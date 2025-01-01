@@ -3,6 +3,7 @@
 namespace Sholokhov\Exchange\Source;
 
 use ArrayIterator;
+use Bitrix\Main\Diag\Debug;
 use Iterator;
 
 /**
@@ -23,7 +24,7 @@ class Item extends AbstractSource
      */
     protected function load(): Iterator
     {
-        $iterator = new ArrayIterator($this->item);
+        $iterator = new ArrayIterator([$this->item]);
         $this->item = null;
 
         return $iterator;
