@@ -2,7 +2,6 @@
 
 namespace Sholokhov\Exchange\Source;
 
-use Bitrix\Main\Diag\Debug;
 use stdClass;
 use PHPUnit\Framework\TestCase;
 
