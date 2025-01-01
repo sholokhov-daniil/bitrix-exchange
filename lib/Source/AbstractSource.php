@@ -8,7 +8,7 @@ use IteratorAggregate;
 /**
  * @internal Наследуемся на свой страх и риск
  */
-abstract class AbstractSource implements Iterator, IteratorAggregate
+abstract class AbstractSource implements Iterator
 {
     private Iterator $iterator;
 
@@ -72,9 +72,10 @@ abstract class AbstractSource implements Iterator, IteratorAggregate
     /**
      * Инициализация итератора данных
      *
+     * @final
      * @return Iterator
      */
-    public function getIterator(): Iterator
+    final protected function getIterator(): Iterator
     {
         return $this->iterator ??= $this->load();
     }
