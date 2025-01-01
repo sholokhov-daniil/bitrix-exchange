@@ -6,21 +6,45 @@ use Iterator;
 use ArrayIterator;
 
 /**
- * Источник данных на основе json файла
+ * Источник данных на основе json строки
  *
  * @internal Наследуемся на свой страх и риск
  */
 class Json extends AbstractSource
 {
+    private bool $multiple = false;
+
     /**
-     * @param string $path Место размещения json файла (локально или удаленно)
-     * @param string $sourceKey Ключ из которого необходимо брать данные. Если не указать, что подгружаются все данные
+     * @param string $json JSON строка
+     * @param string|int|null $sourceKey Ключ из которого необходимо брать данные. Если не указать, что подгружаются все данные
      */
     public function __construct(
-        private readonly string $path,
-        private readonly string $sourceKey = ''
+        private readonly string $json,
+        private readonly string|int|null $sourceKey = null,
     )
     {
+
+    }
+
+    /**
+     * Значение является можественным
+     * @return bool
+     */
+    public function isMultiple(): bool
+    {
+        return $this->multiple;
+    }
+
+    /**
+     * Указание формата данных (множественное или один элемент)
+     *
+     * @param bool $multiple
+     * @return $this
+     */
+    public function setMultiple(bool $multiple = true): self
+    {
+        $this->multiple = $multiple;
+        return $this;
     }
 
     /**
@@ -31,7 +55,12 @@ class Json extends AbstractSource
     protected function load(): Iterator
     {
         $data = $this->loadData();
-        return is_array($data) ? new ArrayIterator($data) : new Item($data);
+
+        if ($this->isMultiple() && is_array($data)) {
+            return new ArrayIterator($data);
+        } else {
+            return new Item($data);
+        }
     }
 
     /**
@@ -41,41 +70,20 @@ class Json extends AbstractSource
      */
     private function loadData(): mixed
     {
-        $json = $this->getContent();
-
-        if (!json_validate($json)) {
-            return [];
+        if (!json_validate($this->json)) {
+            return null;
         }
 
-        $data = (array)json_decode($json, true);
+        $data = json_decode($this->json, true);
 
-        if ($this->sourceKey) {
-            $data = $data[$this->sourceKey] ?? [];
+        if ($this->sourceKey !== null) {
+            if (is_array($data)) {
+                $data = $data[$this->sourceKey];
+            } else {
+                $data = null;
+            }
         }
 
         return $data;
-    }
-
-    /**
-     * Получение содержимого файла
-     *
-     * @return string
-     */
-    private function getContent(): string
-    {
-        $contents = '';
-
-        $resource = fopen($this->path, 'rb');
-        if (!$resource) {
-            return $contents;
-        }
-
-        while (!feof($resource)) {
-            $contents .= fread($resource, 8192);
-        }
-
-        fclose($resource);
-
-        return $contents;
     }
 }
