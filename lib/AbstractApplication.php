@@ -11,7 +11,7 @@ use Bitrix\Main\Result;
 
 use Psr\Log\LoggerAwareTrait;
 
-abstract class AbstractApplication implements ExchangeInterface
+abstract class AbstractApplication
 {
     use LoggerAwareTrait;
 
@@ -33,6 +33,7 @@ abstract class AbstractApplication implements ExchangeInterface
     final public function run(): Result
     {
         try {
+            $this->result = new Result();
             // Событие перед началом работы
             $this->logic();
             // Событие после окончания импорта

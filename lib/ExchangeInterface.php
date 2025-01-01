@@ -13,11 +13,4 @@ interface ExchangeInterface extends LoggerAwareInterface
      * @return Result
      */
     public function run(): Result;
-
-    /**
-     * ID сайта которому принадлежит обмен данными
-     *
-     * @return string
-     */
-    public function getSiteID(): string;
 }
