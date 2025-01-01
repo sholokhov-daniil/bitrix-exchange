@@ -13,24 +13,22 @@ class JsonFile extends Json
      * @param string $path Место размещения json файла (локально или удаленно)
      * @param string $sourceKey Ключ из которого необходимо брать данные. Если не указать, что подгружаются все данные
      */
-    public function __construct(
-        private readonly string $path,
-        private readonly string $sourceKey = ''
-    )
+    public function __construct(string $path, string $sourceKey = '')
     {
-        parent::__construct($this->getContent(), $this->sourceKey);
+        parent::__construct($this->getContent($path), $sourceKey);
     }
 
     /**
      * Получение содержимого файла
      *
+     * @param string $path
      * @return string
      */
-    private function getContent(): string
+    private function getContent(string $path): string
     {
         $contents = '';
 
-        $resource = fopen($this->path, 'rb');
+        $resource = fopen($path, 'rb');
         if (!$resource) {
             return $contents;
         }
