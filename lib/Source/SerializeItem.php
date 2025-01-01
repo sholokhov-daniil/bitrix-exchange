@@ -2,16 +2,15 @@
 
 namespace Sholokhov\Exchange\Source;
 
-use ArrayIterator;
-use Iterator;
-
 /**
  * Источник данных на основе сериализованной строки
  *
  * @internal Наследуемся на свой страх и риск
  */
-class SerializeItem extends AbstractSource
+class SerializeItem implements SourceInterface
 {
+    private SourceInterface $iterator;
+
     /**
      * @param string $data Строка с данными
      * @param bool $multiple Данные являются множественными
@@ -23,19 +22,20 @@ class SerializeItem extends AbstractSource
     {
     }
 
+    public function fetch(): mixed
+    {
+        $this->iterator ??= $this->load();
+        return $this->iterator->fetch();
+    }
+
     /**
      * Инициализация итератора данных из сериализованной строки
      *
-     * @return Iterator
+     * @return SourceInterface
      */
-    protected function load(): Iterator
+    protected function load(): SourceInterface
     {
         $data = unserialize($this->data);
-
-        if (($this->multiple && !is_array($data)) || !$this->multiple) {
-            return new Item($data);
-        }
-
-        return new ArrayIterator($data);
+        return $this->multiple && is_array($data) ? new Items($data) : new Item($data);
     }
 }

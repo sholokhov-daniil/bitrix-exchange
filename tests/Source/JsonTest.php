@@ -8,78 +8,6 @@ class JsonTest extends TestCase
 {
     /**
      * @param string $json
-     * @param mixed $actual
-     * @return void
-     * @dataProvider itemsProvider
-     */
-    public function testCurrent(string $json, mixed $actual): void
-    {
-        $source = new Json($json);
-
-        $this->assertSame($actual, $source->current());
-
-        $source->next();
-        $this->assertNotSame($actual, $source->current());
-
-        $source->rewind();
-        $this->assertSame($actual, $source->current());
-    }
-
-    /**
-     * @param string $json
-     * @param mixed $actual
-     * @return void
-     * @dataProvider itemsProvider
-     */
-    public function testNext(string $json, mixed $actual): void
-    {
-        $source = new Json($json);
-        $source->next();
-        $this->assertNotSame($actual, $source->current());
-    }
-
-    /**
-     * @param string $json
-     * @return void
-     * @dataProvider itemsProvider
-     */
-    public function testKey(string $json): void
-    {
-        $source = new Json($json);
-        $this->assertSame(0, $source->key());
-        $source->next();
-        $this->assertSame(null, $source->key());
-    }
-
-    /**
-     * @param string $json
-     * @return void
-     * @dataProvider itemsProvider
-     */
-    public function testValid(string $json): void
-    {
-        $source = new Json($json);
-        $this->assertTrue($source->valid());
-        $source->next();
-        $this->assertFalse($source->valid());
-    }
-
-    /**
-     * @param string $json
-     * @param mixed $actual
-     * @return void
-     * @dataProvider itemsProvider
-     */
-    public function testRewind(string $json, mixed $actual): void
-    {
-        $source = new Json($json);
-        $source->next();
-        $source->rewind();
-        $this->assertSame($actual, $source->current());
-    }
-
-    /**
-     * @param string $json
      * @param bool $multiple
      * @param int $count
      * @return void
@@ -91,7 +19,7 @@ class JsonTest extends TestCase
         $source = new Json($json);
         $source->setMultiple($multiple);
 
-        foreach ($source as $value) {
+        while ($source->fetch()) {
             $i++;
         }
 
@@ -111,7 +39,7 @@ class JsonTest extends TestCase
         $source = new Json($json, $sourceKey);
         $source->setMultiple($multiple);
 
-        $this->assertSame($actual, $source->current());
+        $this->assertSame($actual, $source->fetch());
     }
 
     public static function sourceKeyProvider(): array

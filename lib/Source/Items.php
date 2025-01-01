@@ -5,17 +5,17 @@ namespace Sholokhov\Exchange\Source;
 use ArrayIterator;
 
 /**
- * Источник данных по одному элементу
+ * Источник данных по массиву элементов
  *
  * @internal Наследуемся на свой страх и риск
  */
-class Item implements SourceInterface
+class Items implements SourceInterface
 {
     private ArrayIterator $iterator;
 
-    public function __construct(mixed $item)
+    public function __construct(array $item)
     {
-        $this->iterator = new ArrayIterator([$item]);
+        $this->iterator = new ArrayIterator($item);
     }
 
     public function fetch(): mixed

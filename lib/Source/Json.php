@@ -2,17 +2,21 @@
 
 namespace Sholokhov\Exchange\Source;
 
-use Iterator;
-use ArrayIterator;
-
 /**
  * Источник данных на основе json строки
  *
  * @internal Наследуемся на свой страх и риск
  */
-class Json extends AbstractSource
+class Json implements SourceInterface
 {
+    /**
+     * JSON хранит множественное значение
+     *
+     * @var bool
+     */
     private bool $multiple = false;
+
+    private SourceInterface $iterator;
 
     /**
      * @param string $json JSON строка
@@ -23,7 +27,12 @@ class Json extends AbstractSource
         private readonly string|int|null $sourceKey = null,
     )
     {
+    }
 
+    public function fetch(): mixed
+    {
+        $this->iterator ??= $this->loadIterator();
+        return $this->iterator->fetch();
     }
 
     /**
@@ -50,17 +59,12 @@ class Json extends AbstractSource
     /**
      * Загрузка данных
      *
-     * @return Iterator
+     * @return SourceInterface
      */
-    protected function load(): Iterator
+    private function loadIterator(): SourceInterface
     {
         $data = $this->loadData();
-
-        if ($this->isMultiple() && is_array($data)) {
-            return new ArrayIterator($data);
-        } else {
-            return new Item($data);
-        }
+        return $this->multiple && is_array($data) ? new Items($data) : new Item($data);
     }
 
     /**
