@@ -2,6 +2,8 @@
 
 namespace Sholokhov\Exchange\Source;
 
+use Sholokhov\Exchange\Helper\IO;
+
 /**
  * Источник данных на основе json файла
  *
@@ -15,30 +17,6 @@ class JsonFile extends Json
      */
     public function __construct(string $path, string $sourceKey = '')
     {
-        parent::__construct($this->getContent($path), $sourceKey);
-    }
-
-    /**
-     * Получение содержимого файла
-     *
-     * @param string $path
-     * @return string
-     */
-    private function getContent(string $path): string
-    {
-        $contents = '';
-
-        $resource = fopen($path, 'rb');
-        if (!$resource) {
-            return $contents;
-        }
-
-        while (!feof($resource)) {
-            $contents .= fread($resource, 8192);
-        }
-
-        fclose($resource);
-
-        return $contents;
+        parent::__construct(IO::getFileContent($path), $sourceKey);
     }
 }
