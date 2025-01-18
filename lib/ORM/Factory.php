@@ -33,8 +33,8 @@ class Factory
      */
     public function make(): Entity
     {
-        $this->parameters['tableName'] = uniqid($this->prefixTableName ?: $this->getDefaultPrefixTableName());
-        $entity = Entity::compileEntity($this->parameters['tableName'], $this->fields, $this->parameters);
+        $this->parameters['table_name'] = uniqid($this->prefixTableName ?: $this->getDefaultPrefixTableName());
+        $entity = Entity::compileEntity($this->parameters['table_name'], $this->fields, $this->parameters);
 
         $entity->createDbTable();
 

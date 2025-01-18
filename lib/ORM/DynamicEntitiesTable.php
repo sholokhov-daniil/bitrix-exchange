@@ -2,9 +2,8 @@
 
 namespace Sholokhov\Exchange\ORM;
 
-use Bitrix\Main\ORM\Data\AddResult;
-use Bitrix\Main\ORM\Data\Result;
 use Bitrix\Main\ORM\Fields;
+use Bitrix\Main\ORM\Data\AddResult;
 use Bitrix\Main\ORM\Data\DataManager;
 
 class DynamicEntitiesTable extends DataManager
