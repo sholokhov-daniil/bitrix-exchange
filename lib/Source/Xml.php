@@ -2,72 +2,46 @@
 
 namespace Sholokhov\Exchange\Source;
 
-use ArrayIterator;
-use Bitrix\Main\ArgumentException;
-use Bitrix\Main\Diag\Debug;
-use Bitrix\Main\Loader;
-use Bitrix\Main\ObjectPropertyException;
-use Bitrix\Main\ORM\Entity;
-use Bitrix\Main\ORM\Fields;
-use Bitrix\Main\SystemException;
-use CFile;
-use CIBlockXMLFile;
 use Iterator;
-use Sholokhov\Exchange\Helper\IO;
+use CIBlockXMLFile;
+use EmptyIterator;
+use ArrayIterator;
+
 use Sholokhov\Exchange\ORM\AbstractXmlDynamic;
 use Sholokhov\Exchange\ORM\Factory;
 
-class Xml implements SourceInterface
+use Bitrix\Main\ArgumentException;
+use Bitrix\Main\DB\SqlQueryException;
+use Bitrix\Main\Loader;
+use Bitrix\Main\ObjectPropertyException;
+use Bitrix\Main\ORM\Entity;
+use Bitrix\Main\SystemException;
+
+/**
+ * Источник данных xml файла.
+ * Весь файл хранится в таблице, что обеспечивает возможность чтение файла любого размера,
+ * но присутствуют издержки в дополнительной нагрузке на сервер и время общения с БД.
+ *
+ * Рекомендуется использовать, если объем XML файла большой и мы готовы подождать
+ */
+class Xml extends AbstractXml
 {
     /**
      * @var AbstractXmlDynamic|null
      */
     private ?string $dataManager = null;
-    private ?\Iterator $iterator = null;
-    private string $rootTag = 'data';
     private int $rootTagDepth = 1;
 
-
-    public function __construct(private readonly string $path)
+    public function __construct(string $path)
     {
+        parent::__construct($path);
         Loader::includeModule('iblock');
     }
 
     public function __destruct()
     {
-        // TODO: Почистить таблицу
-    }
-
-    public function fetch(): array
-    {
-        $this->iterator ??= $this->load();
-        $element = $this->iterator->current();
-        $this->iterator->next();
-
-        if (!$element) {
-            return [];
-        }
-
-        return $this->dataManager::getElement($element["LEFT_MARGIN"], $element["RIGHT_MARGIN"]);
-    }
-
-    /**
-     * Указание родитеского наименования тега хранения данных
-     *
-     * Если изменение происходит после формирования указателя({@see self::fetch()}), то он сбрасывается
-     *
-     * @param string $code
-     * @return $this
-     */
-    public function setRootTag(string $code): self
-    {
-        $this->rootTag = $code;
-
-        if ($this->iterator) {
-            $this->iterator = null;
-        }
-
-        return $this;
+        $entity = $this->dataManager::getEntity();
+        $entity->getConnection()->dropTable($entity->getDBTableName());
     }
 
     /**
@@ -81,31 +55,23 @@ class Xml implements SourceInterface
     public function setRootTagDepth(int $depth): self
     {
         $this->rootTagDepth = $depth;
-
-        if ($this->iterator) {
-            $this->iterator = null;
-        }
-
         return $this;
     }
 
-    private function download(): void
+    /**
+     * Чтение и парсинг xml файла
+     *
+     * @param mixed $resource
+     * @return Iterator
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SqlQueryException
+     * @throws SystemException
+     */
+    protected function parsing(mixed $resource): Iterator
     {
-        if (file_exists($this->path)) {
-            $file = $this->path;
-        } else {
-            $file = CFile::MakeFileArray($this->path)['tmp_name'];
-        }
-
-        $this->saveToTable($file);
-    }
-
-    private function saveToTable(string $path): void
-    {
-        $resource = fopen($path, 'rb');
-
         if (!$resource) {
-            return;
+            return new EmptyIterator();
         }
 
         $entity = $this->makeEntity();
@@ -116,36 +82,30 @@ class Xml implements SourceInterface
         $facade = new CIBlockXMLFile($entity->getDBTableName());
 
         $facade->ReadXMLToDatabase($resource, $ns, 0);
-        fclose($resource);
-
-        Debug::dump($entity->getDBTableName());
-    }
-
-    /**
-     * Получение карты содержимого файла фида
-     *
-     * @return Iterator
-     * @throws ArgumentException
-     * @throws ObjectPropertyException
-     * @throws SystemException
-     */
-    private function load(): Iterator
-    {
-        $this->download();
-
-        $facade = new CIBlockXMLFile($this->dataManager::getEntity()->getDBTableName());
-        $iterator = $facade->GetList();
-        while($item = $iterator->Fetch()) {
-            Debug::dump($item);
-        }
-
         $elements = $this->dataManager::getElementsByName($this->rootTag, $this->rootTagDepth);
-
-        Debug::dump($this->rootTagDepth);
 
         return new ArrayIterator($elements);
     }
 
+    /**
+     * Получение xml элемента по карте вложенности
+     *
+     * @param array $value
+     * @return array
+     */
+    protected function prepareValue(array $value): array
+    {
+        return $this->dataManager::getElement($value["LEFT_MARGIN"], $value["RIGHT_MARGIN"]);
+    }
+
+    /**
+     * Создание сущности хранения результата парсинга
+     *
+     * @return Entity
+     * @throws ArgumentException
+     * @throws SystemException
+     * @throws SqlQueryException
+     */
     private function makeEntity(): Entity
     {
         return (new Factory)

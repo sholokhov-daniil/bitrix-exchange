@@ -7,6 +7,7 @@ use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\ORM\Fields;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\SystemException;
+use CUtil;
 
 abstract class AbstractXmlDynamic extends DataManager
 {
@@ -33,64 +34,53 @@ abstract class AbstractXmlDynamic extends DataManager
 
     public static function getElement(int $leftMargin, int $rightMargin): array
     {
-        $arElement = array();
+        $result = [];
+        $depths = [];
+        $translitOptions = array("replace_space"=>"_","replace_other"=>"_");
 
-        $db_com = parent::getList(
-            array(
-                "filter" => array(
-                    "><LEFT_MARGIN" => array($leftMargin, $rightMargin),
-                ),
-                "select" => array("*")
-            )
-        );
-        $arDepth = array();
+        $iterator = self::query()
+            ->addFilter('><LEFT_MARGIN', [$leftMargin, $rightMargin])
+            ->addSelect('*')
+            ->exec();
 
-        $arParams = array("replace_space"=>"_","replace_other"=>"_");
-
-        while ($ar_com = $db_com->fetch()) {
-
-            foreach($arDepth as $keyD => $valueD){
-                if(intval($keyD)>=intval($ar_com["DEPTH_LEVEL"])){
-                    unset($arDepth[$keyD]);
+        while ($item = $iterator->fetch()) {
+            foreach($depths as $keyD => $valueD){
+                if(intval($keyD)>=intval($item["DEPTH_LEVEL"])){
+                    unset($depths[$keyD]);
                 }
             }
 
-            $codePropPrev = \CUtil::translit(implode("_",$arDepth),"ru",$arParams);
-            unset($arElement[$codePropPrev]);
-            $arDepth[$ar_com["DEPTH_LEVEL"]] = $ar_com["NAME"];
-            $codeProp = \CUtil::translit(implode("_",$arDepth),"ru",$arParams);
+            $codePropPrev = CUtil::translit(implode("_",$depths),"ru",$translitOptions);
+            unset($result[$codePropPrev]);
 
-            $ar_com["NAME"] = $codeProp;
+            $depths[$item["DEPTH_LEVEL"]] = $item["NAME"];
+            $item["NAME"] = CUtil::translit(implode("_",$depths),"ru",$translitOptions);
 
-            if (isset($arElement[$ar_com["NAME"]])) {
-                if (!is_array($arElement[$ar_com["NAME"]])) {
-                    $temp = $arElement[$ar_com["NAME"]];
-                    $arElement[$ar_com["NAME"]] = array();
-                    $arElement[$ar_com["NAME"]][] = $temp;
+            if (isset($result[$item["NAME"]])) {
+                if (!is_array($result[$item["NAME"]])) {
+                    $result[$item["NAME"]] = [$result[$item["NAME"]]];
                 }
-                $arElement[$ar_com["NAME"]][] = $ar_com["VALUE"];
+                $result[$item["NAME"]][] = $item["VALUE"];
             } else {
-                $arElement[$ar_com["NAME"]] = $ar_com["VALUE"];
+                $result[$item["NAME"]] = $item["VALUE"];
             }
 
-            if(!empty($ar_com["ATTRIBUTES"])){
-                foreach ($ar_com["ATTRIBUTES"] as $keyAttribute => $attribute) {
-                    $attributeCode = $ar_com["NAME"]  . "_attribute_" . $keyAttribute;
-                    if (isset($arElement[$attributeCode])) {
-                        if (!is_array($arElement[$attributeCode])) {
-                            $temp = $arElement[$attributeCode];
-                            $arElement[$attributeCode] = array();
-                            $arElement[$attributeCode][] = $temp;
+            if(!empty($item["ATTRIBUTES"])){
+                foreach ($item["ATTRIBUTES"] as $keyAttribute => $attribute) {
+                    $attributeCode = $item["NAME"]  . "_attribute_" . $keyAttribute;
+                    if (isset($result[$attributeCode])) {
+                        if (!is_array($result[$attributeCode])) {
+                            $result[$attributeCode] = [$result[$attributeCode]];
                         }
-                        $arElement[$attributeCode][] = $attribute;
-                    }else{
-                        $arElement[$attributeCode] = $attribute;
+                        $result[$attributeCode][] = $attribute;
+                    } else {
+                        $result[$attributeCode] = $attribute;
                     }
                 }
             }
         }
 
-        return $arElement;
+        return $result;
     }
 
 
