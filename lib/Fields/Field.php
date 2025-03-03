@@ -3,6 +3,7 @@
 namespace Sholokhov\Exchange\Fields;
 
 use Sholokhov\Exchange\Registry\Container;
+use Sholokhov\Exchange\Target\TargetInterface;
 
 /**
  * Описание структуры и логики работы с свойством
@@ -30,9 +31,9 @@ class Field implements FieldInterface
      * Установка пути размещения значения свойства
      *
      * @param string $path
-     * @return FieldInterface
+     * @return static
      */
-    public function setPath(string $path): FieldInterface
+    public function setPath(string $path): self
     {
         $this->getContainer()->setField('path', $path);
         return $this;
@@ -52,9 +53,9 @@ class Field implements FieldInterface
      * Установка кода в который необходимо записать значение
      *
      * @param string $code
-     * @return FieldInterface
+     * @return static
      */
-    public function setCode(string $code): FieldInterface
+    public function setCode(string $code): self
     {
         $this->getContainer()->setField('code', $code);
         return $this;
@@ -63,20 +64,20 @@ class Field implements FieldInterface
     /**
      * Получение цели значения свойства
      *
-     * @return string
+     * @return TargetInterface|null
      */
-    public function getTarget(): string
+    public function getTarget(): ?TargetInterface
     {
-        return $this->getContainer()->getField('target', '');
+        return $this->getContainer()->getField('target');
     }
 
     /**
      * Установка цели значения свойства
      *
-     * @param string $target
-     * @return FieldInterface
+     * @param TargetInterface $target
+     * @return static
      */
-    public function setTarget(string $target): FieldInterface
+    public function setTarget(TargetInterface $target): self
     {
         $this->getContainer()->setField('target', $target);
         return $this;
@@ -96,11 +97,43 @@ class Field implements FieldInterface
      * Установка, что значение является множественным
      *
      * @param bool $multiple
-     * @return FieldInterface
+     * @return static
      */
-    public function setMultiple(bool $multiple): FieldInterface
+    public function setMultiple(bool $multiple = true): self
     {
         $this->getContainer()->setField('multiple', $multiple);
+        return $this;
+    }
+
+    /**
+     * Получение дочернего элемента
+     *
+     * @return FieldInterface|null
+     */
+    public function getChildren(): ?FieldInterface
+    {
+        return $this->getContainer()->getField('children', null);
+    }
+
+    /**
+     * Установка дочернего элемента
+     *
+     * Описание свойства, которое имеет итерационные значения на своем пути
+     * Подходит, если необходимо получить ID изображения
+     * <item>
+     *     <name>NAME</name>
+     *     <images>
+     *          <image id="35" />
+     *          <image id="35" />
+     *      </images>
+     * </item>
+     *
+     * @param FieldInterface $children
+     * @return $this
+     */
+    public function setChildren(FieldInterface $children): self
+    {
+        $this->getContainer()->setField('children', $children);
         return $this;
     }
 

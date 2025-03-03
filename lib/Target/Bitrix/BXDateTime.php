@@ -1,0 +1,50 @@
+<?php
+
+namespace Sholokhov\Exchange\Target\Bitrix;
+
+use Throwable;
+
+use Sholokhov\Exchange\Result;
+use Sholokhov\Exchange\ResultInterface;
+use Sholokhov\Exchange\Helper\LoggerHelper;
+use Sholokhov\Exchange\Target\TargetInterface;
+use Sholokhov\Exchange\Source\SourceAwareTrait;
+
+use Bitrix\Main\Error;
+use Bitrix\Main\Type\DateTime;
+
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerAwareInterface;
+
+/**
+ * Производит превращение произвольного значения времени в объект {@see DateTime}
+ */
+class BXDateTime implements TargetInterface, LoggerAwareInterface
+{
+    use SourceAwareTrait, LoggerAwareTrait;
+
+    /**
+     * Выполнить обмен данных
+     *
+     * @return ResultInterface
+     */
+    public function execute(): ResultInterface
+    {
+        $result = new Result;
+
+        $values = [];
+
+        while ($value = $this->source->fetch()) {
+            try {
+                $values[] = new DateTime($value);
+            } catch (Throwable $throwable) {
+                $result->addError(new Error(sprintf('Ошибка преобразования значение "%s" в "%s"', $value, DateTime::class)));
+                $this->logger?->error(LoggerHelper::exceptionToString($throwable));
+            }
+        }
+
+        $result->setData($values);
+
+        return $result;
+    }
+}

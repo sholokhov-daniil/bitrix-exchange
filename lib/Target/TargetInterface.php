@@ -2,11 +2,10 @@
 
 namespace Sholokhov\Exchange\Target;
 
-use Bitrix\Main\Result;
+use Sholokhov\Exchange\ResultInterface;
+use Sholokhov\Exchange\Source\SourceAwareInterface;
 
-interface TargetInterface
+interface TargetInterface extends SourceAwareInterface
 {
-    public function has(mixed $item): bool;
-    public function add(mixed $item): Result;
-    public function update(mixed $item): Result;
+    public function execute(): ResultInterface;
 }

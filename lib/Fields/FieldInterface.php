@@ -2,6 +2,8 @@
 
 namespace Sholokhov\Exchange\Fields;
 
+use Sholokhov\Exchange\Target\TargetInterface;
+
 /**
  * Описание настроек свойства
  */
@@ -24,9 +26,9 @@ interface FieldInterface
     /**
      * Цель значения
      *
-     * @return string
+     * @return ?TargetInterface
      */
-    public function getTarget(): string;
+    public function getTarget(): ?TargetInterface;
 
     /**
      * Значение является множественным
@@ -34,4 +36,11 @@ interface FieldInterface
      * @return bool
      */
     public function isMultiple(): bool;
+
+    /**
+     * Получение дочернего элемента
+     *
+     * @return FieldInterface|null
+     */
+    public function getChildren(): ?FieldInterface;
 }

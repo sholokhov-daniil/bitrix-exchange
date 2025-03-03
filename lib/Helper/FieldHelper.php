@@ -2,9 +2,7 @@
 
 namespace Sholokhov\Exchange\Helper;
 
-use Illuminate\Support\Arr;
 use Sholokhov\Exchange\Fields\FieldInterface;
-use Sholokhov\Exchange\Fields\TreeField;
 
 class FieldHelper
 {
@@ -17,21 +15,17 @@ class FieldHelper
      */
     public static function getValue(array $item, FieldInterface $field): mixed
     {
-        if ($field instanceof TreeField) {
-            return self::getTreeValue($item, $field);
-        }
-
-        return Helper::getArrValueByPath($item, $field->getPath());
+        return $field->getChildren() ? self::getTreeValue($item, $field) : Helper::getArrValueByPath($item, $field->getPath());
     }
 
     /**
      * Получение значение свойства ветвления
      *
      * @param array $item
-     * @param TreeField $field
+     * @param FieldInterface $field
      * @return array|null
      */
-    public static function getTreeValue(array $item, TreeField $field): ?array
+    public static function getTreeValue(array $item, FieldInterface $field): ?array
     {
         $result = [];
 
@@ -42,11 +36,16 @@ class FieldHelper
         }
 
         $childrenField = $field->getChildren();
+
+        if (!array_is_list($root)) {
+            $root = [$root];
+        }
+
         foreach ($root as $children) {
-            if ($childrenField instanceof TreeField) {
+            if ($childrenField->getChildren()) {
                 $result = array_merge($result, self::getTreeValue($children, $childrenField));
-            } else {
-                $result[] = self::getValue($item, $childrenField);
+            } elseif (is_array($children)) {
+                $result[] = self::getValue($children, $childrenField);
             }
         }
 
