@@ -4,7 +4,6 @@ namespace Sholokhov\Exchange\ORM;
 
 use Exception;
 
-use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ORM\Entity;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\ArgumentException;
@@ -39,7 +38,7 @@ class Factory
         $entity->createDbTable();
 
         if (!$entity->getConnection()->isTableExists($entity->getDBTableName())) {
-            throw new Exception(Loc::getMessage('SHOLOKHOV_EXCHANGE_ERROR_CREATE_DYNAMIC_ENTITY'));
+            throw new Exception('Ошибка создания сущности');
         }
 
         $history = DynamicEntitiesTable::addIfNotExist($entity->getDBTableName());

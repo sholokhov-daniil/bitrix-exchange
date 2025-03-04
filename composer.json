@@ -1,10 +1,22 @@
 {
+    "authors": [
+        {
+            "name": "Daniil Sholokhov",
+            "email": "sholokhovdaniil@yandex.ru"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Sholokhov\\Exchange\\": "src"
+        }
+    },
     "require-dev": {
         "phpunit/phpunit": "^11.5"
     },
     "require": {
         "symfony/dom-crawler": "^7.2",
         "symfony/serializer-pack": "^1.3",
-        "illuminate/support": "^11.40"
+        "illuminate/support": "^11.40",
+        "php": "^8.2"
     }
 }
