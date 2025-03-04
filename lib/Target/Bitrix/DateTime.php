@@ -11,7 +11,7 @@ use Sholokhov\Exchange\Target\TargetInterface;
 use Sholokhov\Exchange\Source\SourceAwareTrait;
 
 use Bitrix\Main\Error;
-use Bitrix\Main\Type\DateTime;
+use Bitrix\Main\Type\DateTime as BXDateTime;
 
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerAwareInterface;
@@ -19,7 +19,7 @@ use Psr\Log\LoggerAwareInterface;
 /**
  * Производит превращение произвольного значения времени в объект {@see DateTime}
  */
-class BXDateTime implements TargetInterface, LoggerAwareInterface
+class DateTime implements TargetInterface, LoggerAwareInterface
 {
     use SourceAwareTrait, LoggerAwareTrait;
 
@@ -36,7 +36,7 @@ class BXDateTime implements TargetInterface, LoggerAwareInterface
 
         while ($value = $this->source->fetch()) {
             try {
-                $values[] = new DateTime($value);
+                $values[] = new BXDateTime($value);
             } catch (Throwable $throwable) {
                 $result->addError(new Error(sprintf('Ошибка преобразования значение "%s" в "%s"', $value, DateTime::class)));
                 $this->logger?->error(LoggerHelper::exceptionToString($throwable));
