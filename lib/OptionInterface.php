@@ -1,21 +1,18 @@
 <?php
 
-namespace Sholokhov\Exchange\Container;
+namespace Sholokhov\Exchange;
 
-use Sholokhov\Exchange\OptionInterface;
+use Sholokhov\Exchange\Container\ContainerInterface;
 use Sholokhov\Exchange\Fields\FieldInterface;
 
-class Options extends Container implements OptionInterface
+interface OptionInterface extends ContainerInterface
 {
     /**
      * Карта обмена
      *
      * @return FieldInterface[]
      */
-    public function getMap(): array
-    {
-        return (array)$this->get('map');
-    }
+    public function getMap(): array;
 
     /**
      * Внешний ключ.
@@ -23,8 +20,5 @@ class Options extends Container implements OptionInterface
      *
      * @return string
      */
-    public function getForeignKey(): string
-    {
-        return (string)$this->get('foreign_key');
-    }
+    public function getForeignKey(): string;
 }

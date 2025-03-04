@@ -10,7 +10,6 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Sholokhov\Exchange\Fields\FieldInterface;
 use Sholokhov\Exchange\Helper\FieldHelper;
-use Sholokhov\Exchange\Helper\LoggerHelper;
 use Sholokhov\Exchange\Source\Item;
 use Sholokhov\Exchange\Source\Items;
 use Sholokhov\Exchange\Source\SourceAwareInterface;
@@ -118,15 +117,11 @@ class Exchange implements SourceAwareInterface
     private function prepare(mixed $value, FieldInterface $field): mixed
     {
         $target = $field->getTarget();
-        if ($target) {
+        if (!$target) {
             return $value;
         }
 
-        if ($field->isMultiple()) {
-            $source = new Items($value);
-        } else {
-            $source = new Item($value);
-        }
+        $source = $field->isMultiple() ? new Items($value) : new Item($value);
 
         if ($this->logger && $target instanceof LoggerAwareInterface) {
             $target->setLogger($this->logger);
