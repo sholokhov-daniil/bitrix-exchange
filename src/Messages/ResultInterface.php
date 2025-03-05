@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\Exchange;
+namespace Sholokhov\Exchange\Messages;
 
-use Bitrix\Main\Error;
+use Sholokhov\Exchange\Messages\Errors\ErrorInterface as Error;
 
 interface ResultInterface
 {

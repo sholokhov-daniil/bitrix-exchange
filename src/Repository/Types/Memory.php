@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\Exchange\Registry;
+namespace Sholokhov\Exchange\Repository\Types;
 
-use Psr\Container\ContainerInterface;
+use Sholokhov\Exchange\Repository\Repository;
 
 /**
  * Базовое представление контейнера.
@@ -13,8 +13,10 @@ use Psr\Container\ContainerInterface;
  * @link https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BD%D1%82%D0%B5%D0%B9%D0%BD%D0%B5%D1%80_%D1%81%D0%B2%D0%BE%D0%B9%D1%81%D1%82%D0%B2_(%D1%88%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD_%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F)
  *
  * @internal
+ * @implements Repository
+ * @autdor Daniil S.
  */
-class Container implements ContainerInterface
+class Memory implements Repository
 {
     /**
      * Хранимые значения.
@@ -25,9 +27,9 @@ class Container implements ContainerInterface
      */
     protected array $fields = [];
 
-    public function __toArray(): array
+    public function __construct(array $fields = [])
     {
-        return $this->fields;
+        array_walk($fields, [$this, 'setField']);
     }
 
     public function __serialize(): array
@@ -38,6 +40,11 @@ class Container implements ContainerInterface
     public function __unserialize(array $data): void
     {
         $this->fields = $data;
+    }
+
+    public function toArray(): array
+    {
+        return $this->fields;
     }
 
     /**
@@ -80,11 +87,11 @@ class Container implements ContainerInterface
      * Десериализация данных.
      *
      * @param string $data
-     * @return ContainerInterface
+     * @return Repository
      *
      * @autdor Daniil S. GlobalArts
      */
-    public function unserialize(string $data): ContainerInterface
+    public function unserialize(string $data): Repository
     {
         $this->fields = unserialize($data);
         return $this;
@@ -196,7 +203,7 @@ class Container implements ContainerInterface
      *
      * @author Daniil S. GlobalArts
      */
-    public function get(string $id): mixed
+    public function get($id): mixed
     {
         return $this->getField($id);
     }
@@ -209,7 +216,7 @@ class Container implements ContainerInterface
      *
      * @author Daniil S. GlobalArts
      */
-    public function has(string $id): bool
+    public function has($id): bool
     {
         return $this->hasField($id);
     }

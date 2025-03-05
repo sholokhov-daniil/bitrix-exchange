@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\Exchange\Container;
+namespace Sholokhov\Exchange\Repository;
 
 use Countable;
 use Iterator;
@@ -25,7 +25,7 @@ use Psr\Container\ContainerInterface as PsrContainer;
  *
  * @autdor Daniil S.
  */
-interface ContainerInterface extends Iterator, Serializable, JsonSerializable , Countable, PsrContainer
+interface Repository extends Iterator, Serializable, JsonSerializable , Countable, PsrContainer
 {
     /**
      * Указание значения.

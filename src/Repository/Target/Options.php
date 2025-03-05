@@ -1,11 +1,12 @@
 <?php
 
-namespace Sholokhov\Exchange\Container;
+namespace Sholokhov\Exchange\Repository\Target;
 
+use Sholokhov\Exchange\Repository\Types\Memory;
 use Sholokhov\Exchange\OptionInterface;
 use Sholokhov\Exchange\Fields\FieldInterface;
 
-class Options extends Container implements OptionInterface
+class Options extends Memory implements OptionInterface
 {
     /**
      * Карта обмена

@@ -2,8 +2,8 @@
 
 namespace Sholokhov\Exchange\Target\Bitrix;
 
-use Sholokhov\Exchange\Result;
-use Sholokhov\Exchange\ResultInterface;
+use Sholokhov\Exchange\Messages\Result;
+use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Source\SourceAwareTrait;
 use Sholokhov\Exchange\Target\TargetInterface;
 

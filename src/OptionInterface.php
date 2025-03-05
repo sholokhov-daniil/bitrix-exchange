@@ -2,10 +2,10 @@
 
 namespace Sholokhov\Exchange;
 
-use Sholokhov\Exchange\Container\ContainerInterface;
+use Sholokhov\Exchange\Container\Repository;
 use Sholokhov\Exchange\Fields\FieldInterface;
 
-interface OptionInterface extends ContainerInterface
+interface OptionInterface extends Repository
 {
     /**
      * Карта обмена

@@ -3,7 +3,7 @@
 namespace Sholokhov\Exchange\Target;
 
 use Sholokhov\Exchange\Container\Container;
-use Sholokhov\Exchange\Container\ContainerInterface;
+use Sholokhov\Exchange\Container\Repository;
 
 abstract class AbstractTarget implements TargetInterface
 {
@@ -11,16 +11,16 @@ abstract class AbstractTarget implements TargetInterface
      * Кэш данных, которые принимали участие в обмене
      *
      * @todo Потом поменять подход
-     * @var ContainerInterface|Container
+     * @var Repository|Container
      */
-    protected readonly ContainerInterface $cache;
+    protected readonly Repository $cache;
 
     /**
      * Конфигурация обмена
      *
-     * @var ContainerInterface|mixed
+     * @var Repository|mixed
      */
-    private readonly ContainerInterface $options;
+    private readonly Repository $options;
 
     /**
      * Объект в котором будут храниться конфигурации
@@ -50,9 +50,9 @@ abstract class AbstractTarget implements TargetInterface
     /**
      * Конфигурация обмена
      *
-     * @return ContainerInterface
+     * @return Repository
      */
-    protected function getOptions(): ContainerInterface
+    protected function getOptions(): Repository
     {
         return $this->options;
     }
