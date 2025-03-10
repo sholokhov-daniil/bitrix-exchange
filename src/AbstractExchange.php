@@ -5,13 +5,16 @@ namespace Sholokhov\Exchange;
 use ArrayIterator;
 
 use Bitrix\Main\Diag\Debug;
+use Illuminate\Contracts\Validation\Validator;
 use Iterator;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Sholokhov\Exchange\Fields\Field;
 use Sholokhov\Exchange\Helper\FieldHelper;
+use Sholokhov\Exchange\Messages\Errors\Error;
 use Sholokhov\Exchange\Messages\Result;
-use Sholokhov\Exchange\Repository\RepositoryInterface;
+use Sholokhov\Exchange\Messages\Type\DataResult;
+use Sholokhov\Exchange\Repository\Repository;
 
 abstract class AbstractExchange extends Application
 {
@@ -25,9 +28,18 @@ abstract class AbstractExchange extends Application
     abstract protected function update(array $item): Result;
     abstract protected function exists(array $item): bool;
 
+    public function __construct(array $options = [])
+    {
+        parent::__construct($options);
+
+    }
+
     final public function execute(Iterator $source): Result
     {
-        $result = new Messages\Type\DataResult;
+        $result = $this->check();
+        if (!$result->isSuccess()) {
+            return $result;
+        }
 
 //        try {
             foreach ($source as $item) {
@@ -71,6 +83,15 @@ abstract class AbstractExchange extends Application
         return $this;
     }
 
+    /**
+     * Проверка возможности запуска обмена данных
+     *
+     * @return Result
+     */
+    protected function check(): Result
+    {
+        return new DataResult;
+    }
 
     private function action(array $item): Result
     {

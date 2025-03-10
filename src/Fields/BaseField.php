@@ -3,19 +3,42 @@
 namespace Sholokhov\Exchange\Fields;
 
 use Sholokhov\Exchange\Exchange;
+use Sholokhov\Exchange\Repository\Repository;
 use Sholokhov\Exchange\Repository\Types\Memory;
 
 /**
- * Описание структуры и логики работы с свойством
+ * Описание структуры и логики работы со свойством
  */
 class BaseField implements Field
 {
     /**
      * Конфигурация свойства
      *
-     * @var Memory
+     * @var Repository
      */
-    private readonly Memory $container;
+    private readonly Repository $container;
+
+    /**
+     * Является идентификационным полем
+     *
+     * @return bool
+     */
+    public function isKeyField(): bool
+    {
+        return $this->getContainer()->getField('key_field', false);
+    }
+
+    /**
+     * Установить флаг идентификационного поля
+     *
+     * @param bool $value
+     * @return $this
+     */
+    public function setKeyField(bool $value): self
+    {
+        $this->getContainer()->setField('key_field', $value);
+        return $this;
+    }
 
     /**
      * Получение пути размещения значения свойства
@@ -137,7 +160,12 @@ class BaseField implements Field
         return $this;
     }
 
-    final protected function getContainer(): Memory
+    /**
+     * Получение хранилище данных
+     *
+     * @return Repository
+     */
+    final protected function getContainer(): Repository
     {
         return $this->container ??= new Memory();
     }

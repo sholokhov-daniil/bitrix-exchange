@@ -21,7 +21,7 @@ use Psr\Container\ContainerInterface as PsrContainer;
  * @extends Countable
  * @extends PsrContainer
  */
-interface RepositoryInterface extends Iterator, Countable, PsrContainer
+interface Repository extends Iterator, Countable, PsrContainer
 {
     /**
      * Указание значения.

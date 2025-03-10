@@ -2,15 +2,15 @@
 
 namespace Sholokhov\Exchange\Repository\Types;
 
-use Sholokhov\Exchange\Repository\RepositoryInterface;
+use Sholokhov\Exchange\Repository\Repository;
 
 /**
  * Базовое представление контейнера.
  *
  * @internal
- * @implements RepositoryInterface
+ * @implements Repository
  */
-class Memory implements RepositoryInterface
+class Memory implements Repository
 {
     /**
      * Хранимые значения.

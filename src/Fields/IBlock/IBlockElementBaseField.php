@@ -7,7 +7,7 @@ use Sholokhov\Exchange\Fields\BaseField;
 /**
  * Описание свойства элемента ИБ
  */
-class IBlockElementBaseField extends BaseField
+class IBlockElementBaseField extends BaseField implements ElementField
 {
     /**
      * Является свойством

@@ -10,6 +10,15 @@ use Sholokhov\Exchange\Exchange;
 interface Field
 {
     /**
+     * Поле отвечает за идентификацию значений.
+     * На основе данного поля происходит определение наличия импортированного значения
+     * или обновление существующего.
+     *
+     * @return bool
+     */
+    public function isKeyField(): bool;
+
+    /**
      * Получение пути хранения значения
      *
      * @return string

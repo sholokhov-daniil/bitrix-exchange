@@ -2,41 +2,36 @@
 
 namespace Sholokhov\Exchange;
 
+use Sholokhov\Exchange\Repository\Container;
+use Sholokhov\Exchange\Repository\Repository;
+use Sholokhov\Exchange\Repository\Types\Configuration;
+
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Sholokhov\Exchange\Repository\RepositoryInterface;
-use Sholokhov\Exchange\Repository\Types\Memory;
 
 abstract class Application implements Exchange
 {
     /**
      * Конфигурация обмена
      *
-     * @var RepositoryInterface|mixed
+     * @var Repository|mixed
      */
-    private readonly RepositoryInterface $options;
-
-    /**
-     * Объект в котором будут храниться конфигурации
-     *
-     * @var string
-     */
-    protected string $optionEntity = Memory::class;
-
-    /**
-     * Объект в котором будут храниться конфигурации
-     *
-     * @var string
-     */
-    protected string $cacheEntity = Memory::class;
+    private readonly Repository $options;
 
     /**
      * Кэш данных, которые принимали участие в обмене
      *
      * @todo Потом поменять подход
-     * @var RepositoryInterface
+     * @var Repository
      */
-    protected readonly RepositoryInterface $cache;
+    protected readonly Repository $cache;
+
+    /**
+     * Глобальные конфигурации обмена
+     *
+     * @var Configuration
+     */
+    protected readonly Configuration $configuration;
 
     /**
      * @param array $options Конфигурация объекта
@@ -45,9 +40,9 @@ abstract class Application implements Exchange
      */
     public function __construct(array $options = [])
     {
-        $options = $this->normalizeOptions($options);
-        $this->options = new $this->optionEntity($options);
-        $this->cache = new $this->cacheEntity($this->options->get('cache') ?: []);
+        $this->configuration = Container::getInstance()->getConfiguration()->get('exchange');
+        $this->options = $this->makeOptionRepository($options);
+        $this->cache = $this->makeCacheRepository();
     }
 
     /**
@@ -64,10 +59,39 @@ abstract class Application implements Exchange
     /**
      * Конфигурация обмена
      *
-     * @return RepositoryInterface
+     * @return Repository
      */
-    protected function getOptions(): RepositoryInterface
+    protected function getOptions(): Repository
     {
         return $this->options;
+    }
+
+    /**
+     * Инициализация хранилища настроек обмена
+     *
+     * @param array $options
+     * @return Repository
+     */
+    private function makeOptionRepository(array $options = []): Repository
+    {
+        $entity = $this->configuration->getOptionEntity(static::class);
+        $options = $this->normalizeOptions($options);
+
+        return new $entity($options);
+    }
+
+    /**
+     * Инициализация хранилища кэша
+     *
+     * @return Repository
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function makeCacheRepository(): Repository
+    {
+        $entity = $this->configuration->getCacheEntity(static::class);
+        $options = $this->options->get('cache') ?: [];
+
+        return new $entity($options);
     }
 }
