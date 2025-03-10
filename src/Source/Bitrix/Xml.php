@@ -1,14 +1,15 @@
 <?php
 
-namespace Sholokhov\Exchange\Source;
+namespace Sholokhov\Exchange\Source\Bitrix;
 
 use Iterator;
 use CIBlockXMLFile;
 use EmptyIterator;
 use ArrayIterator;
 
-use Sholokhov\Exchange\ORM\AbstractXmlDynamic;
 use Sholokhov\Exchange\ORM\Factory;
+use Sholokhov\Exchange\Source\AbstractXml;
+use Sholokhov\Exchange\ORM\AbstractXmlDynamic;
 
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\DB\SqlQueryException;
@@ -42,6 +43,17 @@ class Xml extends AbstractXml
     {
         $entity = $this->dataManager::getEntity();
         $entity->getConnection()->dropTable($entity->getDBTableName());
+    }
+
+    /**
+     * Получение xml элемента по карте вложенности
+     *
+     * @return array
+     */
+    public function current(): array
+    {
+        $value = $this->getIterator()->current();
+        return $this->dataManager::getElement($value["LEFT_MARGIN"], $value["RIGHT_MARGIN"]);
     }
 
     /**
@@ -85,17 +97,6 @@ class Xml extends AbstractXml
         $elements = $this->dataManager::getElementsByName($this->rootTag, $this->rootTagDepth);
 
         return new ArrayIterator($elements);
-    }
-
-    /**
-     * Получение xml элемента по карте вложенности
-     *
-     * @param array $value
-     * @return array
-     */
-    protected function prepareValue(array $value): array
-    {
-        return $this->dataManager::getElement($value["LEFT_MARGIN"], $value["RIGHT_MARGIN"]);
     }
 
     /**

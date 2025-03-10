@@ -4,7 +4,7 @@ namespace Sholokhov\Exchange\Messages;
 
 use Stringable;
 
-interface MessageInterface extends Stringable
+interface Message extends Stringable
 {
     /**
      * Тело ошибки

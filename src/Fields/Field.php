@@ -2,143 +2,45 @@
 
 namespace Sholokhov\Exchange\Fields;
 
-use Sholokhov\Exchange\Registry\Container;
-use Sholokhov\Exchange\Target\TargetInterface;
+use Sholokhov\Exchange\Exchange;
 
 /**
- * Описание структуры и логики работы с свойством
+ * Описание настроек свойства
  */
-class Field implements FieldInterface
+interface Field
 {
     /**
-     * Конфигурация свойства
-     *
-     * @var Container
-     */
-    private readonly Container $container;
-
-    /**
-     * Получение пути размещения значения свойства
+     * Получение пути хранения значения
      *
      * @return string
      */
-    public function getPath(): string
-    {
-        return $this->getContainer()->getField('path', '');
-    }
+    public function getPath(): string;
 
     /**
-     * Установка пути размещения значения свойства
-     *
-     * @param string $path
-     * @return static
-     */
-    public function setPath(string $path): self
-    {
-        $this->getContainer()->setField('path', $path);
-        return $this;
-    }
-
-    /**
-     * Код свойства в которое будет записано значение
+     * Код свойства в которое необходимо записать значение
      *
      * @return string
      */
-    public function getCode(): string
-    {
-        return $this->getContainer()->getField('code', '');
-    }
+    public function getCode(): string;
 
     /**
-     * Установка кода в который необходимо записать значение
+     * Цель значения
      *
-     * @param string $code
-     * @return static
+     * @return ?Exchange
      */
-    public function setCode(string $code): self
-    {
-        $this->getContainer()->setField('code', $code);
-        return $this;
-    }
-
-    /**
-     * Получение цели значения свойства
-     *
-     * @return TargetInterface|null
-     */
-    public function getTarget(): ?TargetInterface
-    {
-        return $this->getContainer()->getField('target');
-    }
-
-    /**
-     * Установка цели значения свойства
-     *
-     * @param TargetInterface $target
-     * @return static
-     */
-    public function setTarget(TargetInterface $target): self
-    {
-        $this->getContainer()->setField('target', $target);
-        return $this;
-    }
+    public function getTarget(): ?Exchange;
 
     /**
      * Значение является множественным
      *
      * @return bool
      */
-    public function isMultiple(): bool
-    {
-        return $this->getContainer()->getField('multiple', false);
-    }
-
-    /**
-     * Установка, что значение является множественным
-     *
-     * @param bool $multiple
-     * @return static
-     */
-    public function setMultiple(bool $multiple = true): self
-    {
-        $this->getContainer()->setField('multiple', $multiple);
-        return $this;
-    }
+    public function isMultiple(): bool;
 
     /**
      * Получение дочернего элемента
      *
-     * @return FieldInterface|null
+     * @return Field|null
      */
-    public function getChildren(): ?FieldInterface
-    {
-        return $this->getContainer()->getField('children', null);
-    }
-
-    /**
-     * Установка дочернего элемента
-     *
-     * Описание свойства, которое имеет итерационные значения на своем пути
-     * Подходит, если необходимо получить ID изображения
-     * <item>
-     *     <name>NAME</name>
-     *     <images>
-     *          <image id="35" />
-     *          <image id="35" />
-     *      </images>
-     * </item>
-     *
-     * @param FieldInterface $children
-     * @return $this
-     */
-    public function setChildren(FieldInterface $children): self
-    {
-        $this->getContainer()->setField('children', $children);
-        return $this;
-    }
-
-    final protected function getContainer(): Container
-    {
-        return $this->container ??= new Container();
-    }
+    public function getChildren(): ?Field;
 }

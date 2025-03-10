@@ -2,43 +2,41 @@
 
 namespace Sholokhov\Exchange\Target\Bitrix;
 
+use Iterator;
 use Throwable;
 
-use Sholokhov\Exchange\Messages\Result;
-use Sholokhov\Exchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Exchange;
+use Sholokhov\Exchange\Messages;
 use Sholokhov\Exchange\Helper\LoggerHelper;
-use Sholokhov\Exchange\Target\TargetInterface;
-use Sholokhov\Exchange\Source\SourceAwareTrait;
 
-use Bitrix\Main\Error;
 use Bitrix\Main\Type\DateTime as BXDateTime;
 
 use Psr\Log\LoggerAwareTrait;
-use Psr\Log\LoggerAwareInterface;
 
 /**
  * Производит превращение произвольного значения времени в объект {@see DateTime}
  */
-class DateTime implements TargetInterface, LoggerAwareInterface
+class DateTime implements Exchange
 {
-    use SourceAwareTrait, LoggerAwareTrait;
+    use LoggerAwareTrait;
 
     /**
      * Выполнить обмен данных
      *
-     * @return ResultInterface
+     * @param Iterator $source
+     * @return Messages\Result
      */
-    public function execute(): ResultInterface
+    public function execute(Iterator $source): Messages\Result
     {
-        $result = new Result;
+        $result = new Messages\Type\DataResult();
 
         $values = [];
 
-        while ($value = $this->source->fetch()) {
+        foreach ($source as $value) {
             try {
                 $values[] = new BXDateTime($value);
             } catch (Throwable $throwable) {
-                $result->addError(new Error(sprintf('Ошибка преобразования значение "%s" в "%s"', $value, DateTime::class)));
+                $result->addError(new Messages\Errors\Error(sprintf('Ошибка преобразования значение "%s" в "%s"', $value, DateTime::class)));
                 $this->logger?->error(LoggerHelper::exceptionToString($throwable));
             }
         }

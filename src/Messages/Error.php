@@ -1,13 +1,13 @@
 <?php
 
-namespace Sholokhov\Exchange\Messages\Errors;
+namespace Sholokhov\Exchange\Messages;
 
-use Sholokhov\Exchange\Messages\MessageInterface;
+use Sholokhov\Exchange\Messages\Message;
 
 /**
  * Структура сообщения об ошибке
  */
-interface ErrorInterface extends MessageInterface
+interface Error extends Message
 {
     /**
      * Код ошибки

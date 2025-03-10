@@ -2,20 +2,22 @@
 
 namespace Sholokhov\Exchange\Source;
 
+use Iterator;
+
 /**
  * @implements  SourceAwareInterface
  */
 trait SourceAwareTrait
 {
-    protected ?SourceInterface $source = null;
+    protected ?Iterator $source = null;
 
     /**
      * Указание источника данных
      *
-     * @param SourceInterface $source
+     * @param Iterator $source
      * @return static
      */
-    public function setSource(SourceInterface $source): self
+    public function setSource(Iterator $source): static
     {
         $this->source = $source;
         return $this;

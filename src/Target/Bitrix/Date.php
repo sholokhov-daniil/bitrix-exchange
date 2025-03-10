@@ -2,38 +2,38 @@
 
 namespace Sholokhov\Exchange\Target\Bitrix;
 
+use Sholokhov\Exchange\Exchange;
+use Sholokhov\Exchange\Messages\Result;
+use Sholokhov\Exchange\Source\Source;
 use Throwable;
 
-use Sholokhov\Exchange\Messages\Result;
-use Sholokhov\Exchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Messages;
+use Sholokhov\Exchange\Messages\Errors\Error;
 use Sholokhov\Exchange\Helper\LoggerHelper;
-use Sholokhov\Exchange\Target\TargetInterface;
-use Sholokhov\Exchange\Source\SourceAwareTrait;
 
-use Bitrix\Main\Error;
 use Bitrix\Main\Type\Date as BXDate;
 
-use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
 /**
  * Производит превращение произвольного значения времени в объект {@see Date}
  */
-class Date implements TargetInterface, LoggerAwareInterface
+class Date implements Exchange
 {
-    use SourceAwareTrait, LoggerAwareTrait;
+    use LoggerAwareTrait;
 
     /**
      * Выполнить обмен данных
      *
-     * @return ResultInterface
+     * @param \Iterator $source
+     * @return Result
      */
-    public function execute(): ResultInterface
+    public function execute(\Iterator $source): Messages\Result
     {
-        $result = new Result;
+        $result = new Messages\Type\DataResult;
         $values = [];
 
-        while ($value = $this->source->fetch()) {
+        foreach ($source as $value) {
             try {
                 $values[] = new BXDate($value);
             } catch (Throwable $throwable) {

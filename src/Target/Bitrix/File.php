@@ -4,37 +4,40 @@ namespace Sholokhov\Exchange\Target\Bitrix;
 
 use CFile;
 
+use Iterator;
+
+use Sholokhov\Exchange\Application;
 use Sholokhov\Exchange\Messages\Result;
-use Sholokhov\Exchange\Messages\ResultInterface;
-use Sholokhov\Exchange\Target\AbstractTarget;
-use Sholokhov\Exchange\Source\SourceAwareTrait;
+use Sholokhov\Exchange\Messages\Type\DataResult;
 
 use Psr\Log\LoggerAwareTrait;
-use Psr\Log\LoggerAwareInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Container\ContainerExceptionInterface;
 
 /**
  * Сохранение файла
  */
-class File extends AbstractTarget implements LoggerAwareInterface
+class File extends Application
 {
-    use SourceAwareTrait, LoggerAwareTrait;
+    use LoggerAwareTrait;
 
     /**
      * Выполнить обмен данными
      *
-     * @return ResultInterface
+     * @param Iterator $source
+     * @return Result
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function execute(): ResultInterface
+    public function execute(Iterator $source): Result
     {
-        $result = new Result;
+        $result = new DataResult();
         $values = [];
 
-        while ($path = $this->source->fetch()) {
-            $values[] = $this->getOptions()->get('USE_CACHE') ? $this->saveByCache($path) : $this->save($path);
+        foreach ($source as $path) {
+            if (is_string($path) && strlen($path)) {
+                $values[] = $this->getOptions()->get('use_cache') ? $this->saveByCache($path) : $this->save($path);
+            }
         }
 
         $result->setData($values);
@@ -77,7 +80,9 @@ class File extends AbstractTarget implements LoggerAwareInterface
             return 0;
         }
 
-        return (int)CFile::SaveFile($file, $this->getOptions()->get('SAVE_PATH'));
+        $file['MODULE_ID'] = $this->getOptions()->get('MODULE_ID');
+
+        return (int)CFile::SaveFile($file, $file['MODULE_ID']);
     }
 
     /**
@@ -88,11 +93,11 @@ class File extends AbstractTarget implements LoggerAwareInterface
      */
     protected function normalizeOptions(array $options): array
     {
-        if (!is_string($options['SAVE_PATH']) || empty($options['SAVE_PATH'])) {
-            $options['SAVE_PATH'] = 'iblock';
+        if (empty($options['MODULE_ID']) || !is_string($options['MODULE_ID'])) {
+            $options['MODULE_ID'] = 'iblock';
         }
 
-        if (!is_bool($options['USE_CACHE'])) {
+        if (!isset($options['USE_CACHE']) || !is_bool($options['USE_CACHE'])) {
             $options['USE_CACHE'] = true;
         }
 

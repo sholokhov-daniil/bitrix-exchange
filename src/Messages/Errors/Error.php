@@ -5,7 +5,7 @@ namespace Sholokhov\Exchange\Messages\Errors;
 use Throwable;
 use JsonSerializable;
 
-class Error implements ErrorInterface, JsonSerializable
+class Error implements \Sholokhov\Exchange\Messages\Error, JsonSerializable
 {
     /**
      * @param string $message Описание ошибки

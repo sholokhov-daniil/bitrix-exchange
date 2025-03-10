@@ -2,12 +2,15 @@
 
 namespace Sholokhov\Exchange\Source;
 
+use Iterator;
+use ArrayIterator;
+
 /**
  * Источник данных на основе json строки
  *
  * @internal Наследуемся на свой страх и риск
  */
-class Json implements SourceInterface
+class Json implements Iterator
 {
     /**
      * JSON хранит множественное значение
@@ -16,7 +19,7 @@ class Json implements SourceInterface
      */
     private bool $multiple = false;
 
-    private SourceInterface $iterator;
+    private Iterator $iterator;
 
     /**
      * @param string $json JSON строка
@@ -29,11 +32,15 @@ class Json implements SourceInterface
     {
     }
 
-    public function fetch(): mixed
+    public function current(): mixed
     {
-        $this->iterator ??= $this->loadIterator();
-        return $this->iterator->fetch();
+        if (!isset($this->iterator)) {
+            $this->iterator = $this->loadIterator();
+        }
+
+        return $this->iterator->current();
     }
+
 
     /**
      * Значение является можественным
@@ -59,12 +66,12 @@ class Json implements SourceInterface
     /**
      * Загрузка данных
      *
-     * @return SourceInterface
+     * @return Iterator
      */
-    private function loadIterator(): SourceInterface
+    private function loadIterator(): Iterator
     {
         $data = $this->loadData();
-        return $this->multiple && is_array($data) ? new Items($data) : new Item($data);
+        return $this->multiple && is_array($data) ? new ArrayIterator($data) : new ArrayIterator([$data]);
     }
 
     /**
@@ -89,5 +96,25 @@ class Json implements SourceInterface
         }
 
         return $data;
+    }
+
+    public function next(): void
+    {
+        $this->iterator->next();
+    }
+
+    public function key(): mixed
+    {
+        return $this->iterator->key();
+    }
+
+    public function valid(): bool
+    {
+        return $this->iterator->valid();
+    }
+
+    public function rewind(): void
+    {
+        $this->iterator->rewind();
     }
 }

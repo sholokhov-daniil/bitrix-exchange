@@ -2,9 +2,8 @@
 
 namespace Sholokhov\Exchange\Source;
 
-use Bitrix\Main\Diag\Debug;
-use EmptyIterator;
 use Iterator;
+use EmptyIterator;
 use Sholokhov\Exchange\Helper\SourceHelper;
 
 /**
@@ -12,14 +11,9 @@ use Sholokhov\Exchange\Helper\SourceHelper;
  *
  * @internal
  */
-abstract class AbstractXml implements SourceInterface
+abstract class AbstractXml implements Iterator
 {
-    /**
-     * Значения источника данных
-     *
-     * @var Iterator|null
-     */
-    private ?Iterator $iterator = null;
+    use IterableTrait;
 
     /**
      * Родительский тег элементов
@@ -42,25 +36,6 @@ abstract class AbstractXml implements SourceInterface
      * @return Iterator
      */
     abstract protected function parsing(mixed $resource): Iterator;
-
-    /**
-     * Получение xml элемента
-     *
-     * @return array
-     */
-    public function fetch(): array
-    {
-        $this->iterator ??= $this->load();
-
-        if (!$this->iterator->valid()) {
-            return [];
-        }
-
-        $value = $this->iterator->current();
-        $this->iterator->next();
-
-        return $this->prepareValue($value);
-    }
 
     /**
      * Указание родительского тега элементов
@@ -95,16 +70,5 @@ abstract class AbstractXml implements SourceInterface
         }
 
         return $this->parsing($resource);
-    }
-
-    /**
-     * Преобразование значения в валидный формат
-     *
-     * @param array $value
-     * @return array
-     */
-    protected function prepareValue(array $value): array
-    {
-        return $value;
     }
 }

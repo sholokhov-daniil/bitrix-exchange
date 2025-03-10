@@ -2,15 +2,14 @@
 
 namespace Sholokhov\Exchange;
 
-use Sholokhov\Exchange\Container\Repository;
-use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Fields\Field;
 
-interface OptionInterface extends Repository
+interface Options
 {
     /**
      * Карта обмена
      *
-     * @return FieldInterface[]
+     * @return Field[]
      */
     public function getMap(): array;
 

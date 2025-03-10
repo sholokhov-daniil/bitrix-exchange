@@ -2,82 +2,45 @@
 
 namespace Sholokhov\Exchange\Source;
 
-use Exception;
-use Bitrix\Main\Text\Encoding;
+use SplFileObject;
 
 /**
  * Источник данных на csv файла
  *
  * @internal Наследуемся на свой страх и риск
  */
-class Csv implements SourceInterface
+class Csv implements \Iterator
 {
-    /** @var resource|null  */
-    private $resource = null;
+    private SplFileObject $file;
 
     /**
-     * Символ-разделитель полей
-     *
-     * @var string
+     * @param string $path Путь до файла
+     * @param string $encoding Кодировка файла
      */
-    private string $separator = ',';
-
-    /**
-     * Устанавливает символ-ограничитель значения поля и принимает только один однобайтовый символ
-     *
-     * @var string
-     */
-    private string $enclosure = "\"";
-
-    /**
-     * Устанавливает символ экранирования и принимает только один однобайтовый символ или пустую строку.
-     * Пустая строка "" отключает внутренний механизм экранирования
-     *
-     * @var string
-     */
-    private string $escape = "\\";
-
-    /**
-     * Устанавливают значение, которое больше самой длинной строки в CSV-файле, иначе строка разбивается на части заданной длины,
-     * если только место разделения не встретится внутри символов-ограничителей.
-     * Длина строк измеряется в символах с учётом символов конца строки, которыми завершаются строки.
-     *
-     * @var int|null
-     */
-    private ?int $length = null;
-
-
     public function __construct(
         private readonly string $path,
         private readonly string $encoding = 'UTF-8',
     )
     {
-        $this->resource = fopen($this->path, 'r');
-
-        if (!$this->resource) {
-            throw new Exception('Unable to open csv file');
-        }
-    }
-
-    public function __destruct()
-    {
-        fclose($this->resource);
+        $this->file = new SplFileObject($this->path);
     }
 
     /**
-     * Получение следующего значения csv файла
+     * Получение текущего значения
      *
      * @return array|null
      */
-    public function fetch(): ?array
+    public function current(): ?array
     {
-        $current = fgetcsv($this->resource, $this->length, $this->separator, $this->enclosure, $this->escape);
-
-        if (is_array($current) && $this->encoding <> SITE_CHARSET) {
-            $current = Encoding::convertEncoding($current, $this->encoding, SITE_CHARSET);
+        if (!$this->valid()) {
+            return null;
         }
 
-        return is_array($current) ? $current : null;
+        $lastLine = $this->file->key();
+        $data = $this->file->fgetcsv(...$this->file->getCsvControl());
+        $this->file->seek($lastLine);
+
+        return is_array($data) ? $data : null;
     }
 
     /**
@@ -92,7 +55,7 @@ class Csv implements SourceInterface
      */
     public function setLength(int $length): self
     {
-        $this->length = $length;
+        $this->file->setMaxLineLen($length);
         return $this;
     }
 
@@ -106,7 +69,7 @@ class Csv implements SourceInterface
      */
     public function setSeparator(string $separator): self
     {
-        $this->separator = $separator;
+        $this->file->setCsvControl($separator);
         return $this;
     }
 
@@ -120,7 +83,9 @@ class Csv implements SourceInterface
      */
     public function setEnclosure(string $enclosure): self
     {
-        $this->enclosure = $enclosure;
+        $control = $this->file->getCsvControl();
+        $this->file->setCsvControl($control[0], $enclosure, $control[1]);
+
         return $this;
     }
 
@@ -133,7 +98,48 @@ class Csv implements SourceInterface
      */
     public function setEscape(string $escape): self
     {
-        $this->escape = $escape;
+        $control = $this->file->getCsvControl();
+        $this->file->setCsvControl($control[0], $control[1], $escape);
         return $this;
+    }
+
+    /**
+     * Последняя позиция указателя в файле
+     *
+     * @return void
+     */
+    public function next(): void
+    {
+        $this->file->next();
+    }
+
+    /**
+     * Позиция указателя в файле
+     *
+     * @return int|false
+     */
+    public function key(): int|false
+    {
+        return $this->file->ftell();
+    }
+
+    /**
+     * Флаг окончания потока данных
+     *
+     * @return bool
+     */
+    public function valid(): bool
+    {
+        return $this->file->valid();
+    }
+
+    /**
+     * Поместить указатель в начало файла
+     *
+     * @return void
+     */
+    public function rewind(): void
+    {
+        $this->file->rewind();
     }
 }

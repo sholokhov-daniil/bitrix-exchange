@@ -2,119 +2,68 @@
 
 namespace Sholokhov\Exchange\Messages;
 
-use Sholokhov\Exchange\Messages\Errors\ErrorInterface;
+use Sholokhov\Exchange\Messages\Errors\Error as Error;
 
-/**
- * Результат выполненных действий
- */
-class Result implements ResultInterface
+interface Result
 {
     /**
-     * Результат действия
-     *
-     * @var mixed|null
-     */
-    protected mixed $data = null;
-
-    /**
-     * Ошибки при выполнении действия
-     *
-     * @var array
-     */
-    protected array $errors = [];
-
-    /**
-     * Работа завершилась успехом
+     * Успешный результат (отсутствие ошибок)
      *
      * @return bool
      */
-    public function isSuccess(): bool
-    {
-        return count($this->errors) === 0;
-    }
+    public function isSuccess(): bool;
 
     /**
-     * Установка данных результата работы
+     * Указание результата работы
      *
      * @param mixed $value
-     * @return ResultInterface
+     * @return $this
      */
-    public function setData(mixed $value): ResultInterface
-    {
-        $this->data = $value;
-        return $this;
-    }
+    public function setData(mixed $value): self;
 
     /**
-     * Получить данные результата работы
+     * Получение результата работы
      *
      * @return mixed
      */
-    public function getData(): mixed
-    {
-        return $this->data;
-    }
+    public function getData(): mixed;
 
     /**
-     * Добавить ошибку
+     * Добавление ошибки
      *
-     * @param ErrorInterface $error
-     * @return ResultInterface
+     * @param Error $error
+     * @return $this
      */
-    public function addError(ErrorInterface $error): ResultInterface
-    {
-        $this->errors[] = $error;
-        return $this;
-    }
+    public function addError(Error $error): self;
 
     /**
-     * Добавить ошибки
+     * Добавление ошибок
      *
      * @param array $errors
-     * @return ResultInterface
+     * @return $this
      */
-    public function addErrors(array $errors): ResultInterface
-    {
-        array_walk($errors, [$this, 'addError']);
-        return $this;
-    }
+    public function addErrors(array $errors): self;
 
     /**
-     * Установить ошибки
+     * Указание нового списка ошибок (старые будут удалены)
      *
-     * @param array $errors
-     * @return ResultInterface
+     * @param Error[] $errors
+     * @return $this
      */
-    public function setErrors(array $errors): ResultInterface
-    {
-        $this->errors = $errors;
-        return $this;
-    }
+    public function setErrors(array $errors): self;
 
     /**
-     * Получение ошибок
+     * Получение всех ошибок
      *
-     * @return array|ErrorInterface[]
+     * @return Error[]
      */
-    public function getErrors(): array
-    {
-        return $this->errors;
-    }
+    public function getErrors(): array;
 
     /**
-     * Получить ошибку по коду
+     * Получение ошибки по коду
      *
      * @param string $code
-     * @return ErrorInterface|null
+     * @return Error|null
      */
-    public function getErrorByCode(string $code): ?ErrorInterface
-    {
-        foreach ($this->errors as $error) {
-            if ($error->getCode() === $code) {
-                return $error;
-            }
-        }
-
-        return null;
-    }
+    public function getErrorByCode(string $code): ?Error;
 }

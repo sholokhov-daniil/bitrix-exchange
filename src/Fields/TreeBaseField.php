@@ -14,14 +14,14 @@ namespace Sholokhov\Exchange\Fields;
  *      </images>
  * </item>
  */
-class TreeField extends Field
+class TreeBaseField extends BaseField
 {
     /**
      * Получение дочернего элемента
      *
-     * @return FieldInterface|null
+     * @return Field|null
      */
-    public function getChildren(): ?FieldInterface
+    public function getChildren(): ?Field
     {
         return $this->getContainer()->getField('children', null);
     }
@@ -29,10 +29,10 @@ class TreeField extends Field
     /**
      * Установка дочернего элемента
      *
-     * @param FieldInterface $children
+     * @param Field $children
      * @return $this
      */
-    public function setChildren(FieldInterface $children): self
+    public function setChildren(Field $children): self
     {
         $this->getContainer()->setField('children', $children);
         return $this;

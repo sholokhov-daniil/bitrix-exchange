@@ -3,15 +3,15 @@
 namespace Sholokhov\Exchange\Repository\Target;
 
 use Sholokhov\Exchange\Repository\Types\Memory;
-use Sholokhov\Exchange\OptionInterface;
-use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Options;
+use Sholokhov\Exchange\Fields\Field;
 
-class Options extends Memory implements OptionInterface
+class Options extends Memory implements Options
 {
     /**
      * Карта обмена
      *
-     * @return FieldInterface[]
+     * @return Field[]
      */
     public function getMap(): array
     {

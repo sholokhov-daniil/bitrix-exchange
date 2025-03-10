@@ -2,20 +2,31 @@
 
 namespace Sholokhov\Exchange\Target\Bitrix;
 
+use Bitrix\Main\Diag\Debug;
+use Sholokhov\Exchange\AbstractExchange;
 use Sholokhov\Exchange\Messages\Result;
-use Sholokhov\Exchange\Messages\ResultInterface;
-use Sholokhov\Exchange\Source\SourceAwareTrait;
-use Sholokhov\Exchange\Target\TargetInterface;
+use Sholokhov\Exchange\Messages\Type\DataResult;
 
 /**
  * Добавляет значения в очередь
  */
-class QueueTarget implements TargetInterface
+class QueueTarget extends AbstractExchange
 {
-    use SourceAwareTrait;
 
-    public function execute(): ResultInterface
+    protected function add(array $item): Result
     {
-        return new Result;
+        Debug::dump($item);
+
+        return new DataResult;
+    }
+
+    protected function update(array $item): Result
+    {
+        return new DataResult;
+    }
+
+    protected function exists(array $item): bool
+    {
+        return false;
     }
 }
