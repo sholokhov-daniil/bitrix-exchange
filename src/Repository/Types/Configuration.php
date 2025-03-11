@@ -2,76 +2,133 @@
 
 namespace Sholokhov\Exchange\Repository\Types;
 
+use Bitrix\Main\Diag\Debug;
+use Illuminate\Support\Arr;
+use Sholokhov\Exchange\Repository\Repository;
+
 /**
  * Хранилище конфигураций
  */
-class Configuration extends Memory
+class Configuration implements Repository
 {
+   protected static self $instance;
+   private array $items = [];
+
+   private function __construct()
+   {
+   }
+
+   public static function getInstance(): self
+   {
+       return self::$instance ??= new self;
+   }
+
     /**
-     * @param string $name Группа конфигурации
+     * Получение значения конфигурации
+     *
+     * @param string $id
+     * @return mixed
      */
-    public function __construct(string $name)
+    public function get(string $id)
     {
-        $configuration = $this->load($name);
-        parent::__construct($configuration);
+        return $this->getField($id);
     }
 
     /**
-     * Объект хранения конфигураций обмена
+     * Получения значения конфигурации
      *
      * @param string $name
      * @param mixed|null $default
      * @return mixed
      */
-    public function getOptionEntity(string $name, mixed $default = null): mixed
+    public function getField(string $name, mixed $default = null): mixed
     {
-        return $this->getValueByGroup('options', $name, $default);
+        if (is_array($name)) {
+            return $this->getMany($name);
+        }
+
+        return Arr::get($this->items, $name, $default);
     }
 
     /**
-     * Объект хранения кэша обмена
+     * Установка значения конфигурации.
      *
-     * @param string $name
-     * @param mixed|null $default
-     * @return mixed
+     * @param $key
+     * @param $value
+     * @return void
+     * @author Daniil S. GlobalArts
      */
-    public function getCacheEntity(string $name, mixed $default = null): mixed
+
+    public function setField(string $name, mixed $value): void
     {
-        return $this->getValueByGroup('cache', $name, $default);
+        $keys = is_array($name) ? $name : [$name => $value];
+
+        foreach ($keys as $key => $value) {
+            Arr::set($this->items, $key, $value);
+        }
+
     }
 
     /**
-     * Получение значение конфигурации
+     * Получение множества значений конфигурации.
      *
-     * @param string $group
-     * @param string $name
-     * @param mixed|null $default
-     * @return mixed
-     */
-    public function getValueByGroup(string $group, string $name, mixed $default = null): mixed
-    {
-        return $this->fields[$group][$name] ?? $this->fields[$group]['default'] ?? $default;
-    }
-
-    /**
-     * Загрузка конфигурации
-     *
-     * @param string $name
+     * @param $keys
      * @return array
+     * @author Daniil S. GlobalArts
      */
-    private function load(string $name): array
+    public function getMany($keys): array
     {
-        $path = $this->getDirectory() . DIRECTORY_SEPARATOR . $name . '.ini';
-        return (array)parse_ini_file($path);
+        $config = [];
+
+        foreach ($keys as $key => $default) {
+            if (is_numeric($key)) {
+                [$key, $default] = [$default, null];
+            }
+
+            $config[$key] = Arr::get($this->items, $key, $default);
+        }
+
+        return $config;
     }
 
-    /**
-     * Директория хранения конфигурационных файлов
-     *
-     * @return string
-     */
-    private function getDirectory(): string
+
+    public function has(string $id): bool
     {
-        return dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'config';
+        // TODO: Implement has() method.
+    }
+
+    public function current(): mixed
+    {
+        // TODO: Implement current() method.
+    }
+
+    public function next(): void
+    {
+        // TODO: Implement next() method.
+    }
+
+    public function key(): mixed
+    {
+        // TODO: Implement key() method.
+    }
+
+    public function valid(): bool
+    {
+        // TODO: Implement valid() method.
+    }
+
+    public function rewind(): void
+    {
+        // TODO: Implement rewind() method.
+    }
+
+    public function count(): int
+    {
+        // TODO: Implement count() method.
+    }
+
+    public function hasField(string $name): bool
+    {
+        // TODO: Implement hasField() method.
     }
 }

@@ -2,20 +2,23 @@
 
 namespace Sholokhov\Exchange;
 
-use ArrayIterator;
-
-use Bitrix\Main\Diag\Debug;
-use Illuminate\Contracts\Validation\Validator;
+use Exception;
 use Iterator;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
+use ArrayIterator;
+use ReflectionException;
+
 use Sholokhov\Exchange\Fields\Field;
+use Sholokhov\Exchange\Validators\Validator;
+use Sholokhov\Exchange\Helper\Entity;
 use Sholokhov\Exchange\Helper\FieldHelper;
-use Sholokhov\Exchange\Messages\Errors\Error;
 use Sholokhov\Exchange\Messages\Result;
 use Sholokhov\Exchange\Messages\Type\DataResult;
-use Sholokhov\Exchange\Repository\Repository;
+use Sholokhov\Exchange\Target\Attributes\MapValidator;
 
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerAwareInterface;
+
+#[MapValidator]
 abstract class AbstractExchange extends Application
 {
     use LoggerAwareTrait;
@@ -28,14 +31,9 @@ abstract class AbstractExchange extends Application
     abstract protected function update(array $item): Result;
     abstract protected function exists(array $item): bool;
 
-    public function __construct(array $options = [])
-    {
-        parent::__construct($options);
-
-    }
-
     final public function execute(Iterator $source): Result
     {
+        $dataResult = [];
         $result = $this->check();
         if (!$result->isSuccess()) {
             return $result;
@@ -48,7 +46,12 @@ abstract class AbstractExchange extends Application
                     continue;
                 }
 
-                $result = $this->action($item);
+                $actionResult = $this->action($item);
+                if (!$actionResult->isSuccess()) {
+                    $result->addErrors($actionResult->getErrors());
+                }
+
+                $dataResult[] = $actionResult->getData();
             }
 //        } catch (\Throwable $throwable) {
 //            $this->result->addError(new Error($throwable->getMessage(), $throwable->getCode()));
@@ -57,7 +60,7 @@ abstract class AbstractExchange extends Application
 
         // Удаление элементов, которые не обновились
 
-        return $result;
+        return $result->setData($dataResult);
     }
 
     /**
@@ -74,11 +77,10 @@ abstract class AbstractExchange extends Application
      * Указание карты данных обмена
      *
      * @param array $map
-     * @return $this
+     * @return AbstractExchange
      */
-    public function setMap(array $map): self
+    public function setMap(array $map): static
     {
-        // TODO: Добавить валидацию
         $this->map = $map;
         return $this;
     }
@@ -87,10 +89,18 @@ abstract class AbstractExchange extends Application
      * Проверка возможности запуска обмена данных
      *
      * @return Result
+     * @throws ReflectionException
      */
     protected function check(): Result
     {
-        return new DataResult;
+        $result = new DataResult;
+
+        $mapValidate = $this->mapValidate($this->getMap());
+        if (!$mapValidate->isSuccess()) {
+            $result->addErrors($mapValidate->getErrors());
+        }
+
+        return $result;
     }
 
     private function action(array $item): Result
@@ -110,6 +120,13 @@ abstract class AbstractExchange extends Application
         return $result;
     }
 
+    /**
+     * Преобразование данных обмена
+     *
+     * @param mixed $value
+     * @param Field $field
+     * @return mixed
+     */
     private function prepare(mixed $value, Field $field): mixed
     {
         $target = $field->getTarget();
@@ -151,5 +168,26 @@ abstract class AbstractExchange extends Application
         }
 
         return $result;
+    }
+
+    /**
+     * Валидация карты обмена
+     *
+     * @param array $map
+     * @return Result
+     * @throws ReflectionException
+     * @throws Exception
+     */
+    private function mapValidate(array $map): Result
+    {
+        /** @var MapValidator $attribute */
+        $attribute = Entity::getAttribute($this, MapValidator::class) ?: Entity::getAttribute(self::class, MapValidator::class);
+        $validator = $attribute->getEntity();
+
+        if (!is_subclass_of($validator, Validator::class)) {
+            throw new Exception('Validator class must be subclass of ' . Validator::class);
+        }
+
+        return (new $validator)->validate($map);
     }
 }

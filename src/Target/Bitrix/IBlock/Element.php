@@ -1,13 +1,16 @@
 <?php
 
-namespace Sholokhov\Exchange\Target\Bitrix\IBlock\Element;
+namespace Sholokhov\Exchange\Target\Bitrix\IBlock;
 
+use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
 use CIBlockElement;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use ReflectionException;
 use Sholokhov\Exchange\AbstractExchange;
+use Sholokhov\Exchange\Fields\IBlock\ElementField;
 use Sholokhov\Exchange\Messages\Errors\Error;
 use Sholokhov\Exchange\Messages\Result;
 use Sholokhov\Exchange\Messages\Type\DataResult;
@@ -18,9 +21,10 @@ class Element extends AbstractExchange
      * Проверка возможности выполнения обмена
      *
      * @return Result
-     * @throws LoaderException
      * @throws ContainerExceptionInterface
+     * @throws LoaderException
      * @throws NotFoundExceptionInterface
+     * @throws ReflectionException
      */
     protected function check(): Result
     {
@@ -32,6 +36,11 @@ class Element extends AbstractExchange
 
         if ($this->getOptions()->get('iblock_id') <= 0) {
             $result->addError(new Error('IBLOCK ID is required'));
+        }
+
+        $parentResult = parent::check();
+        if (!$parentResult->isSuccess()) {
+            $result->addErrors($parentResult->getErrors());
         }
 
         return $result;
@@ -53,10 +62,17 @@ class Element extends AbstractExchange
     {
         $result = new DataResult;
         $iblock = new CIBlockElement;
-        $itemId = $iblock->Add($item);
+
+        $preparedItem = $this->prepareItem($item);
+        $data = $preparedItem['FIELDS'];
+        $data['IBLOCK_ID'] = $this->getIBlockID();
+        $data['PROPERTY_VALUES'] = $preparedItem['PROPERTIES'] ?? [];
+
+        $itemId = $iblock->Add($data);
 
         if ($itemId) {
-            // Добавляем все свойства
+            // TODO: записываем хэш
+            $result->setData((int)$itemId);
         } else {
             $result->addError(new Error('Error while adding IBLOCK element: ' . $iblock->getLastError()));
         }
@@ -71,6 +87,55 @@ class Element extends AbstractExchange
 
     protected function exists(array $item): bool
     {
-        // TODO: Implement exists() method.
+        return false;
+    }
+
+    /**
+     * Разделение импортируемых данных на группы
+     *
+     * @param array{FIELDS: array, PROPERTIES: array} $item
+     * @return array|array[]
+     */
+    protected function prepareItem(array $item): array
+    {
+        $result = [
+            'FIELDS' => [],
+            'PROPERTIES' => []
+        ];
+
+        foreach ($this->getMap() as $field) {
+            $group = 'FIELDS';
+
+            if ($field instanceof ElementField && $field->isProperty()) {
+                $group = 'PROPERTIES';
+            }
+
+            $result[$group][$field->getCode()] = $item[$field->getCode()];
+        }
+
+        Debug::dump($result);
+
+        if (!isset($result['FIELDS']['NAME'])) {
+            foreach ($this->getMap() as $field) {
+                if ($field->isKeyField()) {
+                    $result['FIELDS']['NAME'] = $item[$field->getCode()];
+                    break;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Информационный блок в который иден обмен
+     *
+     * @return int
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    protected function getIBlockID(): int
+    {
+        return (int)$this->getOptions()->get('iblock_id');
     }
 }

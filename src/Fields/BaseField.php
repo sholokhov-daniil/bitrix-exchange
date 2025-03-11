@@ -34,7 +34,7 @@ class BaseField implements Field
      * @param bool $value
      * @return $this
      */
-    public function setKeyField(bool $value): self
+    public function setKeyField(bool $value = true): self
     {
         $this->getContainer()->setField('key_field', $value);
         return $this;

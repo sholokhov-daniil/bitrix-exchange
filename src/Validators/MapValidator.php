@@ -1,6 +1,8 @@
 <?php
 
-namespace Sholokhov\Exchange\Fields\Validator;
+namespace Sholokhov\Exchange\Validators;
+
+use TypeError;
 
 use Sholokhov\Exchange\Fields\Field;
 use Sholokhov\Exchange\Messages\Errors\Error;
@@ -10,20 +12,24 @@ use Sholokhov\Exchange\Messages\Type\DataResult;
 /**
  * Проверка стандартной карты обмена
  */
-class Validator
+class MapValidator implements Validator
 {
     /**
      * Валидация карты обмена
      *
-     * @param array $map
+     * @param mixed $value
      * @return Result
      */
-    public function validate(array $map): Result
+    public function validate(mixed $value): Result
     {
+        if (!is_array($value)) {
+            throw new TypeError("Value must be an array");
+        }
+
         $primary = false;
         $result = new DataResult;
 
-        foreach ($map as $field) {
+        foreach ($value as $field) {
             if (!($field instanceof Field)) {
                 $result->addError(new Error('Incorrect field description'));
                 break;

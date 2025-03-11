@@ -7,7 +7,7 @@ use Sholokhov\Exchange\Fields\BaseField;
 /**
  * Описание свойства элемента ИБ
  */
-class IBlockElementBaseField extends BaseField implements ElementField
+class IBlockElementField extends BaseField implements ElementField
 {
     /**
      * Является свойством
@@ -17,7 +17,7 @@ class IBlockElementBaseField extends BaseField implements ElementField
      */
     public function setProperty(bool $isProperty = true): self
     {
-        $this->getContainer()->getField('property', $isProperty);
+        $this->getContainer()->setField('property', $isProperty);
         return $this;
     }
 
