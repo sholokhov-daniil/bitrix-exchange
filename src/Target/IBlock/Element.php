@@ -6,6 +6,7 @@ use CIBlock;
 use CIBlockElement;
 
 use Sholokhov\Exchange\Fields\IBlock\ElementField;
+use Sholokhov\Exchange\Helper\Site;
 use Sholokhov\Exchange\Messages\Errors\Error;
 use Sholokhov\Exchange\Messages\Result;
 use Sholokhov\Exchange\Messages\Type\DataResult;
@@ -149,6 +150,8 @@ class Element extends IBlock
      *
      * @param array{FIELDS: array, PROPERTIES: array} $item
      * @return array|array[]
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function prepareItem(array $item): array
     {
@@ -159,13 +162,19 @@ class Element extends IBlock
 
         foreach ($this->getMap() as $field) {
             $group = 'FIELDS';
+            $value = $item[$field->getCode()];
 
             if ($field instanceof ElementField && $field->isProperty()) {
                 $group = 'PROPERTIES';
+            } elseif ($field->getCode() === 'CODE') {
+                $translitOptions = $this->getIBlockInfo()['FIELDS']['CODE']['DEFAULT_VALUE'] ?? [];
+
+                if ($translitOptions) {
+                    $value = \CUtil::translit($value, Site::getLanguage(), $translitOptions);
+                }
             }
 
-            // TODO: Добавить транслит кода. Транслит создается на основе настроек ИБ
-            $result[$group][$field->getCode()] = $item[$field->getCode()];
+            $result[$group][$field->getCode()] = $value;
         }
 
         if (!isset($result['FIELDS']['NAME'])) {

@@ -51,7 +51,9 @@ abstract class AbstractExchange extends Application
                     $result->addErrors($action->getErrors());
                 }
 
-                $dataResult[] = $action->getData();
+                if ($data = $action->getData()) {
+                    $dataResult[] = $data;
+                }
             }
 
 //        } catch (\Throwable $throwable) {
