@@ -2,10 +2,13 @@
 
 namespace Sholokhov\Exchange\Target\IBlock;
 
+use Bitrix\Main\Diag\Debug;
+use Bitrix\Main\Event;
+use Bitrix\Main\EventResult;
 use Bitrix\Main\Type\DateTime;
 use CIBlockElement;
 
-use Sholokhov\Event\EventManager;
+use Sholokhov\Exchange\Event\EventManager;
 use Sholokhov\Exchange\Fields\IBlock\ElementField;
 use Sholokhov\Exchange\Helper\Site;
 use Bitrix\Main\Error;
@@ -25,6 +28,9 @@ use Psr\Container\ContainerExceptionInterface;
  */
 class Element extends IBlock
 {
+    public const BEFORE_ELEMENT_ADD_EVENT = 'onBeforeIBlockElementAdd';
+    public const AFTER_ELEMENT_ADD_EVENT = 'onAfterIBlockElementAdd';
+
     /**
      * Обработка параметров импорта
      *
@@ -99,7 +105,18 @@ class Element extends IBlock
         $data['IBLOCK_ID'] = $this->getIBlockID();
         $data['PROPERTY_VALUES'] = $preparedItem['PROPERTIES'] ?? [];
 
-        // TODO: Событие перед добавлением
+        $eventParameters = [
+            'ITEM' => &$data
+        ];
+
+        $eventResult = EventManager::getInstance()->call(self::BEFORE_ELEMENT_ADD_EVENT, $eventParameters);
+
+        if ($eventResult->getType() !== EventResult::SUCCESS) {
+            return $result->addErrors(
+                array_map(fn(string $error) => new Error($error, 300, $data), $eventResult->getParameters()['ERRORS'] ?: [])
+            );
+        }
+
 
         $itemId = $iblock->Add($data);
 
@@ -115,7 +132,12 @@ class Element extends IBlock
             $result->addError(new Error('Error while adding IBLOCK element: ' . $iblock->getLastError(), 500, $data));
         }
 
-        // TODO: Событие после добавления
+        $eventParameters = [
+            'ID' => $itemId,
+            'FIELDS' => $data,
+        ];
+
+        EventManager::getInstance()->call(self::AFTER_ELEMENT_ADD_EVENT, $eventParameters);
 
         return $result;
     }
@@ -166,6 +188,29 @@ class Element extends IBlock
         // TODO: Событие после обновления
 
         return $result->setData($itemID);
+    }
+
+    protected function beforeRun(): bool
+    {
+        EventManager::getInstance()->registration(
+            self::BEFORE_ELEMENT_ADD_EVENT,
+            function(EventResult $event) {
+                if ($event->getType() !== EventResult::SUCCESS) {
+                    $parameters = $event->getParameters();
+                    if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
+                        $parameters['ERRORS'] = ['Error while adding IBLOCK element: stopped'];
+                    }
+
+                    return new EventResult(EventResult::ERROR, $parameters, $event->getModuleId());
+                }
+
+                return new EventResult(EventResult::SUCCESS, $event->getParameters(), $event->getModuleId());
+            }
+        );
+
+        EventManager::getInstance()->registration(self::AFTER_ELEMENT_ADD_EVENT);
+
+        return parent::beforeRun();
     }
 
     /**

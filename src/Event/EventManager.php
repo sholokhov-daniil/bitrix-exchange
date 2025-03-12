@@ -1,9 +1,11 @@
 <?php
 
-namespace Sholokhov\Event;
+namespace Sholokhov\Exchange\Event;
 
 use Bitrix\Main\ArgumentTypeException;
+use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Event;
+use Bitrix\Main\EventResult;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\EventManager as BXEventManager;
 
@@ -48,19 +50,25 @@ class EventManager
      *
      * @param string $id
      * @param array $parameters
-     * @return void
-     * @throws SystemException
+     * @return EventResult
      * @throws ArgumentTypeException
+     * @throws SystemException
      */
-    public function call(string $id, array &$parameters = []): void
+    public function call(string $id, array &$parameters = []): EventResult
     {
+        $eventResult = new EventResult(EventResult::SUCCESS, $parameters, $this->module);
+
         $data = $this->get($id);
         $data['event']->setParameters($parameters);
         $data['event']->send();
 
-        foreach ($data['event']->getResults() as $result) {
-            call_user_func($data['callback'], $result);
+        if (is_callable($data['callback'])) {
+            foreach ($data['event']->getResults() as $result) {
+                $eventResult = call_user_func($data['callback'], $result);
+            }
         }
+
+        return $eventResult;
     }
 
     /**
@@ -80,10 +88,10 @@ class EventManager
      * Регистрация события
      *
      * @param string $id
-     * @param callable $callback
+     * @param callable|null $callback
      * @return $this
      */
-    public function registration(string $id, callable $callback): self
+    public function registration(string $id, callable $callback = null): self
     {
         $event = new Event($this->module, $id);
         $this->events[$id] = [
