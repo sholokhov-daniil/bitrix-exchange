@@ -5,6 +5,7 @@ namespace Sholokhov\Exchange\Target\IBlock;
 use Bitrix\Main\Type\DateTime;
 use CIBlockElement;
 
+use Sholokhov\Event\EventManager;
 use Sholokhov\Exchange\Fields\IBlock\ElementField;
 use Sholokhov\Exchange\Helper\Site;
 use Bitrix\Main\Error;
