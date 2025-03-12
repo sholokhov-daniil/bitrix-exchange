@@ -46,12 +46,17 @@ abstract class AbstractExchange extends Application
                     continue;
                 }
 
-                $actionResult = $this->action($item);
-                if (!$actionResult->isSuccess()) {
-                    $result->addErrors($actionResult->getErrors());
+                $action = $this->action($item);
+                if (!$action->isSuccess()) {
+                    $result->addErrors($action->getErrors());
                 }
 
-                $dataResult[] = $actionResult->getData();
+                $dataResult[] = $action->getData();
+            }
+
+            $deactivate = $this->deactivate();
+            if (!$deactivate->isSuccess()) {
+                $result->addErrors($deactivate->getErrors());
             }
 //        } catch (\Throwable $throwable) {
 //            $this->result->addError(new Error($throwable->getMessage(), $throwable->getCode()));

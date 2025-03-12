@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\Exchange\Target\Bitrix;
+namespace Sholokhov\Exchange\Target;
 
 use Bitrix\Main\Diag\Debug;
 use Sholokhov\Exchange\AbstractExchange;

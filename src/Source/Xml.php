@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\Exchange\Source\Bitrix;
+namespace Sholokhov\Exchange\Source;
 
 use Iterator;
 use CIBlockXMLFile;
@@ -8,7 +8,6 @@ use EmptyIterator;
 use ArrayIterator;
 
 use Sholokhov\Exchange\ORM\Factory;
-use Sholokhov\Exchange\Source\AbstractXml;
 use Sholokhov\Exchange\ORM\AbstractXmlDynamic;
 
 use Bitrix\Main\ArgumentException;

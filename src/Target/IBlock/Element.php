@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\Exchange\Target\Bitrix\IBlock;
+namespace Sholokhov\Exchange\Target\IBlock;
 
 use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Loader;
@@ -74,7 +74,7 @@ class Element extends AbstractExchange
             // TODO: записываем хэш
             $result->setData((int)$itemId);
         } else {
-            $result->addError(new Error('Error while adding IBLOCK element: ' . $iblock->getLastError()));
+            $result->addError(new Error('Error while adding IBLOCK element: ' . $iblock->getLastError(), 500, $data));
         }
 
         return $result;

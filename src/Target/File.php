@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\Exchange\Target\Bitrix;
+namespace Sholokhov\Exchange\Target;
 
 use CFile;
 
