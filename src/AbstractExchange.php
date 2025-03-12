@@ -2,19 +2,23 @@
 
 namespace Sholokhov\Exchange;
 
+use Bitrix\Main\Diag\Debug;
 use Exception;
 use Iterator;
 use ArrayIterator;
+use ReflectionClass;
 use ReflectionException;
 
+use Sholokhov\Exchange\Events\Event;
 use Sholokhov\Exchange\Fields\Field;
-use Bitrix\Main\Error;
 use Sholokhov\Exchange\Validators\Validator;
 use Sholokhov\Exchange\Helper\Entity;
 use Sholokhov\Exchange\Helper\FieldHelper;
 use Sholokhov\Exchange\Messages\Result;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Target\Attributes\MapValidator;
+
+use Bitrix\Main\Error;
 
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerAwareInterface;
@@ -29,9 +33,22 @@ abstract class AbstractExchange extends Application
     private array $map = [];
     protected int $dateUp = 0;
 
+    /**
+     * События обмена
+     *
+     * @var Event
+     */
+    protected Event $event;
+
     abstract protected function add(array $item): Result;
     abstract protected function update(array $item): Result;
     abstract protected function exists(array $item): bool;
+
+    public function __construct(array $options = [])
+    {
+        $this->event = new Event;
+        parent::__construct($options);
+    }
 
     final public function execute(Iterator $source): Result
     {
@@ -39,11 +56,6 @@ abstract class AbstractExchange extends Application
         $result = $this->check();
         if (!$result->isSuccess()) {
             return $result;
-        }
-
-        if (!$this->beforeRun()) {
-            $this->logger?->warning(sprintf('Exchange stopped "%s": %s',  static::class, json_encode($this->getOptions())));
-            return $result->addError(new Error('Exchange stopped ' . static::class, 0, ['OPTIONS' => $this->getOptions()]));
         }
 
         $this->dateUp = time();
@@ -70,7 +82,8 @@ abstract class AbstractExchange extends Application
 //            $this->logger?->critical(LoggerHelper::exceptionToString($throwable));
 //        }
 
-        $this->afterRun();
+        $this->event->invokeAfterRun();
+
             $this->dateUp = 0;
 
         // Удаление элементов, которые не обновились
@@ -98,23 +111,6 @@ abstract class AbstractExchange extends Application
     {
         $this->map = $map;
         return $this;
-    }
-
-    /**
-     * @todo Пересмотреть
-     * @return bool
-     */
-    protected function beforeRun(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @todo Пересмотреть
-     * @return void
-     */
-    protected function afterRun(): void
-    {
     }
 
     /**
@@ -151,19 +147,26 @@ abstract class AbstractExchange extends Application
         return null;
     }
 
+    /**
+     * Вызов действия над элементом источника
+     *
+     * @param array $item
+     * @return Result
+     */
     private function action(array $item): Result
     {
-        // Событие перед импортом
-
+        $this->event->invokeBeforeActionItem();
         $item = $this->normalize($item);
 
         if ($this->exists($item)) {
             $result = $this->update($item);
+            $this->event->invokeAfterUpdate(['ITEM' => $item]);
         } else {
             $result = $this->add($item);
+            $this->event->invokeAfterAdd(['ITEM' => $item]);
         }
 
-        // Событие по окончанию
+        $this->event->invokeAfterActionItem($item);
 
         return $result;
     }

@@ -76,8 +76,6 @@ class File extends Application
      * @param string $path
      * @return int
      * @throws ArgumentException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      * @throws ObjectPropertyException
      * @throws SystemException
      */
@@ -89,7 +87,7 @@ class File extends Application
             $fileId = $this->cache->get($externalID);
         } elseif ($file = FileTable::getRow(['filter' => ['EXTERNAL_ID' => $externalID], 'select' => ['ID']])) {
             $fileId = (int)$file['ID'];
-            $this->cache->setField($externalID, $fileId);
+            $this->cache->set($externalID, $fileId);
         }
 
         return $fileId;
@@ -111,8 +109,6 @@ class File extends Application
      *
      * @param string $path
      * @return int
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     private function save(string $path): int
     {
@@ -126,7 +122,7 @@ class File extends Application
         $file['MODULE_ID'] = $this->getOptions()->get('MODULE_ID');
 
         if ($fileId = (int)CFile::SaveFile($file, $file['MODULE_ID'])) {
-            $this->cache->setField($path, $fileId);
+            $this->cache->set($path, $fileId);
         }
 
         return $fileId;

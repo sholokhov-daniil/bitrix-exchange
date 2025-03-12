@@ -17,7 +17,7 @@ class IBlockElementField extends BaseField implements ElementField
      */
     public function setProperty(bool $isProperty = true): self
     {
-        $this->getContainer()->setField('property', $isProperty);
+        $this->getContainer()->set('property', $isProperty);
         return $this;
     }
 
@@ -28,6 +28,6 @@ class IBlockElementField extends BaseField implements ElementField
      */
     public function isProperty(): bool
     {
-        return $this->getContainer()->getField('property', false);
+        return $this->getContainer()->get('property', false);
     }
 }

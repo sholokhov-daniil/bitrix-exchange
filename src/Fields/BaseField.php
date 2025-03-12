@@ -25,7 +25,7 @@ class BaseField implements Field
      */
     public function isKeyField(): bool
     {
-        return $this->getContainer()->getField('key_field', false);
+        return $this->getContainer()->get('key_field', false);
     }
 
     /**
@@ -36,7 +36,7 @@ class BaseField implements Field
      */
     public function setKeyField(bool $value = true): self
     {
-        $this->getContainer()->setField('key_field', $value);
+        $this->getContainer()->set('key_field', $value);
         return $this;
     }
 
@@ -47,7 +47,7 @@ class BaseField implements Field
      */
     public function getPath(): string
     {
-        return $this->getContainer()->getField('path', '');
+        return $this->getContainer()->get('path', '');
     }
 
     /**
@@ -58,7 +58,7 @@ class BaseField implements Field
      */
     public function setPath(string $path): self
     {
-        $this->getContainer()->setField('path', $path);
+        $this->getContainer()->set('path', $path);
         return $this;
     }
 
@@ -69,7 +69,7 @@ class BaseField implements Field
      */
     public function getCode(): string
     {
-        return $this->getContainer()->getField('code', '');
+        return $this->getContainer()->get('code', '');
     }
 
     /**
@@ -80,7 +80,7 @@ class BaseField implements Field
      */
     public function setCode(string $code): self
     {
-        $this->getContainer()->setField('code', $code);
+        $this->getContainer()->set('code', $code);
         return $this;
     }
 
@@ -91,7 +91,7 @@ class BaseField implements Field
      */
     public function getTarget(): ?Exchange
     {
-        return $this->getContainer()->getField('target');
+        return $this->getContainer()->get('target');
     }
 
     /**
@@ -102,7 +102,7 @@ class BaseField implements Field
      */
     public function setTarget(Exchange $target): self
     {
-        $this->getContainer()->setField('target', $target);
+        $this->getContainer()->set('target', $target);
         return $this;
     }
 
@@ -113,7 +113,7 @@ class BaseField implements Field
      */
     public function isMultiple(): bool
     {
-        return $this->getContainer()->getField('multiple', false);
+        return $this->getContainer()->get('multiple', false);
     }
 
     /**
@@ -124,7 +124,7 @@ class BaseField implements Field
      */
     public function setMultiple(bool $multiple = true): self
     {
-        $this->getContainer()->setField('multiple', $multiple);
+        $this->getContainer()->set('multiple', $multiple);
         return $this;
     }
 
@@ -135,7 +135,7 @@ class BaseField implements Field
      */
     public function getChildren(): ?Field
     {
-        return $this->getContainer()->getField('children', null);
+        return $this->getContainer()->get('children', null);
     }
 
     /**
@@ -156,7 +156,7 @@ class BaseField implements Field
      */
     public function setChildren(Field $children): self
     {
-        $this->getContainer()->setField('children', $children);
+        $this->getContainer()->set('children', $children);
         return $this;
     }
 

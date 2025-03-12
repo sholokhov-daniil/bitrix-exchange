@@ -45,6 +45,15 @@ abstract class Application implements Exchange
     }
 
     /**
+     * Конфигурация текущего обмена
+     *
+     * @return void
+     */
+    protected function configure(): void
+    {
+    }
+
+    /**
      * Предназначен для преобразования(обработки) конфигураций перед сохранением
      *
      * @param array $options

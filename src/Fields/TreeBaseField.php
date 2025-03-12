@@ -23,7 +23,7 @@ class TreeBaseField extends BaseField
      */
     public function getChildren(): ?Field
     {
-        return $this->getContainer()->getField('children', null);
+        return $this->getContainer()->get('children', null);
     }
 
     /**
@@ -34,7 +34,7 @@ class TreeBaseField extends BaseField
      */
     public function setChildren(Field $children): self
     {
-        $this->getContainer()->setField('children', $children);
+        $this->getContainer()->set('children', $children);
         return $this;
     }
 }

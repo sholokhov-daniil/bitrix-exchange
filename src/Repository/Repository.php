@@ -22,22 +22,22 @@ use Psr\Container\ContainerInterface as PsrContainer;
 interface Repository extends Iterator, Countable, PsrContainer
 {
     /**
-     * Указание значения.
+     * Получить значение
      *
-     * @param string $name
-     * @param mixed $value
-     * @return void
-     */
-    public function setField(string $name, mixed $value): void;
-
-    /**
-     * Получение значения свойства.
-     *
-     * @param string $name
+     * @param string $id
      * @param mixed|null $default
      * @return mixed
      */
-    public function getField(string $name, mixed $default = null): mixed;
+    public function get(string $id, mixed $default = null): mixed;
+
+    /**
+     * Указать значение
+     *
+     * @param string $id
+     * @param mixed $value
+     * @return void
+     */
+    public function set(string $id, mixed $value): void;
 
     /**
      * Проверка наличия свойства.

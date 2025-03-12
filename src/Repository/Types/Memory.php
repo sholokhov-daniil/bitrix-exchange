@@ -21,7 +21,7 @@ class Memory implements Repository
 
     public function __construct(array $fields = [])
     {
-        array_walk($fields, fn($value, $key) => $this->setField($key, $value));
+        array_walk($fields, fn($value, $key) => $this->set($key, $value));
     }
 
     public function toArray(): array
@@ -42,25 +42,25 @@ class Memory implements Repository
     /**
      * Указание значения.
      *
-     * @param string $name
+     * @param string $id
      * @param mixed $value
      * @return void
      */
-    public function setField(string $name, mixed $value): void
+    public function set(string $id, mixed $value): void
     {
-        $this->fields[$name] = $value;
+        $this->fields[$id] = $value;
     }
 
     /**
      * Получение значения свойства.
      *
-     * @param string $name
+     * @param string $id
      * @param mixed|null $default
      * @return mixed
      */
-    public function getField(string $name, mixed $default = null): mixed
+    public function get(string $id, mixed $default = null): mixed
     {
-        return array_key_exists($name, $this->fields) ? $this->fields[$name] : $default;
+        return array_key_exists($id, $this->fields) ? $this->fields[$id] : $default;
     }
 
     /**
@@ -122,17 +122,6 @@ class Memory implements Repository
     public function rewind(): void
     {
         reset($this->fields);
-    }
-
-    /**
-     * Получение значения свойства.
-     *
-     * @param string $id
-     * @return mixed
-     */
-    public function get(string $id): mixed
-    {
-        return $this->getField($id);
     }
 
     /**
