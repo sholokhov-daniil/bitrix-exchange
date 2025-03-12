@@ -7,7 +7,7 @@ use Throwable;
 use Sholokhov\Exchange\Exchange;
 use Sholokhov\Exchange\Messages;
 use Sholokhov\Exchange\Messages\Result;
-use Sholokhov\Exchange\Messages\Errors\Error;
+use Bitrix\Main\Error;
 use Sholokhov\Exchange\Helper\LoggerHelper;
 
 use Bitrix\Main\Type\Date as BXDate;

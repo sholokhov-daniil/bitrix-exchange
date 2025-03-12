@@ -8,7 +8,7 @@ use ArrayIterator;
 use ReflectionException;
 
 use Sholokhov\Exchange\Fields\Field;
-use Sholokhov\Exchange\Messages\Errors\Error;
+use Bitrix\Main\Error;
 use Sholokhov\Exchange\Validators\Validator;
 use Sholokhov\Exchange\Helper\Entity;
 use Sholokhov\Exchange\Helper\FieldHelper;

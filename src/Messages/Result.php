@@ -2,7 +2,7 @@
 
 namespace Sholokhov\Exchange\Messages;
 
-use Sholokhov\Exchange\Messages\Errors\Error as Error;
+use Bitrix\Main\Error;
 
 interface Result
 {

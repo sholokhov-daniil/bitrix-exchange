@@ -7,7 +7,7 @@ use CIBlockElement;
 
 use Sholokhov\Exchange\Fields\IBlock\ElementField;
 use Sholokhov\Exchange\Helper\Site;
-use Sholokhov\Exchange\Messages\Errors\Error;
+use Bitrix\Main\Error;
 use Sholokhov\Exchange\Messages\Result;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 

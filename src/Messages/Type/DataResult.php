@@ -2,12 +2,15 @@
 
 namespace Sholokhov\Exchange\Messages\Type;
 
-use Sholokhov\Exchange\Messages\Errors\Error;
+use Sholokhov\Exchange\Messages\Result;
+
+use Bitrix\Main\Error;
+use Bitrix\Main\ErrorCollection;
 
 /**
  * Результат выполненных действий
  */
-class DataResult implements \Sholokhov\Exchange\Messages\Result
+class DataResult implements Result
 {
     /**
      * Результат действия
@@ -22,6 +25,18 @@ class DataResult implements \Sholokhov\Exchange\Messages\Result
      * @var array
      */
     protected array $errors = [];
+
+    /**
+     * Коллекция ошибок
+     *
+     * @var ErrorCollection
+     */
+    private readonly ErrorCollection $errorCollection;
+
+    public function __construct()
+    {
+        $this->errorCollection = new ErrorCollection;
+    }
 
     /**
      * Работа завершилась успехом
@@ -94,7 +109,7 @@ class DataResult implements \Sholokhov\Exchange\Messages\Result
     /**
      * Получение ошибок
      *
-     * @return array|Error[]
+     * @return Error[]
      */
     public function getErrors(): array
     {
@@ -109,12 +124,6 @@ class DataResult implements \Sholokhov\Exchange\Messages\Result
      */
     public function getErrorByCode(string $code): ?Error
     {
-        foreach ($this->errors as $error) {
-            if ($error->getCode() === $code) {
-                return $error;
-            }
-        }
-
-        return null;
+        return $this->errorCollection->getErrorByCode($code);
     }
 }
