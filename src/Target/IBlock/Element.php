@@ -137,8 +137,7 @@ class Element extends IBlock
         $iBlock::SetPropertyValuesEx($itemID, $this->getIBlockID(), $preparedItem['PROPERTIES']);
         $this->logger?->debug('Updated properties IBLOCK element: ' . $itemID);
 
-        CIBlock::CleanCache($this->getIBlockID());
-        CIBlock::clearIblockTagCache($this->getIBlockID());
+        $this->cleanCache();
 
         // TODO: Событие после обновления
 

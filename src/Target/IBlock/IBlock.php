@@ -63,6 +63,19 @@ abstract class IBlock extends AbstractExchange
     }
 
     /**
+     * Очистка кэша ИБ
+     *
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    final protected function cleanCache(): void
+    {
+        CIBlock::CleanCache($this->getIBlockID());
+        CIBlock::clearIblockTagCache($this->getIBlockID());
+    }
+
+    /**
      * Получение информации ИБ
      *
      * @return array
