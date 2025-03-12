@@ -2,23 +2,22 @@
 
 namespace Sholokhov\Exchange\Target\IBlock;
 
-use Bitrix\Main\Diag\Debug;
-use Bitrix\Main\Event;
-use Bitrix\Main\EventResult;
-use Bitrix\Main\Type\DateTime;
 use CIBlockElement;
 
-use Sholokhov\Exchange\Event\EventManager;
-use Sholokhov\Exchange\Fields\IBlock\ElementField;
 use Sholokhov\Exchange\Helper\Site;
-use Bitrix\Main\Error;
 use Sholokhov\Exchange\Messages\Result;
+use Sholokhov\Exchange\Event\EventManager;
 use Sholokhov\Exchange\Messages\Type\DataResult;
+use Sholokhov\Exchange\Fields\IBlock\ElementField;
 
+use Bitrix\Main\Error;
+use Bitrix\Main\EventResult;
+use Bitrix\Main\Type\DateTime;
 use Bitrix\Iblock\ElementTable;
-use Bitrix\Main\ArgumentException;
-use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
+use Bitrix\Main\ArgumentException;
+use Bitrix\Main\ArgumentTypeException;
+use Bitrix\Main\ObjectPropertyException;
 
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -28,6 +27,8 @@ use Psr\Container\ContainerExceptionInterface;
  */
 class Element extends IBlock
 {
+    public const BEFORE_ELEMENT_UPDATE_EVENT = 'onBeforeIBlockElementUpdate';
+    public const AFTER_ELEMENT_UPDATE_EVENT = 'onAfterIBlockElementUpdate';
     public const BEFORE_ELEMENT_ADD_EVENT = 'onBeforeIBlockElementAdd';
     public const AFTER_ELEMENT_ADD_EVENT = 'onAfterIBlockElementAdd';
 
@@ -94,6 +95,8 @@ class Element extends IBlock
      * @return Result
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @throws SystemException
+     * @throws ArgumentTypeException
      */
     protected function add(array $item): Result
     {
@@ -116,7 +119,6 @@ class Element extends IBlock
                 array_map(fn(string $error) => new Error($error, 300, $data), $eventResult->getParameters()['ERRORS'] ?: [])
             );
         }
-
 
         $itemId = $iblock->Add($data);
 
@@ -147,14 +149,14 @@ class Element extends IBlock
      *
      * @param array $item
      * @return Result
+     * @throws ArgumentTypeException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @throws SystemException
      */
     protected function update(array $item): Result
     {
         $result = new DataResult;
-
-        // TODO: Событие перед обновлением
 
         $keyField = $this->getKeyField();
 
@@ -174,6 +176,17 @@ class Element extends IBlock
             $preparedItem['FIELDS']['ACTIVE'] = 'Y';
         }
 
+        $eventParameters = [
+            'FIELDS' => &$preparedItem['FIELDS'],
+        ];
+        $eventResult = EventManager::getInstance()->call(self::BEFORE_ELEMENT_UPDATE_EVENT, $eventParameters);
+
+        if ($eventResult->getType() !== EventResult::SUCCESS) {
+            return $result->addErrors(
+                array_map(fn(string $error) => new Error($error, 300, $preparedItem['FIELDS']), $eventResult->getParameters()['ERRORS'] ?: [])
+            );
+        }
+
         if (!$iBlock->Update($itemID, $preparedItem['FIELDS'])) {
             return $result->addError(new Error('Error while updating IBLOCK element: ' . $iBlock->getLastError(), 500, ['ID' => $itemID, 'FIELDS' => $preparedItem['FIELDS']]));
         }
@@ -185,11 +198,20 @@ class Element extends IBlock
 
         $this->cleanCache();
 
-        // TODO: Событие после обновления
+        $eventParameters = [
+            'FIELDS' => &$preparedItem['FIELDS'],
+            'PROPERTIES' => &$preparedItem['PROPERTIES'],
+        ];
+        EventManager::getInstance()->call(self::AFTER_ELEMENT_UPDATE_EVENT, $eventParameters);
 
         return $result->setData($itemID);
     }
 
+    /**
+     * Подготовка перед запуском импорта
+     *
+     * @return bool
+     */
     protected function beforeRun(): bool
     {
         EventManager::getInstance()->registration(
@@ -209,6 +231,24 @@ class Element extends IBlock
         );
 
         EventManager::getInstance()->registration(self::AFTER_ELEMENT_ADD_EVENT);
+
+        EventManager::getInstance()->registration(self::AFTER_ELEMENT_UPDATE_EVENT);
+
+        EventManager::getInstance()->registration(
+            self::BEFORE_ELEMENT_UPDATE_EVENT,
+            function(EventResult $event) {
+                if ($event->getType() !== EventResult::SUCCESS) {
+                    $parameters = $event->getParameters();
+                    if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
+                        $parameters['ERRORS'] = ['Error while updating IBLOCK element: stopped'];
+                    }
+
+                    return new EventResult(EventResult::ERROR, $parameters, $event->getModuleId());
+                }
+
+                return new EventResult(EventResult::SUCCESS, $event->getParameters(), $event->getModuleId());
+            }
+        );
 
         return parent::beforeRun();
     }
