@@ -27,10 +27,11 @@ use Psr\Container\ContainerExceptionInterface;
  */
 class Element extends IBlock
 {
-    public const BEFORE_ELEMENT_UPDATE_EVENT = 'onBeforeIBlockElementUpdate';
-    public const AFTER_ELEMENT_UPDATE_EVENT = 'onAfterIBlockElementUpdate';
-    public const BEFORE_ELEMENT_ADD_EVENT = 'onBeforeIBlockElementAdd';
-    public const AFTER_ELEMENT_ADD_EVENT = 'onAfterIBlockElementAdd';
+    public const BEFORE_DEACTIVATE = 'onBeforeIBlockElementsDeactivate';
+    public const BEFORE_UPDATE_EVENT = 'onBeforeIBlockElementUpdate';
+    public const AFTER_UPDATE_EVENT = 'onAfterIBlockElementUpdate';
+    public const BEFORE_ADD_EVENT = 'onBeforeIBlockElementAdd';
+    public const AFTER_ADD_EVENT = 'onAfterIBlockElementAdd';
 
     /**
      * Обработка параметров импорта
@@ -112,7 +113,7 @@ class Element extends IBlock
             'ITEM' => &$data
         ];
 
-        $eventResult = EventManager::getInstance()->call(self::BEFORE_ELEMENT_ADD_EVENT, $eventParameters);
+        $eventResult = EventManager::getInstance()->call(self::BEFORE_ADD_EVENT, $eventParameters);
 
         if ($eventResult->getType() !== EventResult::SUCCESS) {
             return $result->addErrors(
@@ -139,7 +140,7 @@ class Element extends IBlock
             'FIELDS' => $data,
         ];
 
-        EventManager::getInstance()->call(self::AFTER_ELEMENT_ADD_EVENT, $eventParameters);
+        EventManager::getInstance()->call(self::AFTER_ADD_EVENT, $eventParameters);
 
         return $result;
     }
@@ -179,7 +180,7 @@ class Element extends IBlock
         $eventParameters = [
             'FIELDS' => &$preparedItem['FIELDS'],
         ];
-        $eventResult = EventManager::getInstance()->call(self::BEFORE_ELEMENT_UPDATE_EVENT, $eventParameters);
+        $eventResult = EventManager::getInstance()->call(self::BEFORE_UPDATE_EVENT, $eventParameters);
 
         if ($eventResult->getType() !== EventResult::SUCCESS) {
             return $result->addErrors(
@@ -202,7 +203,7 @@ class Element extends IBlock
             'FIELDS' => &$preparedItem['FIELDS'],
             'PROPERTIES' => &$preparedItem['PROPERTIES'],
         ];
-        EventManager::getInstance()->call(self::AFTER_ELEMENT_UPDATE_EVENT, $eventParameters);
+        EventManager::getInstance()->call(self::AFTER_UPDATE_EVENT, $eventParameters);
 
         return $result->setData($itemID);
     }
@@ -214,8 +215,11 @@ class Element extends IBlock
      */
     protected function beforeRun(): bool
     {
-        EventManager::getInstance()->registration(
-            self::BEFORE_ELEMENT_ADD_EVENT,
+        $eventManager = EventManager::getInstance();
+
+
+        $eventManager->registration(
+            self::BEFORE_ADD_EVENT,
             function(EventResult $event) {
                 if ($event->getType() !== EventResult::SUCCESS) {
                     $parameters = $event->getParameters();
@@ -230,12 +234,12 @@ class Element extends IBlock
             }
         );
 
-        EventManager::getInstance()->registration(self::AFTER_ELEMENT_ADD_EVENT);
+        $eventManager->registration(self::AFTER_ADD_EVENT);
 
-        EventManager::getInstance()->registration(self::AFTER_ELEMENT_UPDATE_EVENT);
+        $eventManager->registration(self::AFTER_UPDATE_EVENT);
 
-        EventManager::getInstance()->registration(
-            self::BEFORE_ELEMENT_UPDATE_EVENT,
+        $eventManager->registration(
+            self::BEFORE_UPDATE_EVENT,
             function(EventResult $event) {
                 if ($event->getType() !== EventResult::SUCCESS) {
                     $parameters = $event->getParameters();
@@ -249,6 +253,8 @@ class Element extends IBlock
                 return new EventResult(EventResult::SUCCESS, $event->getParameters(), $event->getModuleId());
             }
         );
+
+        $eventManager->registration(self::BEFORE_DEACTIVATE);
 
         return parent::beforeRun();
     }
@@ -330,10 +336,14 @@ class Element extends IBlock
             'ACTIVE' => 'Y',
         ];
         $select = ['ID'];
-        $iterator = ElementTable::getList(compact('filter', 'select'));
+
+        $parameters = compact('filter', 'select');
+        EventManager::getInstance()->call(self::BEFORE_DEACTIVATE, $parameters);
+
+        $iterator = ElementTable::getList($parameters);
 
         $iBlock = new CIBlockElement;
-        // TODO: Добавить деактивацию по хэшу импорта
+
         while ($element = $iterator->fetch()) {
             $iBlock->Update($element['ID'], ['ACTIVE' => 'N']);
         }
