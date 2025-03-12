@@ -99,7 +99,7 @@ class Element extends AbstractExchange
 
         if ($element = CIBlockElement::GetList([], $filter)->Fetch()) {
             // TODO: Проверить хэш импорта
-            $this->cache->setField($item[$keyField->getCode()], $element);
+            $this->cache->setField($item[$keyField->getCode()], (int)$element['ID']);
 
             return true;
         }
@@ -135,7 +135,7 @@ class Element extends AbstractExchange
             $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the %s information block', $this->getIBlockID(), $itemId));
 
             if ($keyField = $this->getKeyField()) {
-                $this->cache->setField($item[$keyField->getCode()], $data);
+                $this->cache->setField($item[$keyField->getCode()], (int)$itemId);
             }
         } else {
             $result->addError(new Error('Error while adding IBLOCK element: ' . $iblock->getLastError(), 500, $data));
@@ -167,7 +167,7 @@ class Element extends AbstractExchange
         }
 
         $iBlock = new CIBlockElement;
-        $itemID = (int)($this->cache->getField($item[$keyField->getCode()])['ID'] ?? 0);
+        $itemID = $this->cache->get($item[$keyField->getCode()]);
 
         if (!$itemID) {
             return $result->addError(new Error('Error while updating IBLOCK element: No ID'));
@@ -179,8 +179,6 @@ class Element extends AbstractExchange
         }
 
         $this->logger?->debug('Updated fields IBLOCK element: ' . $itemID);
-
-        Debug::dump($preparedItem['PROPERTIES']);
 
         $iBlock::SetPropertyValuesEx($itemID, $this->getIBlockID(), $preparedItem['PROPERTIES']);
         $this->logger?->debug('Updated properties IBLOCK element: ' . $itemID);
