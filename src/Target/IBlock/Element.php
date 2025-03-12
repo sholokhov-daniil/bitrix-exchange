@@ -4,17 +4,11 @@ namespace Sholokhov\Exchange\Target\IBlock;
 
 use CIBlock;
 use CIBlockElement;
-use ReflectionException;
 
-use Sholokhov\Exchange\AbstractExchange;
 use Sholokhov\Exchange\Fields\IBlock\ElementField;
 use Sholokhov\Exchange\Messages\Errors\Error;
 use Sholokhov\Exchange\Messages\Result;
 use Sholokhov\Exchange\Messages\Type\DataResult;
-
-use Bitrix\Main\Diag\Debug;
-use Bitrix\Main\Loader;
-use Bitrix\Main\LoaderException;
 
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -22,49 +16,8 @@ use Psr\Container\ContainerExceptionInterface;
 /**
  * Импортирование элемента информационного блока
  */
-class Element extends AbstractExchange
+class Element extends IBlock
 {
-    /**
-     * Проверка возможности выполнения обмена
-     *
-     * @return Result
-     * @throws ContainerExceptionInterface
-     * @throws LoaderException
-     * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
-     */
-    protected function check(): Result
-    {
-        $result = new DataResult;
-
-        if (!Loader::includeModule('iblock')) {
-            $result->addError(new Error('Module "iblock" not installed'));
-        }
-
-        if ($this->getOptions()->get('iblock_id') <= 0) {
-            $result->addError(new Error('IBLOCK ID is required'));
-        }
-
-        $parentResult = parent::check();
-        if (!$parentResult->isSuccess()) {
-            $result->addErrors($parentResult->getErrors());
-        }
-
-        return $result;
-    }
-
-    /**
-     * Обработка конфигураций обмена
-     *
-     * @param array $options
-     * @return array
-     */
-    protected function normalizeOptions(array $options): array
-    {
-        $options['iblock_id'] = (int)$options['iblock_id'];
-        return parent::normalizeOptions($options);
-    }
-
     /**
      * Проверка наличия элемента
      *
@@ -220,17 +173,5 @@ class Element extends AbstractExchange
         }
 
         return $result;
-    }
-
-    /**
-     * Информационный блок в который иден обмен
-     *
-     * @return int
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    protected function getIBlockID(): int
-    {
-        return (int)$this->getOptions()->get('iblock_id');
     }
 }
