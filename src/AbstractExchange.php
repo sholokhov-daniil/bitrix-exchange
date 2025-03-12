@@ -54,10 +54,6 @@ abstract class AbstractExchange extends Application
                 $dataResult[] = $action->getData();
             }
 
-            $deactivate = $this->deactivate();
-            if (!$deactivate->isSuccess()) {
-                $result->addErrors($deactivate->getErrors());
-            }
 //        } catch (\Throwable $throwable) {
 //            $this->result->addError(new Error($throwable->getMessage(), $throwable->getCode()));
 //            $this->logger?->critical(LoggerHelper::exceptionToString($throwable));
@@ -106,6 +102,22 @@ abstract class AbstractExchange extends Application
         }
 
         return $result;
+    }
+
+    /**
+     * Получение свойства отвечающего за идентификацию значения
+     *
+     * @return Field|null
+     */
+    final protected function getKeyField(): ?Field
+    {
+        foreach ($this->getMap() as $field) {
+            if ($field->isKeyField()) {
+                return $field;
+            }
+        }
+
+        return null;
     }
 
     private function action(array $item): Result

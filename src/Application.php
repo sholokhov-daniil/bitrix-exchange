@@ -28,9 +28,9 @@ abstract class Application implements Exchange
      * Кэш данных, которые принимали участие в обмене
      *
      * @todo Потом поменять подход
-     * @var Repository|null
+     * @var Repository
      */
-    protected readonly ?Repository $cache;
+    protected readonly Repository $cache;
 
     /**
      * @param array $options Конфигурация объекта
@@ -90,20 +90,15 @@ abstract class Application implements Exchange
     /**
      * Инициализация хранилища кэша
      *
-     * @return Repository|null
+     * @return Repository
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws ReflectionException
      */
-    private function makeCacheRepository(): ?Repository
+    private function makeCacheRepository(): Repository
     {
         /** @var CacheContainer $attribute */
-        $attribute = Entity::getAttribute($this, CacheContainer::class);
-
-        if (!$attribute) {
-            return null;
-        }
-
+        $attribute = Entity::getAttribute($this, CacheContainer::class) ?: Entity::getAttribute(self::class, CacheContainer::class);
         $entity = $attribute->getEntity();
 
         if (!is_subclass_of($entity, Repository::class)) {
