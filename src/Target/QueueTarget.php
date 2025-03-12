@@ -2,7 +2,6 @@
 
 namespace Sholokhov\Exchange\Target;
 
-use Bitrix\Main\Diag\Debug;
 use Sholokhov\Exchange\AbstractExchange;
 use Sholokhov\Exchange\Messages\Result;
 use Sholokhov\Exchange\Messages\Type\DataResult;
@@ -15,8 +14,6 @@ class QueueTarget extends AbstractExchange
 
     protected function add(array $item): Result
     {
-        Debug::dump($item);
-
         return new DataResult;
     }
 

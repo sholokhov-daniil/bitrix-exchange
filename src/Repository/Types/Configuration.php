@@ -2,7 +2,6 @@
 
 namespace Sholokhov\Exchange\Repository\Types;
 
-use Bitrix\Main\Diag\Debug;
 use Illuminate\Support\Arr;
 use Sholokhov\Exchange\Repository\Repository;
 

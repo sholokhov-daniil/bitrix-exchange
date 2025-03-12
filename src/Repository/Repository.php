@@ -4,8 +4,6 @@ namespace Sholokhov\Exchange\Repository;
 
 use Countable;
 use Iterator;
-use Serializable;
-use JsonSerializable;
 
 use Psr\Container\ContainerInterface as PsrContainer;
 

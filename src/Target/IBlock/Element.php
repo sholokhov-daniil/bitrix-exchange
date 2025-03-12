@@ -2,7 +2,7 @@
 
 namespace Sholokhov\Exchange\Target\IBlock;
 
-use CIBlock;
+use Bitrix\Main\Type\DateTime;
 use CIBlockElement;
 
 use Sholokhov\Exchange\Fields\IBlock\ElementField;
@@ -10,6 +10,11 @@ use Sholokhov\Exchange\Helper\Site;
 use Sholokhov\Exchange\Messages\Errors\Error;
 use Sholokhov\Exchange\Messages\Result;
 use Sholokhov\Exchange\Messages\Type\DataResult;
+
+use Bitrix\Iblock\ElementTable;
+use Bitrix\Main\ArgumentException;
+use Bitrix\Main\ObjectPropertyException;
+use Bitrix\Main\SystemException;
 
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -19,6 +24,21 @@ use Psr\Container\ContainerExceptionInterface;
  */
 class Element extends IBlock
 {
+    /**
+     * Обработка параметров импорта
+     *
+     * @param array $options
+     * @return array
+     */
+    protected function normalizeOptions(array $options): array
+    {
+        if (!isset($options['deactivate']) || !is_bool($options['deactivate'])) {
+            $options['deactivate'] = false;
+        }
+
+        return parent::normalizeOptions($options);
+    }
+
     /**
      * Проверка наличия элемента
      *
@@ -42,7 +62,6 @@ class Element extends IBlock
         // TODO: Добавлять хэш импорта
         $filter = [
             'IBLOCK_ID' => $this->getIBlockID(),
-            'ACTIVE' => 'Y',
         ];
 
         if ($keyField instanceof ElementField) {
@@ -128,6 +147,10 @@ class Element extends IBlock
         }
 
         $preparedItem = $this->prepareItem($item);
+        if (!isset($preparedItem['FIELDS']['ACTIVE'])) {
+            $preparedItem['FIELDS']['ACTIVE'] = 'Y';
+        }
+
         if (!$iBlock->Update($itemID, $preparedItem['FIELDS'])) {
             return $result->addError(new Error('Error while updating IBLOCK element: ' . $iBlock->getLastError(), 500, ['ID' => $itemID, 'FIELDS' => $preparedItem['FIELDS']]));
         }
@@ -142,6 +165,22 @@ class Element extends IBlock
         // TODO: Событие после обновления
 
         return $result->setData($itemID);
+    }
+
+    /**
+     * Деактивация старых элементов
+     *
+     * @return void
+     * @throws ArgumentException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    protected function afterRun(): void
+    {
+        $this->deactivate();
+        parent::afterRun();
     }
 
     /**
@@ -181,5 +220,36 @@ class Element extends IBlock
         }
 
         return $result;
+    }
+
+    /**
+     * Деактивация элементов, которые не пришли в импорте
+     *
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws ArgumentException
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     */
+    private function deactivate(): void
+    {
+        if (!$this->getOptions()->get('deactivate')) {
+            return;
+        }
+
+        $filter = [
+            'IBLOCK_ID' => $this->getIBlockID(),
+            '<TIMESTAMP_X' => DateTime::createFromTimestamp($this->dateUp),
+            'ACTIVE' => 'Y',
+        ];
+        $select = ['ID'];
+        $iterator = ElementTable::getList(compact('filter', 'select'));
+
+        $iBlock = new CIBlockElement;
+        // TODO: Добавить деактивацию по хэшу импорта
+        while ($element = $iterator->fetch()) {
+            $iBlock->Update($element['ID'], ['ACTIVE' => 'N']);
+        }
     }
 }

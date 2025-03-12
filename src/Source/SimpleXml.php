@@ -2,10 +2,12 @@
 
 namespace Sholokhov\Exchange\Source;
 
+use ArrayIterator;
 use Iterator;
 use EmptyIterator;
 
 use Sholokhov\Exchange\Helper\Helper;
+
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 
 /**
@@ -37,6 +39,6 @@ class SimpleXml extends AbstractXml
             return new EmptyIterator();
         }
 
-        return new \ArrayIterator($data);
+        return array_is_list($data) ? new ArrayIterator($data) : new ArrayIterator([$data]);
     }
 }

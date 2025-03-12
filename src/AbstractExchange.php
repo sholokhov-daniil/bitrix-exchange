@@ -8,6 +8,7 @@ use ArrayIterator;
 use ReflectionException;
 
 use Sholokhov\Exchange\Fields\Field;
+use Sholokhov\Exchange\Messages\Errors\Error;
 use Sholokhov\Exchange\Validators\Validator;
 use Sholokhov\Exchange\Helper\Entity;
 use Sholokhov\Exchange\Helper\FieldHelper;
@@ -26,6 +27,7 @@ abstract class AbstractExchange extends Application
     private Result $result;
 
     private array $map = [];
+    protected int $dateUp = 0;
 
     abstract protected function add(array $item): Result;
     abstract protected function update(array $item): Result;
@@ -38,6 +40,13 @@ abstract class AbstractExchange extends Application
         if (!$result->isSuccess()) {
             return $result;
         }
+
+        if (!$this->beforeRun()) {
+            $this->logger?->warning(sprintf('Exchange stopped "%s": %s',  static::class, json_encode($this->getOptions())));
+            return $result->addError(new Error('Exchange stopped ' . static::class, 0, ['OPTIONS' => $this->getOptions()]));
+        }
+
+        $this->dateUp = time();
 
 //        try {
             foreach ($source as $item) {
@@ -60,6 +69,9 @@ abstract class AbstractExchange extends Application
 //            $this->result->addError(new Error($throwable->getMessage(), $throwable->getCode()));
 //            $this->logger?->critical(LoggerHelper::exceptionToString($throwable));
 //        }
+
+        $this->afterRun();
+            $this->dateUp = 0;
 
         // Удаление элементов, которые не обновились
 
@@ -86,6 +98,23 @@ abstract class AbstractExchange extends Application
     {
         $this->map = $map;
         return $this;
+    }
+
+    /**
+     * @todo Пересмотреть
+     * @return bool
+     */
+    protected function beforeRun(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @todo Пересмотреть
+     * @return void
+     */
+    protected function afterRun(): void
+    {
     }
 
     /**
