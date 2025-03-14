@@ -4,6 +4,7 @@ namespace Sholokhov\Exchange\Target;
 
 use Sholokhov\Exchange\AbstractExchange;
 use Sholokhov\Exchange\Messages\Result;
+use Sholokhov\Exchange\Messages\Type\AddResult;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 
 /**
@@ -12,9 +13,9 @@ use Sholokhov\Exchange\Messages\Type\DataResult;
 class QueueTarget extends AbstractExchange
 {
 
-    protected function add(array $item): Result
+    protected function add(array $item): AddResult
     {
-        return new DataResult;
+        return new AddResult;
     }
 
     protected function update(array $item): Result

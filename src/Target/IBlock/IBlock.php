@@ -13,9 +13,6 @@ use Sholokhov\Exchange\AbstractExchange;
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-
 /**
  * Импорт в информационный блок
  */
@@ -25,9 +22,7 @@ abstract class IBlock extends AbstractExchange
      * Проверка возможности выполнения обмена
      *
      * @return Result
-     * @throws ContainerExceptionInterface
      * @throws LoaderException
-     * @throws NotFoundExceptionInterface
      * @throws ReflectionException
      */
     protected function check(): Result
@@ -66,8 +61,6 @@ abstract class IBlock extends AbstractExchange
      * Очистка кэша ИБ
      *
      * @return void
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     final protected function cleanCache(): void
     {
@@ -79,8 +72,6 @@ abstract class IBlock extends AbstractExchange
      * Получение информации ИБ
      *
      * @return array
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     final protected function getIBlockInfo(): array
     {
@@ -92,8 +83,6 @@ abstract class IBlock extends AbstractExchange
      *
      * @final
      * @return int
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     final protected function getIBlockID(): int
     {

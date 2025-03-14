@@ -2,34 +2,34 @@
 
 namespace Sholokhov\Exchange\Target\IBlock;
 
-use CIBlockElement;
+use CUtil;
+use CIBlockSection;
 
 use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\Helper\Site;
 use Sholokhov\Exchange\Messages\Result;
 use Sholokhov\Exchange\Messages\Type\AddResult;
 use Sholokhov\Exchange\Messages\Type\DataResult;
-use Sholokhov\Exchange\Fields\IBlock\ElementField;
 
-use Bitrix\Main\Event;
 use Bitrix\Main\Error;
+use Bitrix\Main\Event;
 use Bitrix\Main\EventResult;
-use Bitrix\Main\Type\DateTime;
-use Bitrix\Iblock\ElementTable;
-use Bitrix\Main\SystemException;
 use Bitrix\Main\ArgumentException;
+use Bitrix\Iblock\SectionTable;
 use Bitrix\Main\ObjectPropertyException;
+use Bitrix\Main\SystemException;
+use Bitrix\Main\Type\DateTime;
 
 /**
- * Импортирование элемента информационного блока
+ * Импорт разделов информационного блока
  */
-class Element extends IBlock
+class Section extends IBlock
 {
-    public const BEFORE_DEACTIVATE = 'onBeforeIBlockElementsDeactivate';
-    public const BEFORE_UPDATE_EVENT = 'onBeforeIBlockElementUpdate';
-    public const AFTER_UPDATE_EVENT = 'onAfterIBlockElementUpdate';
-    public const BEFORE_ADD_EVENT = 'onBeforeIBlockElementAdd';
-    public const AFTER_ADD_EVENT = 'onAfterIBlockElementAdd';
+    public const BEFORE_DEACTIVATE = 'onBeforeIBlockSectionsDeactivate';
+    public const BEFORE_UPDATE_EVENT = 'onBeforeIBlockSectionUpdate';
+    public const AFTER_UPDATE_EVENT = 'onAfterIBlockSectionUpdate';
+    public const BEFORE_ADD_EVENT = 'onBeforeIBlockSectionAdd';
+    public const AFTER_ADD_EVENT = 'onAfterIBlockSectionAdd';
 
     /**
      * Обработка параметров импорта
@@ -58,7 +58,7 @@ class Element extends IBlock
     }
 
     /**
-     * Проверка наличия элемента
+     * Проверка наличия раздела
      *
      * @param array $item
      * @return bool
@@ -75,21 +75,14 @@ class Element extends IBlock
             return true;
         }
 
-        // TODO: Добавлять хэш импорта
         $filter = [
             'IBLOCK_ID' => $this->getIBlockID(),
+            $keyField->getCode() => $item[$keyField->getCode()],
         ];
 
-        if ($keyField instanceof ElementField) {
-            $filter['PROPERTY_' . $keyField->getCode()] = $item[$keyField->getCode()];
-        } else {
-            $filter[$keyField->getCode()] = $item[$keyField->getCode()];
-        }
-
-        if ($element = CIBlockElement::GetList([], $filter)->Fetch()) {
+        if ($section = CIBlockSection::GetList([], $filter)->Fetch()) {
             // TODO: Проверить хэш импорта
-            $this->cache->set($item[$keyField->getCode()], (int)$element['ID']);
-
+            $this->cache->set($item[$keyField->getCode()], (int)$section['ID']);
             return true;
         }
 
@@ -97,7 +90,7 @@ class Element extends IBlock
     }
 
     /**
-     * Добавление элемента в информационный блок
+     * Добавление раздела
      *
      * @param array $item
      * @return AddResult
@@ -105,37 +98,32 @@ class Element extends IBlock
     protected function add(array $item): AddResult
     {
         $result = new AddResult;
-        $iblock = new CIBlockElement;
+        $section = new CIBlockSection;
+        $fields = $this->prepareItem($item);
 
-        $preparedItem = $this->prepareItem($item);
-        $data = $preparedItem['FIELDS'];
-        $data['IBLOCK_ID'] = $this->getIBlockID();
-        $data['PROPERTY_VALUES'] = $preparedItem['PROPERTIES'] ?? [];
-
-        $resultBeforeAdd = $this->beforeAdd($data);
+        $resultBeforeAdd = $this->beforeAdd($fields);
         if (!$resultBeforeAdd->isSuccess()) {
             return $result->addErrors($resultBeforeAdd->getErrors());
         }
 
-        if ($itemId = $iblock->Add($data)) {
-            // TODO: записываем хэш
-            $result->setID((int)$itemId);
-            $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the %s information block', $this->getIBlockID(), $itemId));
+        if ($id = $section->Add($fields)) {
+            $result->setId($id);
+            $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the %s information block', $this->getIBlockID(), $id));
 
             if ($keyField = $this->getKeyField()) {
-                $this->cache->set($item[$keyField->getCode()], (int)$itemId);
+                $this->cache->set($item[$keyField->getCode()], (int)$id);
             }
         } else {
-            $result->addError(new Error('Error while adding IBLOCK element: ' . strip_tags($iblock->getLastError()), 500, $data));
+            $result->addError(new Error('Error while adding IBLOCK element: ' . strip_tags($section->getLastError()), 500, $fields));
         }
 
-        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => $itemId, 'FIELDS' => $data,]))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => $id, 'FIELDS' => $fields]))->send();
 
         return $result;
     }
 
     /**
-     * Обновление элемента
+     * Обновление раздела
      *
      * @param array $item
      * @return Result
@@ -146,19 +134,19 @@ class Element extends IBlock
         $keyField = $this->getKeyField();
 
         if (!$keyField) {
-            return $result->addError(new Error('Error while updating IBLOCK element: No identification field'));
+            return $result->addError(new Error('Error while updating IBLOCK section: No identification field'));
         }
 
-        $iBlock = new CIBlockElement;
-        $itemID = $this->cache->get($item[$keyField->getCode()]);
+        $section = new CIBlockSection;
+        $sectionId = $this->cache->get($item[$keyField->getCode()]);
 
-        if (!$itemID) {
+        if (!$sectionId) {
             return $this->add($item);
         }
 
         $preparedItem = $this->prepareItem($item);
-        if (!isset($preparedItem['FIELDS']['ACTIVE'])) {
-            $preparedItem['FIELDS']['ACTIVE'] = 'Y';
+        if (!isset($preparedItem['ACTIVE'])) {
+            $preparedItem['ACTIVE'] = 'Y';
         }
 
         $resultBeforeUpdate = $this->beforeUpdate($preparedItem);
@@ -166,61 +154,51 @@ class Element extends IBlock
             return $result->addErrors($resultBeforeUpdate->getErrors());
         }
 
-        if (!$iBlock->Update($itemID, $preparedItem['FIELDS'])) {
-            return $result->addError(new Error('Error while updating IBLOCK element: ' . $iBlock->getLastError(), 500, ['ID' => $itemID, 'FIELDS' => $preparedItem['FIELDS']]));
+        if (!$section->Update($sectionId, $preparedItem)) {
+            return $result->addError(new Error('Error while updating IBLOCK section: ' . $section->getLastError(), 500, ['ID' => $sectionId, 'FIELDS' => $preparedItem]));
         }
 
-        $this->logger?->debug('Updated fields IBLOCK element: ' . $itemID);
-
-        $iBlock::SetPropertyValuesEx($itemID, $this->getIBlockID(), $preparedItem['PROPERTIES']);
-
-        $this->logger?->debug('Updated properties IBLOCK element: ' . $itemID);
+        $this->logger?->debug('Updated properties IBLOCK section: ' . $sectionId);
         $this->cleanCache();
 
         (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, $preparedItem))->send();
 
-        return $result->setData($itemID);
+        return $result;
     }
 
     /**
-     * Разделение импортируемых данных на группы
+     * Преобразование данных, которые поддерживаются разделами
      *
-     * @param array{FIELDS: array, PROPERTIES: array} $item
-     * @return array|array[]
+     * @param array $item
+     * @return array
      */
     protected function prepareItem(array $item): array
     {
-        $result = [
-            'FIELDS' => [],
-            'PROPERTIES' => []
-        ];
+        $result = [];
 
         foreach ($this->getMap() as $field) {
-            $group = 'FIELDS';
-            $value = $item[$field->getCode()];
+            $value = $item[$field->getCode()] ?? '';
 
-            if ($field instanceof ElementField && $field->isProperty()) {
-                $group = 'PROPERTIES';
-            } elseif ($field->getCode() === 'CODE') {
+            if ($field->getCode() === 'CODE') {
                 $translitOptions = $this->getIBlockInfo()['FIELDS']['CODE']['DEFAULT_VALUE'] ?? [];
 
                 if ($translitOptions) {
-                    $value = \CUtil::translit($value, Site::getLanguage(), $translitOptions);
+                    $value = CUtil::translit($value, Site::getLanguage(), $translitOptions);
                 }
             }
 
-            $result[$group][$field->getCode()] = $value;
+            $result[$field->getCode()] = $value;
         }
 
-        if (!isset($result['FIELDS']['NAME'])) {
-            $result['FIELDS']['NAME'] = $item[$this->getKeyField()?->getCode()] ?? '';
+        if (!isset($result['NAME'])) {
+            $result['NAME'] = $item[$this->getKeyField()?->getCode()] ?? '';
         }
 
         return $result;
     }
 
     /**
-     * Деактивация элементов, которые не пришли в импорте
+     * Деактивация разделов, которые не пришли в импорте
      *
      * @return void
      * @throws ArgumentException
@@ -244,16 +222,14 @@ class Element extends IBlock
 
         (new Event(Helper::getModuleID(), self::BEFORE_DEACTIVATE, ['PARAMETERS' => &$parameters]))->send();
 
-        $iBlock = new CIBlockElement;
-        $iterator = ElementTable::getList($parameters);
-
+        $iterator = SectionTable::getList($parameters);
         while ($element = $iterator->fetch()) {
-            $iBlock->Update($element['ID'], ['ACTIVE' => 'N']);
+            SectionTable::update($element['ID'], ['ACTIVE' => 'N']);
         }
     }
 
     /**
-     * Событие перед обновлением элемента
+     * Событие перед обновлением раздела
      *
      * @param array $item
      * @return Result
@@ -262,7 +238,7 @@ class Element extends IBlock
     {
         $result = new DataResult;
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['FIELDS' => &$item['FIELDS']]);
+        $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['FIELDS' => &$item]);
         $event->send();
 
         foreach ($event->getResults() as $eventResult) {
@@ -272,7 +248,7 @@ class Element extends IBlock
 
             $parameters = $eventResult->getParameters();
             if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                $result->addError(new Error('Error while updating IBLOCK element: stopped', 300, $item));
+                $result->addError(new Error('Error while updating IBLOCK section: stopped', 300, $item));
             } else {
                 foreach ($parameters['ERRORS'] as $error) {
                     $result->addError(new Error($error, 300, $item));
@@ -284,7 +260,7 @@ class Element extends IBlock
     }
 
     /**
-     * Событие перед созданием элемента
+     * Событие перед созданием раздела
      *
      * @param array $item
      * @return Result
@@ -303,7 +279,7 @@ class Element extends IBlock
 
             $parameters = $eventResult->getParameters();
             if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                $result->addError(new Error('Error while adding IBLOCK element: stopped', 300, $item));
+                $result->addError(new Error('Error while adding IBLOCK section: stopped', 300, $item));
             } else {
                 foreach ($parameters['ERRORS'] as $error) {
                     $result->addError(new Error($error, 300, $item));

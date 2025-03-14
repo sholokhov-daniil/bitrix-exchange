@@ -11,6 +11,7 @@ use ReflectionException;
 
 use Sholokhov\Exchange\Events\Event;
 use Sholokhov\Exchange\Fields\Field;
+use Sholokhov\Exchange\Messages\Type\AddResult;
 use Sholokhov\Exchange\Validators\Validator;
 use Sholokhov\Exchange\Helper\Entity;
 use Sholokhov\Exchange\Helper\FieldHelper;
@@ -40,8 +41,28 @@ abstract class AbstractExchange extends Application
      */
     protected Event $event;
 
-    abstract protected function add(array $item): Result;
+    /**
+     * Добавление нового элемента сущности
+     *
+     * @param array $item
+     * @return AddResult
+     */
+    abstract protected function add(array $item): AddResult;
+
+    /**
+     * Обновление элемента сущности
+     *
+     * @param array $item
+     * @return Result
+     */
     abstract protected function update(array $item): Result;
+
+    /**
+     * Проверка наличия элемента сущности
+     *
+     * @param array $item
+     * @return bool
+     */
     abstract protected function exists(array $item): bool;
 
     public function __construct(array $options = [])
@@ -166,7 +187,7 @@ abstract class AbstractExchange extends Application
             $this->event->invokeAfterAdd(['ITEM' => $item]);
         }
 
-        $this->event->invokeAfterActionItem($item);
+        $this->event->invokeAfterActionItem($item, $result);
 
         return $result;
     }
