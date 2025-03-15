@@ -16,8 +16,6 @@ use Sholokhov\Exchange\Messages\Result;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Target\Attributes\MapValidator;
 
-use Bitrix\Main\Error;
-
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerAwareInterface;
 
@@ -235,7 +233,13 @@ abstract class AbstractExchange extends Application
                     $result->addErrors($targetResult->getErrors());
                 }
 
-                $fields[$field->getCode()] = $targetResult->getData();
+                $targetDataResult = $targetResult->getData();
+
+                if ($field->isMultiple() && !is_array($targetDataResult)) {
+                    $fields[$field->getCode()] = $targetDataResult === null ? [] : [$targetDataResult];
+                } elseif (!$field->isMultiple() && is_array($targetDataResult)) {
+                    $fields[$field->getCode()] = reset($targetDataResult);
+                }
             }
         }
 

@@ -178,7 +178,7 @@ class Element extends IBlock
 
         (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, $preparedItem))->send();
 
-        return $result->setData($itemID);
+        return $result->setData((int)$itemID);
     }
 
     /**

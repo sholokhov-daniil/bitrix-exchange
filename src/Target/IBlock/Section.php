@@ -143,6 +143,8 @@ class Section extends IBlock
             return $this->add($item);
         }
 
+        $result->setData((int)$sectionId);
+
         $preparedItem = $this->prepareItem($item);
         if (!isset($preparedItem['ACTIVE'])) {
             $preparedItem['ACTIVE'] = 'Y';

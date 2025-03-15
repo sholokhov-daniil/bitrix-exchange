@@ -75,7 +75,7 @@ abstract class IBlock extends AbstractExchange
      */
     final protected function getIBlockInfo(): array
     {
-        return CIBlock::GetArrayByID($this->getIBlockID());
+        return CIBlock::GetArrayByID($this->getIBlockID()) ?: [];
     }
 
     /**
