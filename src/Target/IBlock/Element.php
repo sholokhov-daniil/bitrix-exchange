@@ -6,9 +6,9 @@ use CIBlockElement;
 
 use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\Helper\Site;
-use Sholokhov\Exchange\Messages\Result;
+use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
-use Sholokhov\Exchange\Fields\IBlock\ElementField;
+use Sholokhov\Exchange\Fields\IBlock\ElementFieldInterface;
 
 use Bitrix\Main\Event;
 use Bitrix\Main\Error;
@@ -79,7 +79,7 @@ class Element extends IBlock
             'IBLOCK_ID' => $this->getIBlockID(),
         ];
 
-        if ($keyField instanceof ElementField) {
+        if ($keyField instanceof ElementFieldInterface) {
             $filter['PROPERTY_' . $keyField->getCode()] = $item[$keyField->getCode()];
         } else {
             $filter[$keyField->getCode()] = $item[$keyField->getCode()];
@@ -99,9 +99,9 @@ class Element extends IBlock
      * Добавление элемента в информационный блок
      *
      * @param array $item
-     * @return Result
+     * @return ResultInterface
      */
-    protected function add(array $item): Result
+    protected function add(array $item): ResultInterface
     {
         $result = new DataResult;
         $iblock = new CIBlockElement;
@@ -137,9 +137,9 @@ class Element extends IBlock
      * Обновление элемента
      *
      * @param array $item
-     * @return Result
+     * @return ResultInterface
      */
-    protected function update(array $item): Result
+    protected function update(array $item): ResultInterface
     {
         $result = new DataResult;
         $keyField = $this->getKeyField();
@@ -198,7 +198,7 @@ class Element extends IBlock
             $group = 'FIELDS';
             $value = $item[$field->getCode()] ?? null;
 
-            if ($field instanceof ElementField && $field->isProperty()) {
+            if ($field instanceof ElementFieldInterface && $field->isProperty()) {
                 $group = 'PROPERTIES';
             } elseif ($field->getCode() === 'CODE') {
                 $translitOptions = $this->getIBlockInfo()['FIELDS']['CODE']['DEFAULT_VALUE'] ?? [];
@@ -255,9 +255,9 @@ class Element extends IBlock
      * Событие перед обновлением элемента
      *
      * @param array $item
-     * @return Result
+     * @return ResultInterface
      */
-    private function beforeUpdate(array &$item): Result
+    private function beforeUpdate(array &$item): ResultInterface
     {
         $result = new DataResult;
 
@@ -286,9 +286,9 @@ class Element extends IBlock
      * Событие перед созданием элемента
      *
      * @param array $item
-     * @return Result
+     * @return ResultInterface
      */
-    private function beforeAdd(array $item): Result
+    private function beforeAdd(array $item): ResultInterface
     {
         $result = new DataResult;
 

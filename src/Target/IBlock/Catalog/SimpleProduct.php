@@ -4,7 +4,7 @@ namespace Sholokhov\Exchange\Target\IBlock\Catalog;
 
 use ReflectionException;
 
-use Sholokhov\Exchange\Messages\Result;
+use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Target\IBlock\Element;
 
 use Bitrix\Main\Error;
@@ -20,11 +20,11 @@ class SimpleProduct extends Element
     /**
      * Проверка возможности произвести импорт
      *
-     * @return Result
+     * @return ResultInterface
      * @throws LoaderException
      * @throws ReflectionException
      */
-    protected function check(): Result
+    protected function check(): ResultInterface
     {
         throw new \Exception('Not work');
         $result = parent::check();
@@ -47,7 +47,7 @@ class SimpleProduct extends Element
         parent::configure();
     }
 
-    private function setPrice(array $item, Result $result): void
+    private function setPrice(array $item, ResultInterface $result): void
     {
         if (!$result->isSuccess()) {
             return;

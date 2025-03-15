@@ -6,7 +6,7 @@ use CFile;
 use Iterator;
 
 use Sholokhov\Exchange\Application;
-use Sholokhov\Exchange\Messages\Result;
+use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 
 use Bitrix\Main\ArgumentException;
@@ -44,14 +44,14 @@ class File extends Application
      * Выполнить обмен данными
      *
      * @param Iterator $source
-     * @return Result
+     * @return ResultInterface
      * @throws ArgumentException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    public function execute(Iterator $source): Result
+    public function execute(Iterator $source): ResultInterface
     {
         $result = new DataResult();
         $values = [];

@@ -2,12 +2,12 @@
 
 namespace Sholokhov\Exchange\Fields\IBlock;
 
-use Sholokhov\Exchange\Fields\BaseField;
+use Sholokhov\Exchange\Fields\Field;
 
 /**
  * Описание свойства элемента ИБ
  */
-class IBlockElementField extends BaseField implements ElementField
+class IBlockElementField extends Field implements ElementFieldInterface
 {
     /**
      * Является свойством

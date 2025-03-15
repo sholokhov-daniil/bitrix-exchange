@@ -2,18 +2,18 @@
 
 namespace Sholokhov\Exchange\Validators;
 
-use Sholokhov\Exchange\Messages\Result;
+use Sholokhov\Exchange\Messages\ResultInterface;
 
 /**
  * Производит валидацию передаваемого значения
  */
-interface Validator
+interface ValidatorInterface
 {
     /**
      * Валидация значения
      *
      * @param mixed $value
-     * @return Result
+     * @return ResultInterface
      */
-    public function validate(mixed $value): Result;
+    public function validate(mixed $value): ResultInterface;
 }

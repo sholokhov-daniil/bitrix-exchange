@@ -6,7 +6,7 @@ use Exception;
 use ReflectionException;
 
 use Sholokhov\Exchange\Helper\Entity;
-use Sholokhov\Exchange\Repository\Repository;
+use Sholokhov\Exchange\Repository\RepositoryInterface;
 use Sholokhov\Exchange\Target\Attributes\CacheContainer;
 use Sholokhov\Exchange\Target\Attributes\OptionsContainer;
 
@@ -15,22 +15,22 @@ use Psr\Container\NotFoundExceptionInterface;
 
 #[OptionsContainer]
 #[CacheContainer]
-abstract class Application implements Exchange
+abstract class Application implements ExchangeInterface
 {
     /**
      * Конфигурация обмена
      *
-     * @var Repository
+     * @var RepositoryInterface
      */
-    private readonly Repository $options;
+    private readonly RepositoryInterface $options;
 
     /**
      * Кэш данных, которые принимали участие в обмене
      *
      * @todo Потом поменять подход
-     * @var Repository
+     * @var RepositoryInterface
      */
-    protected readonly Repository $cache;
+    protected readonly RepositoryInterface $cache;
 
     /**
      * @param array $options Конфигурация объекта
@@ -67,9 +67,9 @@ abstract class Application implements Exchange
     /**
      * Конфигурация обмена
      *
-     * @return Repository
+     * @return RepositoryInterface
      */
-    protected function getOptions(): Repository
+    protected function getOptions(): RepositoryInterface
     {
         return $this->options;
     }
@@ -78,19 +78,19 @@ abstract class Application implements Exchange
      * Инициализация хранилища настроек обмена
      *
      * @param array $options
-     * @return Repository
+     * @return RepositoryInterface
      * @throws ReflectionException
      * @throws Exception
      */
-    private function makeOptionRepository(array $options = []): Repository
+    private function makeOptionRepository(array $options = []): RepositoryInterface
     {
         /** @var OptionsContainer $attribute */
         $attribute = Entity::getAttribute($this, OptionsContainer::class) ?: Entity::getAttribute(self::class, OptionsContainer::class);
 
         $entity = $attribute->getEntity();
 
-        if (!is_subclass_of($entity, Repository::class)) {
-            throw new Exception('The exchange configuration repository is not a subclass of ' . Repository::class);
+        if (!is_subclass_of($entity, RepositoryInterface::class)) {
+            throw new Exception('The exchange configuration repository is not a subclass of ' . RepositoryInterface::class);
         }
 
         return new $entity($options);
@@ -99,19 +99,19 @@ abstract class Application implements Exchange
     /**
      * Инициализация хранилища кэша
      *
-     * @return Repository
+     * @return RepositoryInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws ReflectionException
      */
-    private function makeCacheRepository(): Repository
+    private function makeCacheRepository(): RepositoryInterface
     {
         /** @var CacheContainer $attribute */
         $attribute = Entity::getAttribute($this, CacheContainer::class) ?: Entity::getAttribute(self::class, CacheContainer::class);
         $entity = $attribute->getEntity();
 
-        if (!is_subclass_of($entity, Repository::class)) {
-            throw new Exception('The exchange cache repository is not a subclass of ' . Repository::class);
+        if (!is_subclass_of($entity, RepositoryInterface::class)) {
+            throw new Exception('The exchange cache repository is not a subclass of ' . RepositoryInterface::class);
         }
 
         $options = $this->options->get('cache') ?: [];

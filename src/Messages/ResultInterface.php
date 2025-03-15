@@ -4,7 +4,7 @@ namespace Sholokhov\Exchange\Messages;
 
 use Bitrix\Main\Error;
 
-interface Result
+interface ResultInterface
 {
     /**
      * Успешный результат (отсутствие ошибок)

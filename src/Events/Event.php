@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Sholokhov\Exchange\Events;
 
-use Sholokhov\Exchange\Repository\Repository;
+use Sholokhov\Exchange\Repository\RepositoryInterface;
 use Sholokhov\Exchange\Repository\Types\Memory;
 
 class Event
 {
-    private Repository $container;
+    private RepositoryInterface $container;
 
     /**
      * Вызов обработчиков перед запуском обмена
@@ -177,9 +177,9 @@ class Event
     /**
      * Получение хранилища данных
      *
-     * @return Repository
+     * @return RepositoryInterface
      */
-    protected function getContainer(): Repository
+    protected function getContainer(): RepositoryInterface
     {
         return $this->container ??= new Memory;
     }

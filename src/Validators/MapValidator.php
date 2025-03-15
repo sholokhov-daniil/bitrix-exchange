@@ -4,23 +4,23 @@ namespace Sholokhov\Exchange\Validators;
 
 use TypeError;
 
-use Sholokhov\Exchange\Fields\Field;
+use Sholokhov\Exchange\Fields\FieldInterface;
 use Bitrix\Main\Error;
-use Sholokhov\Exchange\Messages\Result;
+use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 
 /**
  * Проверка стандартной карты обмена
  */
-class MapValidator implements Validator
+class MapValidator implements ValidatorInterface
 {
     /**
      * Валидация карты обмена
      *
      * @param mixed $value
-     * @return Result
+     * @return ResultInterface
      */
-    public function validate(mixed $value): Result
+    public function validate(mixed $value): ResultInterface
     {
         if (!is_array($value)) {
             throw new TypeError("Value must be an array");
@@ -30,7 +30,7 @@ class MapValidator implements Validator
         $result = new DataResult;
 
         foreach ($value as $field) {
-            if (!($field instanceof Field)) {
+            if (!($field instanceof FieldInterface)) {
                 $result->addError(new Error('Incorrect field description'));
                 break;
             }

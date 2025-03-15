@@ -8,11 +8,11 @@ use ArrayIterator;
 use ReflectionException;
 
 use Sholokhov\Exchange\Events\Event;
-use Sholokhov\Exchange\Fields\Field;
-use Sholokhov\Exchange\Validators\Validator;
+use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Validators\ValidatorInterface;
 use Sholokhov\Exchange\Helper\Entity;
 use Sholokhov\Exchange\Helper\FieldHelper;
-use Sholokhov\Exchange\Messages\Result;
+use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Target\Attributes\MapValidator;
 
@@ -24,7 +24,7 @@ abstract class AbstractExchange extends Application
 {
     use LoggerAwareTrait;
 
-    private Result $result;
+    private ResultInterface $result;
 
     private array $map = [];
     protected int $dateUp = 0;
@@ -40,17 +40,17 @@ abstract class AbstractExchange extends Application
      * Добавление нового элемента сущности
      *
      * @param array $item
-     * @return Result
+     * @return ResultInterface
      */
-    abstract protected function add(array $item): Result;
+    abstract protected function add(array $item): ResultInterface;
 
     /**
      * Обновление элемента сущности
      *
      * @param array $item
-     * @return Result
+     * @return ResultInterface
      */
-    abstract protected function update(array $item): Result;
+    abstract protected function update(array $item): ResultInterface;
 
     /**
      * Проверка наличия элемента сущности
@@ -66,7 +66,7 @@ abstract class AbstractExchange extends Application
         parent::__construct($options);
     }
 
-    final public function execute(Iterator $source): Result
+    final public function execute(Iterator $source): ResultInterface
     {
         $dataResult = [];
         $result = $this->check();
@@ -110,7 +110,7 @@ abstract class AbstractExchange extends Application
     /**
      * Получение карты обмена
      *
-     * @return Field[]
+     * @return FieldInterface[]
      */
     public function getMap(): array
     {
@@ -132,10 +132,10 @@ abstract class AbstractExchange extends Application
     /**
      * Проверка возможности запуска обмена данных
      *
-     * @return Result
+     * @return ResultInterface
      * @throws ReflectionException
      */
-    protected function check(): Result
+    protected function check(): ResultInterface
     {
         $result = new DataResult;
 
@@ -150,9 +150,9 @@ abstract class AbstractExchange extends Application
     /**
      * Получение свойства отвечающего за идентификацию значения
      *
-     * @return Field|null
+     * @return FieldInterface|null
      */
-    final protected function getKeyField(): ?Field
+    final protected function getKeyField(): ?FieldInterface
     {
         foreach ($this->getMap() as $field) {
             if ($field->isKeyField()) {
@@ -167,9 +167,9 @@ abstract class AbstractExchange extends Application
      * Вызов действия над элементом источника
      *
      * @param array $item
-     * @return Result
+     * @return ResultInterface
      */
-    private function action(array $item): Result
+    private function action(array $item): ResultInterface
     {
         $this->event->invokeBeforeActionItem();
         $normalizeResult = $this->normalize($item);
@@ -197,9 +197,9 @@ abstract class AbstractExchange extends Application
      * Нормализация импортируемых данных, для восприятия системы
      *
      * @param array $item
-     * @return Result
+     * @return ResultInterface
      */
-    private function normalize(array $item): Result
+    private function normalize(array $item): ResultInterface
     {
         $result = new DataResult;
         $fields = [];
@@ -250,18 +250,18 @@ abstract class AbstractExchange extends Application
      * Валидация карты обмена
      *
      * @param array $map
-     * @return Result
+     * @return ResultInterface
      * @throws ReflectionException
      * @throws Exception
      */
-    private function mapValidate(array $map): Result
+    private function mapValidate(array $map): ResultInterface
     {
         /** @var MapValidator $attribute */
         $attribute = Entity::getAttribute($this, MapValidator::class) ?: Entity::getAttribute(self::class, MapValidator::class);
         $validator = $attribute->getEntity();
 
-        if (!is_subclass_of($validator, Validator::class)) {
-            throw new Exception('Validator class must be subclass of ' . Validator::class);
+        if (!is_subclass_of($validator, ValidatorInterface::class)) {
+            throw new Exception('Validator class must be subclass of ' . ValidatorInterface::class);
         }
 
         return (new $validator)->validate($map);

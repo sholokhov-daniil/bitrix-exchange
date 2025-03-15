@@ -2,7 +2,7 @@
 
 namespace Sholokhov\Exchange\Messages\Type;
 
-use Sholokhov\Exchange\Messages\Result;
+use Sholokhov\Exchange\Messages\ResultInterface;
 
 use Bitrix\Main\Error;
 use Bitrix\Main\ErrorCollection;
@@ -10,7 +10,7 @@ use Bitrix\Main\ErrorCollection;
 /**
  * Результат выполненных действий
  */
-class DataResult implements Result
+class DataResult implements ResultInterface
 {
     /**
      * Результат действия

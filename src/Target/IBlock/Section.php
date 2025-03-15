@@ -7,7 +7,7 @@ use CIBlockSection;
 
 use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\Helper\Site;
-use Sholokhov\Exchange\Messages\Result;
+use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 
 use Bitrix\Main\Error;
@@ -92,9 +92,9 @@ class Section extends IBlock
      * Добавление раздела
      *
      * @param array $item
-     * @return Result
+     * @return ResultInterface
      */
-    protected function add(array $item): Result
+    protected function add(array $item): ResultInterface
     {
         $result = new DataResult;
         $section = new CIBlockSection;
@@ -125,9 +125,9 @@ class Section extends IBlock
      * Обновление раздела
      *
      * @param array $item
-     * @return Result
+     * @return ResultInterface
      */
-    protected function update(array $item): Result
+    protected function update(array $item): ResultInterface
     {
         $result = new DataResult;
         $keyField = $this->getKeyField();
@@ -236,9 +236,9 @@ class Section extends IBlock
      * Событие перед обновлением раздела
      *
      * @param array $item
-     * @return Result
+     * @return ResultInterface
      */
-    private function beforeUpdate(array &$item): Result
+    private function beforeUpdate(array &$item): ResultInterface
     {
         $result = new DataResult;
 
@@ -267,9 +267,9 @@ class Section extends IBlock
      * Событие перед созданием раздела
      *
      * @param array $item
-     * @return Result
+     * @return ResultInterface
      */
-    private function beforeAdd(array $item): Result
+    private function beforeAdd(array $item): ResultInterface
     {
         $result = new DataResult;
 

@@ -2,7 +2,7 @@
 
 namespace Sholokhov\Exchange\Helper;
 
-use Sholokhov\Exchange\Fields\Field;
+use Sholokhov\Exchange\Fields\FieldInterface;
 
 class FieldHelper
 {
@@ -10,10 +10,10 @@ class FieldHelper
      * Получение значения свойства
      *
      * @param array $item
-     * @param Field $field
+     * @param FieldInterface $field
      * @return mixed
      */
-    public static function getValue(array $item, Field $field): mixed
+    public static function getValue(array $item, FieldInterface $field): mixed
     {
         return $field->getChildren() ? self::getTreeValue($item, $field) : Helper::getArrValueByPath($item, $field->getPath());
     }
@@ -22,10 +22,10 @@ class FieldHelper
      * Получение значение свойства ветвления
      *
      * @param array $item
-     * @param Field $field
+     * @param FieldInterface $field
      * @return array|null
      */
-    public static function getTreeValue(array $item, Field $field): ?array
+    public static function getTreeValue(array $item, FieldInterface $field): ?array
     {
         $result = [];
 

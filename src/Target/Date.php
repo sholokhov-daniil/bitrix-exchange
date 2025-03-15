@@ -4,9 +4,9 @@ namespace Sholokhov\Exchange\Target;
 
 use Throwable;
 
-use Sholokhov\Exchange\Exchange;
+use Sholokhov\Exchange\ExchangeInterface;
 use Sholokhov\Exchange\Messages;
-use Sholokhov\Exchange\Messages\Result;
+use Sholokhov\Exchange\Messages\ResultInterface;
 use Bitrix\Main\Error;
 use Sholokhov\Exchange\Helper\LoggerHelper;
 
@@ -17,7 +17,7 @@ use Psr\Log\LoggerAwareTrait;
 /**
  * Производит превращение произвольного значения времени в объект {@see Date}
  */
-class Date implements Exchange
+class Date implements ExchangeInterface
 {
     use LoggerAwareTrait;
 
@@ -25,9 +25,9 @@ class Date implements Exchange
      * Выполнить обмен данных
      *
      * @param \Iterator $source
-     * @return Result
+     * @return ResultInterface
      */
-    public function execute(\Iterator $source): Messages\Result
+    public function execute(\Iterator $source): Messages\ResultInterface
     {
         $result = new Messages\Type\DataResult;
         $values = [];

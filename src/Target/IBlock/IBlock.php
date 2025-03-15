@@ -6,7 +6,7 @@ use CIBlock;
 use ReflectionException;
 
 use Bitrix\Main\Error;
-use Sholokhov\Exchange\Messages\Result;
+use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\AbstractExchange;
 
@@ -21,11 +21,11 @@ abstract class IBlock extends AbstractExchange
     /**
      * Проверка возможности выполнения обмена
      *
-     * @return Result
+     * @return ResultInterface
      * @throws LoaderException
      * @throws ReflectionException
      */
-    protected function check(): Result
+    protected function check(): ResultInterface
     {
         $result = new DataResult;
 
