@@ -2,16 +2,13 @@
 
 namespace Sholokhov\Exchange;
 
-use Bitrix\Main\Diag\Debug;
 use Exception;
 use Iterator;
 use ArrayIterator;
-use ReflectionClass;
 use ReflectionException;
 
 use Sholokhov\Exchange\Events\Event;
 use Sholokhov\Exchange\Fields\Field;
-use Sholokhov\Exchange\Messages\Type\AddResult;
 use Sholokhov\Exchange\Validators\Validator;
 use Sholokhov\Exchange\Helper\Entity;
 use Sholokhov\Exchange\Helper\FieldHelper;
@@ -45,9 +42,9 @@ abstract class AbstractExchange extends Application
      * Добавление нового элемента сущности
      *
      * @param array $item
-     * @return AddResult
+     * @return Result
      */
-    abstract protected function add(array $item): AddResult;
+    abstract protected function add(array $item): Result;
 
     /**
      * Обновление элемента сущности
@@ -177,7 +174,13 @@ abstract class AbstractExchange extends Application
     private function action(array $item): Result
     {
         $this->event->invokeBeforeActionItem();
-        $item = $this->normalize($item);
+        $normalizeResult = $this->normalize($item);
+
+        if (!$normalizeResult->isSuccess()) {
+            return $normalizeResult;
+        }
+
+        $item = $normalizeResult->getData();
 
         if ($this->exists($item)) {
             $result = $this->update($item);
@@ -187,59 +190,56 @@ abstract class AbstractExchange extends Application
             $this->event->invokeAfterAdd(['ITEM' => $item]);
         }
 
-        $this->event->invokeAfterActionItem($item, $result);
+        $this->event->invokeAfterActionItem($item);
 
         return $result;
-    }
-
-    /**
-     * Преобразование данных обмена
-     *
-     * @param mixed $value
-     * @param Field $field
-     * @return mixed
-     */
-    private function prepare(mixed $value, Field $field): mixed
-    {
-        $target = $field->getTarget();
-        if (!$target) {
-            return $value;
-        }
-
-        $source = $field->isMultiple() ? new ArrayIterator($value) : new ArrayIterator([$value]);
-
-        if ($this->logger && $target instanceof LoggerAwareInterface) {
-            $target->setLogger($this->logger);
-        }
-
-        return $target->execute($source)
-                      ->getData();
     }
 
     /**
      * Нормализация импортируемых данных, для восприятия системы
      *
      * @param array $item
-     * @return array
+     * @return Result
      */
-    private function normalize(array $item): array
+    private function normalize(array $item): Result
     {
-        $result = [];
+        $result = new DataResult;
+        $fields = [];
 
-        foreach ($this->getMap() as $field) {
+        $map = $this->getMap();
+
+        foreach ($map as $field) {
             $value = FieldHelper::getValue($item, $field);
 
             if ($field->isMultiple() && !is_array($value)) {
                 $value = $value === null ? [] : [$value];
             }
 
-            // TODO: Вызвать пользовательские нормализаторы
-            $value = $this->prepare($value, $field);
-
-            $result[$field->getCode()] = $value;
+            $fields[$field->getCode()] = $value;
         }
 
-        return $result;
+        foreach ($map as $field) {
+            if ($target = $field->getTarget()) {
+                if ($this->logger && $target instanceof LoggerAwareInterface) {
+                    $target->setLogger($this->logger);
+                }
+
+                if ($this->logger && $target instanceof LoggerAwareInterface) {
+                    $target->setLogger($this->logger);
+                }
+
+                $source = new ArrayIterator([$item]);
+                $targetResult = $target->execute($source);
+
+                if (!$targetResult->isSuccess()) {
+                    $result->addErrors($targetResult->getErrors());
+                }
+
+                $fields[$field->getCode()] = $targetResult->getData();
+            }
+        }
+
+        return $result->setData($fields);
     }
 
     /**

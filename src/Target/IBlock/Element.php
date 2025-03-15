@@ -7,7 +7,6 @@ use CIBlockElement;
 use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\Helper\Site;
 use Sholokhov\Exchange\Messages\Result;
-use Sholokhov\Exchange\Messages\Type\AddResult;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Fields\IBlock\ElementField;
 
@@ -100,11 +99,11 @@ class Element extends IBlock
      * Добавление элемента в информационный блок
      *
      * @param array $item
-     * @return AddResult
+     * @return Result
      */
-    protected function add(array $item): AddResult
+    protected function add(array $item): Result
     {
-        $result = new AddResult;
+        $result = new DataResult;
         $iblock = new CIBlockElement;
 
         $preparedItem = $this->prepareItem($item);
@@ -119,7 +118,7 @@ class Element extends IBlock
 
         if ($itemId = $iblock->Add($data)) {
             // TODO: записываем хэш
-            $result->setID((int)$itemId);
+            $result->setData((int)$itemId);
             $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the %s information block', $this->getIBlockID(), $itemId));
 
             if ($keyField = $this->getKeyField()) {
@@ -197,7 +196,7 @@ class Element extends IBlock
 
         foreach ($this->getMap() as $field) {
             $group = 'FIELDS';
-            $value = $item[$field->getCode()];
+            $value = $item[$field->getCode()] ?? null;
 
             if ($field instanceof ElementField && $field->isProperty()) {
                 $group = 'PROPERTIES';

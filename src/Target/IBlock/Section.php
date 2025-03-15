@@ -8,7 +8,6 @@ use CIBlockSection;
 use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\Helper\Site;
 use Sholokhov\Exchange\Messages\Result;
-use Sholokhov\Exchange\Messages\Type\AddResult;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 
 use Bitrix\Main\Error;
@@ -93,11 +92,11 @@ class Section extends IBlock
      * Добавление раздела
      *
      * @param array $item
-     * @return AddResult
+     * @return Result
      */
-    protected function add(array $item): AddResult
+    protected function add(array $item): Result
     {
-        $result = new AddResult;
+        $result = new DataResult;
         $section = new CIBlockSection;
         $fields = $this->prepareItem($item);
 
@@ -107,14 +106,14 @@ class Section extends IBlock
         }
 
         if ($id = $section->Add($fields)) {
-            $result->setId($id);
+            $result->setData((int)$id);
             $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the %s information block', $this->getIBlockID(), $id));
 
             if ($keyField = $this->getKeyField()) {
                 $this->cache->set($item[$keyField->getCode()], (int)$id);
             }
         } else {
-            $result->addError(new Error('Error while adding IBLOCK element: ' . strip_tags($section->getLastError()), 500, $fields));
+            $result->addError(new Error('Error while adding IBLOCK section: ' . strip_tags($section->getLastError()), 500, $fields));
         }
 
         (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => $id, 'FIELDS' => $fields]))->send();
@@ -175,16 +174,13 @@ class Section extends IBlock
     protected function prepareItem(array $item): array
     {
         $result = [];
+        $translitOptions = $this->getIBlockInfo()['FIELDS']['CODE']['DEFAULT_VALUE'] ?? [];
 
         foreach ($this->getMap() as $field) {
             $value = $item[$field->getCode()] ?? '';
 
-            if ($field->getCode() === 'CODE') {
-                $translitOptions = $this->getIBlockInfo()['FIELDS']['CODE']['DEFAULT_VALUE'] ?? [];
-
-                if ($translitOptions) {
-                    $value = CUtil::translit($value, Site::getLanguage(), $translitOptions);
-                }
+            if ($field->getCode() === 'CODE' && $translitOptions) {
+                $value = CUtil::translit($value, Site::getLanguage(), $translitOptions);
             }
 
             $result[$field->getCode()] = $value;
@@ -193,6 +189,12 @@ class Section extends IBlock
         if (!isset($result['NAME'])) {
             $result['NAME'] = $item[$this->getKeyField()?->getCode()] ?? '';
         }
+
+        if (!isset($result['CODE'])) {
+            $result['CODE'] = CUtil::translit($result['NAME'], Site::getLanguage(), $translitOptions);
+        }
+
+        $result['IBLOCK_ID'] = $this->getIBlockID();
 
         return $result;
     }
@@ -223,8 +225,8 @@ class Section extends IBlock
         (new Event(Helper::getModuleID(), self::BEFORE_DEACTIVATE, ['PARAMETERS' => &$parameters]))->send();
 
         $iterator = SectionTable::getList($parameters);
-        while ($element = $iterator->fetch()) {
-            SectionTable::update($element['ID'], ['ACTIVE' => 'N']);
+        while ($section = $iterator->fetch()) {
+            SectionTable::update($section['ID'], ['ACTIVE' => 'N']);
         }
     }
 
