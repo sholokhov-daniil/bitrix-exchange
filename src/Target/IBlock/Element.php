@@ -61,14 +61,11 @@ class Element extends IBlock
      *
      * @param array $item
      * @return bool
+     * @throws \Exception
      */
     protected function exists(array $item): bool
     {
         $keyField = $this->getKeyField();
-
-        if (!$keyField || !isset($item[$keyField->getCode()])) {
-            return false;
-        }
 
         if ($this->cache->has($item[$keyField->getCode()])) {
             return true;
@@ -120,10 +117,7 @@ class Element extends IBlock
             // TODO: записываем хэш
             $result->setData((int)$itemId);
             $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the %s information block', $this->getIBlockID(), $itemId));
-
-            if ($keyField = $this->getKeyField()) {
-                $this->cache->set($item[$keyField->getCode()], (int)$itemId);
-            }
+            $this->cache->set($item[$this->getKeyField()->getCode()], (int)$itemId);
         } else {
             $result->addError(new Error('Error while adding IBLOCK element: ' . strip_tags($iblock->getLastError()), 500, $data));
         }

@@ -108,6 +108,16 @@ abstract class AbstractExchange extends Application
     }
 
     /**
+     * ID сайта, которому принадлежит обмен
+     *
+     * @return string
+     */
+    public function getSiteID(): string
+    {
+        return (string)($this->getOptions()->get('site_id') ?? \Bitrix\Main\Application::getInstance()->getContext()->getSite());
+    }
+
+    /**
      * Получение карты обмена
      *
      * @return FieldInterface[]
@@ -150,9 +160,10 @@ abstract class AbstractExchange extends Application
     /**
      * Получение свойства отвечающего за идентификацию значения
      *
-     * @return FieldInterface|null
+     * @return FieldInterface
+     * @throws Exception
      */
-    final protected function getKeyField(): ?FieldInterface
+    final protected function getKeyField(): FieldInterface
     {
         foreach ($this->getMap() as $field) {
             if ($field->isKeyField()) {
@@ -160,7 +171,7 @@ abstract class AbstractExchange extends Application
             }
         }
 
-        return null;
+        throw new Exception("No key field found");
     }
 
     /**

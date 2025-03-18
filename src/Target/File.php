@@ -46,8 +46,6 @@ class File extends Application
      * @param Iterator $source
      * @return ResultInterface
      * @throws ArgumentException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      * @throws ObjectPropertyException
      * @throws SystemException
      */
