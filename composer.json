@@ -1,5 +1,5 @@
 {
-    "name": "sholokhov/exchange",
+    "name": "sholokhov/bitrix-exchange",
     "keywords": ["bitrix", "exchange"],
     "homepage": "https://github.com/sholokhov-daniil/bitrix-exchange",
     "type": "library",
