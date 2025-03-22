@@ -224,6 +224,10 @@ abstract class AbstractExchange extends Application
                 $value = $value === null ? [] : [$value];
             }
 
+            foreach ($field->getNormalizers() as $validator) {
+                $value = call_user_func_array($validator, [$value, $field]);
+            }
+
             $fields[$field->getCode()] = $value;
         }
 

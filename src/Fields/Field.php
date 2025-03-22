@@ -139,6 +139,44 @@ class Field implements FieldInterface
     }
 
     /**
+     * Получение нормализаторов значения свйоства
+     *
+     * @return callable[]
+     */
+    public function getNormalizers(): array
+    {
+        return $this->getContainer()->get('normalizers', []);
+    }
+
+    /**
+     * Указание нормализаторов свойства
+     *
+     * @param array $normalizers
+     * @return $this
+     */
+    public function setNormalizers(array $normalizers): self
+    {
+        $this->getContainer()->set('normalizers', []);
+        array_walk($normalizers, [$this, 'addNormalizer']);
+
+        return $this;
+    }
+
+    /**
+     * Добавление нормализатора данных
+     *
+     * @param callable $callback
+     * @return $this
+     */
+    public function addNormalizer(callable $callback): self
+    {
+        $data = $this->getNormalizers();
+        $data[] = $callback;
+        $this->getContainer()->set('normalizers', $data);
+        return $this;
+    }
+
+    /**
      * Установка дочернего элемента
      *
      * Описание свойства, которое имеет итерационные значения на своем пути
@@ -163,6 +201,7 @@ class Field implements FieldInterface
     /**
      * Получение хранилище данных
      *
+     * @final
      * @return RepositoryInterface
      */
     final protected function getContainer(): RepositoryInterface

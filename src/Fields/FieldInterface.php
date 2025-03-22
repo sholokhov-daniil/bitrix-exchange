@@ -52,4 +52,11 @@ interface FieldInterface
      * @return FieldInterface|null
      */
     public function getChildren(): ?FieldInterface;
+
+    /**
+     * Получение валидаторов значения свойства
+     *
+     * @return callable[]
+     */
+    public function getNormalizers(): array;
 }
