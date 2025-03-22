@@ -1,8 +1,14 @@
 {
+    "name": "sholokhov/exchange",
+    "keywords": ["bitrix", "exchange"],
+    "homepage": "https://github.com/sholokhov-daniil/bitrix-exchange",
+    "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "Daniil Sholokhov",
-            "email": "sholokhovdaniil@yandex.ru"
+            "email": "sholokhovdaniil@yandex.ru",
+            "homepage": "https://t.me/sholokhov22"
         }
     ],
     "autoload": {
