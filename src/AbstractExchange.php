@@ -66,7 +66,7 @@ abstract class AbstractExchange extends Application
         parent::__construct($options);
     }
 
-    final public function execute(Iterator $source): ResultInterface
+    final public function execute(iterable $source): ResultInterface
     {
         $dataResult = [];
         $result = $this->check();
