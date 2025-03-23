@@ -1,12 +1,18 @@
 # События обмена
-- [AbstractExchange](#abstractexchange)
+- [AbstractExchange](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/docs/02-events-afterexchange.md)
 
-## AbstractExchange
+Все события модуля регистрируются в модуле [bitrix](https://dev.1c-bitrix.ru/api_d7/bitrix/main/EventManager/index.php)
 
-Класс [AbstractExchange](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/AbstractExchange.php)
-* before_run - Перед запуском обмена
-* after_run - После обмена
-* after_add - После добавления элемента сущности
-* after_update - После обновления сущности
-* before_action_item - Перед импортом элемента
-* after_action_item - После импорта элемента
+Все события вызываются от модуля `sholokhov.exchange`
+
+Пример подписки на событие
+
+````php
+use Bitrix\Main\EventManager;
+
+EventManager::getInstance()->addEventHandler(
+    'sholokhov.exchange',
+    'eventName',
+    $callback
+);
+````
