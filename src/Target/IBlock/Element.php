@@ -2,6 +2,7 @@
 
 namespace Sholokhov\Exchange\Target\IBlock;
 
+use Exception;
 use CIBlockElement;
 
 use Sholokhov\Exchange\Helper\Helper;
@@ -31,37 +32,11 @@ class Element extends IBlock
     public const AFTER_ADD_EVENT = 'onAfterIBlockElementAdd';
 
     /**
-     * Обработка параметров импорта
-     *
-     * @param array $options
-     * @return array
-     */
-    protected function normalizeOptions(array $options): array
-    {
-        if (!isset($options['deactivate']) || !is_bool($options['deactivate'])) {
-            $options['deactivate'] = false;
-        }
-
-        return parent::normalizeOptions($options);
-    }
-
-    /**
-     * Конфигурация импорта
-     *
-     * @return void
-     */
-    protected function configure(): void
-    {
-        $this->event->subscribeBeforeRun([$this, 'deactivate']);
-        parent::configure();
-    }
-
-    /**
      * Проверка наличия элемента
      *
      * @param array $item
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     protected function exists(array $item): bool
     {
@@ -97,6 +72,7 @@ class Element extends IBlock
      *
      * @param array $item
      * @return ResultInterface
+     * @throws Exception
      */
     protected function add(array $item): ResultInterface
     {
@@ -132,15 +108,12 @@ class Element extends IBlock
      *
      * @param array $item
      * @return ResultInterface
+     * @throws Exception
      */
     protected function update(array $item): ResultInterface
     {
         $result = new DataResult;
         $keyField = $this->getKeyField();
-
-        if (!$keyField) {
-            return $result->addError(new Error('Error while updating IBLOCK element: No identification field'));
-        }
 
         $iBlock = new CIBlockElement;
         $itemID = $this->cache->get($item[$keyField->getCode()]);
@@ -180,6 +153,7 @@ class Element extends IBlock
      *
      * @param array{FIELDS: array, PROPERTIES: array} $item
      * @return array|array[]
+     * @throws Exception
      */
     protected function prepareItem(array $item): array
     {
@@ -220,7 +194,7 @@ class Element extends IBlock
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    private function deactivate(): void
+    protected function deactivate(): void
     {
         if (!$this->getOptions()->get('deactivate')) {
             return;
