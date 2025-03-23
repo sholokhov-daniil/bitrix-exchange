@@ -80,7 +80,9 @@ abstract class AbstractExchange extends Application
      *
      * @return void
      */
-    abstract protected function deactivate(): void;
+    protected function deactivate(): void
+    {
+    }
 
     /**
      * Запуск обмена

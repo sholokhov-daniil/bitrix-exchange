@@ -105,10 +105,6 @@ class Currency extends AbstractExchange
         // TODO: Implement update() method.
     }
 
-    protected function deactivate(): void
-    {
-    }
-
     /**
      * Преобразование импортируемого значения
      *
