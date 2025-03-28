@@ -10,9 +10,6 @@ use Sholokhov\Exchange\Repository\RepositoryInterface;
 use Sholokhov\Exchange\Target\Attributes\CacheContainer;
 use Sholokhov\Exchange\Target\Attributes\OptionsContainer;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-
 #[OptionsContainer]
 #[CacheContainer]
 abstract class Application implements ExchangeInterface
@@ -34,8 +31,6 @@ abstract class Application implements ExchangeInterface
 
     /**
      * @param array $options Конфигурация объекта
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      * @throws ReflectionException
      */
     public function __construct(array $options = [])
@@ -100,9 +95,8 @@ abstract class Application implements ExchangeInterface
      * Инициализация хранилища кэша
      *
      * @return RepositoryInterface
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      * @throws ReflectionException
+     * @throws Exception
      */
     private function makeCacheRepository(): RepositoryInterface
     {

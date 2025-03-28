@@ -49,7 +49,7 @@ $result = $exchange->execute($data);
 
 ## Документация
 * [Использование](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/doc/01-usage.md)
-* [События](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/doc/01-events.md)
+* [События](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/doc/02-events.md)
 
 ## Автор
 Шолохов Даниил - <sholokhovdaniil@yandex.ru> - <https://t.me/sholokhov22>

@@ -2,13 +2,14 @@
 
 namespace Sholokhov\Exchange;
 
+use Throwable;
 use Exception;
-use Iterator;
 use ArrayIterator;
 use ReflectionException;
 
-use Sholokhov\Exchange\Events\Event;
 use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Helper\Helper;
+use Sholokhov\Exchange\Helper\LoggerHelper;
 use Sholokhov\Exchange\Validators\ValidatorInterface;
 use Sholokhov\Exchange\Helper\Entity;
 use Sholokhov\Exchange\Helper\FieldHelper;
@@ -16,25 +17,41 @@ use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Target\Attributes\MapValidator;
 
+use Bitrix\Main\Error;
+use Bitrix\Main\Event;
+use Bitrix\Main\Application as BXApplication;
+use Bitrix\Main\EventResult;
+
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerAwareInterface;
 
 #[MapValidator]
-abstract class AbstractExchange extends Application
+abstract class Exchange extends Application
 {
     use LoggerAwareTrait;
 
-    private ResultInterface $result;
-
-    private array $map = [];
-    protected int $dateUp = 0;
+    public const BEFORE_RUN = 'beforeRun';
+    public const AFTER_RUN = 'afterRun';
+    public const BEFORE_ADD = 'beforeAdd';
+    public const AFTER_ADD = 'afterAdd';
+    public const BEFORE_UPDATE = 'beforeUpdate';
+    public const AFTER_UPDATE = 'afterUpdate';
+    public const BEFORE_IMPORT_ITEM = 'beforeImportItem';
+    public const AFTER_IMPORT_ITEM = 'afterImportItem';
 
     /**
-     * События обмена
+     * Карта обмена
      *
-     * @var Event
+     * @var array
      */
-    protected Event $event;
+    private array $map = [];
+
+    /**
+     * Время запуска обмена
+     *
+     * @var int
+     */
+    protected int $dateUp = 0;
 
     /**
      * Добавление нового элемента сущности
@@ -60,23 +77,36 @@ abstract class AbstractExchange extends Application
      */
     abstract protected function exists(array $item): bool;
 
-    public function __construct(array $options = [])
+    /**
+     * Деактивация элементов сущности, которые не пришли в обмене
+     *
+     * @return void
+     */
+    protected function deactivate(): void
     {
-        $this->event = new Event;
-        parent::__construct($options);
     }
 
+    /**
+     * Запуск обмена
+     *
+     * @param iterable $source
+     * @return ResultInterface
+     * @throws ReflectionException
+     */
     final public function execute(iterable $source): ResultInterface
     {
         $dataResult = [];
         $result = $this->check();
+
         if (!$result->isSuccess()) {
             return $result;
         }
 
         $this->dateUp = time();
 
-//        try {
+        (new Event(Helper::getModuleID(), self::BEFORE_RUN, ['exchange' => $this]))->send();
+
+        try {
             foreach ($source as $item) {
                 if (!is_array($item)) {
                     $this->logger?->warning('The source value is not an array: ' . json_encode($item));
@@ -93,16 +123,18 @@ abstract class AbstractExchange extends Application
                 }
             }
 
-//        } catch (\Throwable $throwable) {
-//            $this->result->addError(new Error($throwable->getMessage(), $throwable->getCode()));
-//            $this->logger?->critical(LoggerHelper::exceptionToString($throwable));
-//        }
+        } catch (Throwable $throwable) {
+            $result->addError(new Error($throwable->getMessage(), $throwable->getCode()));
+            $this->logger?->critical(LoggerHelper::exceptionToString($throwable));
+        }
 
-        $this->event->invokeAfterRun();
+        (new Event(Helper::getModuleID(), self::AFTER_RUN, ['exchange' => $this]))->send();
 
-            $this->dateUp = 0;
+        if ($this->getOptions()->get('deactivate')) {
+            $this->deactivate();
+        }
 
-        // Удаление элементов, которые не обновились
+        $this->dateUp = 0;
 
         return $result->setData($dataResult);
     }
@@ -114,7 +146,7 @@ abstract class AbstractExchange extends Application
      */
     public function getSiteID(): string
     {
-        return (string)($this->getOptions()->get('site_id') ?? \Bitrix\Main\Application::getInstance()->getContext()->getSite());
+        return (string)($this->getOptions()->get('site_id') ?: BXApplication::getInstance()->getContext()->getSite());
     }
 
     /**
@@ -131,7 +163,7 @@ abstract class AbstractExchange extends Application
      * Указание карты данных обмена
      *
      * @param array $map
-     * @return AbstractExchange
+     * @return Exchange
      */
     public function setMap(array $map): static
     {
@@ -182,7 +214,8 @@ abstract class AbstractExchange extends Application
      */
     private function action(array $item): ResultInterface
     {
-        $this->event->invokeBeforeActionItem();
+        (new Event(Helper::getModuleID(), self::BEFORE_IMPORT_ITEM, ['exchange' => $this, 'item' => &$item]))->send();
+
         $normalizeResult = $this->normalize($item);
 
         if (!$normalizeResult->isSuccess()) {
@@ -192,14 +225,34 @@ abstract class AbstractExchange extends Application
         $item = $normalizeResult->getData();
 
         if ($this->exists($item)) {
+            $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE, ['exchange' => $this, 'item' => &$item]);
+            $event->send();
+
+            foreach ($event->getResults() as $eventResult) {
+                if ($eventResult->getType() !== EventResult::SUCCESS) {
+                    $this->logger?->debug('The updating of the element was rejected by the event: ' . json_encode($item));
+                    return new DataResult;
+                }
+            }
+
             $result = $this->update($item);
-            $this->event->invokeAfterUpdate(['ITEM' => $item]);
+            (new Event(Helper::getModuleID(), self::AFTER_UPDATE, ['exchange' => $this, 'item' => $item, 'result' => $result]));
         } else {
+            $event = new Event(Helper::getModuleID(), self::BEFORE_ADD, ['exchange' => $this, 'item' => &$item]);
+            $event->send();
+
+            foreach ($event->getResults() as $eventResult) {
+                if ($eventResult->getType() !== EventResult::SUCCESS) {
+                    $this->logger?->debug('The creation of the element was rejected by the event: ' . json_encode($item));
+                    return new DataResult;
+                }
+            }
+
             $result = $this->add($item);
-            $this->event->invokeAfterAdd(['ITEM' => $item]);
+            (new Event(Helper::getModuleID(), self::AFTER_ADD, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
         }
 
-        $this->event->invokeAfterActionItem($item);
+        (new Event(Helper::getModuleID(), self::AFTER_IMPORT_ITEM, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
 
         return $result;
     }

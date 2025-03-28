@@ -3,6 +3,7 @@
 namespace Sholokhov\Exchange\Target\IBlock;
 
 use CUtil;
+use Exception;
 use CIBlockSection;
 
 use Sholokhov\Exchange\Helper\Helper;
@@ -31,36 +32,11 @@ class Section extends IBlock
     public const AFTER_ADD_EVENT = 'onAfterIBlockSectionAdd';
 
     /**
-     * Обработка параметров импорта
-     *
-     * @param array $options
-     * @return array
-     */
-    protected function normalizeOptions(array $options): array
-    {
-        if (!isset($options['deactivate']) || !is_bool($options['deactivate'])) {
-            $options['deactivate'] = false;
-        }
-
-        return parent::normalizeOptions($options);
-    }
-
-    /**
-     * Конфигурация импорта
-     *
-     * @return void
-     */
-    protected function configure(): void
-    {
-        $this->event->subscribeBeforeRun([$this, 'deactivate']);
-        parent::configure();
-    }
-
-    /**
      * Проверка наличия раздела
      *
      * @param array $item
      * @return bool
+     * @throws Exception
      */
     protected function exists(array $item): bool
     {
@@ -93,6 +69,7 @@ class Section extends IBlock
      *
      * @param array $item
      * @return ResultInterface
+     * @throws Exception
      */
     protected function add(array $item): ResultInterface
     {
@@ -126,15 +103,12 @@ class Section extends IBlock
      *
      * @param array $item
      * @return ResultInterface
+     * @throws Exception
      */
     protected function update(array $item): ResultInterface
     {
         $result = new DataResult;
         $keyField = $this->getKeyField();
-
-        if (!$keyField) {
-            return $result->addError(new Error('Error while updating IBLOCK section: No identification field'));
-        }
 
         $section = new CIBlockSection;
         $sectionId = $this->cache->get($item[$keyField->getCode()]);
@@ -172,6 +146,7 @@ class Section extends IBlock
      *
      * @param array $item
      * @return array
+     * @throws Exception
      */
     protected function prepareItem(array $item): array
     {
@@ -209,12 +184,8 @@ class Section extends IBlock
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    private function deactivate(): void
+    protected function deactivate(): void
     {
-        if (!$this->getOptions()->get('deactivate')) {
-            return;
-        }
-
         $filter = [
             'IBLOCK_ID' => $this->getIBlockID(),
             '<TIMESTAMP_X' => DateTime::createFromTimestamp($this->dateUp),

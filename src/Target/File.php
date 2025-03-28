@@ -3,28 +3,23 @@
 namespace Sholokhov\Exchange\Target;
 
 use CFile;
-use Iterator;
+use Exception;
 
-use Sholokhov\Exchange\Application;
+use Sholokhov\Exchange\Exchange;
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 
-use Bitrix\Main\ArgumentException;
+use Bitrix\Main\Error;
 use Bitrix\Main\FileTable;
-use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
-
-use Psr\Log\LoggerAwareTrait;
-use Psr\Container\NotFoundExceptionInterface;
-use Psr\Container\ContainerExceptionInterface;
+use Bitrix\Main\ArgumentException;
+use Bitrix\Main\ObjectPropertyException;
 
 /**
  * Импорт файла
  */
-class File extends Application
+class File extends Exchange
 {
-    use LoggerAwareTrait;
-
     /**
      * Обработка конфигураций обмена
      *
@@ -41,54 +36,73 @@ class File extends Application
     }
 
     /**
-     * Выполнить обмен данными
+     * Проверка наличия файла
      *
-     * @param Iterator $source
-     * @return ResultInterface
+     * @param array $item
+     * @return bool
      * @throws ArgumentException
      * @throws ObjectPropertyException
      * @throws SystemException
+     * @throws Exception
      */
-    public function execute(Iterator $source): ResultInterface
+    protected function exists(array $item): bool
     {
-        $result = new DataResult();
-        $values = [];
+        $keyField = $this->getKeyField();
+        $externalID = $this->getExternalId((string)$item[$keyField->getCode()]);
 
-        foreach ($source as $path) {
-            if (is_string($path) && strlen($path)) {
-                $id = $this->getFile($path) ?: $this->save($path);
-                if ($id) {
-                    $values[] = $id;
-                }
-            }
+        if ($this->cache->has($externalID)) {
+            return true;
+        } elseif ($file = FileTable::getRow(['filter' => ['EXTERNAL_ID' => $externalID], 'select' => ['ID']])) {
+            $fileId = (int)$file['ID'];
+            $this->cache->set($externalID, $fileId);
+            return true;
         }
 
-        $result->setData($values);
+        return false;
+    }
+
+    /**
+     * Создание нового файла
+     *
+     * @param array $item
+     * @return ResultInterface
+     * @throws Exception
+     */
+    protected function add(array $item): ResultInterface
+    {
+        $result = new DataResult;
+        $path = $item[$this->getKeyField()->getCode()];
+        $file = CFile::MakeFileArray($path);
+
+        if (!$file) {
+            $this->logger?->error('File receipt error: ' . $path);
+            return $result->addError(new Error('Ошибка создания получения файла'));
+        }
+
+        $file['external_id'] = $this->getExternalId($path);
+        $file['MODULE_ID'] = $this->getOptions()->get('MODULE_ID');
+
+        if ($fileId = (int)CFile::SaveFile($file, $file['MODULE_ID'])) {
+            $this->cache->set($path, $fileId);
+            $result->setData($fileId);
+        } else {
+            $this->logger?->error('File receipt error: ' . $path . '. Data: ' . json_encode($file));
+            $result->addError(new Error('Ошибка сохранения файла', 500, $file));
+        }
 
         return $result;
     }
 
     /**
-     * Получение существующего файла
+     * Обновление файла
      *
-     * @param string $path
-     * @return int
-     * @throws ArgumentException
-     * @throws ObjectPropertyException
-     * @throws SystemException
+     * @todo Доработать
+     * @param array $item
+     * @return ResultInterface
      */
-    protected function getFile(string $path): int
+    protected function update(array $item): ResultInterface
     {
-        $fileId = 0;
-        $externalID = $this->getExternalId($path);
-        if ($this->cache->has($externalID)) {
-            $fileId = $this->cache->get($externalID);
-        } elseif ($file = FileTable::getRow(['filter' => ['EXTERNAL_ID' => $externalID], 'select' => ['ID']])) {
-            $fileId = (int)$file['ID'];
-            $this->cache->set($externalID, $fileId);
-        }
-
-        return $fileId;
+        return new DataResult;
     }
 
     /**
@@ -100,29 +114,5 @@ class File extends Application
     protected function getExternalId(string $path): string
     {
         return md5($path);
-    }
-
-    /**
-     * Сохранить без кэша
-     *
-     * @param string $path
-     * @return int
-     */
-    private function save(string $path): int
-    {
-        $file = CFile::MakeFileArray($path);
-
-        if (!$file) {
-            return 0;
-        }
-
-        $file['external_id'] = $this->getExternalId($path);
-        $file['MODULE_ID'] = $this->getOptions()->get('MODULE_ID');
-
-        if ($fileId = (int)CFile::SaveFile($file, $file['MODULE_ID'])) {
-            $this->cache->set($path, $fileId);
-        }
-
-        return $fileId;
     }
 }

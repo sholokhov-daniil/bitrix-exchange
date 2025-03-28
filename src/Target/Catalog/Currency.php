@@ -13,27 +13,12 @@ use Bitrix\Main\SystemException;
 use CCurrency;
 use Exception;
 use ReflectionException;
-use Sholokhov\Exchange\AbstractExchange;
+use Sholokhov\Exchange\Exchange;
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 
-class Currency extends AbstractExchange
+class Currency extends Exchange
 {
-    /**
-     * Обработка параметров импорта
-     *
-     * @param array $options
-     * @return array
-     */
-    protected function normalizeOptions(array $options): array
-    {
-        if (!isset($options['deactivate']) || !is_bool($options['deactivate'])) {
-            $options['deactivate'] = false;
-        }
-
-        return parent::normalizeOptions($options);
-    }
-
     /**
      * Проверка возможности выполнения обмена
      *
@@ -43,6 +28,8 @@ class Currency extends AbstractExchange
      */
     protected function check(): ResultInterface
     {
+        throw new Exception('In development');
+
         $result = parent::check();
 
         if (!Loader::includeModule('currency')) {
