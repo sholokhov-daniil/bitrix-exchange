@@ -13,11 +13,11 @@ use Bitrix\Main\SystemException;
 use CCurrency;
 use Exception;
 use ReflectionException;
-use Sholokhov\Exchange\AbstractExchange;
+use Sholokhov\Exchange\Exchange;
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 
-class Currency extends AbstractExchange
+class Currency extends Exchange
 {
     /**
      * Проверка возможности выполнения обмена

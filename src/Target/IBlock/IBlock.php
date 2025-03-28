@@ -8,7 +8,7 @@ use ReflectionException;
 use Bitrix\Main\Error;
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
-use Sholokhov\Exchange\AbstractExchange;
+use Sholokhov\Exchange\Exchange;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
@@ -16,7 +16,7 @@ use Bitrix\Main\LoaderException;
 /**
  * Импорт в информационный блок
  */
-abstract class IBlock extends AbstractExchange
+abstract class IBlock extends Exchange
 {
     /**
      * Проверка возможности выполнения обмена

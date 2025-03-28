@@ -19,12 +19,14 @@ use Sholokhov\Exchange\Target\Attributes\MapValidator;
 
 use Bitrix\Main\Error;
 use Bitrix\Main\Event;
+use Bitrix\Main\Application as BXApplication;
+use Bitrix\Main\EventResult;
 
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerAwareInterface;
 
 #[MapValidator]
-abstract class AbstractExchange extends Application
+abstract class Exchange extends Application
 {
     use LoggerAwareTrait;
 
@@ -102,6 +104,8 @@ abstract class AbstractExchange extends Application
 
         $this->dateUp = time();
 
+        (new Event(Helper::getModuleID(), self::BEFORE_RUN, ['exchange' => $this]))->send();
+
         try {
             foreach ($source as $item) {
                 if (!is_array($item)) {
@@ -124,7 +128,7 @@ abstract class AbstractExchange extends Application
             $this->logger?->critical(LoggerHelper::exceptionToString($throwable));
         }
 
-        (new Event(Helper::getModuleID(), self::AFTER_RUN, ['exchange' => $this]));
+        (new Event(Helper::getModuleID(), self::AFTER_RUN, ['exchange' => $this]))->send();
 
         if ($this->getOptions()->get('deactivate')) {
             $this->deactivate();
@@ -142,7 +146,7 @@ abstract class AbstractExchange extends Application
      */
     public function getSiteID(): string
     {
-        return (string)($this->getOptions()->get('site_id') ?? \Bitrix\Main\Application::getInstance()->getContext()->getSite());
+        return (string)($this->getOptions()->get('site_id') ?: BXApplication::getInstance()->getContext()->getSite());
     }
 
     /**
@@ -159,7 +163,7 @@ abstract class AbstractExchange extends Application
      * Указание карты данных обмена
      *
      * @param array $map
-     * @return AbstractExchange
+     * @return Exchange
      */
     public function setMap(array $map): static
     {
@@ -210,7 +214,7 @@ abstract class AbstractExchange extends Application
      */
     private function action(array $item): ResultInterface
     {
-        (new Event(Helper::getModuleID(), self::BEFORE_IMPORT_ITEM, ['exchange' => $this, 'item' => &$item]));
+        (new Event(Helper::getModuleID(), self::BEFORE_IMPORT_ITEM, ['exchange' => $this, 'item' => &$item]))->send();
 
         $normalizeResult = $this->normalize($item);
 
@@ -221,16 +225,34 @@ abstract class AbstractExchange extends Application
         $item = $normalizeResult->getData();
 
         if ($this->exists($item)) {
-            (new Event(Helper::getModuleID(), self::BEFORE_UPDATE, ['exchange' => $this, 'item' => &$item]));
+            $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE, ['exchange' => $this, 'item' => &$item]);
+            $event->send();
+
+            foreach ($event->getResults() as $eventResult) {
+                if ($eventResult->getType() !== EventResult::SUCCESS) {
+                    $this->logger?->debug('The updating of the element was rejected by the event: ' . json_encode($item));
+                    return new DataResult;
+                }
+            }
+
             $result = $this->update($item);
             (new Event(Helper::getModuleID(), self::AFTER_UPDATE, ['exchange' => $this, 'item' => $item, 'result' => $result]));
         } else {
-            (new Event(Helper::getModuleID(), self::BEFORE_ADD, ['exchange' => $this, 'item' => &$item]));
+            $event = new Event(Helper::getModuleID(), self::BEFORE_ADD, ['exchange' => $this, 'item' => &$item]);
+            $event->send();
+
+            foreach ($event->getResults() as $eventResult) {
+                if ($eventResult->getType() !== EventResult::SUCCESS) {
+                    $this->logger?->debug('The creation of the element was rejected by the event: ' . json_encode($item));
+                    return new DataResult;
+                }
+            }
+
             $result = $this->add($item);
-            (new Event(Helper::getModuleID(), self::AFTER_ADD, ['exchange' => $this, 'item' => $item, 'result' => $result]));
+            (new Event(Helper::getModuleID(), self::AFTER_ADD, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
         }
 
-        (new Event(Helper::getModuleID(), self::AFTER_IMPORT_ITEM, ['exchange' => $this, 'item' => $item, 'result' => $result]));
+        (new Event(Helper::getModuleID(), self::AFTER_IMPORT_ITEM, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
 
         return $result;
     }

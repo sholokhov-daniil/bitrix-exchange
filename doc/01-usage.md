@@ -16,7 +16,7 @@
 - [Импорт данных](#импорт-данных)
 - [Создание импорта](#создание-импорта)
   - [Application](#application)
-  - [AbstractExchange](#abstractExchange)
+  - [Exchange](#abstractExchange)
   - [Пример создания](#пример-создания-класса-импорта)
 
 # Установка
@@ -50,7 +50,7 @@ composer require sholokhov/bitrix-exchange
 Каждый импорт предусматривает указание пользовательской конфигурации, для более детальной настройки.
 Конфигурация передается при инициализации импорта в виде массива с произвольным форматом.
 
-Если импорт является наследником класса [AbstractExchange](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/AbstractExchange.php), то поддерживается возможность деактивации значений, которые не приняли участие в обмене.
+Если импорт является наследником класса [Exchange](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Exchange.php), то поддерживается возможность деактивации значений, которые не приняли участие в обмене.
 
 ## Включение деактивации
 
@@ -287,8 +287,8 @@ $result = $exchange->execute($source);
 * [OptionsContainer](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Target/Attributes/OptionsContainer.php) - Указывается сущность хранения конфигураций
 * [CacheContainer](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Target/Attributes/CacheContainer.php) - Указывается сущность хранения кэша обмена
 
-## AbstractExchange
-Класс [AbstractExchange](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/AbstractExchange.php)
+## Exchange
+Класс [Exchange](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Exchange.php)
 
 Обмен данных регламентирующий структуру обмена и производящий обработку данных
 
@@ -308,9 +308,10 @@ $result = $exchange->execute($source);
 
 
 ## Пример создания класса импорта
+
 ````php
 use Sholokhov\Exchange\Messages\Result;
-use Sholokhov\Exchange\AbstractExchange;
+use Sholokhov\Exchange\Exchange;
 use Sholokhov\Exchange\Target\Attributes\MapValidator;
 use Sholokhov\Exchange\Target\Attributes\OptionsContainer;
 use Sholokhov\Exchange\Target\Attributes\CacheContainer;
@@ -318,7 +319,7 @@ use Sholokhov\Exchange\Target\Attributes\CacheContainer;
 #[MapValidator('custom map validation')]
 #[OptionsContainer('custom options registry')]
 #[CacheContainer('custom cache container')]
-class Queue extends AbstractExchange
+class Queue extends Exchange
 {
     // Обработка параметров обмена
     protected function normalizeOptions(array $options): array

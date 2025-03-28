@@ -1,6 +1,6 @@
-# События наследников AbstractExchange
+# События наследников Exchange
 
-Класс [AbstractExchange](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/AbstractExchange.php)
+Класс [Exchange](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Exchange.php)
 
 - [beforeRun](#beforerun)
 - [afterRun](#afterrun)
@@ -16,7 +16,7 @@
 
 | Название |                                                                            Тип данных                                                                             | Обязательность |                      Примечание                       |
 |:--------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------:|:-----------------------------------------------------:|
-| exchange |                            [Текущий объект](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/AbstractExchange.php)                             |       Да       |                           -                           | 
+| exchange |                            [Текущий объект](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Exchange.php)                             |       Да       |                           -                           | 
 
 Пример подписки на событие
 
@@ -41,7 +41,7 @@ EventManager::getInstance()->addEventHandler(
 
 | Название |                                                                            Тип данных                                                                             | Обязательность |                      Примечание                       |
 |:--------:|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------:|:-----------------------------------------------------:|
-| exchange |                            [Текущий объект](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/AbstractExchange.php)                             |       Да       |                           -                           |
+| exchange |                            [Текущий объект](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Exchange.php)                             |       Да       |                           -                           |
 
 Пример подписки на событие
 
@@ -64,7 +64,7 @@ EventManager::getInstance()->addEventHandler(
 
 | Название |                                                                            Тип данных                                                                            | Обязательность |                      Примечание                      |
 |:--------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------:|:----------------------------------------------------:|
-| exchange |                            [Текущий объект](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/AbstractExchange.php)                            |       Да       |                          -                           |
+| exchange |                            [Текущий объект](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Exchange.php)                            |       Да       |                          -                           |
 |   item   |                                                                              array                                                                               |       Да       |            Значение передается по ссылке             |
 
 Пример подписки на событие
@@ -109,7 +109,7 @@ EventManager::getInstance()->addEventHandler(
 
 | Название |                                                                           Тип данных                                                                            | Обязательность |
 |:--------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------:|
-| exchange |                           [Текущий объект](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/AbstractExchange.php)                            |       Да       |
+| exchange |                           [Текущий объект](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Exchange.php)                            |       Да       |
 |   item   |                                                                              array                                                                              |       Да       |
 |  result  |                       [ResultInterface](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Messages/ResultInterface.php)                       |       Да       |
 
@@ -139,7 +139,7 @@ EventManager::getInstance()->addEventHandler(
 
 | Название |                                                                            Тип данных                                                                            | Обязательность |                      Примечание                      |
 |:--------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------:|:----------------------------------------------------:|
-| exchange |                            [Текущий объект](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/AbstractExchange.php)                            |       Да       |                          -                           |
+| exchange |                            [Текущий объект](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Exchange.php)                            |       Да       |                          -                           |
 |   item   |                                                                              array                                                                               |       Да       |            Значение передается по ссылке             |
 
 Пример подписки на событие
@@ -186,7 +186,7 @@ EventManager::getInstance()->addEventHandler(
 
 | Название |                                                                           Тип данных                                                                            | Обязательность |
 |:--------:|:---------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------:|
-| exchange |                           [Текущий объект](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/AbstractExchange.php)                            |       Да       |
+| exchange |                           [Текущий объект](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Exchange.php)                            |       Да       |
 |   item   |                                                                              array                                                                              |       Да       |
 |  result  |                       [ResultInterface](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Messages/ResultInterface.php)                       |       Да       |
 
@@ -216,7 +216,7 @@ EventManager::getInstance()->addEventHandler(
 
 | Название |                                                                            Тип данных                                                                            | Обязательность |                      Примечание                      |
 |:--------:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------:|:----------------------------------------------------:|
-| exchange |                            [Текущий объект](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/AbstractExchange.php)                            |       Да       |                          -                           |
+| exchange |                            [Текущий объект](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Exchange.php)                            |       Да       |                          -                           |
 |   item   |                                                                              array                                                                               |       Да       |            Значение передается по ссылке             |
 
 > В параметре item хранится значение до его нормализации, что позволяет более точно произвести модификацию импортируемого значения
@@ -265,7 +265,7 @@ EventManager::getInstance()->addEventHandler(
 
 | Название |                                                                          Тип данных                                                                           | Обязательность |
 |:--------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------:|
-| exchange |                          [Текущий объект](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/AbstractExchange.php)                           |       Да       |
+| exchange |                          [Текущий объект](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Exchange.php)                           |       Да       |
 |   item   |                                                                             array                                                                             |       Да       |
 |  result  |                      [ResultInterface](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Messages/ResultInterface.php)                      |       Да       |
 

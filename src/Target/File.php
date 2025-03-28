@@ -5,7 +5,7 @@ namespace Sholokhov\Exchange\Target;
 use CFile;
 use Exception;
 
-use Sholokhov\Exchange\AbstractExchange;
+use Sholokhov\Exchange\Exchange;
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 
@@ -18,7 +18,7 @@ use Bitrix\Main\ObjectPropertyException;
 /**
  * Импорт файла
  */
-class File extends AbstractExchange
+class File extends Exchange
 {
     /**
      * Обработка конфигураций обмена
