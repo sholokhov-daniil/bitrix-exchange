@@ -2,6 +2,7 @@
 
 namespace Sholokhov\Exchange\Target\Highloadblock;
 
+use Bitrix\Main\Diag\Debug;
 use Exception;
 use ReflectionException;
 
@@ -20,7 +21,7 @@ use Bitrix\Highloadblock\HighloadBlockTable as HLT;
 
 class Element extends Exchange
 {
-    protected readonly DataManager $entity;
+    protected readonly DataManager|string $entity;
 
     /**
      * Получение ID справочника
@@ -33,16 +34,6 @@ class Element extends Exchange
     }
 
     /**
-     * Ключ элемента сущности отвечающего за идентификацию значений
-     *
-     * @return string
-     */
-    public function getPrimaryKey(): string
-    {
-        return $this->getOptions()->get('primary_key');
-    }
-
-    /**
      * Предварительная обработка конфигураций импорта
      *
      * @param array $options
@@ -51,11 +42,6 @@ class Element extends Exchange
     protected function normalizeOptions(array $options): array
     {
         $options['entity_id'] = (int)$options['entity_id'];
-
-        if (!isset($options['primary_key']) || !is_string($options['primary_key'])) {
-            $options['primary_key'] = 'ID';
-        }
-
         return parent::normalizeOptions($options);
     }
 
@@ -67,6 +53,7 @@ class Element extends Exchange
      */
     protected function configure(): void
     {
+        Loader::includeModule('highloadblock');
         $this->entity = HLT::compileEntity($this->getEntityID())->getDataClass();
     }
 
@@ -114,11 +101,11 @@ class Element extends Exchange
             $keyField->getCode() => $item[$keyField->getCode()],
         ];
 
-        $select = [$keyField->getCode(), $this->getPrimaryKey()];
+        $select = [$keyField->getCode(), 'ID'];
         $element = $this->entity::getRow(compact('filter', 'select'));
 
         if ($element) {
-            $this->cache->set($item[$keyField->getCode()], $element[$this->getPrimaryKey()]);
+            $this->cache->set($item[$keyField->getCode()], (int)$element['ID']);
             return true;
         }
 
@@ -139,8 +126,7 @@ class Element extends Exchange
 
         if (!$addResult->isSuccess()) {
             $errorMessage = sprintf(
-                'An error occurred when adding an element with the ID "%s" to the highloadblock "%s": %s',
-                $item[$this->getPrimaryKey()],
+                'An error occurred when adding an element to the highloadblock "%s": %s',
                 $this->getEntityID(),
                 implode('. ', $addResult->getErrorMessages())
             );
@@ -149,9 +135,9 @@ class Element extends Exchange
             return $result->addError(new Error($errorMessage, 500, $item));
         }
 
-        $result->setData($item[$this->getPrimaryKey()]);
-        $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the %s highloadblock', $this->getEntityID(), $item[$this->getPrimaryKey()]));
-        $this->cache->set($item[$this->getKeyField()->getCode()], $item[$this->getPrimaryKey()]);
+        $result->setData($addResult->getId());
+        $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the "%s" highloadblock', $addResult->getId(), $this->getEntityID()));
+        $this->cache->set($item[$this->getKeyField()->getCode()], $addResult->getId());
 
         return $result;
     }
@@ -173,6 +159,8 @@ class Element extends Exchange
         if (!$itemID) {
             return $this->add($item);
         }
+
+        Debug::dump($item);
 
         $updateResult = $this->entity::update($itemID, $item);
 
@@ -197,5 +185,10 @@ class Element extends Exchange
         );
 
         return $result->setData($itemID);
+    }
+
+    protected function deactivate(): void
+    {
+        // TODO: Добавить деактивацию, если указано свойство типа дата и время
     }
 }
