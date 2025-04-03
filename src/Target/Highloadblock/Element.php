@@ -2,7 +2,6 @@
 
 namespace Sholokhov\Exchange\Target\Highloadblock;
 
-use Bitrix\Main\Type\DateTime;
 use Exception;
 use ReflectionException;
 
@@ -155,7 +154,7 @@ class Element extends Exchange
         $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the "%s" highloadblock', $addResult->getId(), $this->getEntityID()));
         $this->cache->set($item[$this->getKeyField()->getCode()], $addResult->getId());
 
-        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => $item, 'FIELDS' => $item, 'RESULT' => $result]))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['id' => $item, 'fields' => $item]))->send();
 
         return $result;
     }
@@ -194,7 +193,7 @@ class Element extends Exchange
             );
             $this->logger?->critical($errorMessage);
 
-            return $result->addError(new Error($errorMessage, 500, ['ID' => $itemID, 'FIELDS' => $item]));
+            return $result->addError(new Error($errorMessage, 500, ['id' => $itemID, 'fields' => $item]));
         }
 
         $this->logger?->debug(
@@ -205,11 +204,9 @@ class Element extends Exchange
             )
         );
 
-        $result->setData($itemID);
+        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['item' => $item, 'id' => $itemID]))->send();
 
-        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['ITEM' => $item, 'RESULT' => $result]))->send();
-
-        return $result;
+        return $result->setData($itemID);
     }
 
     /**
@@ -222,7 +219,7 @@ class Element extends Exchange
     {
         $result = new DataResult;
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['FIELDS' => &$item['FIELDS']]);
+        $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['fields' => &$item['FIELDS']]);
         $event->send();
 
         foreach ($event->getResults() as $eventResult) {
@@ -253,7 +250,7 @@ class Element extends Exchange
     {
         $result = new DataResult;
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['ITEM' => &$item]);
+        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['item' => &$item]);
         $event->send();
 
         foreach ($event->getResults() as $eventResult) {
@@ -263,7 +260,7 @@ class Element extends Exchange
 
             $parameters = $eventResult->getParameters();
             if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                $result->addError(new Error('Error while adding IBLOCK element: stopped', 300, $item));
+                $result->addError(new Error('Error while adding Highloadblock element: stopped', 300, $item));
             } else {
                 foreach ($parameters['ERRORS'] as $error) {
                     $result->addError(new Error($error, 300, $item));

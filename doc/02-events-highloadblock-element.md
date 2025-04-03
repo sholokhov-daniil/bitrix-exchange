@@ -1,0 +1,146 @@
+# События наследников импорта элементов Highloadblock
+
+Класс [Element](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Target/Highloadblock/Element.php)
+
+- [onBeforeHighloadblockElementAdd](#onbeforehighloadblockelementadd)
+- [onAfterHighloadblockElementAdd](#onafterhighloadblockelementadd)
+- [onBeforeHighloadblockElementUpdate](#onbeforehighloadblockelementupdate)
+- [onAfterHighloadblockElementUpdate](#onafterhighloadblockelementupdate)
+
+## onBeforeHighloadblockElementAdd
+Событие вызывается перед созданием элемента справочника(Highloadblock):
+
+| Название | Тип данных | Обязательность |          Примечание           |
+|:--------:|:----------:|:--------------:|:-----------------------------:|
+|   item   |   array    |       Да       | Значение передается по ссылке | 
+
+Пример подписки на событие
+
+````php
+use Bitrix\Main\Event;
+use Bitrix\Main\EventManager;
+use Sholokhov\Exchange\Repository\RepositoryInterface;
+
+EventManager::getInstance()->addEventHandler(
+    'sholokhov.exchange',
+    'onBeforeHighloadblockElementAdd',
+    function(Event $event) {
+        $parameters = &$event->getParameters();
+        $parameters['item']['MY_FIELD'] = 15;
+        
+        return new EventResult(EventResult::SUCCESS, $parameters);
+    }
+);
+````
+
+> Присутствует возможность отмены добавления значения. Если отменить добавление, то в лог файле появится соответствующее сообщение, но в результате работы импорта это не отобразится.
+
+````php
+use Bitrix\Main\Event;
+use Bitrix\Main\EventResult;
+use Bitrix\Main\EventManager;
+use Sholokhov\Exchange\Repository\RepositoryInterface;
+
+EventManager::getInstance()->addEventHandler(
+    'sholokhov.exchange',
+    'onBeforeHighloadblockElementAdd',
+    function(Event $event) {        
+        return new EventResult(EventResult::ERROR, $event->getParameters());
+    }
+);
+````
+
+## onAfterHighloadblockElementAdd
+Событие вызывается после добавления элемента справочника:
+
+| Название | Тип данных | Обязательность |            Примечание            |
+|:--------:|:----------:|:--------------:|:--------------------------------:|
+|    id    |    int     |       Да       |      ID созданного элемента      |
+|  fields  |   array    |       Да       | Массив с добавляемыми значениями |
+
+Пример подписки на событие
+
+````php
+use Bitrix\Main\Event;
+use Bitrix\Main\EventManager;
+use Sholokhov\Exchange\Repository\RepositoryInterface;
+
+EventManager::getInstance()->addEventHandler(
+    'sholokhov.exchange',
+    'onAfterHighloadblockElementAdd',
+    function(Event $event) {
+        //...
+    }
+);
+````
+
+## onBeforeHighloadblockElementUpdate
+Событие перед изменением элемента справочника:
+
+| Название | Тип данных | Обязательность |          Примечание           |
+|:--------:|:----------:|:--------------:|:-----------------------------:|
+|  fields  |   array    |       Да       | Значение передаются по ссылке |
+
+Пример подписки на событие
+
+````php
+use Bitrix\Main\Event;
+use Bitrix\Main\EventResult;
+use Bitrix\Main\EventManager;
+use Sholokhov\Exchange\Repository\RepositoryInterface;
+
+EventManager::getInstance()->addEventHandler(
+    'sholokhov.exchange',
+    'onBeforeHighloadblockElementUpdate',
+    function(Event $event) {
+        $parameters = &$event->getParameters();
+        $parameters['item']['you_field'] = "new_value";
+        
+        return new EventResult(EventResult::SUCCESS, $parameters);
+    }
+);
+````
+
+> Присутствует возможность отмены изменения значения. Если отменить добавление, то в лог файле появится соответствующее сообщение, но в результате работы импорта это не отобразится.
+
+````php
+use Bitrix\Main\Event;
+use Bitrix\Main\EventResult;
+use Bitrix\Main\EventManager;
+use Sholokhov\Exchange\Repository\RepositoryInterface;
+
+EventManager::getInstance()->addEventHandler(
+    'sholokhov.exchange',
+    'beforeAdd',
+    function(Event $event) {        
+        return new EventResult(EventResult::ERROR, $event->getParameters());
+    }
+);
+````
+
+## onAfterHighloadblockElementUpdate
+Событие вызывается после обновления элемента сущности и передаются следующие параметры:
+
+| Название | Тип данных | Обязательность |
+|:--------:|:----------:|:--------------:|
+|   item   |   array    |       Да       |
+|    id    |    int     |       Да       |
+
+Пример подписки на событие
+
+````php
+use Bitrix\Main\Event;
+use Bitrix\Main\EventResult;
+use Bitrix\Main\EventManager;
+use Sholokhov\Exchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Repository\RepositoryInterface;
+
+EventManager::getInstance()->addEventHandler(
+    'sholokhov.exchange',
+    'onAfterHighloadblockElementUpdate',
+    function(Event $event) {
+        $itemID = $event->getParameter('id');
+        // ...
+    }
+);
+````
