@@ -2,25 +2,33 @@
 
 namespace Sholokhov\Exchange\Target\Highloadblock;
 
-use Bitrix\Main\Diag\Debug;
+use Bitrix\Main\Type\DateTime;
 use Exception;
 use ReflectionException;
 
 use Sholokhov\Exchange\Exchange;
+use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Messages\ResultInterface;
 
-use Bitrix\Main\ArgumentException;
+use Bitrix\Main\Event;
 use Bitrix\Main\Error;
 use Bitrix\Main\Loader;
+use Bitrix\Main\EventResult;
+use Bitrix\Main\SystemException;
 use Bitrix\Main\LoaderException;
+use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\ORM\Data\DataManager;
-use Bitrix\Main\SystemException;
 use Bitrix\Highloadblock\HighloadBlockTable as HLT;
 
 class Element extends Exchange
 {
+    public const BEFORE_UPDATE_EVENT = 'onBeforeHighloadblockElementUpdate';
+    public const AFTER_UPDATE_EVENT = 'onAfterHighloadblockElementUpdate';
+    public const BEFORE_ADD_EVENT = 'onBeforeHighloadblockElementAdd';
+    public const AFTER_ADD_EVENT = 'onAfterHighloadblockElementAdd';
+
     protected readonly DataManager|string $entity;
 
     /**
@@ -49,12 +57,14 @@ class Element extends Exchange
      * Конфигурация импорта
      *
      * @return void
+     * @throws LoaderException
      * @throws SystemException
      */
     protected function configure(): void
     {
-        Loader::includeModule('highloadblock');
-        $this->entity = HLT::compileEntity($this->getEntityID())->getDataClass();
+        if (Loader::includeModule('highloadblock')) {
+            $this->entity = HLT::compileEntity($this->getEntityID())->getDataClass();
+        }
     }
 
     /**
@@ -64,9 +74,9 @@ class Element extends Exchange
      * @throws LoaderException
      * @throws ReflectionException
      */
-    protected function check(): ResultInterface
+    protected function validate(): ResultInterface
     {
-        $result = parent::check();
+        $result = parent::validate();
 
         if (!Loader::includeModule('highloadblock')) {
             $result->addError(new Error('Module "highloadblock" not installed'));
@@ -122,6 +132,12 @@ class Element extends Exchange
     protected function add(array $item): ResultInterface
     {
         $result = new DataResult;
+
+        $resultBeforeAdd = $this->beforeAdd($item);
+        if (!$resultBeforeAdd->isSuccess()) {
+            return $result->addErrors($resultBeforeAdd->getErrors());
+        }
+
         $addResult = $this->entity::add($item);
 
         if (!$addResult->isSuccess()) {
@@ -138,6 +154,8 @@ class Element extends Exchange
         $result->setData($addResult->getId());
         $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the "%s" highloadblock', $addResult->getId(), $this->getEntityID()));
         $this->cache->set($item[$this->getKeyField()->getCode()], $addResult->getId());
+
+        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => $item, 'FIELDS' => $item, 'RESULT' => $result]))->send();
 
         return $result;
     }
@@ -160,7 +178,10 @@ class Element extends Exchange
             return $this->add($item);
         }
 
-        Debug::dump($item);
+        $resultBeforeUpdate = $this->beforeUpdate($item);
+        if (!$resultBeforeUpdate->isSuccess()) {
+            return $result->addErrors($resultBeforeUpdate->getErrors());
+        }
 
         $updateResult = $this->entity::update($itemID, $item);
 
@@ -184,11 +205,72 @@ class Element extends Exchange
             )
         );
 
-        return $result->setData($itemID);
+        $result->setData($itemID);
+
+        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['ITEM' => $item, 'RESULT' => $result]))->send();
+
+        return $result;
     }
 
-    protected function deactivate(): void
+    /**
+     * Событие перед обновлением элемента
+     *
+     * @param array $item
+     * @return ResultInterface
+     */
+    private function beforeUpdate(array &$item): ResultInterface
     {
-        // TODO: Добавить деактивацию, если указано свойство типа дата и время
+        $result = new DataResult;
+
+        $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['FIELDS' => &$item['FIELDS']]);
+        $event->send();
+
+        foreach ($event->getResults() as $eventResult) {
+            if ($eventResult->getType() === EventResult::SUCCESS) {
+                continue;
+            }
+
+            $parameters = $eventResult->getParameters();
+            if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
+                $result->addError(new Error('Error while updating IBLOCK element: stopped', 300, $item));
+            } else {
+                foreach ($parameters['ERRORS'] as $error) {
+                    $result->addError(new Error($error, 300, $item));
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Событие перед созданием элемента
+     *
+     * @param array $item
+     * @return ResultInterface
+     */
+    private function beforeAdd(array $item): ResultInterface
+    {
+        $result = new DataResult;
+
+        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['ITEM' => &$item]);
+        $event->send();
+
+        foreach ($event->getResults() as $eventResult) {
+            if ($eventResult->getType() === EventResult::SUCCESS) {
+                continue;
+            }
+
+            $parameters = $eventResult->getParameters();
+            if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
+                $result->addError(new Error('Error while adding IBLOCK element: stopped', 300, $item));
+            } else {
+                foreach ($parameters['ERRORS'] as $error) {
+                    $result->addError(new Error($error, 300, $item));
+                }
+            }
+        }
+
+        return $result;
     }
 }

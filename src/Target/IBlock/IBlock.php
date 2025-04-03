@@ -24,9 +24,9 @@ abstract class IBlock extends Exchange
      * @throws LoaderException
      * @throws ReflectionException
      */
-    protected function check(): ResultInterface
+    protected function validate(): ResultInterface
     {
-        $result = parent::check();
+        $result = parent::validate();
 
         if (!Loader::includeModule('iblock')) {
             $result->addError(new Error('Module "iblock" not installed'));
