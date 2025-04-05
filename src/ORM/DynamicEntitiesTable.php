@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\Exchange\ORM;
+namespace Sholokhov\BitrixExchange\ORM;
 
 use Bitrix\Main\ORM\Fields;
 use Bitrix\Main\ORM\Data\AddResult;

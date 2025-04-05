@@ -1,12 +1,12 @@
 <?php
 
-namespace Sholokhov\Exchange\Target\IBlock;
+namespace Sholokhov\BitrixExchange\Target\IBlock;
 
 use CIBlock;
 use ReflectionException;
 
-use Bitrix\Main\Error;
 use Sholokhov\Exchange\Exchange;
+use Sholokhov\Exchange\Messages\Type\Error;
 use Sholokhov\Exchange\Messages\ResultInterface;
 
 use Bitrix\Main\Loader;

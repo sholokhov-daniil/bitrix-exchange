@@ -1,17 +1,17 @@
 <?php
 
-namespace Sholokhov\Exchange\Target\Highloadblock;
+namespace Sholokhov\BitrixExchange\Target\Highloadblock;
 
 use Exception;
 use ReflectionException;
 
 use Sholokhov\Exchange\Exchange;
 use Sholokhov\Exchange\Helper\Helper;
+use Sholokhov\Exchange\Messages\Type\Error;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Messages\ResultInterface;
 
 use Bitrix\Main\Event;
-use Bitrix\Main\Error;
 use Bitrix\Main\Loader;
 use Bitrix\Main\EventResult;
 use Bitrix\Main\SystemException;

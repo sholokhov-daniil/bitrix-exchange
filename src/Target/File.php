@@ -1,15 +1,15 @@
 <?php
 
-namespace Sholokhov\Exchange\Target;
+namespace Sholokhov\BitrixExchange\Target;
 
 use CFile;
 use Exception;
 
 use Sholokhov\Exchange\Exchange;
 use Sholokhov\Exchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Messages\Type\Error;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 
-use Bitrix\Main\Error;
 use Bitrix\Main\FileTable;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\ArgumentException;

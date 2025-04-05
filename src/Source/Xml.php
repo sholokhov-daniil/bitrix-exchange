@@ -1,14 +1,15 @@
 <?php
 
-namespace Sholokhov\Exchange\Source;
+namespace Sholokhov\BitrixExchange\Source;
 
 use Iterator;
 use CIBlockXMLFile;
 use EmptyIterator;
 use ArrayIterator;
 
-use Sholokhov\Exchange\ORM\Factory;
-use Sholokhov\Exchange\ORM\AbstractXmlDynamic;
+use Sholokhov\Exchange\Source\AbstractXml;
+use Sholokhov\BitrixExchange\ORM\Factory;
+use Sholokhov\BitrixExchange\ORM\AbstractXmlDynamic;
 
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\DB\SqlQueryException;

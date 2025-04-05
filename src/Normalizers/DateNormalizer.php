@@ -2,11 +2,10 @@
 
 namespace Sholokhov\Exchange\Normalizers;
 
-use DateTime;
 use DateTimeZone;
 
-use Bitrix\Main\Type\Date as BxDate;
-use Bitrix\Main\Type\DateTime as BxDateTime;
+use Bitrix\Main\Type\Date;
+use Bitrix\Main\Type\DateTime;
 
 /**
  * Нормализация данных, связанных с датой и время
@@ -14,33 +13,20 @@ use Bitrix\Main\Type\DateTime as BxDateTime;
 class DateNormalizer
 {
     /**
-     * Приведение произвольного значения даты в стандартный объект даты и время
-     *
-     * @param array|string|int $date
-     * @param DateTimeZone|null $timeZone
-     * @return DateTime|array
-     * @throws \DateMalformedStringException
-     */
-    public static function createDate(array|string|int $date, DateTimeZone $timeZone = null): DateTime|array
-    {
-        return is_array($date) ? array_map(fn($value) => new DateTime($value, $timeZone), $date) : new DateTime($date, $timeZone);
-    }
-
-    /**
      * Приведение произвольного значения даты в объект даты bitrix
      *
      * @param array|string|int $date
      * @param DateTimeZone|null $timeZone
-     * @return BxDate|array
+     * @return Date|array
      * @throws \DateMalformedStringException
      */
-    public static function createBxDate(array|string|int $date, DateTimeZone $timeZone = null): BxDate|array
+    public static function createDate(array|string|int $date, DateTimeZone $timeZone = null): Date|array
     {
         if (is_array($date)) {
-            return array_map(fn($value) => BxDate::createFromPhp(new DateTime($value)), $date);
+            return array_map(fn($value) => Date::createFromPhp(new \DateTime($value, $timeZone)), $date);
         }
 
-        return BxDate::createFromPhp(new DateTime($date));
+        return Date::createFromPhp(new \DateTime($date));
     }
 
     /**
@@ -48,15 +34,15 @@ class DateNormalizer
      *
      * @param array|string|int $date
      * @param DateTimeZone|null $timeZone
-     * @return BxDateTime|array
+     * @return DateTime|array
      * @throws \DateMalformedStringException
      */
-    public static function createBxDateTime(array|string|int $date, DateTimeZone $timeZone = null): BXDateTime|array
+    public static function createDateTime(array|string|int $date, DateTimeZone $timeZone = null): DateTime|array
     {
         if (is_array($date)) {
-            return array_map(fn($value) => BXDateTime::createFromPhp(new DateTime($value, $timeZone)), $date);
+            return array_map(fn($value) => DateTime::createFromPhp(new \DateTime($value, $timeZone)), $date);
         }
 
-        return BXDateTime::createFromPhp(new DateTime($date, $timeZone));
+        return DateTime::createFromPhp(new \DateTime($date, $timeZone));
     }
 }

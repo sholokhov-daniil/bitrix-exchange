@@ -121,11 +121,11 @@ EventManager::getInstance()->addEventHandler(
 ## onAfterHighloadblockElementUpdate
 Событие вызывается после обновления элемента сущности и передаются следующие параметры:
 
-| Название |                                                                   Тип данных                                                                    | Обязательность |
-|:--------:|:-----------------------------------------------------------------------------------------------------------------------------------------------:|:--------------:|
-|  FIELDS  |                                                                      array                                                                      |       Да       |
-|    ID    |                                                                       int                                                                       |       Да       |
-|  RESULT  | [Sholokhov\Exchange\Messages\Type\DataResult](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Messages/Type/DataResult.php) |       Да       |
+| Название |                                                                Тип данных                                                                | Обязательность |
+|:--------:|:----------------------------------------------------------------------------------------------------------------------------------------:|:--------------:|
+|  FIELDS  |                                                                  array                                                                   |       Да       |
+|    ID    |                                                                   int                                                                    |       Да       |
+|  RESULT  | [Sholokhov\Exchange\Messages\Type\DataResult](https://github.com/sholokhov-daniil/exchange/blob/master/src/Messages/Type/DataResult.php) |       Да       |
 
 Пример подписки на событие
 
@@ -133,7 +133,6 @@ EventManager::getInstance()->addEventHandler(
 use Bitrix\Main\Event;
 use Bitrix\Main\EventResult;
 use Bitrix\Main\EventManager;
-use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Repository\RepositoryInterface;
 
 EventManager::getInstance()->addEventHandler(

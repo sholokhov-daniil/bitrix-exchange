@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\Exchange\ORM;
+namespace Sholokhov\BitrixExchange\ORM;
 
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectPropertyException;

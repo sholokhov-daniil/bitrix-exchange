@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\Exchange\Helper;
+namespace Sholokhov\BitrixExchange\Helper;
 
 use Bitrix\Main\Application;
 

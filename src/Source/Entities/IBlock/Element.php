@@ -1,14 +1,15 @@
 <?php
 
-namespace Sholokhov\Exchange\Source\Entities\IBlock;
+namespace Sholokhov\BitrixExchange\Source\Entities\IBlock;
 
-use Bitrix\Main\Loader;
-use Bitrix\Main\LoaderException;
 use Iterator;
 use ArrayIterator;
 use CIBlockElement;
 
 use Sholokhov\Exchange\Source\IterableTrait;
+
+use Bitrix\Main\Loader;
+use Bitrix\Main\LoaderException;
 
 /**
  * Источник данных основан на элементах информационного блока

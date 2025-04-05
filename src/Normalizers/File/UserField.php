@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\Exchange\Normalizers\File;
+namespace Sholokhov\BitrixExchange\Normalizers\File;
 
 use CFile;
 use ReflectionException;
