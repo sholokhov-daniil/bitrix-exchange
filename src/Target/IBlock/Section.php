@@ -1,17 +1,18 @@
 <?php
 
-namespace Sholokhov\Exchange\Target\IBlock;
+namespace Sholokhov\BitrixExchange\Target\IBlock;
 
 use CUtil;
 use Exception;
 use CIBlockSection;
 
-use Sholokhov\Exchange\Helper\Helper;
-use Sholokhov\Exchange\Helper\Site;
+use Sholokhov\BitrixExchange\Helper\Helper;
+use Sholokhov\BitrixExchange\Helper\Site;
+
 use Sholokhov\Exchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Messages\Type\Error;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 
-use Bitrix\Main\Error;
 use Bitrix\Main\Event;
 use Bitrix\Main\EventResult;
 use Bitrix\Main\ArgumentException;

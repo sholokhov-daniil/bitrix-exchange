@@ -1,13 +1,13 @@
 <?php
 
-namespace Sholokhov\Exchange\Target\IBlock\Catalog;
+namespace Sholokhov\BitrixExchange\Target\IBlock\Catalog;
 
 use ReflectionException;
 
+use Sholokhov\Exchange\Messages\Type\Error;
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Target\IBlock\Element;
 
-use Bitrix\Main\Error;
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
 

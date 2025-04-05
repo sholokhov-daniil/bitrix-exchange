@@ -1,11 +1,9 @@
 <?php
 
-namespace Sholokhov\Exchange\Target\Catalog;
+namespace Sholokhov\BitrixExchange\Target\Catalog;
 
-use Bitrix\Currency\CurrencyManager;
 use Bitrix\Currency\CurrencyTable;
 use Bitrix\Main\ArgumentException;
-use Bitrix\Main\Error;
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
 use Bitrix\Main\ObjectPropertyException;
@@ -15,6 +13,7 @@ use Exception;
 use ReflectionException;
 use Sholokhov\Exchange\Exchange;
 use Sholokhov\Exchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Messages\Type\Error;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 
 class Currency extends Exchange

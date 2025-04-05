@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\Exchange\Fields\Catalog;
+namespace Sholokhov\BitrixExchange\Fields\Catalog;
 
 use Sholokhov\Exchange\Fields\Field;
 

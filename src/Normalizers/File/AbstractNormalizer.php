@@ -1,10 +1,11 @@
 <?php
 
-namespace Sholokhov\Exchange\Normalizers\File;
+namespace Sholokhov\BitrixExchange\Normalizers\File;
 
 use ReflectionException;
 
-use Sholokhov\Exchange\Target\File;
+use Sholokhov\BitrixExchange\Target\File;
+
 use Sholokhov\Exchange\Messages\ResultInterface;
 
 use Psr\Log\LoggerAwareTrait;

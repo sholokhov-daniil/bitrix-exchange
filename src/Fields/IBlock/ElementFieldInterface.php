@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\Exchange\Fields\IBlock;
+namespace Sholokhov\BitrixExchange\Fields\IBlock;
 
 use Sholokhov\Exchange\Fields\FieldInterface;
 
