@@ -51,5 +51,9 @@ $result = $exchange->execute($data);
 * [Использование](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/doc/01-usage.md)
 * [События](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/doc/02-events.md)
 
-## Автор
-Шолохов Даниил - <sholokhovdaniil@yandex.ru> - <https://t.me/sholokhov22>
+<br>
+<br>
+
+[![Telegram](https://img.shields.io/badge/sholokhov22-50514F?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/sholokhov22)
+[![Email](https://img.shields.io/badge/sholokhovdaniil%40yandex.ru-50514F?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAMAAABF0y+mAAAAYFBMVEX4YEr4X0n4XEX4VTz4Uzn4WkH5hnj8v7j91tH94N34ZVD+5uP////+8vD/9/b9zsj7uLD+7+393tr//v75cl/4bFn4UDX7ppv5gHH8wrv3TTH8xsD3Rib92dX4WkP4Z1PMr9nAAAAAnklEQVR4AcTPNQLDQBAEwUNhW8z4/1caM2kv9qS1qP4bbax171jJfBQn6TuJuZnJcn55eH0xrR5QlFUM9Q19BY12NmsFdDl0RulewqEFr0P4AB1Cm8BoA2giaCcro3IzMC4yarsCjYxKbzusmYxHBIULjPUFRF5Gt8LqtIhHBA+jdc8ddVbAdKgPPo4Lqqw/s+NTdZ6n8InWr8HpgQQAHnwKoF6Sk9YAAAAASUVORK5CYII=)](mailto:sholokhovdaniil@yandex.ru)
+[![VK](https://img.shields.io/badge/daniil.sholokhov-50514F?style=for-the-badge&logo=vk&logoColor=white)](https://vk.ru/daniil.sholokhov)

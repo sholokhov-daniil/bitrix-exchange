@@ -6,9 +6,8 @@ use CIBlock;
 use ReflectionException;
 
 use Bitrix\Main\Error;
-use Sholokhov\Exchange\Messages\ResultInterface;
-use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Exchange;
+use Sholokhov\Exchange\Messages\ResultInterface;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
@@ -25,21 +24,16 @@ abstract class IBlock extends Exchange
      * @throws LoaderException
      * @throws ReflectionException
      */
-    protected function check(): ResultInterface
+    protected function validate(): ResultInterface
     {
-        $result = new DataResult;
+        $result = parent::validate();
 
         if (!Loader::includeModule('iblock')) {
             $result->addError(new Error('Module "iblock" not installed'));
         }
 
-        if ($this->getOptions()->get('iblock_id') <= 0) {
+        if ($this->getIBlockID() <= 0) {
             $result->addError(new Error('IBLOCK ID is required'));
-        }
-
-        $parentResult = parent::check();
-        if (!$parentResult->isSuccess()) {
-            $result->addErrors($parentResult->getErrors());
         }
 
         return $result;

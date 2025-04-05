@@ -26,11 +26,11 @@ class Currency extends Exchange
      * @throws LoaderException
      * @throws ReflectionException
      */
-    protected function check(): ResultInterface
+    protected function validate(): ResultInterface
     {
         throw new Exception('In development');
 
-        $result = parent::check();
+        $result = parent::validate();
 
         if (!Loader::includeModule('currency')) {
             $result->addError(new Error('Module "currency" not installed'));

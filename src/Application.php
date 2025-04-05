@@ -37,6 +37,7 @@ abstract class Application implements ExchangeInterface
     {
         $this->options = $this->makeOptionRepository($options);
         $this->cache = $this->makeCacheRepository();
+        $this->configure();
     }
 
     /**

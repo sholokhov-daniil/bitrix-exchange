@@ -96,13 +96,21 @@ class File extends Exchange
     /**
      * Обновление файла
      *
-     * @todo Доработать
      * @param array $item
      * @return ResultInterface
+     * @throws Exception
+     * @todo Доработать
      */
     protected function update(array $item): ResultInterface
     {
-        return new DataResult;
+        $keyField = $this->getKeyField();
+        $externalID = $this->getExternalId((string)$item[$keyField->getCode()]);
+
+        if (!$this->cache->has($externalID)) {
+            $this->add($item);
+        }
+
+        return (new DataResult)->setData((int)$this->cache->get($externalID));
     }
 
     /**

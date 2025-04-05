@@ -24,10 +24,10 @@ class SimpleProduct extends Element
      * @throws LoaderException
      * @throws ReflectionException
      */
-    protected function check(): ResultInterface
+    protected function validate(): ResultInterface
     {
         throw new \Exception('Not work');
-        $result = parent::check();
+        $result = parent::validate();
 
         if ($result->isSuccess() && !Loader::includeModule("catalog")) {
             $result->addError(new Error('Not installed module "catalog"'));

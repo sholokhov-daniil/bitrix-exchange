@@ -96,7 +96,7 @@ abstract class Exchange extends Application
     final public function execute(iterable $source): ResultInterface
     {
         $dataResult = [];
-        $result = $this->check();
+        $result = $this->validate();
 
         if (!$result->isSuccess()) {
             return $result;
@@ -177,7 +177,7 @@ abstract class Exchange extends Application
      * @return ResultInterface
      * @throws ReflectionException
      */
-    protected function check(): ResultInterface
+    protected function validate(): ResultInterface
     {
         $result = new DataResult;
 

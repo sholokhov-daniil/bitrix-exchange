@@ -98,7 +98,7 @@ class Element extends IBlock
             $result->addError(new Error('Error while adding IBLOCK element: ' . strip_tags($iblock->getLastError()), 500, $data));
         }
 
-        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => $itemId, 'FIELDS' => $data,]))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => $itemId, 'FIELDS' => $data, 'RESULT' => $result]))->send();
 
         return $result;
     }
@@ -143,9 +143,13 @@ class Element extends IBlock
         $this->logger?->debug('Updated properties IBLOCK element: ' . $itemID);
         $this->cleanCache();
 
+        $result->setData((int)$itemID);
+        $preparedItem['ID'] = $itemID;
+        $preparedItem['RESULT'] = $result;
+
         (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, $preparedItem))->send();
 
-        return $result->setData((int)$itemID);
+        return $result;
     }
 
     /**
@@ -196,10 +200,6 @@ class Element extends IBlock
      */
     protected function deactivate(): void
     {
-        if (!$this->getOptions()->get('deactivate')) {
-            return;
-        }
-
         $filter = [
             'IBLOCK_ID' => $this->getIBlockID(),
             '<TIMESTAMP_X' => DateTime::createFromTimestamp($this->dateUp),
@@ -260,7 +260,7 @@ class Element extends IBlock
     {
         $result = new DataResult;
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['ITEM' => &$item]);
+        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['FIELDS' => &$item]);
         $event->send();
 
         foreach ($event->getResults() as $eventResult) {
