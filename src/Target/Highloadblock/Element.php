@@ -154,7 +154,7 @@ class Element extends Exchange
         $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the "%s" highloadblock', $addResult->getId(), $this->getEntityID()));
         $this->cache->set($item[$this->getKeyField()->getCode()], $addResult->getId());
 
-        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['id' => $item, 'fields' => $item]))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => $item, 'FIELDS' => $item, 'RESULT' => $result]))->send();
 
         return $result;
     }
@@ -204,9 +204,11 @@ class Element extends Exchange
             )
         );
 
-        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['item' => $item, 'id' => $itemID]))->send();
+        $result->setData($itemID);
 
-        return $result->setData($itemID);
+        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['FIELDS' => $item, 'ID' => $itemID, 'RESULT' => $result]))->send();
+
+        return $result;
     }
 
     /**
@@ -219,7 +221,7 @@ class Element extends Exchange
     {
         $result = new DataResult;
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['fields' => &$item['FIELDS']]);
+        $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['FIELDS' => &$item['FIELDS']]);
         $event->send();
 
         foreach ($event->getResults() as $eventResult) {
@@ -250,7 +252,7 @@ class Element extends Exchange
     {
         $result = new DataResult;
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['item' => &$item]);
+        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['FIELDS' => &$item]);
         $event->send();
 
         foreach ($event->getResults() as $eventResult) {

@@ -144,6 +144,7 @@ class Element extends IBlock
         $this->cleanCache();
 
         $result->setData((int)$itemID);
+        $preparedItem['ID'] = $itemID;
         $preparedItem['RESULT'] = $result;
 
         (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, $preparedItem))->send();
@@ -259,7 +260,7 @@ class Element extends IBlock
     {
         $result = new DataResult;
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['ITEM' => &$item]);
+        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['FIELDS' => &$item]);
         $event->send();
 
         foreach ($event->getResults() as $eventResult) {
