@@ -19,7 +19,7 @@ composer require sholokhov/bitrix-exchange
 
 ````php
 use Sholokhov\Exchange\Fields;
-use Sholokhov\Exchange\Target\IBlock\Element;
+use Sholokhov\BitrixExchange\Target\IBlock\Element;
 
 $data = [
     [

@@ -1,5 +1,5 @@
 # События обмена
-- [Базовый класс обмена (Sholokhov\Exchange\Exchange)](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/doc/02-events-exchange.md)
+- [Базовый класс обмена (Sholokhov\Exchange\Exchange)](https://github.com/sholokhov-daniil/exchange/blob/master/doc/02-events-exchange.md)
 - [Импорт элементов Highloadblock (Sholokhov\Exchange\Target\Highloadblock\Element)](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Target/Highloadblock/Element.php)
 - [Импорт элементов информационного блока (Sholokhov\Exchange\Target\IBlock\Element)](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Target/IBlock/Element.php)
 

@@ -21,6 +21,6 @@
     },
     "require": {
         "php": "^8.2",
-        "sholokhov/exchange": "^1.0"
+        "sholokhov/exchange": "^1.0.1"
     }
 }
