@@ -2,20 +2,24 @@
 
 namespace Sholokhov\BitrixExchange\Target\IBlock\Property;
 
-use Bitrix\Iblock\PropertyTable;
-use Bitrix\Main\Diag\Debug;
-use Bitrix\Main\LoaderException;
-use CIBlockProperty;
-use CIBlockPropertyEnum;
 use Exception;
-use Sholokhov\BitrixExchange\Repository\IBlock\PropertyRepository;
+use CIBlockPropertyEnum;
+
 use Sholokhov\BitrixExchange\Target\IBlock\IBlock;
+use Sholokhov\BitrixExchange\Repository\IBlock\PropertyRepository;
+
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Messages\Type\Error;
-use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
 use Sholokhov\Exchange\Target\Attributes\Validate;
+use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
 
+use Bitrix\Iblock\PropertyTable;
+use Bitrix\Main\LoaderException;
+
+/**
+ * Импорт значений списка информационного блока
+ */
 class PropertyEnumeration extends IBlock
 {
     /**
@@ -35,7 +39,7 @@ class PropertyEnumeration extends IBlock
 
         $filter = [
             'IBLOCK_ID' => $this->getIBlockID(),
-            'PROPERTY_ID' => $this->getPropertyCode(),
+            'PROPERTY_ID' => $this->getProperty()['ID'],
             $primaryField->getCode() => $item[$primaryField->getCode()],
         ];
 
@@ -47,6 +51,13 @@ class PropertyEnumeration extends IBlock
         return false;
     }
 
+    /**
+     * Создание значения списка
+     *
+     * @param array $item
+     * @return ResultInterface
+     * @throws LoaderException
+     */
     protected function add(array $item): ResultInterface
     {
         $result = new DataResult;
@@ -54,8 +65,6 @@ class PropertyEnumeration extends IBlock
         // TODO: Добавить событие
 
         $fields = $this->prepareItem($item);
-        $fields['PROPERTY_ID'] = $this->getPropertyCode();
-        $fields['IBLOCK_ID'] = $this->getIBlockID();
 
         if ($enumId = CIBlockPropertyEnum::Add($fields)) {
             $result->setData((int)$enumId);
@@ -70,9 +79,37 @@ class PropertyEnumeration extends IBlock
         return $result;
     }
 
+    /**
+     * Обновление значения свойства
+     *
+     * @param array $item
+     * @return ResultInterface
+     * @throws LoaderException
+     */
     protected function update(array $item): ResultInterface
     {
-        // TODO: Implement update() method.
+        $result = new DataResult;
+        $primaryField = $this->getPrimaryField();
+
+        $enumId = (int)$this->cache->get($item[$primaryField->getCode()]);
+
+        if (!$enumId) {
+            return $this->add($item);
+        }
+
+        $fields = $this->prepareItem($item);
+
+        // TODO: Add event
+        if (!CIBlockPropertyEnum::Update($enumId, $fields)) {
+            return $result->addError(new Error('An error occurred when creating the list value', 500, $fields));
+        }
+
+        $this->logger?->debug(sprintf('Updated the value of the list with the ID "%s"', $enumId));
+        $result->setData($enumId);
+
+        // TODO: add event
+
+        return $result;
     }
 
     /**
@@ -80,6 +117,7 @@ class PropertyEnumeration extends IBlock
      *
      * @param array $item
      * @return array
+     * @throws LoaderException
      */
     private function prepareItem(array $item): array
     {
@@ -92,12 +130,26 @@ class PropertyEnumeration extends IBlock
             }
         }
 
+        $result['PROPERTY_ID'] = $this->getProperty()['ID'];
+        $result['IBLOCK_ID'] = $this->getIBlockID();
+
         return $result;
     }
 
     private function getSupportedFields(): array
     {
         return ['VALUE', 'ID', 'SORT', 'DEF', 'XML_ID', 'EXTERNAL_ID'];
+    }
+
+    /**
+     * Получение информации о свойстве
+     *
+     * @return array
+     * @throws LoaderException
+     */
+    private function getProperty(): array
+    {
+        return $this->getPropertyRepository()->get($this->getPropertyCode(), []);
     }
 
     /**
