@@ -2,15 +2,20 @@
 
 namespace Sholokhov\BitrixExchange\Prepares\Base;
 
-use Bitrix\Main\Diag\Debug;
 use Exception;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
+use InvalidArgumentException;
+
 use Sholokhov\BitrixExchange\Prepares\AbstractPrepare;
 use Sholokhov\Exchange\ExchangeInterface;
 use Sholokhov\Exchange\Fields\Field;
 use Sholokhov\Exchange\Fields\FieldInterface;
 
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerAwareInterface;
+
+/**
+ * Импорт значения в список
+ */
 abstract class AbstractEnumeration extends AbstractPrepare implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
@@ -23,6 +28,12 @@ abstract class AbstractEnumeration extends AbstractPrepare implements LoggerAwar
         $this->checkPrimary();
     }
 
+    /**
+     * Получение импорта значения
+     *
+     * @param FieldInterface $field
+     * @return ExchangeInterface
+     */
     abstract protected function getTarget(FieldInterface $field): ExchangeInterface;
 
     /**
@@ -53,7 +64,9 @@ abstract class AbstractEnumeration extends AbstractPrepare implements LoggerAwar
             throw new Exception(implode(PHP_EOL, $result->getErrorMessages()));
         }
 
-        return $result->getData();
+        $data = $result->getData();
+
+        return is_array($data) ? (int)reset($data) : 0;
     }
 
     /**
@@ -64,7 +77,7 @@ abstract class AbstractEnumeration extends AbstractPrepare implements LoggerAwar
     private function checkPrimary(): void
     {
         if ($this->primary <> 'VALUE' && $this->primary <> 'ID' && $this->primary <> 'XML_ID') {
-            throw new \InvalidArgumentException('Primary key are not allowed');
+            throw new InvalidArgumentException('Primary key are not allowed');
         }
     }
 }
