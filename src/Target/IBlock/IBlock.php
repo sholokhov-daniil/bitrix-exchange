@@ -3,11 +3,12 @@
 namespace Sholokhov\BitrixExchange\Target\IBlock;
 
 use CIBlock;
-use ReflectionException;
 
 use Sholokhov\Exchange\Exchange;
 use Sholokhov\Exchange\Messages\Type\Error;
+use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Target\Attributes\Validate;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
@@ -17,28 +18,6 @@ use Bitrix\Main\LoaderException;
  */
 abstract class IBlock extends Exchange
 {
-    /**
-     * Проверка возможности выполнения обмена
-     *
-     * @return ResultInterface
-     * @throws LoaderException
-     * @throws ReflectionException
-     */
-    protected function validate(): ResultInterface
-    {
-        $result = parent::validate();
-
-        if (!Loader::includeModule('iblock')) {
-            $result->addError(new Error('Module "iblock" not installed'));
-        }
-
-        if ($this->getIBlockID() <= 0) {
-            $result->addError(new Error('IBLOCK ID is required'));
-        }
-
-        return $result;
-    }
-
     /**
      * Обработка конфигураций обмена
      *
@@ -54,6 +33,7 @@ abstract class IBlock extends Exchange
     /**
      * Очистка кэша ИБ
      *
+     * @final
      * @return void
      */
     final protected function cleanCache(): void
@@ -65,6 +45,7 @@ abstract class IBlock extends Exchange
     /**
      * Получение информации ИБ
      *
+     * @final
      * @return array
      */
     final protected function getIBlockInfo(): array
@@ -80,6 +61,40 @@ abstract class IBlock extends Exchange
      */
     final protected function getIBlockID(): int
     {
-        return (int)$this->getOptions()->get('iblock_id');
+        return (int)$this->getOptions()->get('entity_id');
+    }
+
+    /**
+     * Проверка загрузки модулей
+     *
+     * @return ResultInterface
+     * @throws LoaderException
+     */
+    #[Validate]
+    private function checkModules(): ResultInterface
+    {
+        $result = new DataResult;
+
+        if (!Loader::includeModule('iblock')) {
+            $result->addError(new Error('Module "iblock" not installed'));
+        }
+        return $result;
+    }
+
+    /**
+     * Валидация конфигурации обмена
+     *
+     * @return ResultInterface
+     */
+    #[Validate]
+    private function validateOptions(): ResultInterface
+    {
+        $result = new DataResult;
+
+        if ($this->getIBlockID() <= 0) {
+            $result->addError(new Error('IBLOCK ID is required'));
+        }
+
+        return $result;
     }
 }

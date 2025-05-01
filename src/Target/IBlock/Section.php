@@ -41,7 +41,7 @@ class Section extends IBlock
      */
     protected function exists(array $item): bool
     {
-        $keyField = $this->getKeyField();
+        $keyField = $this->getPrimaryField();
 
         if (!$keyField || !isset($item[$keyField->getCode()])) {
             return false;
@@ -87,7 +87,7 @@ class Section extends IBlock
             $result->setData((int)$id);
             $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the %s information block', $this->getIBlockID(), $id));
 
-            if ($keyField = $this->getKeyField()) {
+            if ($keyField = $this->getPrimaryField()) {
                 $this->cache->set($item[$keyField->getCode()], (int)$id);
             }
         } else {
@@ -109,7 +109,7 @@ class Section extends IBlock
     protected function update(array $item): ResultInterface
     {
         $result = new DataResult;
-        $keyField = $this->getKeyField();
+        $keyField = $this->getPrimaryField();
 
         $section = new CIBlockSection;
         $sectionId = $this->cache->get($item[$keyField->getCode()]);
@@ -165,7 +165,7 @@ class Section extends IBlock
         }
 
         if (!isset($result['NAME'])) {
-            $result['NAME'] = $item[$this->getKeyField()?->getCode()] ?? '';
+            $result['NAME'] = $item[$this->getPrimaryField()?->getCode()] ?? '';
         }
 
         if (!isset($result['CODE'])) {

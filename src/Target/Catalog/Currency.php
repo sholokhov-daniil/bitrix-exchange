@@ -15,29 +15,10 @@ use Sholokhov\Exchange\Exchange;
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\Error;
 use Sholokhov\Exchange\Messages\Type\DataResult;
+use Sholokhov\Exchange\Target\Attributes\Validate;
 
 class Currency extends Exchange
 {
-    /**
-     * Проверка возможности выполнения обмена
-     *
-     * @return ResultInterface
-     * @throws LoaderException
-     * @throws ReflectionException
-     */
-    protected function validate(): ResultInterface
-    {
-        throw new Exception('In development');
-
-        $result = parent::validate();
-
-        if (!Loader::includeModule('currency')) {
-            $result->addError(new Error('Module "currency" not installed'));
-        }
-
-        return $result;
-    }
-
     /**
      * Проверка наличия валюты
      *
@@ -50,7 +31,7 @@ class Currency extends Exchange
      */
     protected function exists(array $item): bool
     {
-        $keyField = $this->getKeyField();
+        $keyField = $this->getPrimaryField();
 
         if ($this->cache->has($item[$keyField->getCode()])) {
             return true;
@@ -89,7 +70,7 @@ class Currency extends Exchange
         if ($id = CCurrency::Add($preparedItem)) {
             $result->setData((int)$id);
             $this->logger?->debug("A currency with an identifier was created: $id");
-            $this->cache->set($item[$this->getKeyField()->getCode()], (int)$id);
+            $this->cache->set($item[$this->getPrimaryField()->getCode()], (int)$id);
         } else {
             $result->addError(new Error('Failed to create currency', 500, $preparedItem));
         }
@@ -125,5 +106,24 @@ class Currency extends Exchange
         }
 
         return $item;
+    }
+
+    /**
+     * Проверка загрузки модулей
+     *
+     * @return ResultInterface
+     * @throws LoaderException
+     */
+    #[Validate]
+    private function checkModules(): ResultInterface
+    {
+        throw new Exception('In development');
+        $result = new DataResult;
+
+        if (!Loader::includeModule('currency')) {
+            $result->addError(new Error('Module "currency" not installed'));
+        }
+
+        return $result;
     }
 }

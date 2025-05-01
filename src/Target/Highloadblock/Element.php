@@ -2,9 +2,11 @@
 
 namespace Sholokhov\BitrixExchange\Target\Highloadblock;
 
+use Bitrix\Main\Diag\Debug;
 use Exception;
 use ReflectionException;
 
+use Sholokhov\BitrixExchange\Prepares\File\UserField;
 use Sholokhov\Exchange\Exchange;
 use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\Messages\Type\Error;
@@ -20,6 +22,8 @@ use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Highloadblock\HighloadBlockTable as HLT;
+use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\Exchange\Target\Attributes\Validate;
 
 class Element extends Exchange
 {
@@ -53,42 +57,6 @@ class Element extends Exchange
     }
 
     /**
-     * Конфигурация импорта
-     *
-     * @return void
-     * @throws LoaderException
-     * @throws SystemException
-     */
-    protected function configure(): void
-    {
-        if (Loader::includeModule('highloadblock')) {
-            $this->entity = HLT::compileEntity($this->getEntityID())->getDataClass();
-        }
-    }
-
-    /**
-     * Проверка возможности выполнения обмена
-     *
-     * @return ResultInterface
-     * @throws LoaderException
-     * @throws ReflectionException
-     */
-    protected function validate(): ResultInterface
-    {
-        $result = parent::validate();
-
-        if (!Loader::includeModule('highloadblock')) {
-            $result->addError(new Error('Module "highloadblock" not installed'));
-        }
-
-        if ($this->getEntityID() <= 0) {
-            $result->addError(new Error('Entity ID is required'));
-        }
-
-        return $result;
-    }
-
-    /**
      * Проверка наличия элемента сущности
      *
      * @param array $item
@@ -99,7 +67,7 @@ class Element extends Exchange
      */
     protected function exists(array $item): bool
     {
-        $keyField = $this->getKeyField();
+        $keyField = $this->getPrimaryField();
 
         if ($this->cache->has($item[$keyField->getCode()])) {
             return true;
@@ -152,7 +120,7 @@ class Element extends Exchange
 
         $result->setData($addResult->getId());
         $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the "%s" highloadblock', $addResult->getId(), $this->getEntityID()));
-        $this->cache->set($item[$this->getKeyField()->getCode()], $addResult->getId());
+        $this->cache->set($item[$this->getPrimaryField()->getCode()], $addResult->getId());
 
         (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => $item, 'FIELDS' => $item, 'RESULT' => $result]))->send();
 
@@ -169,7 +137,7 @@ class Element extends Exchange
     protected function update(array $item): ResultInterface
     {
         $result = new DataResult;
-        $keyField = $this->getKeyField();
+        $keyField = $this->getPrimaryField();
 
         $itemID = $this->cache->get($item[$keyField->getCode()]);
 
@@ -209,6 +177,21 @@ class Element extends Exchange
         (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['FIELDS' => $item, 'ID' => $itemID, 'RESULT' => $result]))->send();
 
         return $result;
+    }
+
+    /**
+     * Конфигурация импорта
+     *
+     * @return void
+     * @throws LoaderException
+     * @throws SystemException
+     */
+    #[BootstrapConfiguration]
+    private function bootstrap(): void
+    {
+        if (Loader::includeModule('highloadblock')) {
+            $this->entity = HLT::compileEntity($this->getEntityID())->getDataClass();
+        }
     }
 
     /**
@@ -271,5 +254,49 @@ class Element extends Exchange
         }
 
         return $result;
+    }
+
+    /**
+     * Проверка загрузки модулей
+     *
+     * @return ResultInterface
+     * @throws LoaderException
+     */
+    #[Validate]
+    private function checkModules(): ResultInterface
+    {
+        $result = new DataResult;
+
+        if (!Loader::includeModule('highloadblock')) {
+            $result->addError(new Error('Module "highloadblock" not installed'));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Валидация конфигурации обмена
+     *
+     * @return ResultInterface
+     */
+    #[Validate]
+    private function validateOptions(): ResultInterface
+    {
+        $result = new DataResult;
+
+        if ($this->getEntityID() <= 0) {
+            $result->addError(new Error('Entity ID is required'));
+        }
+
+        return $result;
+    }
+
+    #[BootstrapConfiguration]
+    private function bootstrapPrepares(): void
+    {
+        $entityId = 'HLBLOCK_' . $this->getEntityID();
+
+        $this->getPrepares()
+            ->add(new UserField($entityId));
     }
 }

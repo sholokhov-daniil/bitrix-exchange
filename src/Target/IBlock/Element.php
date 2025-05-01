@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\Exchange\Target\IBlock;
+namespace Sholokhov\BitrixExchange\Target\IBlock;
 
 use Exception;
 use CIBlockElement;
@@ -11,6 +11,7 @@ use Sholokhov\Exchange\Messages\Type\Error;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 
 use Sholokhov\BitrixExchange\Helper\Site;
+use Sholokhov\BitrixExchange\Prepares\IBlock\Element as Prepare;
 use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
 
 use Bitrix\Main\Event;
@@ -20,6 +21,7 @@ use Bitrix\Iblock\ElementTable;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectPropertyException;
+use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
 
 /**
  * Импортирование элемента информационного блока
@@ -41,7 +43,7 @@ class Element extends IBlock
      */
     protected function exists(array $item): bool
     {
-        $keyField = $this->getKeyField();
+        $keyField = $this->getPrimaryField();
 
         if ($this->cache->has($item[$keyField->getCode()])) {
             return true;
@@ -94,7 +96,7 @@ class Element extends IBlock
             // TODO: записываем хэш
             $result->setData((int)$itemId);
             $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the %s information block', $this->getIBlockID(), $itemId));
-            $this->cache->set($item[$this->getKeyField()->getCode()], (int)$itemId);
+            $this->cache->set($item[$this->getPrimaryField()->getCode()], (int)$itemId);
         } else {
             $result->addError(new Error('Error while adding IBLOCK element: ' . strip_tags($iblock->getLastError()), 500, $data));
         }
@@ -114,7 +116,7 @@ class Element extends IBlock
     protected function update(array $item): ResultInterface
     {
         $result = new DataResult;
-        $keyField = $this->getKeyField();
+        $keyField = $this->getPrimaryField();
 
         $iBlock = new CIBlockElement;
         $itemID = $this->cache->get($item[$keyField->getCode()]);
@@ -185,7 +187,7 @@ class Element extends IBlock
         }
 
         if (!isset($result['FIELDS']['NAME'])) {
-            $result['FIELDS']['NAME'] = $item[$this->getKeyField()?->getCode()] ?? '';
+            $result['FIELDS']['NAME'] = $item[$this->getPrimaryField()?->getCode()] ?? '';
         }
 
         return $result;
@@ -280,5 +282,16 @@ class Element extends IBlock
         }
 
         return $result;
+    }
+
+    #[BootstrapConfiguration]
+    protected function bootstrapPrepares(): void
+    {
+        $iBlockID = $this->getIBlockID();
+        $this
+            ->addPrepared(new Prepare\Date($iBlockID))
+            ->addPrepared(new Prepare\DateTime($iBlockID))
+            ->addPrepared(new Prepare\Number($iBlockID))
+            ->addPrepared(new Prepare\Enumeration($iBlockID));
     }
 }
