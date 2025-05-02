@@ -29,7 +29,7 @@ composer require sholokhov/bitrix-exchange
 ## Доступные описания свойств
 
 ### Описание свойства информационного блока
-Класс [IBlockElementField](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Fields/IBlock/IBlockElementField.php) наследник [Field](https://github.com/sholokhov-daniil/exchange/blob/master/src/Fields/Field.php) 
+Класс [IBlockElementField](https://github.com/sholokhov-daniil/bitrix-exchange/blob/v0.200/src/Fields/IBlock/IBlockElementField.php) наследник [Field](https://github.com/sholokhov-daniil/exchange/blob/master/src/Fields/Field.php) 
 
 | Наименование | Обязательное | Тип данных параметра | Возвращаемый тип данных |           Описание           |
 |:------------:|:------------:|:--------------------:|:-----------------------:|:----------------------------:|

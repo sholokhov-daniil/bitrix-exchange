@@ -1,39 +1,45 @@
-# События импорта элементов информационного блока
+# События импорта значений списка в свойство информационного блока
 
-Класс [Element](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Target/IBlock/Element.php)
+Класс [PropertyEnumeration](https://github.com/sholokhov-daniil/bitrix-exchange/blob/v0.200/src/Target/IBlock/Property/PropertyEnumeration.php)
 
-- [onBeforeIBlockElementAdd](#onbeforeiblockelementadd)
-- [onAfterIBlockElementAdd](#onafteriblockelementadd)
-- [onBeforeIBlockElementUpdate](#onbeforeiblockelementupdate)
-- [onAfterIBlockElementUpdate](#onafteriblockelementupdate)
+## События
+- [onBeforeIBlockPropertyEnumerationAdd](#onbeforeiblockpropertyenumerationadd)
+- [onAfterIBlockPropertyEnumerationAdd](#onafteriblockpropertyenumerationadd)
+- [onBeforeIBlockPropertyEnumerationUpdate](#onbeforeiblockpropertyenumerationupdate)
+- [onAfterIBlockPropertyEnumerationUpdate](#onafteriblockpropertyenumerationupdate)
 
-## onBeforeIBlockElementAdd
-Событие вызывается перед созданием элемента:
+## onBeforeIBlockPropertyEnumerationAdd
+
+Событие вызывается перед созданием значения списка
+
+### Параметры события
 
 | Название  | Тип данных | Обязательность |          Примечание           |
 |:---------:|:----------:|:--------------:|:-----------------------------:|
-|  FIELDS   |   array    |       Да       | Значение передается по ссылке | 
+|  FIELDS   |   array    |       Да       | Значение передается по ссылке |
 
-Пример подписки на событие
-
+### Пример подписки на событие
 ````php
 use Bitrix\Main\Event;
 use Bitrix\Main\EventManager;
-use Sholokhov\Exchange\Repository\RepositoryInterface;
 
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onBeforeIBlockElementAdd',
+    'onBeforeIBlockPropertyEnumerationAdd',
     function(Event $event) {
         $parameters = &$event->getParameters();
-        $parameters['FIELDS']['MY_FIELD'] = 15;
+        $parameters['FIELDS']['XML_ID'] = 'my_value';
         
         return new EventResult(EventResult::SUCCESS, $parameters);
     }
 );
 ````
 
-> Присутствует возможность отмены добавления значения. Если отменить добавление, то в лог файле появится соответствующее сообщение, но в результате работы импорта это не отобразится.
+> Присутствует возможность отмены добавления значения.
+> 
+> Если отменить добавление, то в лог файле появится соответствующее сообщение, но в результате работы импорта это не отобразится.
+
+### Пример отмены добавления
 
 ````php
 use Bitrix\Main\Event;
@@ -43,15 +49,18 @@ use Sholokhov\Exchange\Repository\RepositoryInterface;
 
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onBeforeIBlockElementAdd',
+    'onBeforeIBlockPropertyEnumerationAdd',
     function(Event $event) {        
         return new EventResult(EventResult::ERROR, $event->getParameters());
     }
 );
 ````
 
-## onAfterIBlockElementAdd
-Событие вызывается после добавления элемента:
+## onAfterIBlockPropertyEnumerationAdd
+
+Событие вызывается после добавления значения в список
+
+### Параметры события
 
 | Название |                                                                Тип данных                                                                | Обязательность |            Примечание            |
 |:--------:|:----------------------------------------------------------------------------------------------------------------------------------------:|:--------------:|:--------------------------------:|
@@ -59,7 +68,7 @@ EventManager::getInstance()->addEventHandler(
 |  FIELDS  |                                                                  array                                                                   |       Да       | Массив с добавляемыми значениями |
 |  RESULT  | [Sholokhov\Exchange\Messages\Type\DataResult](https://github.com/sholokhov-daniil/exchange/blob/master/src/Messages/Type/DataResult.php) |       Да       |
 
-Пример подписки на событие
+### Пример подписки на событие
 
 ````php
 use Bitrix\Main\Event;
@@ -68,22 +77,26 @@ use Sholokhov\Exchange\Repository\RepositoryInterface;
 
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onAfterIBlockElementAdd',
+    'onAfterIBlockPropertyEnumerationAdd',
     function(Event $event) {
         //...
     }
 );
 ````
 
-## onBeforeIBlockElementUpdate
-Событие перед изменением элемента:
+
+## onBeforeIBlockPropertyEnumerationUpdate
+
+Событие перед изменением элемента
+
+### Параметры события
 
 | Название | Тип данных | Обязательность |          Примечание           |
 |:--------:|:----------:|:--------------:|:-----------------------------:|
 |  FIELDS  |   array    |       Да       | Значение передаются по ссылке |
 |    ID    |    int     |       Да       |   ID обновляемого элемента    |
 
-Пример подписки на событие
+### Пример подписки на событие
 
 ````php
 use Bitrix\Main\Event;
@@ -93,17 +106,21 @@ use Sholokhov\Exchange\Repository\RepositoryInterface;
 
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onBeforeIBlockElementUpdate',
+    'onBeforeIBlockPropertyEnumerationUpdate',
     function(Event $event) {
         $parameters = &$event->getParameters();
-        $parameters['FIELDS']['you_field'] = "new_value";
+        $parameters['FIELDS']['XML_ID'] = "new_value";
         
         return new EventResult(EventResult::SUCCESS, $parameters);
     }
 );
 ````
 
-> Присутствует возможность отмены изменения значения. Если отменить изменение, то в лог файле появится соответствующее сообщение, но в результате работы импорта это не отобразится.
+> Присутствует возможность отмены изменения
+> 
+> Если отменить изменение, то в лог файле появится соответствующее сообщение, но в результате работы импорта это не отобразится.
+
+### Пример отмены добавления
 
 ````php
 use Bitrix\Main\Event;
@@ -113,15 +130,18 @@ use Sholokhov\Exchange\Repository\RepositoryInterface;
 
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onBeforeIBlockElementUpdate',
+    'onBeforeIBlockPropertyEnumerationUpdate',
     function(Event $event) {        
         return new EventResult(EventResult::ERROR, $event->getParameters());
     }
 );
 ````
 
-## onAfterIBlockElementUpdate
-Событие вызывается после обновления элемента сущности и передаются следующие параметры:
+## onAfterIBlockPropertyEnumerationUpdate
+
+Событие вызывается после обновления значения списка
+
+### Параметры события
 
 | Название |                                                                Тип данных                                                                | Обязательность |
 |:--------:|:----------------------------------------------------------------------------------------------------------------------------------------:|:--------------:|
@@ -129,7 +149,7 @@ EventManager::getInstance()->addEventHandler(
 |    ID    |                                                                   int                                                                    |       Да       |
 |  RESULT  | [Sholokhov\Exchange\Messages\Type\DataResult](https://github.com/sholokhov-daniil/exchange/blob/master/src/Messages/Type/DataResult.php) |       Да       |
 
-Пример подписки на событие
+### Пример подписки на событие
 
 ````php
 use Bitrix\Main\Event;
@@ -139,9 +159,11 @@ use Sholokhov\Exchange\Repository\RepositoryInterface;
 
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onAfterIBlockElementUpdate',
+    'onAfterIBlockPropertyEnumerationUpdate',
     function(Event $event) {
         // ...
     }
 );
 ````
+
+[![Back](https://img.shields.io/badge/События_свойств_информационного_блока-blue?style=for-the-badge)](https://github.com/sholokhov-daniil/exchange/blob/v0.200/doc/events/iblock/properties/main.md)

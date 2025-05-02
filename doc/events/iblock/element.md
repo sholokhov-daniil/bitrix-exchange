@@ -1,29 +1,28 @@
-# События импорта элементов Highloadblock
+# События импорта элементов информационного блока
 
-Класс [Element](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/src/Target/Highloadblock/Element.php)
+Класс [Element](https://github.com/sholokhov-daniil/bitrix-exchange/blob/v0.200/src/Target/IBlock/Element.php)
 
-- [onBeforeHighloadblockElementAdd](#onbeforehighloadblockelementadd)
-- [onAfterHighloadblockElementAdd](#onafterhighloadblockelementadd)
-- [onBeforeHighloadblockElementUpdate](#onbeforehighloadblockelementupdate)
-- [onAfterHighloadblockElementUpdate](#onafterhighloadblockelementupdate)
+- [onBeforeIBlockElementAdd](#onbeforeiblockelementadd)
+- [onAfterIBlockElementAdd](#onafteriblockelementadd)
+- [onBeforeIBlockElementUpdate](#onbeforeiblockelementupdate)
+- [onAfterIBlockElementUpdate](#onafteriblockelementupdate)
 
-## onBeforeHighloadblockElementAdd
-Событие вызывается перед созданием элемента справочника(Highloadblock):
+## onBeforeIBlockElementAdd
+Событие вызывается перед созданием элемента:
 
-| Название | Тип данных | Обязательность |          Примечание           |
-|:--------:|:----------:|:--------------:|:-----------------------------:|
-|  FIELDS  |   array    |       Да       | Значение передается по ссылке | 
+| Название  | Тип данных | Обязательность |          Примечание           |
+|:---------:|:----------:|:--------------:|:-----------------------------:|
+|  FIELDS   |   array    |       Да       | Значение передается по ссылке | 
 
 Пример подписки на событие
 
 ````php
 use Bitrix\Main\Event;
 use Bitrix\Main\EventManager;
-use Sholokhov\Exchange\Repository\RepositoryInterface;
 
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onBeforeHighloadblockElementAdd',
+    'onBeforeIBlockElementAdd',
     function(Event $event) {
         $parameters = &$event->getParameters();
         $parameters['FIELDS']['MY_FIELD'] = 15;
@@ -43,20 +42,21 @@ use Sholokhov\Exchange\Repository\RepositoryInterface;
 
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onBeforeHighloadblockElementAdd',
+    'onBeforeIBlockElementAdd',
     function(Event $event) {        
         return new EventResult(EventResult::ERROR, $event->getParameters());
     }
 );
 ````
 
-## onAfterHighloadblockElementAdd
-Событие вызывается после добавления элемента справочника:
+## onAfterIBlockElementAdd
+Событие вызывается после добавления элемента:
 
-| Название | Тип данных | Обязательность |            Примечание            |
-|:--------:|:----------:|:--------------:|:--------------------------------:|
-|    ID    |    int     |       Да       |      ID созданного элемента      |
-|  FIELDS  |   array    |       Да       | Массив с добавляемыми значениями |
+| Название |                                                                Тип данных                                                                | Обязательность |            Примечание            |
+|:--------:|:----------------------------------------------------------------------------------------------------------------------------------------:|:--------------:|:--------------------------------:|
+|    ID    |                                                                   int                                                                    |       Да       |      ID созданного элемента      |
+|  FIELDS  |                                                                  array                                                                   |       Да       | Массив с добавляемыми значениями |
+|  RESULT  | [Sholokhov\Exchange\Messages\Type\DataResult](https://github.com/sholokhov-daniil/exchange/blob/master/src/Messages/Type/DataResult.php) |       Да       |
 
 Пример подписки на событие
 
@@ -67,19 +67,20 @@ use Sholokhov\Exchange\Repository\RepositoryInterface;
 
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onAfterHighloadblockElementAdd',
+    'onAfterIBlockElementAdd',
     function(Event $event) {
         //...
     }
 );
 ````
 
-## onBeforeHighloadblockElementUpdate
-Событие перед изменением элемента справочника:
+## onBeforeIBlockElementUpdate
+Событие перед изменением элемента:
 
 | Название | Тип данных | Обязательность |          Примечание           |
 |:--------:|:----------:|:--------------:|:-----------------------------:|
 |  FIELDS  |   array    |       Да       | Значение передаются по ссылке |
+|    ID    |    int     |       Да       |   ID обновляемого элемента    |
 
 Пример подписки на событие
 
@@ -91,7 +92,7 @@ use Sholokhov\Exchange\Repository\RepositoryInterface;
 
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onBeforeHighloadblockElementUpdate',
+    'onBeforeIBlockElementUpdate',
     function(Event $event) {
         $parameters = &$event->getParameters();
         $parameters['FIELDS']['you_field'] = "new_value";
@@ -111,14 +112,14 @@ use Sholokhov\Exchange\Repository\RepositoryInterface;
 
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onBeforeHighloadblockElementUpdate',
+    'onBeforeIBlockElementUpdate',
     function(Event $event) {        
         return new EventResult(EventResult::ERROR, $event->getParameters());
     }
 );
 ````
 
-## onAfterHighloadblockElementUpdate
+## onAfterIBlockElementUpdate
 Событие вызывается после обновления элемента сущности и передаются следующие параметры:
 
 | Название |                                                                Тип данных                                                                | Обязательность |
@@ -137,10 +138,11 @@ use Sholokhov\Exchange\Repository\RepositoryInterface;
 
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onAfterHighloadblockElementUpdate',
+    'onAfterIBlockElementUpdate',
     function(Event $event) {
-        $itemID = $event->getParameter('ID');
         // ...
     }
 );
 ````
+
+[![Back](https://img.shields.io/badge/События_информационного_блока-blue?style=for-the-badge)](https://github.com/sholokhov-daniil/exchange/blob/v0.200/doc/events/iblock/main.md)

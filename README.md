@@ -48,8 +48,8 @@ $result = $exchange->execute($data);
 ````
 
 ## Документация
-* [Использование](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/doc/01-usage.md)
-* [События](https://github.com/sholokhov-daniil/bitrix-exchange/blob/master/doc/02-events.md)
+* [Использование](https://github.com/sholokhov-daniil/bitrix-exchange/blob/v0.200/doc/01-usage.md)
+* [События](https://github.com/sholokhov-daniil/bitrix-exchange/blob/v0.200/doc/02-events/main.md)
 
 <br>
 <br>
