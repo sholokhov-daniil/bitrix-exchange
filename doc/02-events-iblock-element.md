@@ -81,6 +81,7 @@ EventManager::getInstance()->addEventHandler(
 | Название | Тип данных | Обязательность |          Примечание           |
 |:--------:|:----------:|:--------------:|:-----------------------------:|
 |  FIELDS  |   array    |       Да       | Значение передаются по ссылке |
+|    ID    |    int     |       Да       |   ID обновляемого элемента    |
 
 Пример подписки на событие
 
@@ -124,7 +125,7 @@ EventManager::getInstance()->addEventHandler(
 
 | Название |                                                                Тип данных                                                                | Обязательность |
 |:--------:|:----------------------------------------------------------------------------------------------------------------------------------------:|:--------------:|
-|   ITEM   |                                                                  array                                                                   |       Да       |
+|  FIELDS  |                                                                  array                                                                   |       Да       |
 |    ID    |                                                                   int                                                                    |       Да       |
 |  RESULT  | [Sholokhov\Exchange\Messages\Type\DataResult](https://github.com/sholokhov-daniil/exchange/blob/master/src/Messages/Type/DataResult.php) |       Да       |
 

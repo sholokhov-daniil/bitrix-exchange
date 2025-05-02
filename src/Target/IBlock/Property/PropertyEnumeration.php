@@ -2,12 +2,15 @@
 
 namespace Sholokhov\BitrixExchange\Target\IBlock\Property;
 
+use Bitrix\Main\Event;
+use Bitrix\Main\EventResult;
 use Exception;
 use CIBlockPropertyEnum;
 
 use Sholokhov\BitrixExchange\Target\IBlock\IBlock;
 use Sholokhov\BitrixExchange\Repository\IBlock\PropertyRepository;
 
+use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Messages\Type\Error;
@@ -22,6 +25,12 @@ use Bitrix\Main\LoaderException;
  */
 class PropertyEnumeration extends IBlock
 {
+    public const BEFORE_UPDATE_EVENT = 'onBeforeIBlockPropertyEnumerationUpdate';
+    public const AFTER_UPDATE_EVENT = 'onAfterIBlockPropertyEnumerationUpdate';
+
+    public const BEFORE_ADD_EVENT = 'onBeforeIBlockPropertyEnumerationAdd';
+    public const AFTER_ADD_EVENT = 'onAfterIBlockPropertyEnumerationAdd';
+
     /**
      * Проверка наличия значения списка
      *
@@ -62,9 +71,12 @@ class PropertyEnumeration extends IBlock
     {
         $result = new DataResult;
 
-        // TODO: Добавить событие
-
         $fields = $this->prepareItem($item);
+
+        $beforeAdd = $this->beforeAdd($fields);
+        if (!$beforeAdd->isSuccess()) {
+            return $result->addErrors($beforeAdd->getErrors());
+        }
 
         if ($enumId = CIBlockPropertyEnum::Add($fields)) {
             $result->setData((int)$enumId);
@@ -74,7 +86,7 @@ class PropertyEnumeration extends IBlock
             $result->addError(new Error('An error occurred when creating the list value', 500, $fields));
         }
 
-        // TODO: Добавить событие
+        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => $enumId, 'FIELDS' => $fields, 'RESULT' => $result]))->send();
 
         return $result;
     }
@@ -99,7 +111,11 @@ class PropertyEnumeration extends IBlock
 
         $fields = $this->prepareItem($item);
 
-        // TODO: Add event
+        $beforeUpdate = $this->beforeUpdate($enumId, $fields);
+        if (!$beforeUpdate->isSuccess()) {
+            return $result->addErrors($beforeUpdate->getErrors());
+        }
+
         if (!CIBlockPropertyEnum::Update($enumId, $fields)) {
             return $result->addError(new Error('An error occurred when creating the list value', 500, $fields));
         }
@@ -107,7 +123,7 @@ class PropertyEnumeration extends IBlock
         $this->logger?->debug(sprintf('Updated the value of the list with the ID "%s"', $enumId));
         $result->setData($enumId);
 
-        // TODO: add event
+        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['FIELDS' => $fields, 'ID' => $enumId, 'RESULT' => $result]))->send();
 
         return $result;
     }
@@ -136,6 +152,11 @@ class PropertyEnumeration extends IBlock
         return $result;
     }
 
+    /**
+     * Список поддерживаемых полей значения свойства, для импортирования
+     *
+     * @return string[]
+     */
     private function getSupportedFields(): array
     {
         return ['VALUE', 'ID', 'SORT', 'DEF', 'XML_ID', 'EXTERNAL_ID'];
@@ -222,5 +243,68 @@ class PropertyEnumeration extends IBlock
     private function getPropertyRepository(): PropertyRepository
     {
         return $this->repository->get('property_repository');
+    }
+
+    /**
+     * Событие перед обновлением
+     *
+     * @param int $id
+     * @param array $item
+     * @return ResultInterface
+     */
+    private function beforeUpdate(int $id, array $item): ResultInterface
+    {
+        $result = new DataResult;
+
+        $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['FIELDS' => &$item, 'ID' => $id]);
+        $event->send();
+
+        foreach ($event->getResults() as $eventResult) {
+            if ($eventResult->getType() === EventResult::SUCCESS) {
+                continue;
+            }
+
+            $parameters = $eventResult->getParameters();
+            if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
+                $result->addError(new Error('Error updating IBLOCK list property: stopped', 300, $item));
+            } else {
+                foreach ($parameters['ERRORS'] as $error) {
+                    $result->addError(new Error($error, 300, $item));
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Событие перед созданием
+     *
+     * @param array $item
+     * @return ResultInterface
+     */
+    private function beforeAdd(array $item): ResultInterface
+    {
+        $result = new DataResult;
+
+        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['FIELDS' => &$item]);
+        $event->send();
+
+        foreach ($event->getResults() as $eventResult) {
+            if ($eventResult->getType() === EventResult::SUCCESS) {
+                continue;
+            }
+
+            $parameters = $eventResult->getParameters();
+            if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
+                $result->addError(new Error('Error adding IBLOCK list property: stopped', 300, $item));
+            } else {
+                foreach ($parameters['ERRORS'] as $error) {
+                    $result->addError(new Error($error, 300, $item));
+                }
+            }
+        }
+
+        return $result;
     }
 }

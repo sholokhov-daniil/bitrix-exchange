@@ -130,7 +130,7 @@ class Element extends IBlock
             $preparedItem['FIELDS']['ACTIVE'] = 'Y';
         }
 
-        $resultBeforeUpdate = $this->beforeUpdate($preparedItem);
+        $resultBeforeUpdate = $this->beforeUpdate($itemID, $preparedItem);
         if (!$resultBeforeUpdate->isSuccess()) {
             return $result->addErrors($resultBeforeUpdate->getErrors());
         }
@@ -147,10 +147,8 @@ class Element extends IBlock
         $this->cleanCache();
 
         $result->setData((int)$itemID);
-        $preparedItem['ID'] = $itemID;
-        $preparedItem['RESULT'] = $result;
 
-        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, $preparedItem))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['FIELDS' => $preparedItem, 'ID' => $itemID, 'RESULT' => $result]))->send();
 
         return $result;
     }
@@ -225,14 +223,15 @@ class Element extends IBlock
     /**
      * Событие перед обновлением элемента
      *
+     * @param int $id
      * @param array $item
      * @return ResultInterface
      */
-    private function beforeUpdate(array &$item): ResultInterface
+    private function beforeUpdate(int $id, array &$item): ResultInterface
     {
         $result = new DataResult;
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['FIELDS' => &$item['FIELDS']]);
+        $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['FIELDS' => &$item['FIELDS'], 'ID' => $id]);
         $event->send();
 
         foreach ($event->getResults() as $eventResult) {
