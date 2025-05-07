@@ -22,13 +22,34 @@ use Bitrix\Main\LoaderException;
 
 /**
  * Импорт значений списка информационного блока
+ *
+ * @version 1.0.0
+ * @since 1.0.0
  */
 class PropertyEnumeration extends IBlock
 {
+    /**
+     * @version 1.0.0
+     * @since 1.0.0
+     */
     public const BEFORE_UPDATE_EVENT = 'onBeforeIBlockPropertyEnumerationUpdate';
+
+    /**
+     * @version 1.0.0
+     * @since 1.0.0
+     */
     public const AFTER_UPDATE_EVENT = 'onAfterIBlockPropertyEnumerationUpdate';
 
+    /**
+     * @version 1.0.0
+     * @since 1.0.0
+     */
     public const BEFORE_ADD_EVENT = 'onBeforeIBlockPropertyEnumerationAdd';
+
+    /**
+     * @version 1.0.0
+     * @since 1.0.0
+     */
     public const AFTER_ADD_EVENT = 'onAfterIBlockPropertyEnumerationAdd';
 
     /**
@@ -37,6 +58,9 @@ class PropertyEnumeration extends IBlock
      * @param array $item
      * @return bool
      * @throws Exception
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     protected function exists(array $item): bool
     {
@@ -66,6 +90,9 @@ class PropertyEnumeration extends IBlock
      * @param array $item
      * @return ResultInterface
      * @throws LoaderException
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     protected function add(array $item): ResultInterface
     {
@@ -97,6 +124,9 @@ class PropertyEnumeration extends IBlock
      * @param array $item
      * @return ResultInterface
      * @throws LoaderException
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     protected function update(array $item): ResultInterface
     {
@@ -134,6 +164,9 @@ class PropertyEnumeration extends IBlock
      * @param array $item
      * @return array
      * @throws LoaderException
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     private function prepareItem(array $item): array
     {
@@ -156,6 +189,9 @@ class PropertyEnumeration extends IBlock
      * Список поддерживаемых полей значения свойства, для импортирования
      *
      * @return string[]
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     private function getSupportedFields(): array
     {
@@ -167,6 +203,9 @@ class PropertyEnumeration extends IBlock
      *
      * @return array
      * @throws LoaderException
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     private function getProperty(): array
     {
@@ -177,6 +216,9 @@ class PropertyEnumeration extends IBlock
      * Получение кода свойства в которое производится импорт данных
      *
      * @return string
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     private function getPropertyCode(): string
     {
@@ -187,6 +229,9 @@ class PropertyEnumeration extends IBlock
      * Проверка валидности конфигурации импорта
      *
      * @return ResultInterface
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     #[Validate]
     private function optionsValidate(): ResultInterface
@@ -205,6 +250,9 @@ class PropertyEnumeration extends IBlock
      *
      * @return ResultInterface
      * @throws LoaderException
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     #[Validate]
     private function checkProperty(): ResultInterface
@@ -228,6 +276,9 @@ class PropertyEnumeration extends IBlock
      * Инициализация хранилища свойств информационного блока
      *
      * @return void
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     #[BootstrapConfiguration]
     private function bootstrapPropertyRepository(): void
@@ -239,6 +290,9 @@ class PropertyEnumeration extends IBlock
      * Получение хранилища данных свойств информационного блока
      *
      * @return PropertyRepository
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     private function getPropertyRepository(): PropertyRepository
     {
@@ -251,6 +305,9 @@ class PropertyEnumeration extends IBlock
      * @param int $id
      * @param array $item
      * @return ResultInterface
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     private function beforeUpdate(int $id, array $item): ResultInterface
     {
@@ -282,6 +339,9 @@ class PropertyEnumeration extends IBlock
      *
      * @param array $item
      * @return ResultInterface
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     private function beforeAdd(array $item): ResultInterface
     {

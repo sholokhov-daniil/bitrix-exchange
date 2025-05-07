@@ -7,6 +7,9 @@ use Sholokhov\BitrixExchange\Prepares\AbstractPrepare;
 
 /**
  * Приводит значение к целочисленному
+ *
+ * @since 1.0.0
+ * @version 1.0.0
  */
 abstract class AbstractNumber extends AbstractPrepare
 {
@@ -16,6 +19,9 @@ abstract class AbstractNumber extends AbstractPrepare
      * @param mixed $value
      * @param FieldInterface $field
      * @return int
+     *
+     * @since 1.0.0
+     * @version 1.0.0
      */
     protected function logic(mixed $value, FieldInterface $field): int
     {

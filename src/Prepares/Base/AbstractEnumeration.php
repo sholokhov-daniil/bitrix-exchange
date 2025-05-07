@@ -15,6 +15,9 @@ use Psr\Log\LoggerAwareInterface;
 
 /**
  * Импорт значения в список
+ *
+ * @version 1.0.0
+ * @since 1.0.0
  */
 abstract class AbstractEnumeration extends AbstractPrepare implements LoggerAwareInterface
 {
@@ -22,6 +25,9 @@ abstract class AbstractEnumeration extends AbstractPrepare implements LoggerAwar
 
     /**
      * @param string $primary Ключ по которому будет производиться проверка уникальности
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     public function __construct(protected readonly string $primary = 'VALUE')
     {
@@ -31,20 +37,27 @@ abstract class AbstractEnumeration extends AbstractPrepare implements LoggerAwar
     /**
      * Получение импорта значения
      *
-     * @param FieldInterface $field
+     * @param FieldInterface $field Свойство, которое преобразовывается
      * @return ExchangeInterface
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     abstract protected function getTarget(FieldInterface $field): ExchangeInterface;
 
     /**
      * Преобразование значения
      *
-     * @param mixed $value
-     * @param FieldInterface $field
+     * @final
+     * @param mixed $value Значение, которое необходимо преобразовать
+     * @param FieldInterface $field Свойство, которое преобразовывается
      * @return int
      * @throws Exception
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
-    protected function logic(mixed $value, FieldInterface $field): int
+    final protected function logic(mixed $value, FieldInterface $field): int
     {
         $exchange = $this->getTarget($field);
         $exchange->setMap([
@@ -73,6 +86,9 @@ abstract class AbstractEnumeration extends AbstractPrepare implements LoggerAwar
      * Проверка валидности первичного ключа
      *
      * @return void
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     private function checkPrimary(): void
     {

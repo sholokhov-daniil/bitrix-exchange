@@ -2,6 +2,7 @@
 
 namespace Sholokhov\BitrixExchange\Target;
 
+use Bitrix\Main\Diag\Debug;
 use CFile;
 use Exception;
 
@@ -70,13 +71,14 @@ class File extends Exchange
      */
     protected function add(array $item): ResultInterface
     {
+        Debug::dump($item);
         $result = new DataResult;
         $path = $item[$this->getPrimaryField()->getCode()];
         $file = CFile::MakeFileArray($path);
 
         if (!$file) {
             $this->logger?->error('File receipt error: ' . $path);
-            return $result->addError(new Error('Ошибка создания получения файла'));
+            return $result->addError(new Error('Ошибка чтение файла: ' . $path));
         }
 
         $file['external_id'] = $this->getExternalId($path);

@@ -11,7 +11,10 @@ use Bitrix\Iblock\PropertyTable;
 use Bitrix\Main\LoaderException;
 
 /**
- * Приведение значения к типу {@see \Bitrix\Main\Type\Date}
+ * Приведение значения к типу @see \Bitrix\Main\Type\Date
+ *
+ * @version 1.0.0
+ * @since 1.0.0
  */
 class Date extends AbstractDate
 {
@@ -19,6 +22,9 @@ class Date extends AbstractDate
 
     /**
      * @param int $iBlockID ИБ в рамках которого производится преобразование
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     public function __construct(int $iBlockID)
     {
@@ -28,10 +34,13 @@ class Date extends AbstractDate
     /**
      * Проверка поддержки свойства
      *
-     * @param mixed $value
-     * @param FieldInterface $field
+     * @param mixed $value Значение, которое необходимо преобразовать
+     * @param FieldInterface $field Свойство, которое преобразовывается
      * @return bool
      * @throws LoaderException
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     public function supported(mixed $value, FieldInterface $field): bool
     {

@@ -8,24 +8,33 @@ use Sholokhov\Exchange\Prepares\PrepareInterface;
 
 /**
  * Базовый класс преобразователей данных
+ *
+ * @version 1.0.0
+ * @since 1.0.0
  */
 abstract class AbstractPrepare implements PrepareInterface
 {
     /**
      * Преобразование значения
      *
-     * @param mixed $value
-     * @param FieldInterface $field
+     * @param mixed $value Значение, которое необходимо преобразовать
+     * @param FieldInterface $field Свойство, которое преобразовывается
      * @return mixed
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     abstract protected function logic(mixed $value, FieldInterface $field): mixed;
 
     /**
      * Преобразование значения
      *
-     * @param mixed $value
-     * @param FieldInterface $field
+     * @param mixed $value Значение, которое необходимо преобразовать. Может принимать массив
+     * @param FieldInterface $field Свойство, которое необходимо преобразовать
      * @return mixed
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     public function prepare(mixed $value, FieldInterface $field): mixed
     {

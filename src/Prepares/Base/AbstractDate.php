@@ -11,7 +11,10 @@ use Sholokhov\BitrixExchange\Prepares\AbstractPrepare;
 use Bitrix\Main\Type\Date as BxDate;
 
 /**
- * Приведение значения к объекту {@see BxDate}
+ * Приведение значения к объекту @see BxDate
+ *
+ * @since 1.0.0
+ * @version 1.0.0
  */
 abstract class AbstractDate extends AbstractPrepare
 {
@@ -22,6 +25,9 @@ abstract class AbstractDate extends AbstractPrepare
      * @param FieldInterface $field
      * @return BxDate
      * @throws DateMalformedStringException
+     *
+     * @since 1.0.0
+     * @version 1.0.0
      */
     protected function logic(mixed $value, FieldInterface $field): BxDate
     {
