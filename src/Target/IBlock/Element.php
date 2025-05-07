@@ -2,6 +2,7 @@
 
 namespace Sholokhov\BitrixExchange\Target\IBlock;
 
+use Bitrix\Main\Diag\Debug;
 use Exception;
 use CIBlockElement;
 
@@ -283,6 +284,11 @@ class Element extends IBlock
         return $result;
     }
 
+    /**
+     * @return void
+     * @version 1.0.0
+     * @since 1.0.0
+     */
     #[BootstrapConfiguration]
     protected function bootstrapPrepares(): void
     {
@@ -291,6 +297,25 @@ class Element extends IBlock
             ->addPrepared(new Prepare\Date($iBlockID))
             ->addPrepared(new Prepare\DateTime($iBlockID))
             ->addPrepared(new Prepare\Number($iBlockID))
-            ->addPrepared(new Prepare\Enumeration($iBlockID));
+            ->addPrepared(new Prepare\Enumeration($iBlockID))
+            ->addPrepared(new Prepare\PropertyFile($iBlockID))
+            ->addPrepared(new Prepare\File);
+        // Привязка к элементам ИБ
+        // Привязка к разделам ИБ
+        // HTML/Text
+        // Video
+        // Деньги
+        // Привязка к яндекс.карте
+        // Привязка к Google.Maps
+        // Привязка к пользователю
+        // Привязка к разделам автозаполнения
+        // Привязка к теме форума
+        // Привязка к товару(SKU)
+        // Привязка к файлу (на сервере)
+        // Привязка к элементам в виде списка
+        // Привязка к элементам по XML_ID
+        // Привязка к элементам с автозаполнением
+        // Справочник
+        // Счетчик
     }
 }
