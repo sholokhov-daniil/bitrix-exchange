@@ -4,7 +4,7 @@ namespace Sholokhov\BitrixExchange\Prepares\IBlock\Element;
 
 use ReflectionException;
 
-use Sholokhov\BitrixExchange\Target\IBlock\Element;
+use Sholokhov\BitrixExchange\Target\IBlock\Section;
 use Sholokhov\BitrixExchange\Prepares\Base\AbstractIBlockImport;
 use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
 
@@ -22,7 +22,7 @@ use Bitrix\Main\LoaderException;
  * @since 1.0.0
  * @version 1.0.0
  */
-class IBlockElement extends AbstractIBlockImport
+class IBlockSection extends AbstractIBlockImport
 {
     /**
      * Инициализация импорта элементов информационного блока
@@ -39,7 +39,7 @@ class IBlockElement extends AbstractIBlockImport
     protected function getTarget(FieldInterface $field): ExchangeInterface
     {
         $property = $this->getRepository()->get($field->getCode());
-        return new Element(['entity_id' => $property['LINK_IBLOCK_ID']]);
+        return new Section(['entity_id' => $property['LINK_IBLOCK_ID']]);
     }
 
     /**
@@ -72,7 +72,7 @@ class IBlockElement extends AbstractIBlockImport
         return $field instanceof ElementFieldInterface
             && $field->isProperty()
             && ($property = $this->getRepository()->get($field->getCode()))
-            && $property['PROPERTY_TYPE'] === PropertyTable::TYPE_ELEMENT
+            && $property['PROPERTY_TYPE'] === PropertyTable::TYPE_SECTION
             && !$property['USER_TYPE']
             && $property['LINK_IBLOCK_ID'];
     }

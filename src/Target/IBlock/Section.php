@@ -23,6 +23,8 @@ use Bitrix\Main\Type\DateTime;
 
 /**
  * Импорт разделов информационного блока
+ *
+ * @version 1.0.0
  */
 class Section extends IBlock
 {
@@ -148,11 +150,13 @@ class Section extends IBlock
      * @param array $item
      * @return array
      * @throws Exception
+     *
+     * @version 1.0.0
      */
     protected function prepareItem(array $item): array
     {
         $result = [];
-        $translitOptions = $this->getIBlockInfo()['FIELDS']['CODE']['DEFAULT_VALUE'] ?? [];
+        $translitOptions = $this->getIBlockInfo()->get('FIELDS')['CODE']['DEFAULT_VALUE'] ?? [];
 
         foreach ($this->getMap() as $field) {
             $value = $item[$field->getCode()] ?? '';

@@ -2,7 +2,6 @@
 
 namespace Sholokhov\BitrixExchange\Target\IBlock;
 
-use Bitrix\Main\Diag\Debug;
 use Exception;
 use CIBlockElement;
 
@@ -26,6 +25,8 @@ use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
 
 /**
  * Импортирование элемента информационного блока
+ *
+ * @version 1.0.0
  */
 class Element extends IBlock
 {
@@ -306,8 +307,8 @@ class Element extends IBlock
             ->addPrepared(new Prepare\Enumeration($iBlockID))
             ->addPrepared(new Prepare\PropertyFile($iBlockID))
             ->addPrepared(new Prepare\IBlockElement($iBlockID))
-            ->addPrepared(new Prepare\File);
-        // Привязка к элементам ИБ
+            ->addPrepared(new Prepare\File)
+            ->addPrepared(new Prepare\IBlockSection($iBlockID));
         // Привязка к разделам ИБ
         // HTML/Text
         // Video

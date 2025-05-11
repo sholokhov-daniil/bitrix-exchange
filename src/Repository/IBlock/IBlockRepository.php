@@ -91,10 +91,10 @@ final class IBlockRepository implements ContainerInterface
             return null;
         }
 
-        $description['properties'] = new PropertyRepository($description['IBLOCK_ID']);
-        $this->getStorage()->set($this->iBlockID, $description['properties']);
+        $description['PROPERTIES'] = new PropertyRepository($description['IBLOCK_ID']);
+        $this->getStorage()->set($this->iBlockID, $description);
 
-        return $description['properties'];
+        return $description['PROPERTIES'];
     }
 
     /**
@@ -127,10 +127,8 @@ final class IBlockRepository implements ContainerInterface
     {
         $storage = $this->getStorage();
 
-        if (!($storage->get($this->iBlockID, [])['base'])) {
-            $data = $storage->get($this->iBlockID, []);
-            $data['base'] = $this->getInfo();
-            $storage->set($this->iBlockID, $data);
+        if (!$storage->has($this->iBlockID)) {
+            $storage->set($this->iBlockID, $this->getInfo());
         }
 
         return $storage->get($this->iBlockID, []);
@@ -155,7 +153,7 @@ final class IBlockRepository implements ContainerInterface
             return [];
         }
 
-        return CIBlock::GetByID($this->iBlockID)->Fetch() ?: [];
+        return CIBlock::GetArrayByID($this->iBlockID) ?: [];
     }
 
     /**

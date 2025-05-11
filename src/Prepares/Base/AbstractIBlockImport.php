@@ -2,49 +2,31 @@
 
 namespace Sholokhov\BitrixExchange\Prepares\Base;
 
+use Sholokhov\BitrixExchange\Prepares\IBlock\PropertyTrait;
+
 use Sholokhov\Exchange\Fields\Field;
 use Sholokhov\Exchange\ExchangeInterface;
 
 /**
- * Импорт значения в список
+ * Преобразует значение имеющего связь к иной сущности
  *
- * @version 1.0.0
  * @since 1.0.0
+ * @version 1.0.0
  */
-abstract class AbstractEnumeration extends AbstractImport
+abstract class AbstractIBlockImport extends AbstractImport
 {
-    /**
-     * Поддерживаемые ключи связи
-     *
-     * @var array|string[]
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    protected array $supportedPrimaries = ['VALUE', 'ID', 'XML_ID'];
+    use PropertyTrait;
 
     /**
-     * Связующий ключ по умолчанию
-     *
-     * @var string
+     * @param string $primary Ключ по которому будет производиться проверка уникальности
      *
      * @version 1.0.0
      * @since 1.0.0
      */
-    protected string $defaultPrimary = 'VALUE';
-
-    /**
-     * Нормализация результата импорта значения
-     *
-     * @param mixed $value
-     * @return int
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    protected function normalize(mixed $value): int
+    public function __construct(int $iblockId, string $primary = 'XML_ID')
     {
-        return max((int)$value, 0);
+        $this->iblockId = $iblockId;
+        parent::__construct($primary);
     }
 
     /**
