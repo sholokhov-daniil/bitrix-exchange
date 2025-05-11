@@ -2,7 +2,6 @@
 
 namespace Sholokhov\BitrixExchange\Target\IBlock;
 
-use Bitrix\Main\Diag\Debug;
 use Exception;
 use CIBlockElement;
 
@@ -138,7 +137,6 @@ class Element extends IBlock
             return $result->addErrors($resultBeforeUpdate->getErrors());
         }
 
-        Debug::dump($preparedItem['FIELDS']);
         if (!$iBlock->Update($itemID, $preparedItem['FIELDS'])) {
             return $result->addError(new Error('Error while updating IBLOCK element: ' . $iBlock->getLastError(), 500, ['ID' => $itemID, 'FIELDS' => $preparedItem['FIELDS']]));
         }
@@ -311,8 +309,8 @@ class Element extends IBlock
             ->addPrepared(new Prepare\IBlockElement($iBlockID))
             ->addPrepared(new Prepare\File)
             ->addPrepared(new Prepare\IBlockSection($iBlockID))
-            ->addPrepared(new Prepare\HtmlText($iBlockID));
-        // HTML/Text
+            ->addPrepared(new Prepare\HtmlText($iBlockID))
+            ->addPrepared(new Prepare\HandbookElement($iBlockID));
         // Video
         // Деньги
         // Привязка к яндекс.карте
@@ -325,7 +323,6 @@ class Element extends IBlock
         // Привязка к элементам в виде списка
         // Привязка к элементам по XML_ID
         // Привязка к элементам с автозаполнением
-        // Справочник
         // Счетчик
     }
 }

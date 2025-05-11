@@ -86,8 +86,6 @@ class HtmlText extends AbstractPrepare implements LoggerAwareInterface
      */
     protected function after(mixed $value, FieldInterface $field): mixed
     {
-        Debug::dump($value, 'AFTER');
-
         return $value || $value == 0 ? $value : null;
     }
 }
