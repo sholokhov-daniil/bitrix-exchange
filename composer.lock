@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d0773497149dd70ce95fa898cfd24751",
+    "content-hash": "69d106a90a7124eab58f92b8da999536",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -1086,16 +1086,16 @@
         },
         {
             "name": "sholokhov/exchange",
-            "version": "v1.100.0",
+            "version": "v1.100.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sholokhov-daniil/exchange.git",
-                "reference": "04d756a6516c5916ced6e6c8d17cf1c61c6f3507"
+                "reference": "d882f9d4c0815817835b40fe0351e5190cbb3335"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sholokhov-daniil/exchange/zipball/04d756a6516c5916ced6e6c8d17cf1c61c6f3507",
-                "reference": "04d756a6516c5916ced6e6c8d17cf1c61c6f3507",
+                "url": "https://api.github.com/repos/sholokhov-daniil/exchange/zipball/d882f9d4c0815817835b40fe0351e5190cbb3335",
+                "reference": "d882f9d4c0815817835b40fe0351e5190cbb3335",
                 "shasum": ""
             },
             "require": {
@@ -1132,9 +1132,9 @@
             ],
             "support": {
                 "issues": "https://github.com/sholokhov-daniil/exchange/issues",
-                "source": "https://github.com/sholokhov-daniil/exchange/tree/v1.100.0"
+                "source": "https://github.com/sholokhov-daniil/exchange/tree/v1.100.1"
             },
-            "time": "2025-05-07T13:49:46+00:00"
+            "time": "2025-05-11T11:08:13+00:00"
         },
         {
             "name": "symfony/clock",
