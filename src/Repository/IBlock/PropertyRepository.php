@@ -18,6 +18,7 @@ use Psr\Container\ContainerInterface;
  * Если необходимо освободить память, то необходимо вызвать метод {@see self::free}.
  *
  * Хранилище производит автоматическое обновление при изменении, удалении или добавлении свойства
+ * @final
  */
 final class PropertyRepository implements ContainerInterface
 {

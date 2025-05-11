@@ -4,10 +4,13 @@ namespace Sholokhov\BitrixExchange\Target\IBlock;
 
 use CIBlock;
 
+use Sholokhov\BitrixExchange\Repository\IBlock\IBlockRepository;
+
 use Sholokhov\Exchange\Exchange;
 use Sholokhov\Exchange\Messages\Type\Error;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
 use Sholokhov\Exchange\Target\Attributes\Validate;
 
 use Bitrix\Main\Loader;
@@ -26,7 +29,7 @@ abstract class IBlock extends Exchange
      */
     protected function normalizeOptions(array $options): array
     {
-        $options['iblock_id'] = (int)$options['iblock_id'];
+        $options['entity_id'] = (int)$options['entity_id'];
         return parent::normalizeOptions($options);
     }
 
@@ -42,16 +45,6 @@ abstract class IBlock extends Exchange
         CIBlock::clearIblockTagCache($this->getIBlockID());
     }
 
-    /**
-     * Получение информации ИБ
-     *
-     * @final
-     * @return array
-     */
-    final protected function getIBlockInfo(): array
-    {
-        return CIBlock::GetArrayByID($this->getIBlockID()) ?: [];
-    }
 
     /**
      * Информационный блок в который идет импорт
@@ -62,6 +55,20 @@ abstract class IBlock extends Exchange
     final protected function getIBlockID(): int
     {
         return (int)$this->getOptions()->get('entity_id');
+    }
+
+    /**
+     * Получение информации об информационном блоке
+     *
+     * @return IBlockRepository|null
+     *
+     * @final
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    final protected function getIBlockInfo(): ?IBlockRepository
+    {
+        return $this->repository->get('iblock_info');
     }
 
     /**
@@ -96,5 +103,19 @@ abstract class IBlock extends Exchange
         }
 
         return $result;
+    }
+
+    /**
+     * Инициализация хранилища информации об информационном блоке
+     *
+     * @return void
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    #[BootstrapConfiguration]
+    private function bootstrapIBlockRepository(): void
+    {
+        $this->repository->set('iblock_info', new IBlockRepository($this->getIBlockID()));
     }
 }

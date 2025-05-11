@@ -160,6 +160,8 @@ class Element extends IBlock
      * @param array{FIELDS: array, PROPERTIES: array} $item
      * @return array|array[]
      * @throws Exception
+     *
+     * @version 1.0.0
      */
     protected function prepareItem(array $item): array
     {
@@ -185,9 +187,12 @@ class Element extends IBlock
             $result[$group][$field->getCode()] = $value;
         }
 
-        if (!isset($result['FIELDS']['NAME'])) {
-            $result['FIELDS']['NAME'] = $item[$this->getPrimaryField()?->getCode()] ?? '';
-        }
+        $requiredFields = ['NAME', 'CODE', 'XML_ID'];
+        array_walk($requiredFields, function($field) use (&$result) {
+            if (!isset($result['FIELDS'][$field])) {
+                $result['FIELDS'][$field] = $item[$this->getPrimaryField()?->getCode()] ?? '';
+            }
+        });
 
         return $result;
     }
@@ -286,6 +291,7 @@ class Element extends IBlock
 
     /**
      * @return void
+     *
      * @version 1.0.0
      * @since 1.0.0
      */
@@ -299,6 +305,7 @@ class Element extends IBlock
             ->addPrepared(new Prepare\Number($iBlockID))
             ->addPrepared(new Prepare\Enumeration($iBlockID))
             ->addPrepared(new Prepare\PropertyFile($iBlockID))
+            ->addPrepared(new Prepare\IBlockElement($iBlockID))
             ->addPrepared(new Prepare\File);
         // Привязка к элементам ИБ
         // Привязка к разделам ИБ
