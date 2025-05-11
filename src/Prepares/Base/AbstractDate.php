@@ -23,14 +23,13 @@ abstract class AbstractDate extends AbstractPrepare
      *
      * @param mixed $value
      * @param FieldInterface $field
-     * @return BxDate
+     * @return BxDate|string
      * @throws DateMalformedStringException
-     *
      * @since 1.0.0
      * @version 1.0.0
      */
-    protected function logic(mixed $value, FieldInterface $field): BxDate
+    protected function logic(mixed $value, FieldInterface $field): BxDate|string
     {
-        return BxDate::createFromPhp(new DateTime($value));
+        return $value ? BxDate::createFromPhp(new DateTime($value)) : '';
     }
 }

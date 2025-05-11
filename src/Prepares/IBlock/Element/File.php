@@ -48,6 +48,6 @@ class File extends AbstractPrepare implements LoggerAwareInterface
      */
     protected function logic(mixed $value, FieldInterface $field): array
     {
-        return CFile::MakeFileArray($value);
+        return !empty($value) ? CFile::MakeFileArray($value) : [];
     }
 }

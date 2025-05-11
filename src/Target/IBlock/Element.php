@@ -138,13 +138,12 @@ class Element extends IBlock
             return $result->addErrors($resultBeforeUpdate->getErrors());
         }
 
+        Debug::dump($preparedItem['FIELDS']);
         if (!$iBlock->Update($itemID, $preparedItem['FIELDS'])) {
             return $result->addError(new Error('Error while updating IBLOCK element: ' . $iBlock->getLastError(), 500, ['ID' => $itemID, 'FIELDS' => $preparedItem['FIELDS']]));
         }
 
         $this->logger?->debug('Updated fields IBLOCK element: ' . $itemID);
-
-        Debug::dump($preparedItem['PROPERTIES']);
 
         $iBlock::SetPropertyValuesEx($itemID, $this->getIBlockID(), $preparedItem['PROPERTIES']);
 

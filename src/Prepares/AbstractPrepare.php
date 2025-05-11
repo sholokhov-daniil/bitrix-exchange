@@ -39,7 +39,6 @@ abstract class AbstractPrepare implements PrepareInterface
      */
     public function prepare(mixed $value, FieldInterface $field): mixed
     {
-        Debug::dump(static::class, $field->getCode());
         $value = FieldHelper::normalizeValue($value, $field);
 
         if (is_array($value)) {

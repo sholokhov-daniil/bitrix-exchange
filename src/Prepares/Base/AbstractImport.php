@@ -103,6 +103,10 @@ abstract class AbstractImport extends AbstractPrepare implements LoggerAwareInte
      */
     final protected function logic(mixed $value, FieldInterface $field): mixed
     {
+        if ($value == '') {
+            return 0;
+        }
+
         $target = $this->getTarget($field);
         $this->configurationTarget($target);
 

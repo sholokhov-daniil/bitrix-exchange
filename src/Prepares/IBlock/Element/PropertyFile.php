@@ -69,6 +69,10 @@ class PropertyFile extends AbstractPrepare implements LoggerAwareInterface
      */
     protected function logic(mixed $value, FieldInterface $field): array
     {
+        if (empty($value)) {
+            return [];
+        }
+
         $file = CFile::MakeFileArray($value);
         return ['VALUE' => $file, 'DESCRIPTION' => $file['name']];
     }
