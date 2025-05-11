@@ -188,7 +188,7 @@ class Element extends IBlock
         }
 
         $requiredFields = ['NAME', 'CODE', 'XML_ID'];
-        array_walk($requiredFields, function($field) use (&$result) {
+        array_walk($requiredFields, function($field) use (&$result, $item) {
             if (!isset($result['FIELDS'][$field])) {
                 $result['FIELDS'][$field] = $item[$this->getPrimaryField()?->getCode()] ?? '';
             }
