@@ -2,6 +2,7 @@
 
 namespace Sholokhov\BitrixExchange\Target\IBlock;
 
+use Bitrix\Main\Diag\Debug;
 use Exception;
 use CIBlockElement;
 
@@ -142,6 +143,8 @@ class Element extends IBlock
         }
 
         $this->logger?->debug('Updated fields IBLOCK element: ' . $itemID);
+
+        Debug::dump($preparedItem['PROPERTIES']);
 
         $iBlock::SetPropertyValuesEx($itemID, $this->getIBlockID(), $preparedItem['PROPERTIES']);
 
@@ -308,8 +311,8 @@ class Element extends IBlock
             ->addPrepared(new Prepare\PropertyFile($iBlockID))
             ->addPrepared(new Prepare\IBlockElement($iBlockID))
             ->addPrepared(new Prepare\File)
-            ->addPrepared(new Prepare\IBlockSection($iBlockID));
-        // Привязка к разделам ИБ
+            ->addPrepared(new Prepare\IBlockSection($iBlockID))
+            ->addPrepared(new Prepare\HtmlText($iBlockID));
         // HTML/Text
         // Video
         // Деньги

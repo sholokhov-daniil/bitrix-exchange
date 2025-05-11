@@ -2,6 +2,7 @@
 
 namespace Sholokhov\BitrixExchange\Prepares;
 
+use Bitrix\Main\Diag\Debug;
 use Sholokhov\Exchange\Helper\FieldHelper;
 use Sholokhov\Exchange\Fields\FieldInterface;
 use Sholokhov\Exchange\Prepares\PrepareInterface;
@@ -38,6 +39,7 @@ abstract class AbstractPrepare implements PrepareInterface
      */
     public function prepare(mixed $value, FieldInterface $field): mixed
     {
+        Debug::dump(static::class, $field->getCode());
         $value = FieldHelper::normalizeValue($value, $field);
 
         if (is_array($value)) {
@@ -47,6 +49,24 @@ abstract class AbstractPrepare implements PrepareInterface
             $result = $this->logic($value, $field);
         }
 
-        return $result;
+        return $this->after($result, $field);
+    }
+
+    /**
+     * Нормализация конечного значения
+     *
+     * Вызывается после нормализации значения(-ий).
+     * Метод создан для переопределения потомками
+     *
+     * @param mixed $value
+     * @param FieldInterface $field
+     * @return mixed
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    protected function after(mixed $value, FieldInterface $field): mixed
+    {
+        return $value;
     }
 }
