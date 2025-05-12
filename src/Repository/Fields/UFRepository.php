@@ -8,7 +8,7 @@ use InvalidArgumentException;
 /**
  * Хранилище информации о пользовательских свойствах определенной сущности
  */
-class UserField extends AbstractFieldRepository
+class UFRepository extends AbstractFieldRepository
 {
     /**
      * Обновление информации определенного свойства
@@ -19,12 +19,7 @@ class UserField extends AbstractFieldRepository
     public function refreshByCode(string $code): void
     {
         $field = $this->query(['FIELD_NAME' => $code]);
-
-        if ($field) {
-            $this->getContainer()->set($code, $field);
-        } else {
-            $this->getContainer()->delete($code);
-        }
+        $field ? $this->getStorage()->set($code, $field) : $this->getStorage()->delete($code);
     }
 
     /**
@@ -74,5 +69,18 @@ class UserField extends AbstractFieldRepository
     final protected function getEntityId(): string
     {
         return $this->getOptions()->get('ENTITY_ID');
+    }
+
+    /**
+     * Получение идентификатора хранилища
+     *
+     * @return string
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    protected function getHash(): string
+    {
+        return static::class . '_' . $this->getEntityId();
     }
 }

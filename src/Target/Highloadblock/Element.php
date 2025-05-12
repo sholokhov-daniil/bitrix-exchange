@@ -7,6 +7,7 @@ use Exception;
 use ReflectionException;
 
 use Sholokhov\BitrixExchange\Prepares\File\UserField;
+use Sholokhov\BitrixExchange\Prepares\UserField\File;
 use Sholokhov\Exchange\Exchange;
 use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\Messages\Type\Error;
@@ -291,12 +292,18 @@ class Element extends Exchange
         return $result;
     }
 
+    /**
+     * Инициализация преобразователей импортированных значений
+     *
+     * @return void
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
     #[BootstrapConfiguration]
     private function bootstrapPrepares(): void
     {
         $entityId = 'HLBLOCK_' . $this->getEntityID();
-
-        $this->getPrepares()
-            ->add(new UserField($entityId));
+        $this->addPrepared(new File($entityId));
     }
 }

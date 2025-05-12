@@ -11,14 +11,48 @@ use Psr\Container\ContainerInterface;
 
 abstract class AbstractFieldRepository implements ContainerInterface
 {
-    private Memory $container;
+    /**
+     * Хранилище данных
+     *
+     * @var RepositoryInterface[]
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    private static array $storage;
+
+    /**
+     * Конфигурация хранилища
+     *
+     * @var Memory
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
     private Memory $options;
+
+    /**
+     * Проверка валидности конфигураций.
+     *
+     * Если конфигурации не валидны, то необходимо вызвать исключение
+     *
+     * @extends Exception
+     * @param array $options Валидируемая конфигурация хранилища
+     * @return void
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    abstract protected function checkOptions(array $options): void;
 
     /**
      * Обновление информации определенного свойства
      *
      * @param string $code
      * @return void
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     abstract public function refreshByCode(string $code): void;
 
@@ -27,22 +61,27 @@ abstract class AbstractFieldRepository implements ContainerInterface
      *
      * @param array $parameters Параметры запроса
      * @return array
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     abstract protected function query(array $parameters = []): array;
 
     /**
-     * Проверка валидности конфигураций.
+     * Идентификатор хранилища (уникальный ID)
      *
-     * Если конфигурации не валидны, то необходимо вызвать исключение
+     * @return string
      *
-     * @extends Exception
-     * @param array $options
-     * @return void
+     * @version 1.0.0
+     * @since 1.0.0
      */
-    abstract protected function checkOptions(array $options): void;
+    abstract protected function getHash(): string;
 
     /**
      * @param array $options Конфигурация хранилища
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     public function __construct(array $options)
     {
@@ -51,56 +90,60 @@ abstract class AbstractFieldRepository implements ContainerInterface
     }
 
     /**
+     * Получение информации о свойствах в виде массива
+     *
+     * @return array
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    public function toArray(): array
+    {
+        return $this->getStorage()->toArray();
+    }
+
+    /**
      * Обновление информации о свойствах
      *
      * @return void
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     public function refresh(): void
     {
-        $container = $this->getContainer();
+        $container = $this->getStorage();
         $container->clear();
         $fields = $this->query();
         array_walk($fields, fn($field, $code) => $container->set($code, $fields));
     }
 
     /**
-     * Преобразование в массив свойств
+     * Получения информации поля
      *
-     * @return array
+     * @param string $id Код или ID свойства
+     * @param mixed|null $default Значение по умолчанию
+     * @return mixed
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
-    public function toArray(): array
+    public function get(string $id, mixed $default = null): mixed
     {
-        $result = [];
-
-        foreach ($this->getContainer() as $key => $value) {
-            $result[$key] = $value;
-        }
-
-        return $result;
+        return $this->getStorage()->get($id, $default);
     }
 
     /**
-     * Получение информации о свойстве
-     *
-     * @param string $id
-     * @param mixed|null $default
-     * @return array|null
-     */
-     public function get(string $id, mixed $default = null): ?array
-     {
-         return $this->getContainer()->get($id, $default);
-     }
-
-    /**
-     * Проверка наличия информации о свойстве
-     *
-     * @param string $id Символьный код свойства
+     * @param string $id Код или ID свойства
      * @return bool
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
-     public function has(string $id): bool
-     {
-         return $this->getContainer()->has($id);
-     }
+    public function has(string $id): bool
+    {
+        return $this->getStorage()->has($id);
+    }
 
     /**
      * Нормализация(обработка) конфигураций хранилища
@@ -109,6 +152,9 @@ abstract class AbstractFieldRepository implements ContainerInterface
      *
      * @param array $options
      * @return array
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     protected function normalizeOptions(array $options): array
     {
@@ -119,6 +165,9 @@ abstract class AbstractFieldRepository implements ContainerInterface
      * Получение конфигурации
      *
      * @return RepositoryInterface
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
     protected function getOptions(): RepositoryInterface
     {
@@ -126,12 +175,16 @@ abstract class AbstractFieldRepository implements ContainerInterface
     }
 
     /**
-     * Получение хранилища данных
+     * Получения хранилища данных
      *
-     * @return RepositoryInterface
+     * @final
+     * @return Memory
+     *
+     * @version 1.0.0
+     * @since 1.0.0
      */
-    protected function getContainer(): RepositoryInterface
+    final protected function getStorage(): Memory
     {
-        return $this->container ??= new Memory($this->query());
+        return self::$storage[$this->getHash()] ??= new Memory($this->query());
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Sholokhov\BitrixExchange\Prepares;
 
-use Bitrix\Main\Diag\Debug;
 use Sholokhov\Exchange\Helper\FieldHelper;
 use Sholokhov\Exchange\Fields\FieldInterface;
 use Sholokhov\Exchange\Prepares\PrepareInterface;
