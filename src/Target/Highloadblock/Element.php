@@ -305,7 +305,8 @@ class Element extends Exchange
         $entityId = 'HLBLOCK_' . $this->getEntityID();
         $this->addPrepared(new Prepare\File($entityId))
             ->addPrepared(new Prepare\Date($entityId))
-            ->addPrepared(new Prepare\DateTime($entityId));
+            ->addPrepared(new Prepare\DateTime($entityId))
+            ->addPrepared(new Prepare\Boolean($entityId));
 
         // Адрес
         // Видео

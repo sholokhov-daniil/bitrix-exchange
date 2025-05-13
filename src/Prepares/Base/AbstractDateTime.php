@@ -21,8 +21,8 @@ abstract class AbstractDateTime extends AbstractPrepare
     /**
      * Преобразование значения
      *
-     * @param mixed $value
-     * @param FieldInterface $field
+     * @param mixed $value Преобразуемое значение
+     * @param FieldInterface $field Свойство, которому принадлежит преобразуемое значение
      * @return BxDateTime|string
      * @throws DateMalformedStringException
      * @since 1.0.0
