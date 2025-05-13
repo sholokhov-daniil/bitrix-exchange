@@ -6,8 +6,7 @@ use Bitrix\Main\Diag\Debug;
 use Exception;
 use ReflectionException;
 
-use Sholokhov\BitrixExchange\Prepares\File\UserField;
-use Sholokhov\BitrixExchange\Prepares\UserField\File;
+use Sholokhov\BitrixExchange\Prepares\UserField as Prepare;
 use Sholokhov\Exchange\Exchange;
 use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\Messages\Type\Error;
@@ -304,7 +303,8 @@ class Element extends Exchange
     private function bootstrapPrepares(): void
     {
         $entityId = 'HLBLOCK_' . $this->getEntityID();
-        $this->addPrepared(new File($entityId));
+        $this->addPrepared(new Prepare\File($entityId))
+            ->addPrepared(new Prepare\Date($entityId));
 
         // Адрес
         // Видео
