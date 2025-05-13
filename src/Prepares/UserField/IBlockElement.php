@@ -1,18 +1,14 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Prepares\IBlock\Element;
+namespace Sholokhov\BitrixExchange\Prepares\UserField;
 
 use ReflectionException;
 
 use Sholokhov\BitrixExchange\Target\IBlock\LinkElement;
-use Sholokhov\BitrixExchange\Prepares\Base\AbstractIBlockImport;
-use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
+use Sholokhov\BitrixExchange\Prepares\Base\AbstractHandbookImport;
 
 use Sholokhov\Exchange\ExchangeInterface;
 use Sholokhov\Exchange\Fields\FieldInterface;
-
-use Bitrix\Iblock\PropertyTable;
-use Bitrix\Main\LoaderException;
 
 /**
  * Преобразует значение имеющего связь к элементу информационного блока
@@ -22,7 +18,7 @@ use Bitrix\Main\LoaderException;
  * @since 1.0.0
  * @version 1.0.0
  */
-class IBlockElement extends AbstractIBlockImport
+class IBlockElement extends AbstractHandbookImport
 {
     /**
      * Инициализация импорта элементов информационного блока
@@ -30,7 +26,6 @@ class IBlockElement extends AbstractIBlockImport
      * @param FieldInterface $field Свойство в которое производится преобразование
      * @return ExchangeInterface
      *
-     * @throws LoaderException
      * @throws ReflectionException
      *
      * @since 1.0.0
@@ -38,8 +33,8 @@ class IBlockElement extends AbstractIBlockImport
      */
     protected function getTarget(FieldInterface $field): ExchangeInterface
     {
-        $property = $this->getRepository()->get($field->getCode());
-        return new LinkElement(['entity_id' => $property['LINK_IBLOCK_ID']]);
+        $property = $this->getFieldRepository()->get($field->getCode());
+        return new LinkElement(['entity_id' => $property['SETTINGS']['IBLOCK_ID']]);
     }
 
     /**
@@ -62,18 +57,13 @@ class IBlockElement extends AbstractIBlockImport
      * @param mixed $value Значение, которое необходимо преобразовать
      * @param FieldInterface $field Свойство, которое преобразовывается
      * @return bool
-     * @throws LoaderException
      *
      * @since 1.0.0
      * @version 1.0.0
      */
     public function supported(mixed $value, FieldInterface $field): bool
     {
-        return $field instanceof ElementFieldInterface
-            && $field->isProperty()
-            && ($property = $this->getRepository()->get($field->getCode()))
-            && $property['PROPERTY_TYPE'] === PropertyTable::TYPE_ELEMENT
-            && !$property['USER_TYPE']
-            && $property['LINK_IBLOCK_ID'];
+        $property = $this->getFieldRepository()->get($field->getCode());
+        return $property && $property['USER_TYPE_ID'] === 'iblock_element' && $property['SETTINGS']['IBLOCK_ID'];
     }
 }
