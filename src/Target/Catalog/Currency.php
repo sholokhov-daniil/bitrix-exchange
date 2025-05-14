@@ -11,11 +11,11 @@ use Bitrix\Main\SystemException;
 use CCurrency;
 use Exception;
 use ReflectionException;
-use Sholokhov\Exchange\Exchange;
-use Sholokhov\Exchange\Messages\ResultInterface;
-use Sholokhov\Exchange\Messages\Type\Error;
-use Sholokhov\Exchange\Messages\Type\DataResult;
-use Sholokhov\Exchange\Target\Attributes\Validate;
+use Sholokhov\BitrixExchange\Exchange;
+use Sholokhov\BitrixExchange\Messages\ResultInterface;
+use Sholokhov\BitrixExchange\Messages\Type\Error;
+use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 
 class Currency extends Exchange
 {

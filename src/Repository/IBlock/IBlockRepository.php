@@ -4,7 +4,7 @@ namespace Sholokhov\BitrixExchange\Repository\IBlock;
 
 use CIBlock;
 
-use Sholokhov\Exchange\Repository\Types\Memory;
+use Sholokhov\BitrixExchange\Repository\Types\Memory;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;

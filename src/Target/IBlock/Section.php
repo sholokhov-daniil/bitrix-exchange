@@ -9,9 +9,9 @@ use CIBlockSection;
 use Sholokhov\BitrixExchange\Helper\Helper;
 use Sholokhov\BitrixExchange\Helper\Site;
 
-use Sholokhov\Exchange\Messages\ResultInterface;
-use Sholokhov\Exchange\Messages\Type\Error;
-use Sholokhov\Exchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Messages\ResultInterface;
+use Sholokhov\BitrixExchange\Messages\Type\Error;
+use Sholokhov\BitrixExchange\Messages\Type\DataResult;
 
 use Bitrix\Main\Event;
 use Bitrix\Main\EventResult;

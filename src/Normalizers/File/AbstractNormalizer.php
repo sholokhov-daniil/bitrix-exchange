@@ -6,7 +6,7 @@ use ReflectionException;
 
 use Sholokhov\BitrixExchange\Target\File;
 
-use Sholokhov\Exchange\Messages\ResultInterface;
+use Sholokhov\BitrixExchange\Messages\ResultInterface;
 
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerAwareInterface;
@@ -70,6 +70,8 @@ abstract class AbstractNormalizer implements LoggerAwareInterface
      * @param array $options
      * @return ResultInterface
      * @throws ReflectionException
+     *
+     * @version 1.0.0
      */
     protected function execute(mixed $source, array $options = []): ResultInterface
     {

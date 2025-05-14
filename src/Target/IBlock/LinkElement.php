@@ -5,10 +5,10 @@ namespace Sholokhov\BitrixExchange\Target\IBlock;
 use Exception;
 
 use Psr\Log\LoggerAwareTrait;
-use Sholokhov\Exchange\Application;
-use Sholokhov\Exchange\ExchangeInterface;
-use Sholokhov\Exchange\Messages\ResultInterface;
-use Sholokhov\Exchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Application;
+use Sholokhov\BitrixExchange\ExchangeInterface;
+use Sholokhov\BitrixExchange\Messages\ResultInterface;
+use Sholokhov\BitrixExchange\Messages\Type\DataResult;
 
 /**
  * Импортирование элемента информационного блока

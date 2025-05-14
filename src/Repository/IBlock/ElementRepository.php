@@ -7,8 +7,11 @@ use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
 use CIBlockElement;
 use Psr\Container\ContainerInterface;
-use Sholokhov\Exchange\Repository\Types\Memory;
+use Sholokhov\BitrixExchange\Repository\Types\Memory;
 
+/**
+ * @version 1.0.0
+ */
 class ElementRepository implements ContainerInterface
 {
     /**

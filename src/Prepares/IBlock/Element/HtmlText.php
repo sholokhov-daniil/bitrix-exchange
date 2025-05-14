@@ -7,7 +7,7 @@ use Sholokhov\BitrixExchange\Prepares\AbstractPrepare;
 use Sholokhov\BitrixExchange\Prepares\IBlock\PropertyTrait;
 use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
 
-use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 
 use Bitrix\Iblock\PropertyTable;
 use Bitrix\Main\LoaderException;

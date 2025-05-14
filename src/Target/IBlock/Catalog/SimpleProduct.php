@@ -4,9 +4,9 @@ namespace Sholokhov\BitrixExchange\Target\IBlock\Catalog;
 
 use ReflectionException;
 
-use Sholokhov\Exchange\Messages\Type\Error;
-use Sholokhov\Exchange\Messages\ResultInterface;
-use Sholokhov\Exchange\Target\IBlock\Element;
+use Sholokhov\BitrixExchange\Messages\Type\Error;
+use Sholokhov\BitrixExchange\Messages\ResultInterface;
+use Sholokhov\BitrixExchange\Target\IBlock\Element;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;

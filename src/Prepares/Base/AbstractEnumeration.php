@@ -2,8 +2,8 @@
 
 namespace Sholokhov\BitrixExchange\Prepares\Base;
 
-use Sholokhov\Exchange\Fields\Field;
-use Sholokhov\Exchange\ExchangeInterface;
+use Sholokhov\BitrixExchange\Fields\Field;
+use Sholokhov\BitrixExchange\ExchangeInterface;
 
 /**
  * Импорт значения в список

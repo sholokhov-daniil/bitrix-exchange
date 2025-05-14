@@ -8,8 +8,8 @@ use Sholokhov\BitrixExchange\Target\Highloadblock\Element;
 use Sholokhov\BitrixExchange\Prepares\Base\AbstractIBlockImport;
 use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
 
-use Sholokhov\Exchange\ExchangeInterface;
-use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\ExchangeInterface;
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 
 use Bitrix\Iblock\PropertyTable;
 use Bitrix\Main\LoaderException;

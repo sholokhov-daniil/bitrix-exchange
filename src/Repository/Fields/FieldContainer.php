@@ -2,13 +2,15 @@
 
 namespace Sholokhov\BitrixExchange\Repository\Fields;
 
-use Sholokhov\Exchange\Repository\Types\Memory;
+use Sholokhov\BitrixExchange\Repository\Types\Memory;
 
 /**
  * Хранилище данных о свойствах
  *
  * @method AbstractFieldRepository|null|mixed get(string $id, mixed $default = null)
  * @method AbstractFieldRepository|null current()
+ *
+ * @version 1.0.0
  */
 class FieldContainer extends Memory
 {

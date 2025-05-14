@@ -4,8 +4,8 @@ namespace Sholokhov\BitrixExchange\Prepares\IBlock\Element;
 
 use ReflectionException;
 
-use Sholokhov\Exchange\ExchangeInterface;
-use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\ExchangeInterface;
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
 use Sholokhov\BitrixExchange\Prepares\IBlock\PropertyTrait;
 use Sholokhov\BitrixExchange\Prepares\Base\AbstractEnumeration;

@@ -5,7 +5,7 @@ namespace Sholokhov\BitrixExchange\Prepares\Base;
 use DateTime;
 use DateMalformedStringException;
 
-use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Prepares\AbstractPrepare;
 
 use Bitrix\Main\Type\Date as BxDate;

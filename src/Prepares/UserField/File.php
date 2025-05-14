@@ -4,7 +4,7 @@ namespace Sholokhov\BitrixExchange\Prepares\UserField;
 
 use CFile;
 
-use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Prepares\AbstractPrepare;
 
 use Psr\Log\LoggerAwareTrait;

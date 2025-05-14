@@ -2,10 +2,12 @@
 
 namespace Sholokhov\BitrixExchange\Fields\IBlock;
 
-use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 
 /**
  * Поле описывающее свойство элемента ИБ
+ *
+ * @version 1.0.0
  */
 interface ElementFieldInterface extends FieldInterface
 {

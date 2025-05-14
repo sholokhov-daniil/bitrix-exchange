@@ -10,12 +10,12 @@ use CIBlockPropertyEnum;
 use Sholokhov\BitrixExchange\Target\IBlock\IBlock;
 use Sholokhov\BitrixExchange\Repository\IBlock\PropertyRepository;
 
-use Sholokhov\Exchange\Helper\Helper;
-use Sholokhov\Exchange\Messages\ResultInterface;
-use Sholokhov\Exchange\Messages\Type\DataResult;
-use Sholokhov\Exchange\Messages\Type\Error;
-use Sholokhov\Exchange\Target\Attributes\Validate;
-use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\BitrixExchange\Helper\Helper;
+use Sholokhov\BitrixExchange\Messages\ResultInterface;
+use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Messages\Type\Error;
+use Sholokhov\BitrixExchange\Target\Attributes\Validate;
+use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 
 use Bitrix\Iblock\PropertyTable;
 use Bitrix\Main\LoaderException;

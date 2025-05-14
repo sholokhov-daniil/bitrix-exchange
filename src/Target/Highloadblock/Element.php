@@ -7,11 +7,11 @@ use Exception;
 use ReflectionException;
 
 use Sholokhov\BitrixExchange\Prepares\UserField as Prepare;
-use Sholokhov\Exchange\Exchange;
-use Sholokhov\Exchange\Helper\Helper;
-use Sholokhov\Exchange\Messages\Type\Error;
-use Sholokhov\Exchange\Messages\Type\DataResult;
-use Sholokhov\Exchange\Messages\ResultInterface;
+use Sholokhov\BitrixExchange\Exchange;
+use Sholokhov\BitrixExchange\Helper\Helper;
+use Sholokhov\BitrixExchange\Messages\Type\Error;
+use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Messages\ResultInterface;
 
 use Bitrix\Main\Event;
 use Bitrix\Main\Loader;
@@ -22,8 +22,8 @@ use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Highloadblock\HighloadBlockTable as HLT;
-use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
-use Sholokhov\Exchange\Target\Attributes\Validate;
+use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 
 class Element extends Exchange
 {

@@ -2,7 +2,7 @@
 
 namespace Sholokhov\BitrixExchange\Fields\Catalog;
 
-use Sholokhov\Exchange\Fields\Field;
+use Sholokhov\BitrixExchange\Fields\Field;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
@@ -10,6 +10,8 @@ use Bitrix\Currency\CurrencyManager;
 
 /**
  * Свойство отвечающее за валюту
+ *
+ * @version 1.0.0
  */
 class PriceField extends Field implements PriceFieldInterface
 {

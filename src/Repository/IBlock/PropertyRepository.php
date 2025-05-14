@@ -4,7 +4,7 @@ namespace Sholokhov\BitrixExchange\Repository\IBlock;
 
 use CIBlock;
 
-use Sholokhov\Exchange\Repository\Types\Memory;
+use Sholokhov\BitrixExchange\Repository\Types\Memory;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\EventManager;
@@ -19,6 +19,8 @@ use Psr\Container\ContainerInterface;
  *
  * Хранилище производит автоматическое обновление при изменении, удалении или добавлении свойства
  * @final
+ *
+ * @version 1.0.0
  */
 final class PropertyRepository implements ContainerInterface
 {

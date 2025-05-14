@@ -7,8 +7,8 @@ use InvalidArgumentException;
 
 use Sholokhov\BitrixExchange\Prepares\AbstractPrepare;
 
-use Sholokhov\Exchange\ExchangeInterface;
-use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\ExchangeInterface;
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerAwareInterface;

@@ -6,10 +6,10 @@ use Bitrix\Main\Diag\Debug;
 use CFile;
 use Exception;
 
-use Sholokhov\Exchange\Exchange;
-use Sholokhov\Exchange\Messages\ResultInterface;
-use Sholokhov\Exchange\Messages\Type\Error;
-use Sholokhov\Exchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Exchange;
+use Sholokhov\BitrixExchange\Messages\ResultInterface;
+use Sholokhov\BitrixExchange\Messages\Type\Error;
+use Sholokhov\BitrixExchange\Messages\Type\DataResult;
 
 use Bitrix\Main\FileTable;
 use Bitrix\Main\SystemException;
@@ -18,6 +18,8 @@ use Bitrix\Main\ObjectPropertyException;
 
 /**
  * Импорт файла
+ *
+ * @version 1.0.0
  */
 class File extends Exchange
 {

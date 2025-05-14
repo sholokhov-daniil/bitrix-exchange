@@ -6,12 +6,12 @@ use CIBlock;
 
 use Sholokhov\BitrixExchange\Repository\IBlock\IBlockRepository;
 
-use Sholokhov\Exchange\Exchange;
-use Sholokhov\Exchange\Messages\Type\Error;
-use Sholokhov\Exchange\Messages\Type\DataResult;
-use Sholokhov\Exchange\Messages\ResultInterface;
-use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
-use Sholokhov\Exchange\Target\Attributes\Validate;
+use Sholokhov\BitrixExchange\Exchange;
+use Sholokhov\BitrixExchange\Messages\Type\Error;
+use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Messages\ResultInterface;
+use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;

@@ -2,10 +2,12 @@
 
 namespace Sholokhov\BitrixExchange\Fields\IBlock;
 
-use Sholokhov\Exchange\Fields\Field;
+use Sholokhov\BitrixExchange\Fields\Field;
 
 /**
  * Описание свойства элемента ИБ
+ *
+ * @version 1.0.0
  */
 class IBlockElementField extends Field implements ElementFieldInterface
 {

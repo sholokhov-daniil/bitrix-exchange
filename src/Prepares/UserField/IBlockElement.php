@@ -7,8 +7,8 @@ use ReflectionException;
 use Sholokhov\BitrixExchange\Target\IBlock\LinkElement;
 use Sholokhov\BitrixExchange\Prepares\Base\AbstractHandbookImport;
 
-use Sholokhov\Exchange\ExchangeInterface;
-use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\ExchangeInterface;
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 
 /**
  * Преобразует значение имеющего связь к элементу информационного блока

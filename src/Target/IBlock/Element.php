@@ -5,10 +5,10 @@ namespace Sholokhov\BitrixExchange\Target\IBlock;
 use Exception;
 use CIBlockElement;
 
-use Sholokhov\Exchange\Helper\Helper;
-use Sholokhov\Exchange\Messages\ResultInterface;
-use Sholokhov\Exchange\Messages\Type\Error;
-use Sholokhov\Exchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Helper\Helper;
+use Sholokhov\BitrixExchange\Messages\ResultInterface;
+use Sholokhov\BitrixExchange\Messages\Type\Error;
+use Sholokhov\BitrixExchange\Messages\Type\DataResult;
 
 use Sholokhov\BitrixExchange\Helper\Site;
 use Sholokhov\BitrixExchange\Prepares\IBlock\Element as Prepare;
@@ -21,7 +21,7 @@ use Bitrix\Iblock\ElementTable;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectPropertyException;
-use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 
 /**
  * Импортирование элемента информационного блока

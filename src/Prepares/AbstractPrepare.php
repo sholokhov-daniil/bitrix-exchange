@@ -2,9 +2,9 @@
 
 namespace Sholokhov\BitrixExchange\Prepares;
 
-use Sholokhov\Exchange\Helper\FieldHelper;
-use Sholokhov\Exchange\Fields\FieldInterface;
-use Sholokhov\Exchange\Prepares\PrepareInterface;
+use Sholokhov\BitrixExchange\Helper\FieldHelper;
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\Prepares\PrepareInterface;
 
 /**
  * Базовый класс преобразователей данных

@@ -6,7 +6,7 @@ use CFile;
 
 use Sholokhov\BitrixExchange\Prepares\AbstractPrepare;
 
-use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerAwareInterface;

@@ -5,8 +5,8 @@ namespace Sholokhov\BitrixExchange\Prepares\Base;
 
 use Sholokhov\BitrixExchange\Prepares\UserField\UFTrait;
 
-use Sholokhov\Exchange\Fields\Field;
-use Sholokhov\Exchange\ExchangeInterface;
+use Sholokhov\BitrixExchange\Fields\Field;
+use Sholokhov\BitrixExchange\ExchangeInterface;
 
 /**
  * Преобразует значение имеющего связь к иной сущности

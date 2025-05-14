@@ -2,7 +2,7 @@
 
 namespace Sholokhov\BitrixExchange\Prepares\Base;
 
-use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Prepares\AbstractPrepare;
 
 /**

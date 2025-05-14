@@ -4,11 +4,14 @@ namespace Sholokhov\BitrixExchange\Repository\Fields;
 
 use Exception;
 
-use Sholokhov\Exchange\Repository\Types\Memory;
-use Sholokhov\Exchange\Repository\RepositoryInterface;
+use Sholokhov\BitrixExchange\Repository\Types\Memory;
+use Sholokhov\BitrixExchange\Repository\RepositoryInterface;
 
 use Psr\Container\ContainerInterface;
 
+/**
+ * @version 1.0.0
+ */
 abstract class AbstractFieldRepository implements ContainerInterface
 {
     /**

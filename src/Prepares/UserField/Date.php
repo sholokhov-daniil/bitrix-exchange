@@ -2,7 +2,7 @@
 
 namespace Sholokhov\BitrixExchange\Prepares\UserField;
 
-use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Prepares\Base\AbstractDate;
 
 use Psr\Log\LoggerAwareInterface;

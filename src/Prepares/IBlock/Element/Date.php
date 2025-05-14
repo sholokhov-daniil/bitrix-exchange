@@ -2,7 +2,7 @@
 
 namespace Sholokhov\BitrixExchange\Prepares\IBlock\Element;
 
-use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Prepares\Base\AbstractDate;
 use Sholokhov\BitrixExchange\Prepares\IBlock\PropertyTrait;
 use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;

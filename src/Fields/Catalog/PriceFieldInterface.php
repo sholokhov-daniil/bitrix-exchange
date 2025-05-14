@@ -2,8 +2,11 @@
 
 namespace Sholokhov\BitrixExchange\Fields\Catalog;
 
-use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 
+/**
+ * @version 1.0.0
+ */
 interface PriceFieldInterface extends FieldInterface
 {
     /**

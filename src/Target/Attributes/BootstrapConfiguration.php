@@ -1,0 +1,16 @@
+<?php
+
+namespace Sholokhov\BitrixExchange\Target\Attributes;
+
+use Attribute;
+
+/**
+ * Отвечает за автоматическую загрузку(конфигурацию обмена)
+ *
+ * @since 1.0.0
+ * @version 1.0.0
+ */
+#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_PROPERTY)]
+class BootstrapConfiguration
+{
+}

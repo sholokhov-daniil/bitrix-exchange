@@ -6,7 +6,7 @@ use Iterator;
 use ArrayIterator;
 use CIBlockElement;
 
-use Sholokhov\Exchange\Source\IterableTrait;
+use Sholokhov\BitrixExchange\Source\IterableTrait;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
@@ -15,6 +15,8 @@ use Bitrix\Main\LoaderException;
  * Источник данных основан на элементах информационного блока
  *
  * @author Daniil S.
+ *
+ * @version 1.0.0
  */
 class Element implements Iterator
 {
