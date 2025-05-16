@@ -16,21 +16,6 @@ use InvalidArgumentException;
 class UFRepository extends AbstractFieldRepository
 {
     /**
-     * Обновление информации определенного свойства
-     *
-     * @param string $code
-     * @return void
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public function refreshByCode(string $code): void
-    {
-        $field = $this->query(['FIELD_NAME' => $code]);
-        $field ? $this->getStorage()->set($code, $field) : $this->getStorage()->delete($code);
-    }
-
-    /**
      * Проверка конфигурации
      *
      * @param array $options

@@ -102,10 +102,10 @@ class ElementRepository extends AbstractRepository
         $filter = ['=IBLOCK_ID' => $this->getIBlockID()];
         $select = ['ID', 'IBLOCK_ID', 'NAME', 'CODE', 'XML_ID'];
 
-        $parameters['filter'] = array_merge($parameters['filter'] ?: [], $filter);
-        $parameters['select'] = array_merge($parameters['select'] ?: [], $select);
+        $parameters['filter'] = array_merge($parameters['filter'] ?? [], $filter);
+        $parameters['select'] = array_merge($parameters['select'] ?? [], $select);
 
-        if (!is_array($parameters['order'])) {
+        if (!isset($parameters['order']) || !is_array($parameters['order'])) {
             $parameters['order'] = [];
         }
 

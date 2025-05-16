@@ -138,34 +138,6 @@ class Field implements FieldInterface
     }
 
     /**
-     * Значение является множественным
-     *
-     * @return bool
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public function isMultiple(): bool
-    {
-        return $this->getContainer()->get('multiple', false);
-    }
-
-    /**
-     * Установка, что значение является множественным
-     *
-     * @param bool $multiple
-     * @return static
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public function setMultiple(bool $multiple = true): self
-    {
-        $this->getContainer()->set('multiple', $multiple);
-        return $this;
-    }
-
-    /**
      * Получение дочернего элемента
      *
      * @return FieldInterface|null

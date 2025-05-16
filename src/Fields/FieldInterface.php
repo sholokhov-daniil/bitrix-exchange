@@ -58,16 +58,6 @@ interface FieldInterface
     public function getTarget(): ?ExchangeInterface;
 
     /**
-     * Значение является множественным
-     *
-     * @return bool
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public function isMultiple(): bool;
-
-    /**
      * Получение дочернего элемента
      *
      * @return FieldInterface|null

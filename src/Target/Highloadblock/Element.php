@@ -2,10 +2,9 @@
 
 namespace Sholokhov\BitrixExchange\Target\Highloadblock;
 
-use Bitrix\Main\Diag\Debug;
 use Exception;
-use ReflectionException;
 
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Prepares\UserField as Prepare;
 use Sholokhov\BitrixExchange\Exchange;
 use Sholokhov\BitrixExchange\Helper\Helper;
@@ -22,6 +21,8 @@ use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Highloadblock\HighloadBlockTable as HLT;
+use Sholokhov\BitrixExchange\Repository\Fields\FieldRepositoryInterface;
+use Sholokhov\BitrixExchange\Repository\Fields\UFRepository;
 use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 
@@ -180,6 +181,33 @@ class Element extends Exchange
     }
 
     /**
+     * Свойство является множественным
+     *
+     * @param FieldInterface $field
+     * @return bool
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    protected function isMultipleField(FieldInterface $field): bool
+    {
+        return $this->getUfRepository()->get($field->getCode())['MULTIPLE'] === 'Y';
+    }
+
+    /**
+     * Получение хранилища пользовательских свойств (UF)
+     *
+     * @return FieldRepositoryInterface
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    protected function getUfRepository(): FieldRepositoryInterface
+    {
+        return $this->repository->get('uf_repository');
+    }
+
+    /**
      * Конфигурация импорта
      *
      * @return void
@@ -192,6 +220,8 @@ class Element extends Exchange
         if (Loader::includeModule('highloadblock')) {
             $this->entity = HLT::compileEntity($this->getEntityID())->getDataClass();
         }
+
+        $this->repository->set('uf_repository', new UFRepository(['ENTITY_ID' => HLT::compileEntityId($this->getEntityID())]));
     }
 
     /**
@@ -302,7 +332,7 @@ class Element extends Exchange
     #[BootstrapConfiguration]
     private function bootstrapPrepares(): void
     {
-        $entityId = 'HLBLOCK_' . $this->getEntityID();
+        $entityId = HLT::compileEntityId($this->getEntityID());
 
         $this->addPrepared(new Prepare\File($entityId))
             ->addPrepared(new Prepare\Date($entityId))
@@ -315,7 +345,6 @@ class Element extends Exchange
         // Деньги
         // Опрос
         // Привязка к разделам ИБ
-        // Привязка к элементам ИБ
         // Привязка к элементам справочника
         // Содержимое ссылки
         // Ссылка

@@ -7,6 +7,7 @@ use CFile;
 use Exception;
 
 use Sholokhov\BitrixExchange\Exchange;
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
 use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Sholokhov\BitrixExchange\Messages\Type\DataResult;
@@ -73,7 +74,6 @@ class File extends Exchange
      */
     protected function add(array $item): ResultInterface
     {
-        Debug::dump($item);
         $result = new DataResult;
         $path = $item[$this->getPrimaryField()->getCode()];
         $file = CFile::MakeFileArray($path);
@@ -126,5 +126,19 @@ class File extends Exchange
     protected function getExternalId(string $path): string
     {
         return md5($path);
+    }
+
+    /**
+     * Проверка, что свойство является множественным
+     *
+     * @param FieldInterface $field
+     * @return bool
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    protected function isMultipleField(FieldInterface $field): bool
+    {
+        return false;
     }
 }

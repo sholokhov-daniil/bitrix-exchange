@@ -2,9 +2,7 @@
 
 namespace Sholokhov\BitrixExchange\Prepares;
 
-use Sholokhov\BitrixExchange\Helper\FieldHelper;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Prepares\PrepareInterface;
 
 /**
  * Базовый класс преобразователей данных
@@ -38,8 +36,6 @@ abstract class AbstractPrepare implements PrepareInterface
      */
     public function prepare(mixed $value, FieldInterface $field): mixed
     {
-        $value = FieldHelper::normalizeValue($value, $field);
-
         if (is_array($value)) {
             $result = array_map(fn($chit) => $this->logic($chit, $field), array_filter($value));
             $result = array_filter($result);

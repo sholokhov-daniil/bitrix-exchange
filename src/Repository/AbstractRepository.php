@@ -181,6 +181,19 @@ abstract class AbstractRepository implements RepositoryInterface
     }
 
     /**
+     * Полная очистка хранилища
+     *
+     * @return void
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    public function clearAll(): void
+    {
+        self::$storage = [];
+    }
+
+    /**
      * Значение на которое показывает указатель
      *
      * @return mixed

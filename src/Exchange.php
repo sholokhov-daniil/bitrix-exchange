@@ -2,24 +2,21 @@
 
 namespace Sholokhov\BitrixExchange;
 
-use Bitrix\Main\Diag\Debug;
-use Throwable;
 use Exception;
-use ArrayIterator;
 use ReflectionException;
 
 use Sholokhov\BitrixExchange\Events\Event;
 use Sholokhov\BitrixExchange\Events\EventResult;
 use Sholokhov\BitrixExchange\Bootstrap\Validator;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\Helper\LoggerHelper;
+use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Sholokhov\BitrixExchange\Repository\Types\Memory;
 use Sholokhov\BitrixExchange\Repository\RepositoryInterface;
 use Sholokhov\BitrixExchange\Validators\ValidatorInterface;
 use Sholokhov\BitrixExchange\Helper\Entity;
 use Sholokhov\BitrixExchange\Helper\FieldHelper;
-use Sholokhov\BitrixExchange\Helper\LoggerHelper;
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
-use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Sholokhov\BitrixExchange\Messages\Type\DataResult;
 use Sholokhov\BitrixExchange\Prepares\Chain;
 use Sholokhov\BitrixExchange\Prepares\PrepareInterface;
@@ -29,6 +26,7 @@ use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerAwareInterface;
+use Throwable;
 
 /**
  * @since 1.0.0
@@ -151,6 +149,17 @@ abstract class Exchange extends Application implements MappingExchangeInterface
     abstract protected function exists(array $item): bool;
 
     /**
+     * Свойство является множественным
+     *
+     * @param FieldInterface $field
+     * @return bool
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    abstract protected function isMultipleField(FieldInterface $field): bool;
+
+    /**
      * Деактивация элементов сущности, которые не пришли в обмене
      *
      * @return void
@@ -168,6 +177,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * @param iterable $source
      * @return ResultInterface
      *
+     * @throws ReflectionException
      * @since 1.0.0
      * @version 1.0.0
      */
@@ -292,6 +302,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      *
      * @return ResultInterface
      *
+     * @throws ReflectionException
      * @since 1.0.0
      * @version 1.0.0
      */
@@ -394,6 +405,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
             $value = FieldHelper::getValue($item, $field);
             $value = $this->normalize($value, $field);
 
+
             if ($field->getTarget()) {
                 $targetResult = $this->runTarget($value, $field);
                 if (!$targetResult->isSuccess()) {
@@ -433,10 +445,9 @@ abstract class Exchange extends Application implements MappingExchangeInterface
             $target->setLogger($this->logger);
         }
 
-        $source = new ArrayIterator([$value]);
-        $result = $target->execute($source);
+        $result = $target->execute([$value]);
 
-        return FieldHelper::normalizeValue($result, $field);
+        return $this->conversionValueByMultiplicity($result->getData(), $field);
     }
 
     /**
@@ -451,10 +462,33 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      */
     private function normalize(mixed $value, FieldInterface $field): mixed
     {
-        $value = FieldHelper::normalizeValue($value, $field);
+        $value = $this->conversionValueByMultiplicity($value, $field);
 
         foreach ($field->getNormalizers() as $validator) {
             $value = call_user_func_array($validator, [$value, $field]);
+        }
+
+        return $value;
+    }
+
+    /**
+     * Приведение формата значения согласно его кратности
+     *
+     * @param mixed $value
+     * @param FieldInterface $field
+     * @return mixed
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    final protected function conversionValueByMultiplicity(mixed $value, FieldInterface $field): mixed
+    {
+        $isMultiple = $this->isMultipleField($field);
+
+        if ($isMultiple && !is_array($value)) {
+            return is_null($value) ? [] : [$value];
+        } elseif (!$isMultiple && is_array($value)) {
+            return reset($value);
         }
 
         return $value;
