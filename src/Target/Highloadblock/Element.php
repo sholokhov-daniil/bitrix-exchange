@@ -26,6 +26,9 @@ use Sholokhov\BitrixExchange\Repository\Fields\UFRepository;
 use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 
+/**
+ * @package Target
+ */
 class Element extends Exchange
 {
     public const BEFORE_UPDATE_EVENT = 'onBeforeHighloadblockElementUpdate';

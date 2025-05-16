@@ -6,6 +6,7 @@ use Attribute;
 use Sholokhov\BitrixExchange\Repository\Types\Memory;
 
 /**
+ * @package Attribute
  * @since 1.0.0
  * @version 1.0.0
  */

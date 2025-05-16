@@ -17,6 +17,9 @@ use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Sholokhov\BitrixExchange\Messages\Type\DataResult;
 use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 
+/**
+ * @package Target
+ */
 class Currency extends Exchange
 {
     /**

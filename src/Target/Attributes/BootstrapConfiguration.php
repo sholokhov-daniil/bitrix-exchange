@@ -7,6 +7,7 @@ use Attribute;
 /**
  * Отвечает за автоматическую загрузку(конфигурацию обмена)
  *
+ * @package Attribute
  * @since 1.0.0
  * @version 1.0.0
  */
