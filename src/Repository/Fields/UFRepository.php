@@ -100,7 +100,7 @@ class UFRepository extends AbstractFieldRepository
      * @version 1.0.0
      * @since 1.0.0
      */
-    protected function getHash(): string
+    protected function generateId(): string
     {
         return static::class . '_' . $this->getEntityId();
     }

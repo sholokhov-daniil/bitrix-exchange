@@ -122,7 +122,7 @@ final class PropertyRepository extends AbstractFieldRepository
      * @since 1.0.0
      * @version 1.0.0
      */
-    protected function getHash(): string
+    protected function generateId(): string
     {
         return self::class . '_' . $this->getIBlockID();
     }

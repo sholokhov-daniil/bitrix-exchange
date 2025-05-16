@@ -145,7 +145,7 @@ class ElementRepository extends AbstractRepository
      * @since 1.0.0
      * @version 1.0.0
      */
-    protected function getHash(): string
+    protected function generateId(): string
     {
         return static::class . '_' . $this->getIBlockID() . '_' . $this->getPrimary();
     }

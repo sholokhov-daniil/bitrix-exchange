@@ -24,6 +24,16 @@ abstract class AbstractRepository implements RepositoryInterface
     private static array $storage;
 
     /**
+     * Уникальный идентификатор хранилища
+     *
+     * @var string
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    private readonly string $id;
+
+    /**
      * Конфигурация хранилища
      *
      * @var Memory
@@ -34,14 +44,14 @@ abstract class AbstractRepository implements RepositoryInterface
     private Memory $options;
 
     /**
-     * Идентификатор хранилища (уникальный ID)
+     * Генерация уникального идентификатора хранилища
      *
      * @return string
      *
      * @version 1.0.0
      * @since 1.0.0
      */
-    abstract protected function getHash(): string;
+    abstract protected function generateId(): string;
 
     /**
      * Запрос на получение данных
@@ -89,6 +99,21 @@ abstract class AbstractRepository implements RepositoryInterface
     {
         $this->checkOptions($options);
         $this->options = new Memory($this->normalizeOptions($options));
+        $this->id = $this->generateId();
+    }
+
+    /**
+     * Идентификатор хранилища (уникальный ID)
+     *
+     * @final
+     * @return string
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    final public function getId(): string
+    {
+        return $this->id;
     }
 
     /**
@@ -311,6 +336,6 @@ abstract class AbstractRepository implements RepositoryInterface
      */
     final protected function getStorage(): Memory
     {
-        return self::$storage[$this->getHash()] ??= new Memory;
+        return self::$storage[$this->getId()] ??= new Memory;
     }
 }
