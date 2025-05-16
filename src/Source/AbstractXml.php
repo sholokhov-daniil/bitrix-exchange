@@ -10,6 +10,7 @@ use EmptyIterator;
  *
  * @internal
  *
+ * @package Source
  * @since 1.0.0
  * @version 1.0.0
  */

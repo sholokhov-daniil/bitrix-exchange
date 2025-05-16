@@ -9,6 +9,9 @@ use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\SystemException;
 use CUtil;
 
+/**
+ * @package ORM
+ */
 abstract class AbstractXmlDynamic extends DataManager
 {
     public static function getMap(): array

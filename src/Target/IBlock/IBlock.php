@@ -18,6 +18,7 @@ use Bitrix\Main\LoaderException;
 
 /**
  * Импорт в информационный блок
+ * @package Target
  */
 abstract class IBlock extends Exchange
 {

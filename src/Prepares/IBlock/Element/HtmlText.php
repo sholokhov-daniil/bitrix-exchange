@@ -18,6 +18,7 @@ use Psr\Log\LoggerAwareInterface;
 /**
  * Преобразует значение в формат, который поддерживает HTML\Text
  *
+ * @package Preparation
  * @since 1.0.0
  * @version 1.0.0
  */

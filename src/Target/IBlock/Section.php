@@ -24,6 +24,7 @@ use Bitrix\Main\Type\DateTime;
 /**
  * Импорт разделов информационного блока
  *
+ * @package Target
  * @version 1.0.0
  */
 class Section extends IBlock

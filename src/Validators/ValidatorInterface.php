@@ -7,6 +7,7 @@ use Sholokhov\BitrixExchange\Messages\ResultInterface;
 /**
  * Производит валидацию передаваемого значения
  *
+ * @package Validator
  * @since 1.0.0
  * @version 1.0.0
  */

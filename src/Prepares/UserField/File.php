@@ -13,6 +13,7 @@ use Psr\Log\LoggerAwareInterface;
 /**
  * Преобразование значение в файл, который воспринимает пользовательское свойство (UF)
  *
+ * @package Preparation
  * @since 1.0.0
  * @version 1.0.0
  */

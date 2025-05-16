@@ -5,6 +5,7 @@ namespace Sholokhov\BitrixExchange\Prepares\IBlock;
 use Sholokhov\BitrixExchange\Repository\IBlock\PropertyRepository;
 
 /**
+ * @package Preparation
  * @version 1.0.0
  * @since 1.0.0
  */

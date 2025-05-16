@@ -12,6 +12,7 @@ use Sholokhov\BitrixExchange\Messages\Type\DataResult;
 /**
  * Проверка стандартной карты обмена
  *
+ * @package Validator
  * @since 1.0.0
  * @version 1.0.0
  */

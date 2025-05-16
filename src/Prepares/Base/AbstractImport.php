@@ -16,6 +16,7 @@ use Psr\Log\LoggerAwareInterface;
 /**
  * Преобразует значение имеющего связь к сущности
  *
+ * @package Preparation
  * @since 1.0.0
  * @version 1.0.0
  */

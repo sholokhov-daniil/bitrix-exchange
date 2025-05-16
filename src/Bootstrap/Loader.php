@@ -9,6 +9,7 @@ use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 /**
  * Производит вызов всех методов отвечающий за загрузку конфигураций обмена
  *
+ * @package Bootstrap
  * @since 1.0.0
  * @version 1.0.0
  */

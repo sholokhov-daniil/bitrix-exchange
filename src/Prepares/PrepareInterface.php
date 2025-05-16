@@ -5,6 +5,7 @@ namespace Sholokhov\BitrixExchange\Prepares;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 
 /**
+ * @package Preparation
  * @since 1.0.0
  * @version 1.0.0
  */

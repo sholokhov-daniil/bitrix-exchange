@@ -5,6 +5,7 @@ namespace Sholokhov\BitrixExchange\Helper;
 use Throwable;
 
 /**
+ * @package Helper
  * @since 1.0.0
  * @version 1.0.0
  */

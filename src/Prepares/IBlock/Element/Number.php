@@ -13,6 +13,7 @@ use Bitrix\Main\LoaderException;
 /**
  * Приведение значения свойства к целочисленному значению
  *
+ * @package Preparation
  * @version 1.0.0
  * @since 1.0.0
  */
@@ -37,8 +38,6 @@ class Number extends AbstractNumber
      * @param mixed $value Значение, которое необходимо преобразовать
      * @param FieldInterface $field Свойство, которое преобразовывается
      * @return bool
-     * @throws LoaderException
-     *
      * @version 1.0.0
      * @since 1.0.0
      */

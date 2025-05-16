@@ -19,6 +19,7 @@ use Psr\Log\LoggerAwareInterface;
 /**
  * Производит преобразование пути до файла в формат, который поддерживается свойствами информационного блока
  *
+ * @package Preparation
  * @since 1.0.0
  * @version 1.0.0
  */
@@ -44,7 +45,6 @@ class PropertyFile extends AbstractPrepare implements LoggerAwareInterface
      * @param FieldInterface $field Свойство, которое преобразовывается
      * @return bool
      *
-     * @throws LoaderException
      * @version 1.0.0
      * @since 1.0.0
      */

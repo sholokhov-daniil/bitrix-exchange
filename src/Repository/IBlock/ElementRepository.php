@@ -3,7 +3,6 @@
 namespace Sholokhov\BitrixExchange\Repository\IBlock;
 
 use _CIBElement;
-use Bitrix\Main\Diag\Debug;
 use CIBlockElement;
 
 use Sholokhov\BitrixExchange\Repository\AbstractRepository;

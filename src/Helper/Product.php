@@ -8,6 +8,9 @@ use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectNotFoundException;
 use Bitrix\Main\ObjectPropertyException;
 
+/**
+ * @package Helper
+ */
 class Product
 {
 

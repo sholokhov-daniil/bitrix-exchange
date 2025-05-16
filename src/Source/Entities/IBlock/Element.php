@@ -16,6 +16,7 @@ use Bitrix\Main\LoaderException;
  *
  * @author Daniil S.
  *
+ * @package Source
  * @version 1.0.0
  */
 class Element implements Iterator

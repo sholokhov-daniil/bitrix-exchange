@@ -8,6 +8,7 @@ use Sholokhov\BitrixExchange\ExchangeInterface;
 /**
  * Импорт значения в список
  *
+ * @package Preparation
  * @version 1.0.0
  * @since 1.0.0
  */

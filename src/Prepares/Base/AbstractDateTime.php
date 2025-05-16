@@ -13,6 +13,7 @@ use Bitrix\Main\Type\DateTime as BxDateTime;
 /**
  * Приведение значения к объекту @see BxDateTime
  *
+ * @package Preparation
  * @since 1.0.0
  * @version 1.0.0
  */

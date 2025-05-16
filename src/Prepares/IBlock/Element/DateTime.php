@@ -13,6 +13,7 @@ use Bitrix\Main\LoaderException;
 /**
  * Приведение значения к типу @see \Bitrix\Main\Type\DateTime
  *
+ * @package Preparation
  * @version 1.0.0
  * @since 1.0.0
  */

@@ -11,6 +11,7 @@ use Psr\Log\LoggerAwareTrait;
 /**
  * Преобразование значения в дату @see \Bitrix\Main\Type\Date
  *
+ * @package Preparation
  * @version 1.0.0
  * @since 1.0.0
  */

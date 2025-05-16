@@ -14,6 +14,7 @@ use Bitrix\Main\LoaderException;
 /**
  * Импорт товаров в простой каталог
  * @todo Еще в разработке
+ * @package Target
  */
 class SimpleProduct extends Element
 {

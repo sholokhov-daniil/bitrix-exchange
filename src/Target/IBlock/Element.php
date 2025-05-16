@@ -26,6 +26,7 @@ use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 /**
  * Импортирование элемента информационного блока
  *
+ * @package Target
  * @version 1.0.0
  */
 class Element extends IBlock

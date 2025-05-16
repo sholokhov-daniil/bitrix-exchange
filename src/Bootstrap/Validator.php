@@ -10,6 +10,7 @@ use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 /**
  * Производит вызов методов отвечающих за валидацию обмена
  *
+ * @package Bootstrap
  * @since 1.0.0
  * @version 1.0.0
  */

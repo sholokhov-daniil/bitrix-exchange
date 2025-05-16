@@ -10,6 +10,7 @@ use Sholokhov\BitrixExchange\ExchangeInterface;
 /**
  * Преобразует значение имеющего связь к иной сущности
  *
+ * @package Preparation
  * @since 1.0.0
  * @version 1.0.0
  */

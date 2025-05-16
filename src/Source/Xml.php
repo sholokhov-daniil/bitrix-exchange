@@ -7,7 +7,6 @@ use CIBlockXMLFile;
 use EmptyIterator;
 use ArrayIterator;
 
-use Sholokhov\BitrixExchange\Source\AbstractXml;
 use Sholokhov\BitrixExchange\ORM\Factory;
 use Sholokhov\BitrixExchange\ORM\AbstractXmlDynamic;
 
@@ -25,6 +24,7 @@ use Bitrix\Main\SystemException;
  *
  * Рекомендуется использовать, если объем XML файла большой и мы готовы подождать
  *
+ * @package Source
  * @version 1.0.0
  */
 class Xml extends AbstractXml

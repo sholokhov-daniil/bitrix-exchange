@@ -9,6 +9,7 @@ use Sholokhov\BitrixExchange\Fields\FieldInterface;
  * Цепочка преобразователей данных.
  * Из цепочки выбирается первый подходящий и производится модификация
  *
+ * @package Preparation
  * @since 1.0.0
  * @version 1.0.0
  */

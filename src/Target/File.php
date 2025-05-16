@@ -20,6 +20,7 @@ use Bitrix\Main\ObjectPropertyException;
 /**
  * Импорт файла
  *
+ * @package Target
  * @version 1.0.0
  */
 class File extends Exchange

@@ -23,6 +23,7 @@ use Bitrix\Main\LoaderException;
 /**
  * Импорт значений списка информационного блока
  *
+ * @package Target
  * @version 1.0.0
  * @since 1.0.0
  */

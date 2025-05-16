@@ -4,6 +4,9 @@ namespace Sholokhov\BitrixExchange\Helper;
 
 use Bitrix\Main\Application;
 
+/**
+ * @package Helper
+ */
 class Site
 {
     /**

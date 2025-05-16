@@ -19,6 +19,7 @@ use Bitrix\Main\LoaderException;
  *
  * Если элемент будет отсутствовать, то будет произведено автоматическое создание
  *
+ * @package Preparation
  * @since 1.0.0
  * @version 1.0.0
  */
@@ -30,9 +31,7 @@ class HandbookElement extends AbstractIBlockImport
      * @param FieldInterface $field Свойство в которое производится преобразование
      * @return ExchangeInterface
      *
-     * @throws LoaderException
      * @throws ReflectionException
-     *
      * @since 1.0.0
      * @version 1.0.0
      */

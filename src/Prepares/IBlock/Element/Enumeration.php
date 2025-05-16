@@ -17,6 +17,7 @@ use Bitrix\Main\LoaderException;
 /**
  * Производит импорт значения списка и преобразовывает значение в идентификатор значения списка
  *
+ * @package Preparation
  * @version 1.0.0
  * @since 1.0.0
  */

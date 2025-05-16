@@ -17,6 +17,7 @@ use Symfony\Component\Serializer\Encoder\XmlEncoder;
  *
  * Рекомендуется для использования, если объем данных не большой
  *
+ * @package Source
  * @since 1.0.0
  * @version 1.0.0
  */

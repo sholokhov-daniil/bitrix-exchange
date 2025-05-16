@@ -8,6 +8,7 @@ use Sholokhov\BitrixExchange\Prepares\AbstractPrepare;
 /**
  * Приводит значение к целочисленному
  *
+ * @package Preparation
  * @since 1.0.0
  * @version 1.0.0
  */

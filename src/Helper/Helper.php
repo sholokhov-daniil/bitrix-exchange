@@ -4,6 +4,9 @@ namespace Sholokhov\BitrixExchange\Helper;
 
 use Illuminate\Support\Arr;
 
+/**
+ * @package Helper
+ */
 class Helper
 {
     /**

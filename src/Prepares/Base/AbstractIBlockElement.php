@@ -19,6 +19,7 @@ use Psr\Log\LoggerAwareInterface;
 /**
  * Преобразователь значения в идентификатор информационного блока
  *
+ * @package Preparation
  * @since 1.0.0
  * @version 1.0.0
  */

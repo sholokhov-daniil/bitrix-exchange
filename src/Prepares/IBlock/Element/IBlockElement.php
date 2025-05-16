@@ -17,6 +17,7 @@ use Bitrix\Main\LoaderException;
  *
  * Если элемент будет отсутствовать, то будет произведено автоматическое создание
  *
+ * @package Preparation
  * @since 1.0.0
  * @version 1.0.0
  */

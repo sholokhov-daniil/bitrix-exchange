@@ -7,6 +7,7 @@ use Sholokhov\BitrixExchange\Fields\FieldInterface;
 /**
  * Базовый класс преобразователей данных
  *
+ * @package Preparation
  * @version 1.0.0
  * @since 1.0.0
  */

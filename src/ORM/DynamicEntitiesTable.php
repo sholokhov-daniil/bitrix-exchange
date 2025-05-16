@@ -6,6 +6,9 @@ use Bitrix\Main\ORM\Fields;
 use Bitrix\Main\ORM\Data\AddResult;
 use Bitrix\Main\ORM\Data\DataManager;
 
+/**
+ * @package ORM
+ */
 class DynamicEntitiesTable extends DataManager
 {
     /**

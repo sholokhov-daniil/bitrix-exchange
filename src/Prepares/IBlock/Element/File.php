@@ -14,6 +14,7 @@ use Psr\Log\LoggerAwareInterface;
 /**
  * Преобразование пути до файла в массив формата $_FILES {@see CFile::MakeFileArray()}
  *
+ * @package Preparation
  * @since 1.0.0
  * @version 1.0.0
  */
