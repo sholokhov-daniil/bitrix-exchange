@@ -38,7 +38,7 @@ class HandbookElement extends AbstractIBlockImport
      */
     protected function getTarget(FieldInterface $field): ExchangeInterface
     {
-        $property = $this->getRepository()->get($field->getCode());
+        $property = $this->getPropertyRepository()->get($field->getCode());
         return new Element(['entity_id' => $property['LINK_IBLOCK_ID']]);
     }
 
@@ -71,7 +71,7 @@ class HandbookElement extends AbstractIBlockImport
     {
         return $field instanceof ElementFieldInterface
             && $field->isProperty()
-            && ($property = $this->getRepository()->get($field->getCode()))
+            && ($property = $this->getPropertyRepository()->get($field->getCode()))
             && $property['PROPERTY_TYPE'] === PropertyTable::TYPE_ELEMENT
             && $property['USER_TYPE'] === PropertyTable::USER_TYPE_DIRECTORY
             && $property['LINK_IBLOCK_ID'];

@@ -12,6 +12,7 @@ use Bitrix\Currency\CurrencyManager;
  * Свойство отвечающее за валюту
  *
  * @version 1.0.0
+ * @package Field
  */
 class PriceField extends Field implements PriceFieldInterface
 {

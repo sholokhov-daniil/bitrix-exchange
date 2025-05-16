@@ -21,6 +21,8 @@ use Psr\Container\ContainerInterface;
  * @final
  *
  * @version 1.0.0
+ *
+ * @package Repository
  */
 final class PropertyRepository implements ContainerInterface
 {

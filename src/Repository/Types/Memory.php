@@ -12,6 +12,8 @@ use Sholokhov\BitrixExchange\Repository\RepositoryInterface;
  *
  * @since 1.0.0
  * @version 1.0.0
+ *
+ * @package Repository
  */
 class Memory implements RepositoryInterface
 {

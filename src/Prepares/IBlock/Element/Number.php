@@ -46,7 +46,7 @@ class Number extends AbstractNumber
     {
         return $field instanceof ElementFieldInterface
             && $field->isProperty()
-            && ($property = $this->getRepository()->get($field->getCode()))
+            && ($property = $this->getPropertyRepository()->get($field->getCode()))
             && (!$property['USER_TYPE'] && $property['PROPERTY_TYPE'] === PropertyTable::TYPE_NUMBER);
     }
 }

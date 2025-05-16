@@ -20,6 +20,8 @@ use Psr\Container\ContainerInterface;
  *
  * @since 1.0.0
  * @version 1.0.0
+ *
+ * @package Repository
  */
 final class IBlockRepository implements ContainerInterface
 {

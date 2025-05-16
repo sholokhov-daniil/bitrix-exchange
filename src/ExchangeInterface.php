@@ -22,15 +22,4 @@ interface ExchangeInterface extends LoggerAwareInterface
      * @version 1.0.0
      */
     public function execute(iterable $source): ResultInterface;
-
-    /**
-     * Указание карты обмена данных
-     *
-     * @param array $map
-     * @return $this
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public function setMap(array $map): static;
 }

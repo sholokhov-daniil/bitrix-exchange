@@ -2,13 +2,8 @@
 
 namespace Sholokhov\BitrixExchange\Prepares\UserField;
 
-use ReflectionException;
-
-use Sholokhov\BitrixExchange\Target\IBlock\LinkElement;
-use Sholokhov\BitrixExchange\Prepares\Base\AbstractHandbookImport;
-
-use Sholokhov\BitrixExchange\ExchangeInterface;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\Prepares\Base\AbstractIBlockElement;
 
 /**
  * Преобразует значение имеющего связь к элементу информационного блока
@@ -18,37 +13,36 @@ use Sholokhov\BitrixExchange\Fields\FieldInterface;
  * @since 1.0.0
  * @version 1.0.0
  */
-class IBlockElement extends AbstractHandbookImport
+class IBlockElement extends AbstractIBlockElement
 {
+    use UFTrait;
+
     /**
-     * Инициализация импорта элементов информационного блока
-     *
-     * @param FieldInterface $field Свойство в которое производится преобразование
-     * @return ExchangeInterface
-     *
-     * @throws ReflectionException
+     * @param string $entityID Сущность для которой производится преобразование
+     * @param string $primary Ключ по которому будет производиться проверка уникальности
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    protected function getTarget(FieldInterface $field): ExchangeInterface
+    public function __construct(string $entityID, string $primary = 'XML_ID')
     {
-        $property = $this->getFieldRepository()->get($field->getCode());
-        return new LinkElement(['entity_id' => $property['SETTINGS']['IBLOCK_ID']]);
+        $this->entityId = $entityID;
+        parent::__construct($primary);
     }
 
     /**
-     * Нормализация результата импорта значения
+     * Предоставляет идентификатор информационного блока в котором должен храниться элемент информационного блока
      *
-     * @param mixed $value
-     * @return mixed
+     * @param FieldInterface $field Свойство из которого необходимо получить идентификатор информационного блока
+     * @return int
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    protected function normalize(mixed $value): int
+    protected function getFieldIBlockID(FieldInterface $field): int
     {
-        return is_array($value) ? (int)reset($value) : 0;
+        $property = $this->getFieldRepository()->get($field->getCode());
+        return (int)($property['SETTINGS']['IBLOCK_ID'] ?? 0);
     }
 
     /**

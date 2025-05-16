@@ -47,7 +47,7 @@ class DateTime extends AbstractDateTime
         $code = $field->getCode();
 
         if ($field instanceof ElementFieldInterface && $field->isProperty()) {
-            $property = $this->getRepository()->get($code);
+            $property = $this->getPropertyRepository()->get($code);
             return $property && $property['USER_TYPE'] === PropertyTable::USER_TYPE_DATETIME;
         }
 

@@ -35,7 +35,7 @@ use Psr\Log\LoggerAwareInterface;
  * @version 1.0.0
  */
 #[MapValidator]
-abstract class Exchange extends Application
+abstract class Exchange extends Application implements MappingExchangeInterface
 {
     use LoggerAwareTrait;
 
@@ -167,7 +167,6 @@ abstract class Exchange extends Application
      *
      * @param iterable $source
      * @return ResultInterface
-     * @throws ReflectionException
      *
      * @since 1.0.0
      * @version 1.0.0

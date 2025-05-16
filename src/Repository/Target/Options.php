@@ -8,6 +8,8 @@ use Sholokhov\BitrixExchange\Fields\FieldInterface;
 /**
  * @since 1.0.0
  * @version 1.0.0
+ *
+ * @package Repository
  */
 class Options extends Memory
 {

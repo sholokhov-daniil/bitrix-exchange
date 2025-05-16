@@ -52,7 +52,7 @@ class PropertyFile extends AbstractPrepare implements LoggerAwareInterface
     {
         return $field instanceof ElementFieldInterface
             && $field->isProperty()
-            && ($property = $this->getRepository()->get($field->getCode()))
+            && ($property = $this->getPropertyRepository()->get($field->getCode()))
             && $property['PROPERTY_TYPE'] === PropertyTable::TYPE_FILE
             && !$property['USER_TYPE'];
     }

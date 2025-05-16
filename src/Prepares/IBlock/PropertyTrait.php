@@ -38,7 +38,7 @@ trait PropertyTrait
      * @version 1.0.0
      * @since 1.0.0
      */
-    final protected function getRepository(): PropertyRepository
+    final protected function getPropertyRepository(): PropertyRepository
     {
         return $this->repository ??= new PropertyRepository($this->iblockId);
     }

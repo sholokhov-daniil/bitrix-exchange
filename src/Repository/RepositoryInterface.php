@@ -21,6 +21,8 @@ use Psr\Container\ContainerInterface as PsrContainer;
  *
  * @since 1.0.0
  * @version 1.0.0
+ *
+ * @package Repository
  */
 interface RepositoryInterface extends Iterator, Countable, PsrContainer
 {

@@ -38,7 +38,7 @@ class IBlockSection extends AbstractIBlockImport
      */
     protected function getTarget(FieldInterface $field): ExchangeInterface
     {
-        $property = $this->getRepository()->get($field->getCode());
+        $property = $this->getPropertyRepository()->get($field->getCode());
         return new Section(['entity_id' => $property['LINK_IBLOCK_ID']]);
     }
 
@@ -71,7 +71,7 @@ class IBlockSection extends AbstractIBlockImport
     {
         return $field instanceof ElementFieldInterface
             && $field->isProperty()
-            && ($property = $this->getRepository()->get($field->getCode()))
+            && ($property = $this->getPropertyRepository()->get($field->getCode()))
             && $property['PROPERTY_TYPE'] === PropertyTable::TYPE_SECTION
             && !$property['USER_TYPE']
             && $property['LINK_IBLOCK_ID'];

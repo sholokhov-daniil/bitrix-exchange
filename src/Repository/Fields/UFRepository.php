@@ -7,6 +7,11 @@ use InvalidArgumentException;
 
 /**
  * Хранилище информации о пользовательских свойствах определенной сущности
+ *
+ * @since 1.0.0
+ * @version 1.0.0
+ *
+ * @package Repository
  */
 class UFRepository extends AbstractFieldRepository
 {
@@ -15,6 +20,9 @@ class UFRepository extends AbstractFieldRepository
      *
      * @param string $code
      * @return void
+     *
+     * @since 1.0.0
+     * @version 1.0.0
      */
     public function refreshByCode(string $code): void
     {
@@ -27,6 +35,9 @@ class UFRepository extends AbstractFieldRepository
      *
      * @param array $options
      * @return void
+     *
+     * @since 1.0.0
+     * @version 1.0.0
      */
     protected function checkOptions(array $options): void
     {
@@ -41,6 +52,9 @@ class UFRepository extends AbstractFieldRepository
      * @final
      * @param array $parameters
      * @return array
+     *
+     * @since 1.0.0
+     * @version 1.0.0
      */
     final protected function query(array $parameters = []): array
     {
@@ -61,10 +75,32 @@ class UFRepository extends AbstractFieldRepository
     }
 
     /**
+     * Поиск свойства по символьному коду свойства
+     *
+     * @final
+     * @param string $id
+     * @return mixed
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    final protected function search(string $id): mixed
+    {
+        $iterator = $this->query([
+            'filter' => ['FIELD_NAME' => $id]
+        ]);
+
+        return $iterator[$id] ?? null;
+    }
+
+    /**
      * Получение ID сущности, которому принадлежат поля
      *
      * @final
      * @return string
+     *
+     * @since 1.0.0
+     * @version 1.0.0
      */
     final protected function getEntityId(): string
     {

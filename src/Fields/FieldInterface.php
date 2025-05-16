@@ -1,5 +1,7 @@
 <?php
 
+declare (strict_types=1);
+
 namespace Sholokhov\BitrixExchange\Fields;
 
 use Sholokhov\BitrixExchange\ExchangeInterface;
@@ -9,6 +11,7 @@ use Sholokhov\BitrixExchange\ExchangeInterface;
  *
  * @since 1.0.0
  * @version 1.0.0
+ * @package Field
  */
 interface FieldInterface
 {

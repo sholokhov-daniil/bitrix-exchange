@@ -49,7 +49,7 @@ class HtmlText extends AbstractPrepare implements LoggerAwareInterface
     {
         return $field instanceof ElementFieldInterface
             && $field->isProperty()
-            && ($property = $this->getRepository()->get($field->getCode()))
+            && ($property = $this->getPropertyRepository()->get($field->getCode()))
             && $property['USER_TYPE'] === PropertyTable::USER_TYPE_HTML;
     }
 
@@ -67,7 +67,7 @@ class HtmlText extends AbstractPrepare implements LoggerAwareInterface
      */
     protected function logic(mixed $value, FieldInterface $field): array|string
     {
-        $property = $this->getRepository()->get($field->getCode());
+        $property = $this->getPropertyRepository()->get($field->getCode());
 
         return $property['MULTIPLE'] === 'Y'
             ? ['VALUE' => ['TYPE' => 'HTML', 'TEXT' => $value]]

@@ -11,6 +11,7 @@ use Sholokhov\BitrixExchange\Repository\Types\Memory;
  *
  * @since 1.0.0
  * @version 1.0.0
+ * @package Field
  */
 class Field implements FieldInterface
 {

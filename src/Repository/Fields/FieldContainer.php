@@ -11,6 +11,8 @@ use Sholokhov\BitrixExchange\Repository\Types\Memory;
  * @method AbstractFieldRepository|null current()
  *
  * @version 1.0.0
+ *
+ * @package Repository
  */
 class FieldContainer extends Memory
 {

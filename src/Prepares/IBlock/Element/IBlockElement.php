@@ -2,17 +2,15 @@
 
 namespace Sholokhov\BitrixExchange\Prepares\IBlock\Element;
 
-use ReflectionException;
-
-use Sholokhov\BitrixExchange\Target\IBlock\LinkElement;
-use Sholokhov\BitrixExchange\Prepares\Base\AbstractIBlockImport;
-use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
-
-use Sholokhov\BitrixExchange\ExchangeInterface;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
+use Sholokhov\BitrixExchange\Prepares\IBlock\PropertyTrait;
+use Sholokhov\BitrixExchange\Prepares\Base\AbstractIBlockElement;
+
 
 use Bitrix\Iblock\PropertyTable;
 use Bitrix\Main\LoaderException;
+
 
 /**
  * Преобразует значение имеющего связь к элементу информационного блока
@@ -22,38 +20,37 @@ use Bitrix\Main\LoaderException;
  * @since 1.0.0
  * @version 1.0.0
  */
-class IBlockElement extends AbstractIBlockImport
+class IBlockElement extends AbstractIBlockElement
 {
+    use PropertyTrait;
+
     /**
-     * Инициализация импорта элементов информационного блока
+     * @param int $iblockId Информационный блок, которому относится свойство хранения значения
+     * @param string $primary Ключ по которому будет производиться проверка уникальности
      *
-     * @param FieldInterface $field Свойство в которое производится преобразование
-     * @return ExchangeInterface
-     *
-     * @throws LoaderException
-     * @throws ReflectionException
-     *
-     * @since 1.0.0
      * @version 1.0.0
+     * @since 1.0.0
      */
-    protected function getTarget(FieldInterface $field): ExchangeInterface
+    public function __construct(int $iblockId, string $primary = 'XML_ID')
     {
-        $property = $this->getRepository()->get($field->getCode());
-        return new LinkElement(['entity_id' => $property['LINK_IBLOCK_ID']]);
+        $this->iblockId = $iblockId;
+        parent::__construct($primary);
     }
 
     /**
-     * Нормализация результата импорта значения
+     * Предоставляет идентификатор информационного блока в котором должен храниться элемент информационного блока
      *
-     * @param mixed $value
-     * @return mixed
+     * @param FieldInterface $field Свойство из которого необходимо получить идентификатор информационного блока
+     * @return int
      *
+     * @throws LoaderException
      * @since 1.0.0
      * @version 1.0.0
      */
-    protected function normalize(mixed $value): int
+    protected function getFieldIBlockID(FieldInterface $field): int
     {
-        return is_array($value) ? (int)reset($value) : 0;
+        $property = $this->getPropertyRepository()->get($field->getCode());
+        return (int)($property['LINK_IBLOCK_ID'] ?? 0);
     }
 
     /**
@@ -71,7 +68,7 @@ class IBlockElement extends AbstractIBlockImport
     {
         return $field instanceof ElementFieldInterface
             && $field->isProperty()
-            && ($property = $this->getRepository()->get($field->getCode()))
+            && ($property = $this->getPropertyRepository()->get($field->getCode()))
             && $property['PROPERTY_TYPE'] === PropertyTable::TYPE_ELEMENT
             && !$property['USER_TYPE']
             && $property['LINK_IBLOCK_ID'];
