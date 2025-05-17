@@ -39,6 +39,6 @@ trait UFTrait
      */
     final protected function getFieldRepository(): UFRepository
     {
-        return $this->repository ??= new UFRepository(['ENTITY_ID' => $this->entityId]);
+        return $this->repository ??= new UFRepository(['entity_id' => $this->entityId]);
     }
 }

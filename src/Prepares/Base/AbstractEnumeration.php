@@ -45,7 +45,7 @@ abstract class AbstractEnumeration extends AbstractImport
      */
     protected function normalize(mixed $value): int
     {
-        return max((int)$value, 0);
+        return is_array($value) ? $this->normalize(reset($value)) : max((int)$value, 0);
     }
 
     /**

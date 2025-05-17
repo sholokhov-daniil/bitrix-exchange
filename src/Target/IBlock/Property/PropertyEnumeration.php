@@ -284,7 +284,9 @@ class PropertyEnumeration extends IBlock
     #[BootstrapConfiguration]
     private function bootstrapPropertyRepository(): void
     {
-        $this->repository->set('property_repository', new PropertyRepository($this->getIBlockID()));
+        $this->repository->set('property_repository', new PropertyRepository([
+            'iblock_id' => $this->getIBlockID(),
+        ]));
     }
 
     /**

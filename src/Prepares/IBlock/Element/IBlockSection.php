@@ -12,7 +12,6 @@ use Sholokhov\BitrixExchange\ExchangeInterface;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 
 use Bitrix\Iblock\PropertyTable;
-use Bitrix\Main\LoaderException;
 
 /**
  * Преобразует значение имеющего связь к элементу информационного блока
@@ -52,7 +51,7 @@ class IBlockSection extends AbstractIBlockImport
      */
     protected function normalize(mixed $value): int
     {
-        return is_array($value) ? (int)reset($value) : 0;
+        return is_array($value) ? $this->normalize(reset($value)) : max((int)$value, 0);
     }
 
     /**
@@ -61,7 +60,6 @@ class IBlockSection extends AbstractIBlockImport
      * @param mixed $value Значение, которое необходимо преобразовать
      * @param FieldInterface $field Свойство, которое преобразовывается
      * @return bool
-     * @throws LoaderException
      *
      * @since 1.0.0
      * @version 1.0.0

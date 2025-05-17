@@ -220,11 +220,12 @@ class Element extends Exchange
     #[BootstrapConfiguration]
     private function bootstrap(): void
     {
-        if (Loader::includeModule('highloadblock')) {
-            $this->entity = HLT::compileEntity($this->getEntityID())->getDataClass();
+        if (!Loader::includeModule('highloadblock')) {
+            throw new LoaderException('Module "highloadblock" not installed');
         }
 
-        $this->repository->set('uf_repository', new UFRepository(['ENTITY_ID' => HLT::compileEntityId($this->getEntityID())]));
+        $this->entity = HLT::compileEntity($this->getEntityID())->getDataClass();
+        $this->repository->set('uf_repository', new UFRepository(['entity_id' => HLT::compileEntityId($this->getEntityID())]));
     }
 
     /**
@@ -290,24 +291,6 @@ class Element extends Exchange
     }
 
     /**
-     * Проверка загрузки модулей
-     *
-     * @return ResultInterface
-     * @throws LoaderException
-     */
-    #[Validate]
-    private function checkModules(): ResultInterface
-    {
-        $result = new DataResult;
-
-        if (!Loader::includeModule('highloadblock')) {
-            $result->addError(new Error('Module "highloadblock" not installed'));
-        }
-
-        return $result;
-    }
-
-    /**
      * Валидация конфигурации обмена
      *
      * @return ResultInterface
@@ -342,7 +325,8 @@ class Element extends Exchange
             ->addPrepared(new Prepare\DateTime($entityId))
             ->addPrepared(new Prepare\Boolean($entityId))
             ->addPrepared(new Prepare\IBlockElement($entityId))
-            ->addPrepared(new Prepare\IBlockSection($entityId));
+            ->addPrepared(new Prepare\IBlockSection($entityId))
+            ->addPrepared(new Prepare\Enumeration($entityId));
 
         // Адрес
         // Видео
@@ -351,7 +335,6 @@ class Element extends Exchange
         // Привязка к элементам справочника
         // Содержимое ссылки
         // Ссылка
-        // Список
         // Целое число
         // Число
         // Шаблон

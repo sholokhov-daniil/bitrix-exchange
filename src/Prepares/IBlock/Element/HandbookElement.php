@@ -52,7 +52,7 @@ class HandbookElement extends AbstractIBlockImport
      */
     protected function normalize(mixed $value): int
     {
-        return is_array($value) ? (int)reset($value) : 0;
+        return is_array($value) ? $this->normalize(reset($value)) : max((int)$value, 0);
     }
 
     /**

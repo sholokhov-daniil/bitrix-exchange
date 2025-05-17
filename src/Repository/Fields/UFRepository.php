@@ -26,8 +26,8 @@ class UFRepository extends AbstractFieldRepository
      */
     protected function checkOptions(array $options): void
     {
-        if (!is_string($options['ENTITY_ID']) || !mb_strlen($options['ENTITY_ID'])) {
-            throw new InvalidArgumentException('Option "ENTITY_ID" should be a string');
+        if (!is_string($options['entity_id']) || !mb_strlen($options['entity_id'])) {
+            throw new InvalidArgumentException('Option "entity_id" should be a string');
         }
     }
 
@@ -89,7 +89,7 @@ class UFRepository extends AbstractFieldRepository
      */
     final protected function getEntityId(): string
     {
-        return $this->getOptions()->get('ENTITY_ID');
+        return $this->getOptions()->get('entity_id');
     }
 
     /**
