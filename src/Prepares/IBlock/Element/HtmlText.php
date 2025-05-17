@@ -2,7 +2,6 @@
 
 namespace Sholokhov\BitrixExchange\Prepares\IBlock\Element;
 
-use Bitrix\Main\Diag\Debug;
 use Sholokhov\BitrixExchange\Prepares\AbstractPrepare;
 use Sholokhov\BitrixExchange\Prepares\IBlock\PropertyTrait;
 use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;

@@ -2,7 +2,6 @@
 
 namespace Sholokhov\BitrixExchange\Helper;
 
-use Bitrix\Main\Diag\Debug;
 use ReflectionClass;
 use ReflectionException;
 

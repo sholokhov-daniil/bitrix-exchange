@@ -2,7 +2,6 @@
 
 namespace Sholokhov\BitrixExchange\Target;
 
-use Bitrix\Main\Diag\Debug;
 use CFile;
 use Exception;
 

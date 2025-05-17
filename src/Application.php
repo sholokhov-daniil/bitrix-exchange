@@ -110,8 +110,7 @@ abstract class Application implements ExchangeInterface
     private function makeOptionRepository(array $options = []): RepositoryInterface
     {
         /** @var OptionsContainer $attribute */
-        $attribute = Entity::getAttribute($this, OptionsContainer::class) ?: Entity::getAttribute(self::class, OptionsContainer::class);
-
+        $attribute = Entity::getAttributeChain($this, OptionsContainer::class);
         $entity = $attribute->getEntity();
 
         if (!is_subclass_of($entity, RepositoryInterface::class)) {

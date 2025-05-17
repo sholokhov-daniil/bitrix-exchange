@@ -341,13 +341,13 @@ class Element extends Exchange
             ->addPrepared(new Prepare\Date($entityId))
             ->addPrepared(new Prepare\DateTime($entityId))
             ->addPrepared(new Prepare\Boolean($entityId))
-            ->addPrepared(new Prepare\IBlockElement($entityId));
+            ->addPrepared(new Prepare\IBlockElement($entityId))
+            ->addPrepared(new Prepare\IBlockSection($entityId));
 
         // Адрес
         // Видео
         // Деньги
         // Опрос
-        // Привязка к разделам ИБ
         // Привязка к элементам справочника
         // Содержимое ссылки
         // Ссылка
