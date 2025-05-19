@@ -10,11 +10,11 @@ use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 use CCurrency;
 use Exception;
-use ReflectionException;
 use Sholokhov\BitrixExchange\Exchange;
+use Sholokhov\BitrixExchange\Messages\Type\Result;
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
 use Sholokhov\BitrixExchange\Messages\Type\Error;
-use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Messages\Type\ExchangeResult;
 use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 
 /**
@@ -63,9 +63,9 @@ class Currency extends Exchange
      * @return ResultInterface
      * @throws Exception
      */
-    protected function add(array $item): ResultInterface
+    protected function add(array $item): Result
     {
-        $result = new DataResult;
+        $result = new Result;
         $preparedItem = $this->prepareItem($item);
 
         // TODO: before event
@@ -83,7 +83,7 @@ class Currency extends Exchange
         return $result;
     }
 
-    protected function update(array $item): ResultInterface
+    protected function update(array $item): Result
     {
         // TODO: Implement update() method.
     }
@@ -121,7 +121,7 @@ class Currency extends Exchange
     private function checkModules(): ResultInterface
     {
         throw new Exception('In development');
-        $result = new DataResult;
+        $result = new Result;
 
         if (!Loader::includeModule('currency')) {
             $result->addError(new Error('Module "currency" not installed'));

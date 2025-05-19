@@ -3,8 +3,11 @@
 namespace Sholokhov\BitrixExchange\Bootstrap;
 
 use ReflectionClass;
+use ReflectionException;
+
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
-use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Messages\Type\Result;
+use Sholokhov\BitrixExchange\Messages\Type\ExchangeResult;
 use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 
 /**
@@ -27,15 +30,15 @@ class Validator
     }
 
     /**
-     * @return ResultInterface
-     * @throws \ReflectionException
+     * @return Result
+     * @throws ReflectionException
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function run(): ResultInterface
+    public function run(): Result
     {
-        $result = new DataResult;
+        $result = new Result;
 
         $chain = array_reverse(class_parents($this->exchange));
         $chain[] = $this->exchange;
@@ -48,7 +51,7 @@ class Validator
                 if ($method->getAttributes(Validate::class)) {
                     $validateResult = $method->invoke($this->exchange);
 
-                    if ($validateResult instanceof DataResult) {
+                    if ($validateResult instanceof ResultInterface) {
                         $result->addErrors($validateResult->getErrors());
                     }
                 }

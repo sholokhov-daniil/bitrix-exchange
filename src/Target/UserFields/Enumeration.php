@@ -8,13 +8,17 @@ use CUserFieldEnum;
 use Sholokhov\BitrixExchange\Exchange;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Helper\Helper;
+use Sholokhov\BitrixExchange\Messages\DataResultInterface;
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
 use Sholokhov\BitrixExchange\Messages\Type\DataResult;
-use Sholokhov\BitrixExchange\Messages\Type\Error;
+use Sholokhov\BitrixExchange\Messages\Type\ExchangeResult;
+use Sholokhov\BitrixExchange\Messages\Type\Result;
 use Sholokhov\BitrixExchange\Repository\Fields\UFRepository;
+use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 
 use Bitrix\Main\Event;
+use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Bitrix\Main\EventResult;
 
 class Enumeration extends Exchange
@@ -86,13 +90,13 @@ class Enumeration extends Exchange
      * Создание значения списка
      *
      * @param array $item
-     * @return ResultInterface
+     * @return DataResultInterface
      * @throws Exception
      *
      * @version 1.0.0
      * @since 1.0.0
      */
-    protected function add(array $item): ResultInterface
+    protected function add(array $item): DataResultInterface
     {
         global $APPLICATION;
 
@@ -136,13 +140,13 @@ class Enumeration extends Exchange
      * Обновление значения списка
      *
      * @param array $item
-     * @return ResultInterface
+     * @return DataResultInterface
      * @throws Exception
      *
      * @version 1.0.0
      * @since 1.0.0
      */
-    protected function update(array $item): ResultInterface
+    protected function update(array $item): DataResultInterface
     {
         $result = new DataResult;
         $primary = $this->getPrimaryField();
@@ -202,7 +206,7 @@ class Enumeration extends Exchange
     #[Validate]
     private function validateOptions(): ResultInterface
     {
-        $result = new DataResult;
+        $result = new Result;
 
         if (!$this->getEntityId()) {
             $result->addError(new Error('entity_id is required'));
@@ -336,7 +340,7 @@ class Enumeration extends Exchange
      */
     private function beforeAdd(array $item): ResultInterface
     {
-        $result = new DataResult;
+        $result = new Result;
 
         $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['FIELDS' => &$item]);
         $event->send();
@@ -371,7 +375,7 @@ class Enumeration extends Exchange
      */
     private function beforeUpdate(int $id, array $item): ResultInterface
     {
-        $result = new DataResult;
+        $result = new Result;
 
         $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['FIELDS' => &$item, 'ID' => $id]);
         $event->send();

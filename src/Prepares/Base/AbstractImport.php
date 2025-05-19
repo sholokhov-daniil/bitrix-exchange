@@ -116,7 +116,7 @@ abstract class AbstractImport extends AbstractPrepare implements LoggerAwareInte
             throw new Exception(implode(PHP_EOL, $result->getErrorMessages()));
         }
 
-        $data = $result->getData();
+        $data = $result->getData()->get();
 
         return $this->normalize($data);
     }

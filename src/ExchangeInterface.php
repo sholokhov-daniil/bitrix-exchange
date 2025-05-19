@@ -2,7 +2,7 @@
 
 namespace Sholokhov\BitrixExchange;
 
-use Sholokhov\BitrixExchange\Messages\ResultInterface;
+use Sholokhov\BitrixExchange\Messages\ExchangeResultInterface;
 
 use Psr\Log\LoggerAwareInterface;
 
@@ -16,10 +16,10 @@ interface ExchangeInterface extends LoggerAwareInterface
      * Запуск обмена данными
      *
      * @param iterable $source
-     * @return ResultInterface
+     * @return ExchangeResultInterface
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function execute(iterable $source): ResultInterface;
+    public function execute(iterable $source): ExchangeResultInterface;
 }

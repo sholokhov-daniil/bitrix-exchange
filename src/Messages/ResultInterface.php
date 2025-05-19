@@ -2,8 +2,6 @@
 
 namespace Sholokhov\BitrixExchange\Messages;
 
-use Sholokhov\BitrixExchange\Messages\Type\Error;
-
 /**
  * @since 1.0.0
  * @version 1.0.0
@@ -21,41 +19,20 @@ interface ResultInterface
     public function isSuccess(): bool;
 
     /**
-     * Указание результата работы
-     *
-     * @param mixed $value
-     * @return $this
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public function setData(mixed $value): self;
-
-    /**
-     * Получение результата работы
-     *
-     * @return mixed
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public function getData(): mixed;
-
-    /**
      * Добавление ошибки
      *
-     * @param Error $error
+     * @param ErrorInterface $error
      * @return $this
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function addError(Error $error): self;
+    public function addError(ErrorInterface $error): self;
 
     /**
      * Добавление ошибок
      *
-     * @param array $errors
+     * @param ErrorInterface[] $errors
      * @return $this
      *
      * @since 1.0.0
@@ -66,7 +43,7 @@ interface ResultInterface
     /**
      * Указание нового списка ошибок (старые будут удалены)
      *
-     * @param Error[] $errors
+     * @param ErrorInterface[] $errors
      * @return $this
      *
      * @since 1.0.0
@@ -77,7 +54,7 @@ interface ResultInterface
     /**
      * Получение всех ошибок
      *
-     * @return Error[]
+     * @return ErrorInterface[]
      *
      * @since 1.0.0
      * @version 1.0.0
@@ -98,10 +75,10 @@ interface ResultInterface
      * Получение ошибки по коду
      *
      * @param string $code
-     * @return Error|null
+     * @return ErrorInterface|null
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function getErrorByCode(string $code): ?Error;
+    public function getErrorByCode(string $code): ?ErrorInterface;
 }

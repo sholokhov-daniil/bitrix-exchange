@@ -44,7 +44,6 @@ class IBlockElement extends AbstractIBlockElement
      * @param FieldInterface $field Свойство из которого необходимо получить идентификатор информационного блока
      * @return int
      *
-     * @throws LoaderException
      * @since 1.0.0
      * @version 1.0.0
      */

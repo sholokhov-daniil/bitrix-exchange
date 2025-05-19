@@ -4,15 +4,15 @@ namespace Sholokhov\BitrixExchange\Target\IBlock;
 
 use CIBlock;
 
-use Sholokhov\BitrixExchange\Repository\IBlock\IBlockRepository;
 
 use Sholokhov\BitrixExchange\Exchange;
-use Sholokhov\BitrixExchange\Messages\Type\Error;
-use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Messages\Type\Result;
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
-use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\BitrixExchange\Repository\IBlock\IBlockRepository;
 use Sholokhov\BitrixExchange\Target\Attributes\Validate;
+use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 
+use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
 
@@ -81,7 +81,7 @@ abstract class IBlock extends Exchange
     #[Validate]
     private function checkModules(): ResultInterface
     {
-        $result = new DataResult;
+        $result = new Result;
 
         if (!Loader::includeModule('iblock')) {
             $result->addError(new Error('Module "iblock" not installed'));
@@ -97,7 +97,7 @@ abstract class IBlock extends Exchange
     #[Validate]
     private function validateOptions(): ResultInterface
     {
-        $result = new DataResult;
+        $result = new Result;
 
         if ($this->getIBlockID() <= 0) {
             $result->addError(new Error('IBLOCK ID is required'));

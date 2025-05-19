@@ -40,8 +40,6 @@ class HtmlText extends AbstractPrepare implements LoggerAwareInterface
      * @param FieldInterface $field Свойство, которое преобразовывается
      * @return bool
      *
-     * @throws LoaderException
-     *
      * @version 1.0.0
      * @since 1.0.0
      */
@@ -59,8 +57,6 @@ class HtmlText extends AbstractPrepare implements LoggerAwareInterface
      * @param mixed $value
      * @param FieldInterface $field
      * @return array|string
-     *
-     * @throws LoaderException
      *
      * @version 1.0.0
      * @since 1.0.0

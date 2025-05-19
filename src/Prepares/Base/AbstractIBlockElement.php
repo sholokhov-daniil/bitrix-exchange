@@ -2,13 +2,18 @@
 
 namespace Sholokhov\BitrixExchange\Prepares\Base;
 
+use Bitrix\Main\NotImplementedException;
 use ReflectionException;
 
+use Sholokhov\BitrixExchange\Factory\Result\SimpleFactory;
 use Sholokhov\BitrixExchange\Fields\Field;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Fields\LinkFieldInterface;
+use Sholokhov\BitrixExchange\Messages\DataResultInterface;
+use Sholokhov\BitrixExchange\Messages\ExchangeResultInterface;
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
 use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Messages\Type\ExchangeResult;
 use Sholokhov\BitrixExchange\Prepares\AbstractPrepare;
 use Sholokhov\BitrixExchange\Repository\IBlock\ElementRepository;
 use Sholokhov\BitrixExchange\Target\IBlock\Element;
@@ -54,8 +59,8 @@ abstract class AbstractIBlockElement extends AbstractPrepare implements LoggerAw
      * @param mixed $value
      * @param FieldInterface $field
      * @return int
+     * @throws NotImplementedException
      * @throws ReflectionException
-     *
      * @since 1.0.0
      * @version 1.0.0
      */
@@ -68,7 +73,7 @@ abstract class AbstractIBlockElement extends AbstractPrepare implements LoggerAw
         }
 
         if ($field instanceof LinkFieldInterface && $field->isAppend()) {
-            $result = $this->runExchange($value, $field);
+            $result = $this->runExchange($value, $field)->getData()->get();
         } else {
             $result = $this->runRepository($value, $field);
         }
@@ -83,15 +88,17 @@ abstract class AbstractIBlockElement extends AbstractPrepare implements LoggerAw
      *
      * @param mixed $value Преобразуемое значение
      * @param FieldInterface $field Свойство на основе которого будет производиться импорт элемента
-     * @return ResultInterface
+     * @return ExchangeResultInterface
      * @throws ReflectionException
+     * @throws NotImplementedException
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    private function runExchange(mixed $value, FieldInterface $field): ResultInterface
+    private function runExchange(mixed $value, FieldInterface $field): ExchangeResultInterface
     {
         $exchange = new Element([
+            'result_repository' => new SimpleFactory,
             'iblock_id' => $this->getFieldIBlockID($field),
             'primary' => $this->primary,
         ]);
@@ -115,12 +122,12 @@ abstract class AbstractIBlockElement extends AbstractPrepare implements LoggerAw
      *
      * @param mixed $value Преобразуемое значение
      * @param FieldInterface $field Свойство на основе которого будет производиться поиск элемента
-     * @return ResultInterface
+     * @return DataResultInterface
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    private function runRepository(mixed $value, FieldInterface $field): ResultInterface
+    private function runRepository(mixed $value, FieldInterface $field): DataResultInterface
     {
         $result = new DataResult;
 

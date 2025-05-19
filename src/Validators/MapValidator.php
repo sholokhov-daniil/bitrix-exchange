@@ -4,10 +4,11 @@ namespace Sholokhov\BitrixExchange\Validators;
 
 use TypeError;
 
+use Sholokhov\BitrixExchange\Messages\Type\Result;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
-use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+
+use Sholokhov\BitrixExchange\Messages\Type\Error;
 
 /**
  * Проверка стандартной карты обмена
@@ -34,7 +35,7 @@ class MapValidator implements ValidatorInterface
         }
 
         $primary = false;
-        $result = new DataResult;
+        $result = new Result;
 
         foreach ($value as $field) {
             if (!($field instanceof FieldInterface)) {

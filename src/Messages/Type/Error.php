@@ -4,67 +4,41 @@ namespace Sholokhov\BitrixExchange\Messages\Type;
 
 use Throwable;
 
+use Sholokhov\BitrixExchange\Messages\ErrorInterface;
+
 /**
- * @deprecated Будет переделано на {@see \Bitrix\Main\Error}
+ * Описание ошибки
  *
- * @since 1.0.0
  * @version 1.0.0
+ * @since 1.0.0
  */
-class Error
+class Error implements ErrorInterface
 {
-    /**
-     * @param string $message
-     * @param int $code
-     * @param array $context
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     */
     public function __construct(
-        protected string $message,
-        protected int $code = 0,
-        protected array $context = []
+        private readonly string $message,
+        private readonly int $code = 500,
+        private readonly mixed $context = null
     )
     {
     }
 
-    /**
-     * @return string
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     */
     public function __toString(): string
     {
-        return $this->message;
+        return sprintf('[%s] %s', $this->getCode(), $this->getMessage());
     }
 
     /**
-     * Создание ошибки на основе исключения
+     * Создать объект на основе исключения
      *
      * @param Throwable $throwable
-     * @param array $context
      * @return static
      *
-     * @since 1.0.0
      * @version 1.0.0
-     */
-    public static function createFromThrowable(Throwable $throwable, array $context = [])
-    {
-        return new static($throwable->getMessage(), $throwable->getCode(), $context);
-    }
-
-    /**
-     * Получение текста ошибки
-     *
-     * @return string
-     *
      * @since 1.0.0
-     * @version 1.0.0
      */
-    public function getMessage(): string
+    public static function createFromThrowable(Throwable $throwable): static
     {
-        return $this->message;
+        return new static($throwable->getMessage(), $throwable->getCode());
     }
 
     /**
@@ -72,8 +46,8 @@ class Error
      *
      * @return int
      *
-     * @since 1.0.0
      * @version 1.0.0
+     * @since 1.0.0
      */
     public function getCode(): int
     {
@@ -81,14 +55,27 @@ class Error
     }
 
     /**
+     * Текстовое сообщение ошибки
+     *
+     * @return string
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    public function getMessage(): string
+    {
+        return $this->message;
+    }
+
+    /**
      * Получение контекста ошибки
      *
-     * @return array
+     * @return mixed
      *
-     * @since 1.0.0
      * @version 1.0.0
+     * @since 1.0.0
      */
-    public function getContext(): array
+    public function getContext(): mixed
     {
         return $this->context;
     }

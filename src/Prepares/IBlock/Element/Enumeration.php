@@ -5,6 +5,7 @@ namespace Sholokhov\BitrixExchange\Prepares\IBlock\Element;
 use ReflectionException;
 
 use Sholokhov\BitrixExchange\ExchangeInterface;
+use Sholokhov\BitrixExchange\Factory\Result\SimpleFactory;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
 use Sholokhov\BitrixExchange\Prepares\IBlock\PropertyTrait;
@@ -50,6 +51,7 @@ class Enumeration extends AbstractEnumeration
     protected function getTarget(FieldInterface $field): ExchangeInterface
     {
         return new PropertyEnumeration([
+            'result_repository' => new SimpleFactory,
             'entity_id' => $this->iblockId,
             'property_code' => $field->getCode(),
         ]);

@@ -2,7 +2,10 @@
 
 namespace Sholokhov\BitrixExchange;
 
+use Bitrix\Main\Diag\Debug;
 use Exception;
+use Sholokhov\BitrixExchange\Repository\Result\ResultRepositoryInterface;
+use Throwable;
 use ReflectionException;
 
 use Sholokhov\BitrixExchange\Events\Event;
@@ -10,23 +13,29 @@ use Sholokhov\BitrixExchange\Events\EventResult;
 use Sholokhov\BitrixExchange\Bootstrap\Validator;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Helper\LoggerHelper;
+use Sholokhov\BitrixExchange\Messages\Type\Result;
+use Sholokhov\BitrixExchange\Messages\DataResultInterface;
+use Sholokhov\BitrixExchange\Messages\ExchangeResultInterface;
+use Sholokhov\BitrixExchange\Messages\Type\DataResult;
 use Sholokhov\BitrixExchange\Messages\Type\Error;
+use Sholokhov\BitrixExchange\Messages\ResultInterface;
+use Sholokhov\BitrixExchange\Messages\Type\ExchangeResult;
 use Sholokhov\BitrixExchange\Repository\Types\Memory;
 use Sholokhov\BitrixExchange\Repository\RepositoryInterface;
 use Sholokhov\BitrixExchange\Validators\ValidatorInterface;
 use Sholokhov\BitrixExchange\Helper\Entity;
 use Sholokhov\BitrixExchange\Helper\FieldHelper;
-use Sholokhov\BitrixExchange\Messages\ResultInterface;
-use Sholokhov\BitrixExchange\Messages\Type\DataResult;
 use Sholokhov\BitrixExchange\Prepares\Chain;
 use Sholokhov\BitrixExchange\Prepares\PrepareInterface;
 use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 use Sholokhov\BitrixExchange\Target\Attributes\MapValidator;
 use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 
+
+use Bitrix\Main\NotImplementedException;
+
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerAwareInterface;
-use Throwable;
 
 /**
  * @since 1.0.0
@@ -119,23 +128,23 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * Добавление нового элемента сущности
      *
      * @param array $item
-     * @return ResultInterface
+     * @return DataResultInterface
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    abstract protected function add(array $item): ResultInterface;
+    abstract protected function add(array $item): DataResultInterface;
 
     /**
      * Обновление элемента сущности
      *
      * @param array $item
-     * @return ResultInterface
+     * @return DataResultInterface
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    abstract protected function update(array $item): ResultInterface;
+    abstract protected function update(array $item): DataResultInterface;
 
     /**
      * Проверка наличия элемента сущности
@@ -175,26 +184,37 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * Запуск обмена
      *
      * @param iterable $source
-     * @return ResultInterface
+     * @return ExchangeResultInterface
      *
+     * @throws NotImplementedException
      * @throws ReflectionException
      * @since 1.0.0
      * @version 1.0.0
      */
-    final public function execute(iterable $source): ResultInterface
+    final public function execute(iterable $source): ExchangeResultInterface
     {
-        $dataResult = [];
-        $result = $this->validate();
+        $resultRepository = null;
 
-        if (!$result->isSuccess()) {
-            return $result;
+        if (is_callable($this->getResultRepository())) {
+            $resultRepository = call_user_func($this->getResultRepository(), $this);
+
+            if (!$resultRepository instanceof ResultRepositoryInterface) {
+                throw new NotImplementedException('Result repository not implemented: ' . ResultRepositoryInterface::class);
+            }
+        }
+
+        $result = new ExchangeResult($resultRepository);
+        $validate = $this->validate();
+
+        if (!$validate->isSuccess()) {
+            return $result->addErrors($validate->getErrors());
         }
 
         $this->dateUp = time();
 
         (new Event(self::BEFORE_RUN, ['exchange' => $this]))->send();
 
-        try {
+//        try {
             foreach ($source as $item) {
                 if (!is_array($item)) {
                     $this->logger?->warning('The source value is not an array: ' . json_encode($item));
@@ -207,14 +227,13 @@ abstract class Exchange extends Application implements MappingExchangeInterface
                 }
 
                 if ($data = $action->getData()) {
-                    $dataResult[] = $data;
+                    $result->getData()?->add($data);
                 }
             }
-
-        } catch (Throwable $throwable) {
-            $result->addError(Error::createFromThrowable($throwable));
-            $this->logger?->critical(LoggerHelper::exceptionToString($throwable));
-        }
+//        } catch (Throwable $throwable) {
+//            $result->addError(Error::createFromThrowable($throwable));
+//            $this->logger?->critical(LoggerHelper::exceptionToString($throwable));
+//        }
 
         (new Event(self::AFTER_RUN, ['exchange' => $this]))->send();
 
@@ -224,7 +243,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
 
         $this->dateUp = 0;
 
-        return $result->setData($dataResult);
+        return $result;
     }
 
     /**
@@ -284,6 +303,35 @@ abstract class Exchange extends Application implements MappingExchangeInterface
     }
 
     /**
+     * Указание генератора хранилища
+     *
+     * @final
+     * @param callable $callback
+     * @return $this
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    final public function setResultRepository(callable $callback): static
+    {
+        $this->getOptions()->set('result_repository', $callback);
+        return $this;
+    }
+
+    /**
+     * Получение генератора хранилища
+     *
+     * @return callable|null
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    protected function getResultRepository(): ?callable
+    {
+        return $this->getOptions()->get('result_repository');
+    }
+
+    /**
      * Получение цепочки преобразователей данных
      *
      * @final
@@ -300,13 +348,14 @@ abstract class Exchange extends Application implements MappingExchangeInterface
     /**
      * Проверка возможности запуска обмена данных
      *
-     * @return ResultInterface
+     * @return Result
      *
      * @throws ReflectionException
+     *
      * @since 1.0.0
      * @version 1.0.0
      */
-    protected function validate(): ResultInterface
+    protected function validate(): Result
     {
         $bootstrap = new Validator($this);
         return $bootstrap->run();
@@ -337,12 +386,12 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * Вызов действия над элементом источника
      *
      * @param array $item
-     * @return ResultInterface
+     * @return DataResultInterface
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    private function action(array $item): ResultInterface
+    private function action(array $item): DataResultInterface
     {
         (new Event(self::BEFORE_IMPORT_ITEM, ['exchange' => $this, 'item' => &$item]))->send();
 
@@ -390,14 +439,14 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * Преобразование значения
      *
      * @param array $item
-     * @return ResultInterface
+     * @return DataResultInterface
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    private function prepared(array $item): ResultInterface
+    private function prepared(array $item): DataResultInterface
     {
-        $result = new DataResult;
+        $result = new DataResult();
         $map = $this->getMap();
         $data = [];
 
@@ -428,12 +477,12 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      *
      * @param mixed $value
      * @param FieldInterface $field
-     * @return ResultInterface
+     * @return ExchangeResultInterface
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    private function runTarget(mixed $value, FieldInterface $field): ResultInterface
+    private function runTarget(mixed $value, FieldInterface $field): ExchangeResultInterface
     {
         $target = $field->getTarget();
 
@@ -530,6 +579,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      *
      * @return void
      * @throws ReflectionException
+     * @throws Exception
      *
      * @since 1.0.0
      * @version 1.0.0

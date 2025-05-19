@@ -2,21 +2,24 @@
 
 namespace Sholokhov\BitrixExchange\Target\IBlock\Property;
 
-use Bitrix\Main\Event;
-use Bitrix\Main\EventResult;
 use Exception;
 use CIBlockPropertyEnum;
 
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
+use Sholokhov\BitrixExchange\Messages\DataResultInterface;
+use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Messages\Type\Result;
 use Sholokhov\BitrixExchange\Target\IBlock\IBlock;
 use Sholokhov\BitrixExchange\Repository\IBlock\PropertyRepository;
 
 use Sholokhov\BitrixExchange\Helper\Helper;
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
-use Sholokhov\BitrixExchange\Messages\Type\DataResult;
-use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 
+use Sholokhov\BitrixExchange\Messages\Type\Error;
+use Bitrix\Main\Event;
+use Bitrix\Main\EventResult;
 use Bitrix\Iblock\PropertyTable;
 use Bitrix\Main\LoaderException;
 
@@ -89,13 +92,13 @@ class PropertyEnumeration extends IBlock
      * Создание значения списка
      *
      * @param array $item
-     * @return ResultInterface
+     * @return DataResultInterface
      * @throws LoaderException
      *
      * @version 1.0.0
      * @since 1.0.0
      */
-    protected function add(array $item): ResultInterface
+    protected function add(array $item): DataResultInterface
     {
         $result = new DataResult;
 
@@ -123,13 +126,13 @@ class PropertyEnumeration extends IBlock
      * Обновление значения свойства
      *
      * @param array $item
-     * @return ResultInterface
+     * @return DataResultInterface
      * @throws LoaderException
      *
      * @version 1.0.0
      * @since 1.0.0
      */
-    protected function update(array $item): ResultInterface
+    protected function update(array $item): DataResultInterface
     {
         $result = new DataResult;
         $primaryField = $this->getPrimaryField();
@@ -157,6 +160,21 @@ class PropertyEnumeration extends IBlock
         (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['FIELDS' => $fields, 'ID' => $enumId, 'RESULT' => $result]))->send();
 
         return $result;
+    }
+
+    /**
+     * Проверка на множественный тип свойства
+     *
+     * @param FieldInterface $field
+     * @return bool
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    protected function isMultipleField(FieldInterface $field): bool
+    {
+        $repository = $this->getPropertyRepository();
+        return $repository->has($field->getCode()) && $repository->get($field->getCode())['MULTIPLE'] === 'Y';
     }
 
     /**
@@ -237,7 +255,7 @@ class PropertyEnumeration extends IBlock
     #[Validate]
     private function optionsValidate(): ResultInterface
     {
-        $result = new DataResult;
+        $result = new Result;
 
         if (!$this->getPropertyCode()) {
             $result->addError(new Error('Property code is required.'));
@@ -250,7 +268,6 @@ class PropertyEnumeration extends IBlock
      * Производит проверку возможности импорта данных в свойство
      *
      * @return ResultInterface
-     * @throws LoaderException
      *
      * @version 1.0.0
      * @since 1.0.0
@@ -258,7 +275,7 @@ class PropertyEnumeration extends IBlock
     #[Validate]
     private function checkProperty(): ResultInterface
     {
-        $result = new DataResult;
+        $result = new Result;
 
         $property = $this->getPropertyRepository()->get($this->getPropertyCode());
 
@@ -314,7 +331,7 @@ class PropertyEnumeration extends IBlock
      */
     private function beforeUpdate(int $id, array $item): ResultInterface
     {
-        $result = new DataResult;
+        $result = new Result;
 
         $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['FIELDS' => &$item, 'ID' => $id]);
         $event->send();
@@ -348,7 +365,7 @@ class PropertyEnumeration extends IBlock
      */
     private function beforeAdd(array $item): ResultInterface
     {
-        $result = new DataResult;
+        $result = new Result;
 
         $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['FIELDS' => &$item]);
         $event->send();

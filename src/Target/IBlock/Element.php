@@ -5,12 +5,16 @@ namespace Sholokhov\BitrixExchange\Target\IBlock;
 use Exception;
 use CIBlockElement;
 
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Helper\Helper;
+use Sholokhov\BitrixExchange\Messages\DataResultInterface;
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
 use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Messages\Type\ExchangeResult;
 
 use Sholokhov\BitrixExchange\Helper\Site;
+use Sholokhov\BitrixExchange\Messages\Type\Result;
 use Sholokhov\BitrixExchange\Prepares\IBlock\Element as Prepare;
 use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
 
@@ -21,6 +25,7 @@ use Bitrix\Iblock\ElementTable;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectPropertyException;
+use Sholokhov\BitrixExchange\Prepares\IBlock\PropertyTrait;
 use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 
 /**
@@ -31,6 +36,8 @@ use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
  */
 class Element extends IBlock
 {
+    use PropertyTrait;
+
     public const BEFORE_DEACTIVATE = 'onBeforeIBlockElementsDeactivate';
     public const BEFORE_UPDATE_EVENT = 'onBeforeIBlockElementUpdate';
     public const AFTER_UPDATE_EVENT = 'onAfterIBlockElementUpdate';
@@ -77,10 +84,10 @@ class Element extends IBlock
      * Добавление элемента в информационный блок
      *
      * @param array $item
-     * @return ResultInterface
+     * @return DataResultInterface
      * @throws Exception
      */
-    protected function add(array $item): ResultInterface
+    protected function add(array $item): DataResultInterface
     {
         $result = new DataResult;
         $iblock = new CIBlockElement;
@@ -113,10 +120,10 @@ class Element extends IBlock
      * Обновление элемента
      *
      * @param array $item
-     * @return ResultInterface
+     * @return DataResultInterface
      * @throws Exception
      */
-    protected function update(array $item): ResultInterface
+    protected function update(array $item): DataResultInterface
     {
         $result = new DataResult;
         $keyField = $this->getPrimaryField();
@@ -237,7 +244,7 @@ class Element extends IBlock
      */
     private function beforeUpdate(int $id, array &$item): ResultInterface
     {
-        $result = new DataResult;
+        $result = new Result;
 
         $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['FIELDS' => &$item['FIELDS'], 'ID' => $id]);
         $event->send();
@@ -268,7 +275,7 @@ class Element extends IBlock
      */
     private function beforeAdd(array $item): ResultInterface
     {
-        $result = new DataResult;
+        $result = new Result;
 
         $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['FIELDS' => &$item]);
         $event->send();
@@ -325,5 +332,34 @@ class Element extends IBlock
         // Привязка к элементам по XML_ID
         // Привязка к элементам с автозаполнением
         // Счетчик
+    }
+
+    /**
+     * Проверка, что поле является множественным
+     *
+     * @param FieldInterface $field
+     * @return bool
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    protected function isMultipleField(FieldInterface $field): bool
+    {
+        $repository = $this->getPropertyRepository();
+        return $repository->has($field->getCode()) && $repository->get($field->getCode())['MULTIPLE'] === 'Y';
+    }
+
+    /**
+     * Конфигурация связанных объектов обмена
+     *
+     * @return void
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    #[BootstrapConfiguration]
+    private function configuration(): void
+    {
+        $this->iblockId = $this->getIBlockID();
     }
 }

@@ -4,6 +4,7 @@ namespace Sholokhov\BitrixExchange\Prepares\IBlock\Element;
 
 use ReflectionException;
 
+use Sholokhov\BitrixExchange\Factory\Result\SimpleFactory;
 use Sholokhov\BitrixExchange\Target\Highloadblock\Element;
 use Sholokhov\BitrixExchange\Prepares\Base\AbstractIBlockImport;
 use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
@@ -38,7 +39,10 @@ class HandbookElement extends AbstractIBlockImport
     protected function getTarget(FieldInterface $field): ExchangeInterface
     {
         $property = $this->getPropertyRepository()->get($field->getCode());
-        return new Element(['entity_id' => $property['LINK_IBLOCK_ID']]);
+        return new Element([
+            'result_repository' => new SimpleFactory,
+            'entity_id' => $property['LINK_IBLOCK_ID']
+        ]);
     }
 
     /**

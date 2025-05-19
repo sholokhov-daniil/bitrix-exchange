@@ -5,6 +5,7 @@ namespace Sholokhov\BitrixExchange\Prepares\UserField;
 use ReflectionException;
 
 use Sholokhov\BitrixExchange\ExchangeInterface;
+use Sholokhov\BitrixExchange\Factory\Result\SimpleFactory;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Prepares\Base\AbstractEnumeration;
 use Sholokhov\BitrixExchange\Target\UserFields\Enumeration as Target;
@@ -46,6 +47,7 @@ class Enumeration extends AbstractEnumeration
     protected function getTarget(FieldInterface $field): ExchangeInterface
     {
         return new Target([
+            'result_repository' => new SimpleFactory,
             'entity_id' => $this->entityId,
             'property_code' => $field->getCode(),
         ]);

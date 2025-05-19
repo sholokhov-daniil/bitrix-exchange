@@ -7,10 +7,10 @@ use Exception;
 
 use Sholokhov\BitrixExchange\Exchange;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Messages\ResultInterface;
-use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Messages\DataResultInterface;
 
+use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Bitrix\Main\FileTable;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\ArgumentException;
@@ -69,10 +69,10 @@ class File extends Exchange
      * Создание нового файла
      *
      * @param array $item
-     * @return ResultInterface
+     * @return DataResultInterface
      * @throws Exception
      */
-    protected function add(array $item): ResultInterface
+    protected function add(array $item): DataResultInterface
     {
         $result = new DataResult;
         $path = $item[$this->getPrimaryField()->getCode()];
@@ -101,11 +101,11 @@ class File extends Exchange
      * Обновление файла
      *
      * @param array $item
-     * @return ResultInterface
+     * @return DataResultInterface
      * @throws Exception
      * @todo Доработать
      */
-    protected function update(array $item): ResultInterface
+    protected function update(array $item): DataResultInterface
     {
         $keyField = $this->getPrimaryField();
         $externalID = $this->getExternalId((string)$item[$keyField->getCode()]);
