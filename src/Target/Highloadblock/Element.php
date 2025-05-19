@@ -214,7 +214,8 @@ class Element extends Exchange
      */
     protected function isMultipleField(FieldInterface $field): bool
     {
-        return $this->getUfRepository()->get($field->getCode())['MULTIPLE'] === 'Y';
+        $property = $this->getUfRepository()->get($field->getCode());
+        return $property && $property['MULTIPLE'] === 'Y';
     }
 
     /**
@@ -244,7 +245,13 @@ class Element extends Exchange
             throw new LoaderException('Module "highloadblock" not installed');
         }
 
-        $this->entity = HLT::compileEntity($this->getHlID())->getDataClass();
+        $entity = HLT::compileEntity($this->getHlID());
+
+        if (!$entity) {
+            throw new LoaderException('Entity "' . $this->getHlID() . '" not found');
+        }
+
+        $this->entity = $entity->getDataClass();
         $this->repository->set('uf_repository', new UFRepository(['entity_id' => $this->getUfEntityID()]));
     }
 

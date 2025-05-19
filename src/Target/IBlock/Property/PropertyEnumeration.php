@@ -173,8 +173,8 @@ class PropertyEnumeration extends IBlock
      */
     protected function isMultipleField(FieldInterface $field): bool
     {
-        $repository = $this->getPropertyRepository();
-        return $repository->has($field->getCode()) && $repository->get($field->getCode())['MULTIPLE'] === 'Y';
+        $repository = $this->getPropertyRepository()->get($field->getCode());
+        return $repository && $repository['MULTIPLE'] === 'Y';
     }
 
     /**

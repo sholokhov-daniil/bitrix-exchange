@@ -46,7 +46,6 @@ class HtmlText extends AbstractPrepare implements LoggerAwareInterface
     public function supported(mixed $value, FieldInterface $field): bool
     {
         return $field instanceof ElementFieldInterface
-            && $field->isProperty()
             && ($property = $this->getPropertyRepository()->get($field->getCode()))
             && $property['USER_TYPE'] === PropertyTable::USER_TYPE_HTML;
     }

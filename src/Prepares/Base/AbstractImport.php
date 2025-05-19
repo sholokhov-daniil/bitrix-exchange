@@ -116,9 +116,9 @@ abstract class AbstractImport extends AbstractPrepare implements LoggerAwareInte
             throw new Exception(implode(PHP_EOL, $result->getErrorMessages()));
         }
 
-        $data = $result->getData()->get();
+        $data = $result->getData()?->get();
 
-        return $this->normalize($data);
+        return $this->normalize($data, $field);
     }
 
     /**
@@ -126,15 +126,16 @@ abstract class AbstractImport extends AbstractPrepare implements LoggerAwareInte
      *
      * Метод предназначен для переопределения
      *
-     * @todo Потом перейти на цепочку атрибутов и выполнять только первый от последнего ребенка
-     *
      * @param mixed $value Результат цели, который необходимо нормализовать
+     * @param FieldInterface $field
      * @return mixed
+     *
+     * @todo Потом перейти на цепочку атрибутов и выполнять только первый от последнего ребенка
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    protected function normalize(mixed $value): mixed
+    protected function normalize(mixed $value, FieldInterface $field): mixed
     {
         return $value;
     }

@@ -63,15 +63,12 @@ class Enumeration extends AbstractEnumeration
      * @param mixed $value Значение, которое необходимо преобразовать
      * @param FieldInterface $field Свойство, которое преобразовывается
      * @return bool
-     * @throws LoaderException
-     *
      * @version 1.0.0
      * @since 1.0.0
      */
     public function supported(mixed $value, FieldInterface $field): bool
     {
         return $field instanceof ElementFieldInterface
-            && $field->isProperty()
             && ($property = $this->getPropertyRepository()->get($field->getCode()))
             && $property['PROPERTY_TYPE'] === PropertyTable::TYPE_LIST
             && !$property['USER_TYPE'];

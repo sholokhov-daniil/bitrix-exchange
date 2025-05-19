@@ -7,10 +7,7 @@ use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
 use Sholokhov\BitrixExchange\Prepares\IBlock\PropertyTrait;
 use Sholokhov\BitrixExchange\Prepares\Base\AbstractIBlockElement;
 
-
 use Bitrix\Iblock\PropertyTable;
-use Bitrix\Main\LoaderException;
-
 
 /**
  * Преобразует значение имеющего связь к элементу информационного блока
@@ -59,15 +56,12 @@ class IBlockElement extends AbstractIBlockElement
      * @param mixed $value Значение, которое необходимо преобразовать
      * @param FieldInterface $field Свойство, которое преобразовывается
      * @return bool
-     * @throws LoaderException
-     *
      * @since 1.0.0
      * @version 1.0.0
      */
     public function supported(mixed $value, FieldInterface $field): bool
     {
         return $field instanceof ElementFieldInterface
-            && $field->isProperty()
             && ($property = $this->getPropertyRepository()->get($field->getCode()))
             && $property['PROPERTY_TYPE'] === PropertyTable::TYPE_ELEMENT
             && !$property['USER_TYPE']

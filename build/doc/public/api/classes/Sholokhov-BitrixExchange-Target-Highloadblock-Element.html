@@ -102,6 +102,10 @@
 </h4>
 
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
+    <a href="packages/Attribute.html" class="">Attribute</a>
+</h4>
+
+                                    <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="packages/Target.html" class="">Target</a>
 </h4>
 
@@ -144,7 +148,7 @@
             <div class="phpdocumentor-element__package">
             in package
             <ul class="phpdocumentor-breadcrumbs">
-                                    <li class="phpdocumentor-breadcrumb"><a href="packages/Application.html">Application</a></li>
+                                    <li class="phpdocumentor-breadcrumb"><a href="packages/Target.html">Target</a></li>
                             </ul>
         </div>
     
@@ -159,7 +163,7 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">29</span>
+    <span class="phpdocumentor-element-found-in__line">34</span>
 
     </aside>
 
@@ -336,12 +340,12 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Sholokhov-BitrixExchange-Exchange.html#method_execute">execute()</a>
     <span>
-                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a>    </span>
+                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-ExchangeResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ExchangeResultInterface">ExchangeResultInterface</abbr></a>    </span>
 </dt>
 <dd>Запуск обмена</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_getEntityID">getEntityID()</a>
+    <a class="" href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_getHlID">getHlID()</a>
     <span>
                                 &nbsp;: int    </span>
 </dt>
@@ -362,16 +366,29 @@
 <dd>ID сайта, которому принадлежит обмен</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_getUfEntityID">getUfEntityID()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Sholokhov-BitrixExchange-Exchange.html#method_setMap">setMap()</a>
     <span>
                                 &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Exchange.html"><abbr title="\Sholokhov\BitrixExchange\Exchange">Exchange</abbr></a>    </span>
 </dt>
 <dd>Указание карты данных обмена</dd>
 
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Sholokhov-BitrixExchange-Exchange.html#method_setResultRepository">setResultRepository()</a>
+    <span>
+                                &nbsp;: $this    </span>
+</dt>
+<dd>Указание генератора хранилища</dd>
+
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_add">add()</a>
     <span>
-                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a>    </span>
+                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-DataResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\DataResultInterface">DataResultInterface</abbr></a>    </span>
 </dt>
 <dd>Создание элемента сущности</dd>
 
@@ -418,6 +435,13 @@
 <dd>Получение свойства отвечающего за идентификацию значения</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
+    <a class="" href="classes/Sholokhov-BitrixExchange-Exchange.html#method_getResultRepository">getResultRepository()</a>
+    <span>
+                                &nbsp;: callable|null    </span>
+</dt>
+<dd>Получение генератора хранилища</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_getUfRepository">getUfRepository()</a>
     <span>
                                 &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Repository-Fields-FieldRepositoryInterface.html"><abbr title="\Sholokhov\BitrixExchange\Repository\Fields\FieldRepositoryInterface">FieldRepositoryInterface</abbr></a>    </span>
@@ -441,21 +465,21 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_update">update()</a>
     <span>
-                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a>    </span>
+                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-Type-DataResult.html"><abbr title="\Sholokhov\BitrixExchange\Messages\Type\DataResult">DataResult</abbr></a>    </span>
 </dt>
 <dd>Обновление элемента сущности</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/Sholokhov-BitrixExchange-Exchange.html#method_validate">validate()</a>
     <span>
-                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a>    </span>
+                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-Type-Result.html"><abbr title="\Sholokhov\BitrixExchange\Messages\Type\Result">Result</abbr></a>    </span>
 </dt>
 <dd>Проверка возможности запуска обмена данных</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Sholokhov-BitrixExchange-Exchange.html#method_action">action()</a>
     <span>
-                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a>    </span>
+                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-DataResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\DataResultInterface">DataResultInterface</abbr></a>    </span>
 </dt>
 <dd>Вызов действия над элементом источника</dd>
 
@@ -502,13 +526,6 @@
 <dd>Инициализация хранилища дополнительных данных обмена</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
-    <a class="" href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_checkModules">checkModules()</a>
-    <span>
-                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a>    </span>
-</dt>
-<dd>Проверка загрузки модулей</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Sholokhov-BitrixExchange-Application.html#method_makeCacheRepository">makeCacheRepository()</a>
     <span>
                                 &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Repository-RepositoryInterface.html"><abbr title="\Sholokhov\BitrixExchange\Repository\RepositoryInterface">RepositoryInterface</abbr></a>    </span>
@@ -539,14 +556,14 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Sholokhov-BitrixExchange-Exchange.html#method_prepared">prepared()</a>
     <span>
-                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a>    </span>
+                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-DataResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\DataResultInterface">DataResultInterface</abbr></a>    </span>
 </dt>
 <dd>Преобразование значения</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Sholokhov-BitrixExchange-Exchange.html#method_runTarget">runTarget()</a>
     <span>
-                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a>    </span>
+                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-ExchangeResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ExchangeResultInterface">ExchangeResultInterface</abbr></a>    </span>
 </dt>
 <dd>Вызов вложенного импорта указанного в свойстве</dd>
 
@@ -578,7 +595,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">71</span>
 
     </aside>
 
@@ -632,7 +649,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">34</span>
+    <span class="phpdocumentor-element-found-in__line">39</span>
 
     </aside>
 
@@ -663,7 +680,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">86</span>
+    <span class="phpdocumentor-element-found-in__line">95</span>
 
     </aside>
 
@@ -717,7 +734,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">50</span>
+    <span class="phpdocumentor-element-found-in__line">59</span>
 
     </aside>
 
@@ -771,7 +788,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">74</span>
+    <span class="phpdocumentor-element-found-in__line">83</span>
 
     </aside>
 
@@ -825,7 +842,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">32</span>
+    <span class="phpdocumentor-element-found-in__line">37</span>
 
     </aside>
 
@@ -856,7 +873,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">56</span>
+    <span class="phpdocumentor-element-found-in__line">65</span>
 
     </aside>
 
@@ -910,7 +927,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">33</span>
+    <span class="phpdocumentor-element-found-in__line">38</span>
 
     </aside>
 
@@ -941,7 +958,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">80</span>
+    <span class="phpdocumentor-element-found-in__line">89</span>
 
     </aside>
 
@@ -995,7 +1012,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">44</span>
+    <span class="phpdocumentor-element-found-in__line">53</span>
 
     </aside>
 
@@ -1049,7 +1066,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">68</span>
+    <span class="phpdocumentor-element-found-in__line">77</span>
 
     </aside>
 
@@ -1103,7 +1120,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">31</span>
+    <span class="phpdocumentor-element-found-in__line">36</span>
 
     </aside>
 
@@ -1219,7 +1236,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">106</span>
+    <span class="phpdocumentor-element-found-in__line">115</span>
 
     </aside>
 
@@ -1279,7 +1296,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">36</span>
+    <span class="phpdocumentor-element-found-in__line">41</span>
 
     </aside>
 
@@ -1315,7 +1332,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">116</span>
+    <span class="phpdocumentor-element-found-in__line">125</span>
 
     </aside>
 
@@ -1375,7 +1392,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">96</span>
+    <span class="phpdocumentor-element-found-in__line">105</span>
 
     </aside>
 
@@ -1577,7 +1594,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">280</span>
+    <span class="phpdocumentor-element-found-in__line">299</span>
 
     </aside>
 
@@ -1649,7 +1666,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">184</span>
+    <span class="phpdocumentor-element-found-in__line">194</span>
 
     </aside>
 
@@ -1657,7 +1674,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__final">final</span>            <span class="phpdocumentor-signature__name">execute</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">iterable&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$source</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a></span></code>
+        <span class="phpdocumentor-signature__final">final</span>            <span class="phpdocumentor-signature__name">execute</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">iterable&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$source</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ExchangeResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ExchangeResultInterface">ExchangeResultInterface</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1682,6 +1699,14 @@
     </h5>
     <dl class="phpdocumentor-tag-list">
                                     <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">throws</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><abbr title="\Bitrix\Main\NotImplementedException">NotImplementedException</abbr></span>
+                                                            
+                                             
+                                    </dd>
+                            <dt class="phpdocumentor-tag-list__entry">
                     <span class="phpdocumentor-tag__name">throws</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
@@ -1711,7 +1736,7 @@
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ExchangeResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ExchangeResultInterface">ExchangeResultInterface</abbr></a></span>
             </section>
 
 </article>
@@ -1721,15 +1746,15 @@
             -public
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_getEntityID">
-        getEntityID()
-        <a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_getEntityID" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_getHlID">
+        getHlID()
+        <a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_getHlID" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">43</span>
+    <span class="phpdocumentor-element-found-in__line">50</span>
 
     </aside>
 
@@ -1737,7 +1762,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getEntityID</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
+                    <span class="phpdocumentor-signature__name">getHlID</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1745,6 +1770,29 @@
     
     
     
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_getHlID#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.0.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">version</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.0.1</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
 
     
 
@@ -1768,7 +1816,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">251</span>
+    <span class="phpdocumentor-element-found-in__line">270</span>
 
     </aside>
 
@@ -1830,7 +1878,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">238</span>
+    <span class="phpdocumentor-element-found-in__line">257</span>
 
     </aside>
 
@@ -1884,6 +1932,67 @@
             -public
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getUfEntityID">
+        getUfEntityID()
+        <a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_getUfEntityID" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">61</span>
+
+    </aside>
+
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getUfEntityID</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_getUfEntityID#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.0.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">version</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.0.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_setMap">
         setMap()
         <a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_setMap" class="headerlink"><i class="fas fa-link"></i></a>
@@ -1892,7 +2001,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">265</span>
+    <span class="phpdocumentor-element-found-in__line">284</span>
 
     </aside>
 
@@ -1953,6 +2062,85 @@
                     <article
         class="phpdocumentor-element
             -method
+            -public
+                                                -final        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_setResultRepository">
+        setResultRepository()
+        <a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_setResultRepository" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">315</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Указание генератора хранилища</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__final">final</span>            <span class="phpdocumentor-signature__name">setResultRepository</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">callable&nbsp;</span><span class="phpdocumentor-signature__argument__name">$callback</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">$this</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-signature__argument__name">$callback</span>
+                : <span class="phpdocumentor-signature__argument__return-type">callable</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_setResultRepository#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">final</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                                
+                                             
+                                    </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.0.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">version</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.0.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">$this</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
             -protected
                                                         "
 >
@@ -1964,7 +2152,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">100</span>
+    <span class="phpdocumentor-element-found-in__line">123</span>
 
     </aside>
 
@@ -1972,7 +2160,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">add</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$item</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">add</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$item</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-DataResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\DataResultInterface">DataResultInterface</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2010,7 +2198,7 @@
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-DataResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\DataResultInterface">DataResultInterface</abbr></a></span>
             </section>
 
 </article>
@@ -2028,7 +2216,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">484</span>
+    <span class="phpdocumentor-element-found-in__line">533</span>
 
     </aside>
 
@@ -2103,7 +2291,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">170</span>
+    <span class="phpdocumentor-element-found-in__line">179</span>
 
     </aside>
 
@@ -2161,7 +2349,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">69</span>
+    <span class="phpdocumentor-element-found-in__line">92</span>
 
     </aside>
 
@@ -2303,7 +2491,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">295</span>
+    <span class="phpdocumentor-element-found-in__line">343</span>
 
     </aside>
 
@@ -2372,7 +2560,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">325</span>
+    <span class="phpdocumentor-element-found-in__line">374</span>
 
     </aside>
 
@@ -2441,6 +2629,68 @@
             -protected
                                                         "
 >
+    <h4 class="phpdocumentor-element__name" id="method_getResultRepository">
+        getResultRepository()
+        <a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_getResultRepository" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">329</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Получение генератора хранилища</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">protected</span>
+                    <span class="phpdocumentor-signature__name">getResultRepository</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">callable|null</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_getResultRepository#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.0.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">version</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.0.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">callable|null</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -protected
+                                                        "
+>
     <h4 class="phpdocumentor-element__name" id="method_getUfRepository">
         getUfRepository()
         <a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_getUfRepository" class="headerlink"><i class="fas fa-link"></i></a>
@@ -2449,7 +2699,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">205</span>
+    <span class="phpdocumentor-element-found-in__line">228</span>
 
     </aside>
 
@@ -2511,7 +2761,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">192</span>
+    <span class="phpdocumentor-element-found-in__line">215</span>
 
     </aside>
 
@@ -2583,7 +2833,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">54</span>
+    <span class="phpdocumentor-element-found-in__line">77</span>
 
     </aside>
 
@@ -2632,7 +2882,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">138</span>
+    <span class="phpdocumentor-element-found-in__line">161</span>
 
     </aside>
 
@@ -2640,7 +2890,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">update</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$item</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">update</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$item</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-Type-DataResult.html"><abbr title="\Sholokhov\BitrixExchange\Messages\Type\DataResult">DataResult</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2678,7 +2928,7 @@
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-Type-DataResult.html"><abbr title="\Sholokhov\BitrixExchange\Messages\Type\DataResult">DataResult</abbr></a></span>
             </section>
 
 </article>
@@ -2696,7 +2946,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">309</span>
+    <span class="phpdocumentor-element-found-in__line">358</span>
 
     </aside>
 
@@ -2704,7 +2954,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">protected</span>
-                    <span class="phpdocumentor-signature__name">validate</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">validate</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-Type-Result.html"><abbr title="\Sholokhov\BitrixExchange\Messages\Type\Result">Result</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2748,7 +2998,7 @@
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-Type-Result.html"><abbr title="\Sholokhov\BitrixExchange\Messages\Type\Result">Result</abbr></a></span>
             </section>
 
 </article>
@@ -2766,7 +3016,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">345</span>
+    <span class="phpdocumentor-element-found-in__line">394</span>
 
     </aside>
 
@@ -2774,7 +3024,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">action</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$item</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">action</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$item</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-DataResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\DataResultInterface">DataResultInterface</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -2820,7 +3070,7 @@
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-DataResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\DataResultInterface">DataResultInterface</abbr></a></span>
             </section>
 
 </article>
@@ -2838,7 +3088,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">264</span>
+    <span class="phpdocumentor-element-found-in__line">288</span>
 
     </aside>
 
@@ -2887,7 +3137,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">233</span>
+    <span class="phpdocumentor-element-found-in__line">257</span>
 
     </aside>
 
@@ -2936,7 +3186,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">217</span>
+    <span class="phpdocumentor-element-found-in__line">240</span>
 
     </aside>
 
@@ -3005,7 +3255,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">537</span>
+    <span class="phpdocumentor-element-found-in__line">587</span>
 
     </aside>
 
@@ -3032,6 +3282,14 @@
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><abbr title="\ReflectionException">ReflectionException</abbr></span>
+                                                            
+                                             
+                                    </dd>
+                            <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">throws</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><abbr title="\Exception">Exception</abbr></span>
                                                             
                                              
                                     </dd>
@@ -3082,7 +3340,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">332</span>
+    <span class="phpdocumentor-element-found-in__line">338</span>
 
     </aside>
 
@@ -3151,7 +3409,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">521</span>
+    <span class="phpdocumentor-element-found-in__line">570</span>
 
     </aside>
 
@@ -3212,71 +3470,6 @@
             -private
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_checkModules">
-        checkModules()
-        <a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_checkModules" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">295</span>
-
-    </aside>
-
-        <p class="phpdocumentor-summary">Проверка загрузки модулей</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">checkModules</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-    
-    
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_checkModules#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                <span class="phpdocumentor-tag-link"><abbr title="\Bitrix\Main\LoaderException">LoaderException</abbr></span>
-                                                            
-                                             
-                                    </dd>
-                                            </dl>
-
-    
-    <section class="phpdocumentor-attributes">
-        <h5 class="phpdocumentor-elements__header" id="attributes">
-            Attributes <a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_checkModules#attributes" class="headerlink"><i class="fas fa-link"></i></a>
-
-        </h5>
-                    <dl class="phpdocumentor-argument-list">
-    <dt class="phpdocumentor-argument-list__entry">
-        #[<a href="classes/Sholokhov-BitrixExchange-Target-Attributes-Validate.html"><abbr title="\Sholokhov\BitrixExchange\Target\Attributes\Validate">Validate</abbr></a>]
-    </dt>
-    </dl>
-            </section>
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a></span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -private
-                                                        "
->
     <h4 class="phpdocumentor-element__name" id="method_makeCacheRepository">
         makeCacheRepository()
         <a href="classes/Sholokhov-BitrixExchange-Application.html#method_makeCacheRepository" class="headerlink"><i class="fas fa-link"></i></a>
@@ -3285,7 +3478,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Application.php"><a href="files/src-application.html"><abbr title="src/Application.php">Application.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">134</span>
+    <span class="phpdocumentor-element-found-in__line">133</span>
 
     </aside>
 
@@ -3451,7 +3644,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">505</span>
+    <span class="phpdocumentor-element-found-in__line">554</span>
 
     </aside>
 
@@ -3524,7 +3717,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">463</span>
+    <span class="phpdocumentor-element-found-in__line">512</span>
 
     </aside>
 
@@ -3599,7 +3792,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">398</span>
+    <span class="phpdocumentor-element-found-in__line">447</span>
 
     </aside>
 
@@ -3607,7 +3800,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">prepared</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$item</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">prepared</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$item</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-DataResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\DataResultInterface">DataResultInterface</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3653,7 +3846,7 @@
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-DataResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\DataResultInterface">DataResultInterface</abbr></a></span>
             </section>
 
 </article>
@@ -3671,7 +3864,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">436</span>
+    <span class="phpdocumentor-element-found-in__line">485</span>
 
     </aside>
 
@@ -3679,7 +3872,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">runTarget</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html"><abbr title="\Sholokhov\BitrixExchange\Fields\FieldInterface">FieldInterface</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$field</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">runTarget</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html"><abbr title="\Sholokhov\BitrixExchange\Fields\FieldInterface">FieldInterface</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$field</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ExchangeResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ExchangeResultInterface">ExchangeResultInterface</abbr></a></span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -3732,7 +3925,7 @@
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ResultInterface">ResultInterface</abbr></a></span>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ExchangeResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ExchangeResultInterface">ExchangeResultInterface</abbr></a></span>
             </section>
 
 </article>
@@ -3750,7 +3943,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Target/Highloadblock/Element.php"><a href="files/src-target-highloadblock-element.html"><abbr title="src/Target/Highloadblock/Element.php">Element.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">312</span>
+    <span class="phpdocumentor-element-found-in__line">318</span>
 
     </aside>
 
@@ -3932,10 +4125,12 @@
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Application.html#method___construct">__construct()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_addPrepared">addPrepared()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_execute">execute()</a></li>
-                                            <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_getEntityID">getEntityID()</a></li>
+                                            <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_getHlID">getHlID()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_getMap">getMap()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_getSiteID">getSiteID()</a></li>
+                                            <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_getUfEntityID">getUfEntityID()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_setMap">setMap()</a></li>
+                                            <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_setResultRepository">setResultRepository()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_add">add()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_conversionValueByMultiplicity">conversionValueByMultiplicity()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_deactivate">deactivate()</a></li>
@@ -3943,6 +4138,7 @@
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Application.html#method_getOptions">getOptions()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_getPrepares">getPrepares()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_getPrimaryField">getPrimaryField()</a></li>
+                                            <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_getResultRepository">getResultRepository()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_getUfRepository">getUfRepository()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_isMultipleField">isMultipleField()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_normalizeOptions">normalizeOptions()</a></li>
@@ -3955,7 +4151,6 @@
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_bootstrapMap">bootstrapMap()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_bootstrapPrepares">bootstrapPrepares()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_bootstrapRepository">bootstrapRepository()</a></li>
-                                            <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-Highloadblock-Element.html#method_checkModules">checkModules()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Application.html#method_makeCacheRepository">makeCacheRepository()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Application.html#method_makeOptionRepository">makeOptionRepository()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_mapValidate">mapValidate()</a></li>

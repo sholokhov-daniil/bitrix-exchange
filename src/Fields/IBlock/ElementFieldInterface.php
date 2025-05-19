@@ -12,10 +12,4 @@ use Sholokhov\BitrixExchange\Fields\FieldInterface;
  */
 interface ElementFieldInterface extends FieldInterface
 {
-    /**
-     * Является свойством
-     *
-     * @return bool
-     */
-    public function isProperty(): bool;
 }

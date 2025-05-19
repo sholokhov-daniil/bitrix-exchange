@@ -136,7 +136,7 @@ abstract class AbstractIBlockElement extends AbstractPrepare implements LoggerAw
             'primary' => $this->primary
         ]);
 
-        return $result->setData((int)$repository->get($value)?->GetFields()['ID'] ?? 0);
+        return $result->setData((int)($repository->get($value)?->GetFields()['ID'] ?? 0));
     }
 
     /**

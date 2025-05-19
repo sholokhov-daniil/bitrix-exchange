@@ -19,12 +19,22 @@ abstract class AbstractIBlockImport extends AbstractImport
     use PropertyTrait;
 
     /**
-     * @param string $primary Ключ по которому будет производиться проверка уникальности
+     * Связующий ключ по умолчанию
+     *
+     * @var string
      *
      * @version 1.0.0
      * @since 1.0.0
      */
-    public function __construct(int $iblockId, string $primary = 'XML_ID')
+    protected string $defaultPrimary = 'XML_ID';
+
+    /**
+     * @param string|null $primary Ключ по которому будет производиться проверка уникальности
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    public function __construct(int $iblockId, string $primary = null)
     {
         $this->iblockId = $iblockId;
         parent::__construct($primary);

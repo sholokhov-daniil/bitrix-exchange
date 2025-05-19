@@ -41,6 +41,6 @@ trait PropertyTrait
      */
     final protected function getPropertyRepository(): PropertyRepository
     {
-        return $this->repository ??= new PropertyRepository($this->iblockId);
+        return $this->repository ??= new PropertyRepository(['iblock_id' => $this->iblockId]);
     }
 }

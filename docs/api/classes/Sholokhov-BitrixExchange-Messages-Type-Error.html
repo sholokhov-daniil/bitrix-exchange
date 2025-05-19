@@ -102,6 +102,10 @@
 </h4>
 
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
+    <a href="packages/Attribute.html" class="">Attribute</a>
+</h4>
+
+                                    <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="packages/Target.html" class="">Target</a>
 </h4>
 
@@ -145,6 +149,9 @@
                             </ul>
         </div>
     
+            <span class="phpdocumentor-element__implements">
+            implements
+                            <a href="classes/Sholokhov-BitrixExchange-Messages-ErrorInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ErrorInterface">ErrorInterface</abbr></a>                    </span>
     
     </h2>
 
@@ -156,19 +163,13 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Messages/Type/Error.php"><a href="files/src-messages-type-error.html"><abbr title="src/Messages/Type/Error.php">Error.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">13</span>
+    <span class="phpdocumentor-element-found-in__line">15</span>
 
     </aside>
 
-        
-            <div class="phpdocumentor-admonition">
-        <svg class="phpdocumentor-admonition__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            <article>
-                <p>Будет переделано на <abbr title="\Bitrix\Main\Error">Error</abbr></p>
+            <p class="phpdocumentor-summary">Описание ошибки</p>
 
-            </article>
-        </div>
-    
+
 
 
     <h5 class="phpdocumentor-tag-list__heading" id="tags">
@@ -178,7 +179,7 @@
     </h5>
     <dl class="phpdocumentor-tag-list">
                                     <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
+                    <span class="phpdocumentor-tag__name">version</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.0.0</span>
@@ -186,7 +187,7 @@
                                              
                                     </dd>
                                                 <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">version</span>
+                    <span class="phpdocumentor-tag__name">since</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.0.0</span>
@@ -207,6 +208,13 @@
 
 
 
+    <h4 id="toc-interfaces">
+        Interfaces
+        <a href="classes/Sholokhov-BitrixExchange-Messages-Type-Error.html#toc-interfaces" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <dl class="phpdocumentor-table-of-contents">
+                    <dt class="phpdocumentor-table-of-contents__entry -interface"><a href="classes/Sholokhov-BitrixExchange-Messages-ErrorInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ErrorInterface">ErrorInterface</abbr></a></dt><dd>Описание ошибки</dd>    </dl>
 
 
 
@@ -219,19 +227,19 @@
 
 </h4>
 <dl class="phpdocumentor-table-of-contents">
-            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/Sholokhov-BitrixExchange-Messages-Type-Error.html#property_code">$code</a>
     <span>
                         &nbsp;: int            </span>
 </dt>
 
-            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/Sholokhov-BitrixExchange-Messages-Type-Error.html#property_context">$context</a>
     <span>
-                        &nbsp;: array&lt;string|int, mixed&gt;            </span>
+                        &nbsp;: mixed            </span>
 </dt>
 
-            <dt class="phpdocumentor-table-of-contents__entry -property -protected">
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
     <a class="" href="classes/Sholokhov-BitrixExchange-Messages-Type-Error.html#property_message">$message</a>
     <span>
                         &nbsp;: string            </span>
@@ -262,7 +270,7 @@
     <span>
                                 &nbsp;: static    </span>
 </dt>
-<dd>Создание ошибки на основе исключения</dd>
+<dd>Создать объект на основе исключения</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Sholokhov-BitrixExchange-Messages-Type-Error.html#method_getCode">getCode()</a>
@@ -274,7 +282,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Sholokhov-BitrixExchange-Messages-Type-Error.html#method_getContext">getContext()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: mixed    </span>
 </dt>
 <dd>Получение контекста ошибки</dd>
 
@@ -283,7 +291,7 @@
     <span>
                                 &nbsp;: string    </span>
 </dt>
-<dd>Получение текста ошибки</dd>
+<dd>Текстовое сообщение ошибки</dd>
 
     </dl>
 
@@ -302,30 +310,30 @@
         class="
             phpdocumentor-element
             -property
-            -protected
-                                                        "
+            -private
+                                                -read-only        "
 >
     <h4 class="phpdocumentor-element__name" id="property_code">
         $code
         <a href="classes/Sholokhov-BitrixExchange-Messages-Type-Error.html#property_code" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                        <small class="phpdocumentor-element__modifier">read-only</small>        </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Messages/Type/Error.php"><a href="files/src-messages-type-error.html"><abbr title="src/Messages/Type/Error.php">Error.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">25</span>
+    <span class="phpdocumentor-element-found-in__line">19</span>
 
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
+    <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">int</span>
     <span class="phpdocumentor-signature__name">$code</span>
-     = <span class="phpdocumentor-signature__default-value">0</span></code>
+     = <span class="phpdocumentor-signature__default-value">500</span></code>
 
     
     
@@ -338,30 +346,30 @@
         class="
             phpdocumentor-element
             -property
-            -protected
-                                                        "
+            -private
+                                                -read-only        "
 >
     <h4 class="phpdocumentor-element__name" id="property_context">
         $context
         <a href="classes/Sholokhov-BitrixExchange-Messages-Type-Error.html#property_context" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                        <small class="phpdocumentor-element__modifier">read-only</small>        </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Messages/Type/Error.php"><a href="files/src-messages-type-error.html"><abbr title="src/Messages/Type/Error.php">Error.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">26</span>
+    <span class="phpdocumentor-element-found-in__line">20</span>
 
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">mixed</span>
     <span class="phpdocumentor-signature__name">$context</span>
-     = <span class="phpdocumentor-signature__default-value">[]</span></code>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
 
     
     
@@ -374,27 +382,27 @@
         class="
             phpdocumentor-element
             -property
-            -protected
-                                                        "
+            -private
+                                                -read-only        "
 >
     <h4 class="phpdocumentor-element__name" id="property_message">
         $message
         <a href="classes/Sholokhov-BitrixExchange-Messages-Type-Error.html#property_message" class="headerlink"><i class="fas fa-link"></i></a>
 
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                        <small class="phpdocumentor-element__modifier">read-only</small>        </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Messages/Type/Error.php"><a href="files/src-messages-type-error.html"><abbr title="src/Messages/Type/Error.php">Error.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">24</span>
+    <span class="phpdocumentor-element-found-in__line">18</span>
 
     </aside>
 
     
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
+    <span class="phpdocumentor-signature__visibility">private</span>
         <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$message</span>
     </code>
@@ -428,14 +436,14 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Messages/Type/Error.php"><a href="files/src-messages-type-error.html"><abbr title="src/Messages/Type/Error.php">Error.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">23</span>
+    <span class="phpdocumentor-element-found-in__line">17</span>
 
     </aside>
 
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$code</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">0</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$message</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$code</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">500</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -453,43 +461,20 @@
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$code</span>
                 : <span class="phpdocumentor-signature__argument__return-type">int</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">0</span>            </dt>
+                 = <span class="phpdocumentor-signature__argument__default-value">500</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$context</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">[]</span>            </dt>
+                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/Sholokhov-BitrixExchange-Messages-Type-Error.html#method___construct#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                            <span class="phpdocumentor-tag-link">1.0.0</span>
-                                                                                
-                                             
-                                    </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">version</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                            <span class="phpdocumentor-tag-link">1.0.0</span>
-                                                                                
-                                             
-                                    </dd>
-                                            </dl>
 
     
 
@@ -509,7 +494,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Messages/Type/Error.php"><a href="files/src-messages-type-error.html"><abbr title="src/Messages/Type/Error.php">Error.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">37</span>
+    <span class="phpdocumentor-element-found-in__line">25</span>
 
     </aside>
 
@@ -524,29 +509,6 @@
     
     
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/Sholokhov-BitrixExchange-Messages-Type-Error.html#method___toString#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                            <span class="phpdocumentor-tag-link">1.0.0</span>
-                                                                                
-                                             
-                                    </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">version</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                            <span class="phpdocumentor-tag-link">1.0.0</span>
-                                                                                
-                                             
-                                    </dd>
-                                            </dl>
 
     
 
@@ -570,15 +532,15 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Messages/Type/Error.php"><a href="files/src-messages-type-error.html"><abbr title="src/Messages/Type/Error.php">Error.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">39</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Создание ошибки на основе исключения</p>
+        <p class="phpdocumentor-summary">Создать объект на основе исключения</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">createFromThrowable</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$throwable</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$context</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">static</span></code>
+            <span class="phpdocumentor-signature__static">static</span>        <span class="phpdocumentor-signature__name">createFromThrowable</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><abbr title="\Throwable">Throwable</abbr>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$throwable</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">static</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -593,13 +555,6 @@
             <dd class="phpdocumentor-argument-list__definition">
                 
             </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$context</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">[]</span>            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
             </dl>
 
     
@@ -610,7 +565,7 @@
     </h5>
     <dl class="phpdocumentor-tag-list">
                                     <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
+                    <span class="phpdocumentor-tag__name">version</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.0.0</span>
@@ -618,7 +573,7 @@
                                              
                                     </dd>
                                                 <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">version</span>
+                    <span class="phpdocumentor-tag__name">since</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.0.0</span>
@@ -649,7 +604,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Messages/Type/Error.php"><a href="files/src-messages-type-error.html"><abbr title="src/Messages/Type/Error.php">Error.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">78</span>
+    <span class="phpdocumentor-element-found-in__line">52</span>
 
     </aside>
 
@@ -672,7 +627,7 @@
     </h5>
     <dl class="phpdocumentor-tag-list">
                                     <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
+                    <span class="phpdocumentor-tag__name">version</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.0.0</span>
@@ -680,7 +635,7 @@
                                              
                                     </dd>
                                                 <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">version</span>
+                    <span class="phpdocumentor-tag__name">since</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.0.0</span>
@@ -711,7 +666,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Messages/Type/Error.php"><a href="files/src-messages-type-error.html"><abbr title="src/Messages/Type/Error.php">Error.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">91</span>
+    <span class="phpdocumentor-element-found-in__line">78</span>
 
     </aside>
 
@@ -719,7 +674,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getContext</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">getContext</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -734,7 +689,7 @@
     </h5>
     <dl class="phpdocumentor-tag-list">
                                     <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
+                    <span class="phpdocumentor-tag__name">version</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.0.0</span>
@@ -742,7 +697,7 @@
                                              
                                     </dd>
                                                 <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">version</span>
+                    <span class="phpdocumentor-tag__name">since</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.0.0</span>
@@ -753,11 +708,7 @@
 
     
 
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
-            </section>
-
+    
 </article>
                     <article
         class="phpdocumentor-element
@@ -777,7 +728,7 @@
 
     </aside>
 
-        <p class="phpdocumentor-summary">Получение текста ошибки</p>
+        <p class="phpdocumentor-summary">Текстовое сообщение ошибки</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -796,7 +747,7 @@
     </h5>
     <dl class="phpdocumentor-tag-list">
                                     <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
+                    <span class="phpdocumentor-tag__name">version</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.0.0</span>
@@ -804,7 +755,7 @@
                                              
                                     </dd>
                                                 <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">version</span>
+                    <span class="phpdocumentor-tag__name">since</span>
                 </dt>
                 <dd class="phpdocumentor-tag-list__definition">
                                             <span class="phpdocumentor-tag-link">1.0.0</span>

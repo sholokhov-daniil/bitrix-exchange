@@ -51,7 +51,6 @@ class PropertyFile extends AbstractPrepare implements LoggerAwareInterface
     public function supported(mixed $value, FieldInterface $field): bool
     {
         return $field instanceof ElementFieldInterface
-            && $field->isProperty()
             && ($property = $this->getPropertyRepository()->get($field->getCode()))
             && $property['PROPERTY_TYPE'] === PropertyTable::TYPE_FILE
             && !$property['USER_TYPE'];

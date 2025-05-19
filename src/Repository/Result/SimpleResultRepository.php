@@ -2,7 +2,6 @@
 
 namespace Sholokhov\BitrixExchange\Repository\Result;
 
-use Bitrix\Main\Diag\Debug;
 use Stringable;
 
 /**

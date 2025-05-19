@@ -24,7 +24,7 @@ use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\Type\DateTime;
 use Sholokhov\BitrixExchange\Messages\Type\Result;
-use Sholokhov\BitrixExchange\Prepares\UserField\UFTrait;
+use Sholokhov\BitrixExchange\Repository\Fields\UFRepository;
 use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 
 /**
@@ -35,8 +35,6 @@ use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
  */
 class Section extends IBlock
 {
-    use UFTrait;
-
     public const BEFORE_DEACTIVATE = 'onBeforeIBlockSectionsDeactivate';
     public const BEFORE_UPDATE_EVENT = 'onBeforeIBlockSectionUpdate';
     public const AFTER_UPDATE_EVENT = 'onAfterIBlockSectionUpdate';
@@ -250,6 +248,19 @@ class Section extends IBlock
     }
 
     /**
+     * Получить хранилище данных свойств
+     *
+     * @return UFRepository
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    protected function getFieldRepository(): UFRepository
+    {
+        return $this->repository->get('uf_repository');
+    }
+
+    /**
      * Конфигурация механизмов обмена
      *
      * @return void
@@ -260,7 +271,7 @@ class Section extends IBlock
     #[BootstrapConfiguration]
     private function configuration(): void
     {
-        $this->entityId = 'IBLOCK_' . $this->getIBlockID() . '_SECTION';
+        $this->repository->set('uf_repository', new UFRepository(['entity_id' => 'IBLOCK_' . $this->getIBlockID() . '_SECTION']));
     }
 
     /**

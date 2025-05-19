@@ -4,6 +4,7 @@ namespace Sholokhov\BitrixExchange\Prepares\Base;
 
 use Sholokhov\BitrixExchange\Fields\Field;
 use Sholokhov\BitrixExchange\ExchangeInterface;
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
 
 /**
  * Импорт значения в список
@@ -38,14 +39,15 @@ abstract class AbstractEnumeration extends AbstractImport
      * Нормализация результата импорта значения
      *
      * @param mixed $value
+     * @param FieldInterface $field
      * @return int
      *
      * @version 1.0.0
      * @since 1.0.0
      */
-    protected function normalize(mixed $value): int
+    protected function normalize(mixed $value, FieldInterface $field): int
     {
-        return is_array($value) ? $this->normalize(reset($value)) : max((int)$value, 0);
+        return is_array($value) ? $this->normalize(reset($value), $field) : max((int)$value, 0);
     }
 
     /**

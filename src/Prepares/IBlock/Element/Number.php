@@ -44,7 +44,6 @@ class Number extends AbstractNumber
     public function supported(mixed $value, FieldInterface $field): bool
     {
         return $field instanceof ElementFieldInterface
-            && $field->isProperty()
             && ($property = $this->getPropertyRepository()->get($field->getCode()))
             && (!$property['USER_TYPE'] && $property['PROPERTY_TYPE'] === PropertyTable::TYPE_NUMBER);
     }

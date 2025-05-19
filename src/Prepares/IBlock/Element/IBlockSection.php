@@ -5,8 +5,9 @@ namespace Sholokhov\BitrixExchange\Prepares\IBlock\Element;
 use ReflectionException;
 
 use Sholokhov\BitrixExchange\Factory\Result\SimpleFactory;
+use Sholokhov\BitrixExchange\Prepares\Base\AbstractIBlockSection;
+use Sholokhov\BitrixExchange\Prepares\IBlock\PropertyTrait;
 use Sholokhov\BitrixExchange\Target\IBlock\Section;
-use Sholokhov\BitrixExchange\Prepares\Base\AbstractIBlockImport;
 use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
 
 use Sholokhov\BitrixExchange\ExchangeInterface;
@@ -23,8 +24,23 @@ use Bitrix\Iblock\PropertyTable;
  * @since 1.0.0
  * @version 1.0.0
  */
-class IBlockSection extends AbstractIBlockImport
+class IBlockSection extends AbstractIBlockSection
 {
+    use PropertyTrait;
+
+    /**
+     * @param int $iblockId Информационный блок, которому относится свойство хранения значения
+     * @param string $primary Ключ по которому будет производиться проверка уникальности
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    public function __construct(int $iblockId, string $primary = 'XML_ID')
+    {
+        $this->iblockId = $iblockId;
+        parent::__construct($primary);
+    }
+
     /**
      * Инициализация импорта элементов информационного блока
      *
@@ -45,17 +61,18 @@ class IBlockSection extends AbstractIBlockImport
     }
 
     /**
-     * Нормализация результата импорта значения
+     * Предоставляет идентификатор информационного блока в котором должен храниться элемент информационного блока
      *
-     * @param mixed $value
-     * @return mixed
+     * @param FieldInterface $field Свойство из которого необходимо получить идентификатор информационного блока
+     * @return int
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    protected function normalize(mixed $value): int
+    protected function getFieldIBlockID(FieldInterface $field): int
     {
-        return is_array($value) ? $this->normalize(reset($value)) : max((int)$value, 0);
+        $property = $this->getPropertyRepository()->get($field->getCode());
+        return (int)($property['LINK_IBLOCK_ID'] ?? 0);
     }
 
     /**
@@ -71,7 +88,6 @@ class IBlockSection extends AbstractIBlockImport
     public function supported(mixed $value, FieldInterface $field): bool
     {
         return $field instanceof ElementFieldInterface
-            && $field->isProperty()
             && ($property = $this->getPropertyRepository()->get($field->getCode()))
             && $property['PROPERTY_TYPE'] === PropertyTable::TYPE_SECTION
             && !$property['USER_TYPE']

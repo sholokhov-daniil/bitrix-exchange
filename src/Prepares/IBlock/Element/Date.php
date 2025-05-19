@@ -47,7 +47,7 @@ class Date extends AbstractDate
     {
         $code = $field->getCode();
 
-        if ($field instanceof ElementFieldInterface && $field->isProperty()) {
+        if ($field instanceof ElementFieldInterface) {
             $property = $this->getPropertyRepository()->get($code);
             return $property && $property['USER_TYPE'] === PropertyTable::USER_TYPE_DATE;
         }

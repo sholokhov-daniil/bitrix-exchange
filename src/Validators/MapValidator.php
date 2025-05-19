@@ -4,11 +4,10 @@ namespace Sholokhov\BitrixExchange\Validators;
 
 use TypeError;
 
+use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Sholokhov\BitrixExchange\Messages\Type\Result;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
-
-use Sholokhov\BitrixExchange\Messages\Type\Error;
 
 /**
  * Проверка стандартной карты обмена
@@ -39,25 +38,25 @@ class MapValidator implements ValidatorInterface
 
         foreach ($value as $field) {
             if (!($field instanceof FieldInterface)) {
-                $result->addError(new Error('Incorrect field description'));
+                $result->addError(new Error('Incorrect field description', 400, $field));
                 break;
             }
 
             if ($field->isPrimary()) {
                 if ($primary) {
-                    $result->addError(new Error(sprintf('Duplication of the identification field "%s"', $field->getCode())));
+                    $result->addError(new Error('Duplication of the identification', 400, $field));
                 } else {
                     $primary = true;
                 }
             }
 
             if ($field->getPath() === '') {
-                $result->addError(new Error('Field path is required'));
+                $result->addError(new Error('Field path is required', 400, $field));
             }
         }
 
         if (!$primary) {
-            $result->addError(new Error('No identification field'));
+            $result->addError(new Error('No identification field', 400));
         }
 
         return $result;

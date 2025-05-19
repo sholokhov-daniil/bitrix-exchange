@@ -2,6 +2,7 @@
 
 namespace Sholokhov\BitrixExchange\Target\IBlock;
 
+use Bitrix\Main\Diag\Debug;
 use Exception;
 use CIBlockElement;
 
@@ -11,7 +12,6 @@ use Sholokhov\BitrixExchange\Messages\DataResultInterface;
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
 use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Sholokhov\BitrixExchange\Messages\Type\DataResult;
-use Sholokhov\BitrixExchange\Messages\Type\ExchangeResult;
 
 use Sholokhov\BitrixExchange\Helper\Site;
 use Sholokhov\BitrixExchange\Messages\Type\Result;
@@ -25,7 +25,7 @@ use Bitrix\Iblock\ElementTable;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectPropertyException;
-use Sholokhov\BitrixExchange\Prepares\IBlock\PropertyTrait;
+use Sholokhov\BitrixExchange\Repository\IBlock\PropertyRepository;
 use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 
 /**
@@ -36,8 +36,6 @@ use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
  */
 class Element extends IBlock
 {
-    use PropertyTrait;
-
     public const BEFORE_DEACTIVATE = 'onBeforeIBlockElementsDeactivate';
     public const BEFORE_UPDATE_EVENT = 'onBeforeIBlockElementUpdate';
     public const AFTER_UPDATE_EVENT = 'onAfterIBlockElementUpdate';
@@ -183,7 +181,7 @@ class Element extends IBlock
             $group = 'FIELDS';
             $value = $item[$field->getCode()] ?? null;
 
-            if ($field instanceof ElementFieldInterface && $field->isProperty()) {
+            if ($field instanceof ElementFieldInterface) {
                 $group = 'PROPERTIES';
             } elseif ($field->getCode() === 'CODE') {
                 $translitOptions = $this->getIBlockInfo()['FIELDS']['CODE']['DEFAULT_VALUE'] ?? [];
@@ -308,8 +306,7 @@ class Element extends IBlock
     protected function bootstrapPrepares(): void
     {
         $iBlockID = $this->getIBlockID();
-        $this
-            ->addPrepared(new Prepare\Date($iBlockID))
+        $this->addPrepared(new Prepare\Date($iBlockID))
             ->addPrepared(new Prepare\DateTime($iBlockID))
             ->addPrepared(new Prepare\Number($iBlockID))
             ->addPrepared(new Prepare\Enumeration($iBlockID))
@@ -345,8 +342,21 @@ class Element extends IBlock
      */
     protected function isMultipleField(FieldInterface $field): bool
     {
-        $repository = $this->getPropertyRepository();
-        return $repository->has($field->getCode()) && $repository->get($field->getCode())['MULTIPLE'] === 'Y';
+        $property = $this->getPropertyRepository()->get($field->getCode());
+        return $property && $property['MULTIPLE'] === 'Y';
+    }
+
+    /**
+     * Получение хранилища свойств ИБ
+     *
+     * @return PropertyRepository
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    protected function getPropertyRepository(): PropertyRepository
+    {
+        return $this->repository->get('property_repository');
     }
 
     /**
@@ -360,6 +370,6 @@ class Element extends IBlock
     #[BootstrapConfiguration]
     private function configuration(): void
     {
-        $this->iblockId = $this->getIBlockID();
+        $this->repository->set('property_repository', new PropertyRepository(['iblock_id' => $this->getIBlockID()]));
     }
 }
