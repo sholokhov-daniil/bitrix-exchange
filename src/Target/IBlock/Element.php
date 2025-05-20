@@ -184,7 +184,7 @@ class Element extends IBlock
             if ($field instanceof ElementFieldInterface) {
                 $group = 'PROPERTIES';
             } elseif ($field->getCode() === 'CODE') {
-                $translitOptions = $this->getIBlockInfo()['FIELDS']['CODE']['DEFAULT_VALUE'] ?? [];
+                $translitOptions = $this->getIBlockInfo()->get('FIELDS')['CODE']['DEFAULT_VALUE'] ?? [];
 
                 if ($translitOptions) {
                     $value = \CUtil::translit($value, Site::getLanguage(), $translitOptions);
