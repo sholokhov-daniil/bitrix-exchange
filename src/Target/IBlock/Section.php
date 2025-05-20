@@ -10,7 +10,7 @@ use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Helper\Helper;
 use Sholokhov\BitrixExchange\Helper\Site;
 
-use Sholokhov\BitrixExchange\Prepares\UserField as Prepare;
+use Sholokhov\BitrixExchange\Preparation\UserField as Prepare;
 use Sholokhov\BitrixExchange\Messages\DataResultInterface;
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
 use Sholokhov\BitrixExchange\Messages\Type\DataResult;

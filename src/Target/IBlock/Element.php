@@ -15,7 +15,7 @@ use Sholokhov\BitrixExchange\Messages\Type\DataResult;
 
 use Sholokhov\BitrixExchange\Helper\Site;
 use Sholokhov\BitrixExchange\Messages\Type\Result;
-use Sholokhov\BitrixExchange\Prepares\IBlock\Element as Prepare;
+use Sholokhov\BitrixExchange\Preparation\IBlock\Element as Prepare;
 use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
 
 use Bitrix\Main\Event;

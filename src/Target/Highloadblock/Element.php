@@ -8,7 +8,7 @@ use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Messages\DataResultInterface;
 use Sholokhov\BitrixExchange\Messages\Type\DataResult;
 use Sholokhov\BitrixExchange\Messages\Type\Result;
-use Sholokhov\BitrixExchange\Prepares\UserField as Prepare;
+use Sholokhov\BitrixExchange\Preparation\UserField as Prepare;
 use Sholokhov\BitrixExchange\Exchange;
 use Sholokhov\BitrixExchange\Helper\Helper;
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
