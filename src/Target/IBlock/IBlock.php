@@ -30,7 +30,7 @@ abstract class IBlock extends Exchange
      */
     protected function normalizeOptions(array $options): array
     {
-        $options['entity_id'] = (int)$options['entity_id'];
+        $options['iblock_id'] = (int)$options['iblock_id'];
         return parent::normalizeOptions($options);
     }
 
@@ -55,7 +55,7 @@ abstract class IBlock extends Exchange
      */
     final protected function getIBlockID(): int
     {
-        return (int)$this->getOptions()->get('entity_id');
+        return (int)$this->getOptions()->get('iblock_id');
     }
 
     /**

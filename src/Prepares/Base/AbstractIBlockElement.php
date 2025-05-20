@@ -2,21 +2,20 @@
 
 namespace Sholokhov\BitrixExchange\Prepares\Base;
 
-use Bitrix\Main\NotImplementedException;
+use Bitrix\Main\Diag\Debug;
 use ReflectionException;
 
 use Sholokhov\BitrixExchange\Factory\Result\SimpleFactory;
 use Sholokhov\BitrixExchange\Fields\Field;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Fields\LinkFieldInterface;
 use Sholokhov\BitrixExchange\Messages\DataResultInterface;
 use Sholokhov\BitrixExchange\Messages\ExchangeResultInterface;
-use Sholokhov\BitrixExchange\Messages\ResultInterface;
 use Sholokhov\BitrixExchange\Messages\Type\DataResult;
-use Sholokhov\BitrixExchange\Messages\Type\ExchangeResult;
 use Sholokhov\BitrixExchange\Prepares\AbstractPrepare;
 use Sholokhov\BitrixExchange\Repository\IBlock\ElementRepository;
 use Sholokhov\BitrixExchange\Target\IBlock\Element;
+
+use Bitrix\Main\NotImplementedException;
 
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerAwareInterface;
@@ -72,15 +71,17 @@ abstract class AbstractIBlockElement extends AbstractPrepare implements LoggerAw
             return $result;
         }
 
-        if ($field instanceof LinkFieldInterface && $field->isAppend()) {
+        if ($field->isCreatedLink()) {
             $result = $this->runExchange($value, $field)->getData()->get();
+            $result = reset($result);
         } else {
-            $result = $this->runRepository($value, $field);
+            $result = $this->runRepository($value, $field)->getData();
         }
 
         // todo: Обработка ошибок
 
-        return $result->getData();
+
+        return $result;
     }
 
     /**

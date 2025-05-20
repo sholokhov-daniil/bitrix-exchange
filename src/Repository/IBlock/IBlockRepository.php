@@ -93,7 +93,7 @@ final class IBlockRepository implements ContainerInterface
             return null;
         }
 
-        $description['PROPERTIES'] = new PropertyRepository($description['IBLOCK_ID']);
+        $description['PROPERTIES'] = new PropertyRepository(['iblock_id' => $description['IBLOCK_ID']]);
         $this->getStorage()->set($this->iBlockID, $description);
 
         return $description['PROPERTIES'];

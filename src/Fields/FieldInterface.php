@@ -28,6 +28,18 @@ interface FieldInterface
     public function isPrimary(): bool;
 
     /**
+     * При отсутствии связующей сущности произвести его создание.
+     *
+     * @example Описываем свойство типа: привязка к элементу инфоблока. Если значение true, то при отсутствии элемента оно будет создано
+     *
+     * @return bool
+     *
+     * @version 1.0.0
+     * @version 1.0.0
+     */
+    public function isCreatedLink(): bool;
+
+    /**
      * Получение пути хранения значения
      *
      * @return string

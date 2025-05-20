@@ -56,7 +56,7 @@ class IBlockSection extends AbstractIBlockSection
         $property = $this->getPropertyRepository()->get($field->getCode());
         return new Section([
             'result_repository' => new SimpleFactory,
-            'entity_id' => $property['LINK_IBLOCK_ID']
+            'iblock_id' => $property['LINK_IBLOCK_ID']
         ]);
     }
 

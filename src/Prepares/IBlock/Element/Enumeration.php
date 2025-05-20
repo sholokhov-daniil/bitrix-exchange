@@ -52,7 +52,7 @@ class Enumeration extends AbstractEnumeration
     {
         return new PropertyEnumeration([
             'result_repository' => new SimpleFactory,
-            'entity_id' => $this->iblockId,
+            'iblock_id' => $this->iblockId,
             'property_code' => $field->getCode(),
         ]);
     }

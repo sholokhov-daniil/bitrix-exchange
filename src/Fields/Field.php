@@ -3,8 +3,8 @@
 namespace Sholokhov\BitrixExchange\Fields;
 
 use Sholokhov\BitrixExchange\ExchangeInterface;
-use Sholokhov\BitrixExchange\Repository\RepositoryInterface;
 use Sholokhov\BitrixExchange\Repository\Types\Memory;
+use Sholokhov\BitrixExchange\Repository\RepositoryInterface;
 
 /**
  * Описание структуры и логики работы со свойством
@@ -39,6 +39,19 @@ class Field implements FieldInterface
     }
 
     /**
+     * При отсутствии сущности попытается создать
+     *
+     * @return bool
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    public function isCreatedLink(): bool
+    {
+        return $this->getContainer()->get('is_created_link', true);
+    }
+
+    /**
      * Установить флаг идентификационного поля
      *
      * @param bool $value
@@ -50,6 +63,21 @@ class Field implements FieldInterface
     public function setPrimary(bool $value = true): self
     {
         $this->getContainer()->set('key_field', $value);
+        return $this;
+    }
+
+    /**
+     * При отсутствии сущности попытается создать
+     *
+     * @param bool $value
+     * @return $this
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    public function setCreatedLink(bool $value = false): self
+    {
+        $this->getContainer()->set('is_created_link', $value);
         return $this;
     }
 
