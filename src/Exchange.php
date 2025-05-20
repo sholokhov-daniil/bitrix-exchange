@@ -6,8 +6,7 @@ use Exception;
 use Throwable;
 use ReflectionException;
 
-use Sholokhov\BitrixExchange\Events\Event;
-use Sholokhov\BitrixExchange\Events\EventResult;
+use Sholokhov\BitrixExchange\Helper\Helper;
 use Sholokhov\BitrixExchange\Bootstrap\Validator;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Helper\LoggerHelper;
@@ -30,7 +29,8 @@ use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 use Sholokhov\BitrixExchange\Target\Attributes\MapValidator;
 use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 
-
+use Bitrix\Main\Event;
+use Bitrix\Main\EventResult;
 use Bitrix\Main\NotImplementedException;
 
 use Psr\Log\LoggerAwareTrait;
@@ -211,9 +211,9 @@ abstract class Exchange extends Application implements MappingExchangeInterface
 
         $this->dateUp = time();
 
-        (new Event(self::BEFORE_RUN, ['exchange' => $this]))->send();
+        (new Event(Helper::getModuleID(), self::BEFORE_RUN, ['exchange' => $this]))->send();
 
-//        try {
+        try {
             foreach ($source as $item) {
                 if (!is_array($item)) {
                     $this->logger?->warning('The source value is not an array: ' . json_encode($item));
@@ -229,12 +229,12 @@ abstract class Exchange extends Application implements MappingExchangeInterface
                     $result->getData()?->add($data);
                 }
             }
-//        } catch (Throwable $throwable) {
-//            $result->addError(Error::createFromThrowable($throwable));
-//            $this->logger?->critical(LoggerHelper::exceptionToString($throwable));
-//        }
+        } catch (Throwable $throwable) {
+            $result->addError(Error::createFromThrowable($throwable));
+            $this->logger?->critical(LoggerHelper::exceptionToString($throwable));
+        }
 
-        (new Event(self::AFTER_RUN, ['exchange' => $this]))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_RUN, ['exchange' => $this]))->send();
 
         if ($this->getOptions()->get('deactivate')) {
             $this->deactivate();
@@ -392,7 +392,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      */
     private function action(array $item): DataResultInterface
     {
-        (new Event(self::BEFORE_IMPORT_ITEM, ['exchange' => $this, 'item' => &$item]))->send();
+        (new Event(Helper::getModuleID(), self::BEFORE_IMPORT_ITEM, ['exchange' => $this, 'item' => &$item]))->send();
 
         $prepareResult = $this->prepared($item);
 
@@ -403,33 +403,33 @@ abstract class Exchange extends Application implements MappingExchangeInterface
         $item = $prepareResult->getData();
 
         if ($this->exists($item)) {
-            $event = new Event(self::BEFORE_UPDATE, ['exchange' => $this, 'item' => &$item]);
+            $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE, ['exchange' => $this, 'item' => &$item]);
             $event->send();
 
-            foreach ($event->send() as $eventResult) {
-                if ($eventResult->getStatus() !== EventResult::SUCCESS) {
+            foreach ($event->getResults() as $eventResult) {
+                if ($eventResult->getType() !== EventResult::SUCCESS) {
                     $this->logger?->debug('The updating of the element was rejected by the event: ' . json_encode($item));
                     return new DataResult;
                 }
             }
 
             $result = $this->update($item);
-            (new Event(self::AFTER_UPDATE, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
+            (new Event(Helper::getModuleID(), self::AFTER_UPDATE, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
         } else {
-            $event = new Event(self::BEFORE_ADD, ['exchange' => $this, 'item' => &$item]);
+            $event = new Event(Helper::getModuleID(), self::BEFORE_ADD, ['exchange' => $this, 'item' => &$item]);
 
-            foreach ($event->send() as $eventResult) {
-                if ($eventResult->getStatus() !== EventResult::SUCCESS) {
+            foreach ($event->getResults() as $eventResult) {
+                if ($eventResult->getType()!== EventResult::SUCCESS) {
                     $this->logger?->debug('The creation of the element was rejected by the event: ' . json_encode($item));
                     return new DataResult;
                 }
             }
 
             $result = $this->add($item);
-            (new Event(self::AFTER_ADD, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
+            (new Event(Helper::getModuleID(), self::AFTER_ADD, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
         }
 
-        (new Event(self::AFTER_IMPORT_ITEM, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_IMPORT_ITEM, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
 
         return $result;
     }
