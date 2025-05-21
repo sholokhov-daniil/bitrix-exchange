@@ -24,7 +24,7 @@ use Sholokhov\BitrixExchange\Validators\ValidatorInterface;
 use Sholokhov\BitrixExchange\Helper\Entity;
 use Sholokhov\BitrixExchange\Helper\FieldHelper;
 use Sholokhov\BitrixExchange\Preparation\Chain;
-use Sholokhov\BitrixExchange\Preparation\PrepareInterface;
+use Sholokhov\BitrixExchange\Preparation\PreparationInterface;
 use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 use Sholokhov\BitrixExchange\Target\Attributes\MapValidator;
 use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
@@ -289,13 +289,13 @@ abstract class Exchange extends Application implements MappingExchangeInterface
     /**
      * Добавить преобразователь данных обмена
      *
-     * @param PrepareInterface $prepare
+     * @param PreparationInterface $prepare
      * @return $this
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function addPrepared(PrepareInterface $prepare): self
+    public function addPrepared(PreparationInterface $prepare): self
     {
         $this->getPrepares()->add($prepare);
         return $this;
@@ -445,7 +445,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      */
     private function prepared(array $item): DataResultInterface
     {
-        $result = new DataResult();
+        $result = new DataResult;
         $map = $this->getMap();
         $data = [];
 
@@ -454,16 +454,13 @@ abstract class Exchange extends Application implements MappingExchangeInterface
             $value = $this->normalize($value, $field);
 
 
-            if ($field->getTarget()) {
-                $targetResult = $this->runTarget($value, $field);
-                if (!$targetResult->isSuccess()) {
-                    $result->addErrors($targetResult->getErrors());
-                }
+            if ($field->getPreparation()) {
+                $value = $this->customPreparation($value, $field);
             } else {
                 $value = $this->getPrepares()->prepare($value, $field);
             }
 
-            $data[$field->getCode()] = $value;
+            $data[$field->getIn()] = $value;
         }
 
         $result->setData($data);
@@ -481,21 +478,15 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * @since 1.0.0
      * @version 1.0.0
      */
-    private function runTarget(mixed $value, FieldInterface $field): ExchangeResultInterface
+    private function customPreparation(mixed $value, FieldInterface $field): mixed
     {
-        $target = $field->getTarget();
+        $preparation = $field->getPreparation();
 
-        if ($this->logger && $target instanceof LoggerAwareInterface) {
-            $target->setLogger($this->logger);
+        if ($this->logger && $preparation instanceof LoggerAwareInterface) {
+            $preparation->setLogger($this->logger);
         }
 
-        if ($this->logger && $target instanceof LoggerAwareInterface) {
-            $target->setLogger($this->logger);
-        }
-
-        $result = $target->execute([$value]);
-
-        return $this->conversionValueByMultiplicity($result->getData(), $field);
+        return $preparation->prepare($value, $field);
     }
 
     /**
@@ -510,33 +501,16 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      */
     private function normalize(mixed $value, FieldInterface $field): mixed
     {
-        $value = $this->conversionValueByMultiplicity($value, $field);
-
-        foreach ($field->getNormalizers() as $validator) {
-            $value = call_user_func_array($validator, [$value, $field]);
-        }
-
-        return $value;
-    }
-
-    /**
-     * Приведение формата значения согласно его кратности
-     *
-     * @param mixed $value
-     * @param FieldInterface $field
-     * @return mixed
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    final protected function conversionValueByMultiplicity(mixed $value, FieldInterface $field): mixed
-    {
         $isMultiple = $this->isMultipleField($field);
 
         if ($isMultiple && !is_array($value)) {
-            return is_null($value) ? [] : [$value];
+            $value = is_null($value) ? [] : [$value];
         } elseif (!$isMultiple && is_array($value)) {
-            return reset($value);
+            $value = reset($value);
+        }
+
+        foreach ($field->getNormalizers() as $validator) {
+            $value = call_user_func_array($validator, [$value, $field]);
         }
 
         return $value;

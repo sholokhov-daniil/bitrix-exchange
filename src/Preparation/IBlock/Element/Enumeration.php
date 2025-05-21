@@ -53,7 +53,7 @@ class Enumeration extends AbstractEnumeration
         return new PropertyEnumeration([
             'result_repository' => new SimpleFactory,
             'iblock_id' => $this->iblockId,
-            'property_code' => $field->getCode(),
+            'property_code' => $field->getIn(),
         ]);
     }
 
@@ -69,7 +69,7 @@ class Enumeration extends AbstractEnumeration
     public function supported(mixed $value, FieldInterface $field): bool
     {
         return $field instanceof ElementFieldInterface
-            && ($property = $this->getPropertyRepository()->get($field->getCode()))
+            && ($property = $this->getPropertyRepository()->get($field->getIn()))
             && $property['PROPERTY_TYPE'] === PropertyTable::TYPE_LIST
             && !$property['USER_TYPE'];
     }

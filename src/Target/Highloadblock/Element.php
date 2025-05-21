@@ -93,20 +93,20 @@ class Element extends Exchange
     {
         $keyField = $this->getPrimaryField();
 
-        if ($this->cache->has($item[$keyField->getCode()])) {
+        if ($this->cache->has($item[$keyField->getIn()])) {
             return true;
         }
 
         // TODO: Добавить хэш импорта
         $filter = [
-            $keyField->getCode() => $item[$keyField->getCode()],
+            $keyField->getIn() => $item[$keyField->getIn()],
         ];
 
-        $select = [$keyField->getCode(), 'ID'];
+        $select = [$keyField->getIn(), 'ID'];
         $element = $this->entity::getRow(compact('filter', 'select'));
 
         if ($element) {
-            $this->cache->set($item[$keyField->getCode()], (int)$element['ID']);
+            $this->cache->set($item[$keyField->getIn()], (int)$element['ID']);
             return true;
         }
 
@@ -144,7 +144,7 @@ class Element extends Exchange
 
         $result->setData($addResult->getId());
         $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the "%s" highloadblock', $addResult->getId(), $this->getHlID()));
-        $this->cache->set($item[$this->getPrimaryField()->getCode()], $addResult->getId());
+        $this->cache->set($item[$this->getPrimaryField()->getIn()], $addResult->getId());
 
         (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => $item, 'FIELDS' => $item, 'RESULT' => $result]))->send();
 
@@ -163,7 +163,7 @@ class Element extends Exchange
         $result = new DataResult;
         $keyField = $this->getPrimaryField();
 
-        $itemID = $this->cache->get($item[$keyField->getCode()]);
+        $itemID = $this->cache->get($item[$keyField->getIn()]);
 
         if (!$itemID) {
             return $this->add($item);
@@ -214,7 +214,7 @@ class Element extends Exchange
      */
     protected function isMultipleField(FieldInterface $field): bool
     {
-        $property = $this->getUfRepository()->get($field->getCode());
+        $property = $this->getUfRepository()->get($field->getIn());
         return $property && $property['MULTIPLE'] === 'Y';
     }
 

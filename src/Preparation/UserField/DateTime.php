@@ -42,7 +42,7 @@ class DateTime extends AbstractDateTime implements LoggerAwareInterface
      */
     public function supported(mixed $value, FieldInterface $field): bool
     {
-        $property = $this->getFieldRepository()->get($field->getCode());
+        $property = $this->getFieldRepository()->get($field->getIn());
         return $property && $property['USER_TYPE_ID'] === 'datetime';
     }
 }

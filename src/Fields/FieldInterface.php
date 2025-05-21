@@ -5,6 +5,7 @@ declare (strict_types=1);
 namespace Sholokhov\BitrixExchange\Fields;
 
 use Sholokhov\BitrixExchange\ExchangeInterface;
+use Sholokhov\BitrixExchange\Preparation\PreparationInterface;
 
 /**
  * Описание настроек свойства
@@ -47,7 +48,7 @@ interface FieldInterface
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function getPath(): string;
+    public function getOut(): string;
 
     /**
      * Код свойства в которое необходимо записать значение
@@ -57,17 +58,17 @@ interface FieldInterface
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function getCode(): string;
+    public function getIn(): string;
 
     /**
      * Цель значения
      *
-     * @return ?ExchangeInterface
+     * @return ?PreparationInterface
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function getTarget(): ?ExchangeInterface;
+    public function getPreparation(): ?PreparationInterface;
 
     /**
      * Получение дочернего элемента

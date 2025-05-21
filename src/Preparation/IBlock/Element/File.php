@@ -34,7 +34,7 @@ class File extends AbstractPrepare implements LoggerAwareInterface
      */
     public function supported(mixed $value, FieldInterface $field): bool
     {
-        return in_array($field->getCode(), ['PREVIEW_PICTURE', 'DETAIL_PICTURE']);
+        return in_array($field->getIn(), ['PREVIEW_PICTURE', 'DETAIL_PICTURE']);
     }
 
     /**

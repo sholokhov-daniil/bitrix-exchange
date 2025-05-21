@@ -74,12 +74,12 @@ class Enumeration extends Exchange
     {
         $primary = $this->getPrimaryField();
 
-        if ($this->cache->has($item[$primary->getCode()])) {
+        if ($this->cache->has($item[$primary->getIn()])) {
             return true;
         }
 
-        if ($enum = $this->searchEnum($item[$primary->getCode()])) {
-            $this->cache->set($item[$primary->getCode()], $enum['ID']);
+        if ($enum = $this->searchEnum($item[$primary->getIn()])) {
+            $this->cache->set($item[$primary->getIn()], $enum['ID']);
             return true;
         }
 
@@ -127,8 +127,8 @@ class Enumeration extends Exchange
         }
 
         $primary = $this->getPrimaryField();
-        $enum = $this->searchEnum($fields[$primary->getCode()]);
-        $this->cache->set($item[$primary->getCode()], (int)$enum['ID']);
+        $enum = $this->searchEnum($fields[$primary->getIn()]);
+        $this->cache->set($item[$primary->getIn()], (int)$enum['ID']);
         $result->setData((int)$enum['ID']);
 
         (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => (int)$enum['ID'], 'FIELDS' => $fields, 'RESULT' => $result]))->send();
@@ -151,7 +151,7 @@ class Enumeration extends Exchange
         $result = new DataResult;
         $primary = $this->getPrimaryField();
 
-        $enumId = (int)$this->cache->get($item[$primary->getCode()]);
+        $enumId = (int)$this->cache->get($item[$primary->getIn()]);
 
         if (!$enumId) {
             return $this->add($item);
@@ -164,7 +164,7 @@ class Enumeration extends Exchange
             return $result->addErrors($beforeUpdate->getErrors());
         }
 
-        $this->searchEnum($fields[$primary->getCode()]);
+        $this->searchEnum($fields[$primary->getIn()]);
 
         $uf = new CUserFieldEnum;
         if (!$uf->SetEnumValues($this->getUserField()['ID'], [$enumId => $fields])) {
@@ -248,7 +248,7 @@ class Enumeration extends Exchange
         $primary = $this->getPrimaryField();
         $filter = [
             'USER_FIELD_ID' => $this->getUserField()['ID'],
-            $primary->getCode() => $value,
+            $primary->getIn() => $value,
         ];
 
         return CUserFieldEnum::GetList([], $filter)->Fetch() ?: [];
@@ -269,8 +269,8 @@ class Enumeration extends Exchange
         $supportedFields = $this->getSupportedFields();
 
         foreach ($this->getMap() as $field) {
-            if (in_array($field->getCode(), $supportedFields)) {
-                $result[$field->getCode()] = $item[$field->getCode()];
+            if (in_array($field->getIn(), $supportedFields)) {
+                $result[$field->getIn()] = $item[$field->getIn()];
             }
         }
 

@@ -3,6 +3,7 @@
 namespace Sholokhov\BitrixExchange\Fields;
 
 use Sholokhov\BitrixExchange\ExchangeInterface;
+use Sholokhov\BitrixExchange\Preparation\PreparationInterface;
 use Sholokhov\BitrixExchange\Repository\Types\Memory;
 use Sholokhov\BitrixExchange\Repository\RepositoryInterface;
 
@@ -89,9 +90,9 @@ class Field implements FieldInterface
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function getPath(): string
+    public function getOut(): string
     {
-        return $this->getContainer()->get('path', '');
+        return $this->getContainer()->get('out', '');
     }
 
     /**
@@ -103,9 +104,9 @@ class Field implements FieldInterface
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function setPath(string $path): self
+    public function setOut(string $path): self
     {
-        $this->getContainer()->set('path', $path);
+        $this->getContainer()->set('out', $path);
         return $this;
     }
 
@@ -117,9 +118,9 @@ class Field implements FieldInterface
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function getCode(): string
+    public function getIn(): string
     {
-        return $this->getContainer()->get('code', '');
+        return $this->getContainer()->get('in', '');
     }
 
     /**
@@ -131,37 +132,37 @@ class Field implements FieldInterface
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function setCode(string $code): self
+    public function setIn(string $code): self
     {
-        $this->getContainer()->set('code', $code);
+        $this->getContainer()->set('in', $code);
         return $this;
     }
 
     /**
      * Получение цели значения свойства
      *
-     * @return ExchangeInterface|null
+     * @return PreparationInterface|null
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function getTarget(): ?ExchangeInterface
+    public function getPreparation(): ?PreparationInterface
     {
-        return $this->getContainer()->get('target');
+        return $this->getContainer()->get('preparation');
     }
 
     /**
      * Установка цели значения свойства
      *
-     * @param ExchangeInterface $target
+     * @param PreparationInterface $target
      * @return static
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function setTarget(ExchangeInterface $target): self
+    public function setPreparation(PreparationInterface $target): self
     {
-        $this->getContainer()->set('target', $target);
+        $this->getContainer()->set('preparation', $target);
         return $this;
     }
 

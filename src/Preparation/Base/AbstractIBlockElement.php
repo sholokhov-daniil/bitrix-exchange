@@ -106,8 +106,8 @@ abstract class AbstractIBlockElement extends AbstractPrepare implements LoggerAw
 
         $exchange->setMap([
             (new Field)
-                ->setPath(0)
-                ->setCode($this->primary)
+                ->setOut(0)
+                ->setIn($this->primary)
                 ->setPrimary(),
         ]);
 

@@ -13,12 +13,12 @@ use Sholokhov\BitrixExchange\Fields\FieldInterface;
  * @since 1.0.0
  * @version 1.0.0
  */
-class Chain implements PrepareInterface, Countable
+class Chain implements PreparationInterface, Countable
 {
     /**
      * Преобразователи данных
      *
-     * @var PrepareInterface[]
+     * @var PreparationInterface[]
      *
      * @since 1.0.0
      * @version 1.0.0
@@ -71,13 +71,13 @@ class Chain implements PrepareInterface, Countable
     /**
      * Добавление преобразователя
      *
-     * @param PrepareInterface $prepare
-     * @return PrepareInterface
+     * @param PreparationInterface $prepare
+     * @return PreparationInterface
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function add(PrepareInterface $prepare): PrepareInterface
+    public function add(PreparationInterface $prepare): PreparationInterface
     {
         array_unshift($this->prepares, $prepare);
         return $this;
@@ -87,12 +87,12 @@ class Chain implements PrepareInterface, Countable
      * Добавление списка преобразователей
      *
      * @param iterable $iterator
-     * @return PrepareInterface
+     * @return PreparationInterface
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function addList(iterable $iterator): PrepareInterface
+    public function addList(iterable $iterator): PreparationInterface
     {
         foreach ($iterator as $entity) {
             $this->add($entity);
@@ -106,12 +106,12 @@ class Chain implements PrepareInterface, Countable
      *
      * @param mixed $value
      * @param FieldInterface $field
-     * @return PrepareInterface|null
+     * @return PreparationInterface|null
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    private function getSupported(mixed $value, FieldInterface $field): ?PrepareInterface
+    private function getSupported(mixed $value, FieldInterface $field): ?PreparationInterface
     {
         foreach ($this->prepares as $prepare) {
             if ($prepare->supported($value, $field)) {

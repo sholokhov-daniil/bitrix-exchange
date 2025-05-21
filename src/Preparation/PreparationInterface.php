@@ -9,7 +9,7 @@ use Sholokhov\BitrixExchange\Fields\FieldInterface;
  * @since 1.0.0
  * @version 1.0.0
  */
-interface PrepareInterface
+interface PreparationInterface
 {
     /**
      * Преобразование значения

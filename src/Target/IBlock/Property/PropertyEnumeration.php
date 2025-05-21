@@ -70,18 +70,18 @@ class PropertyEnumeration extends IBlock
     {
         $primaryField = $this->getPrimaryField();
 
-        if ($this->cache->has($item[$primaryField->getCode()])) {
+        if ($this->cache->has($item[$primaryField->getIn()])) {
             return true;
         }
 
         $filter = [
             'IBLOCK_ID' => $this->getIBlockID(),
             'PROPERTY_ID' => $this->getProperty()['ID'],
-            $primaryField->getCode() => $item[$primaryField->getCode()],
+            $primaryField->getIn() => $item[$primaryField->getIn()],
         ];
 
         if ($enum = CIBlockPropertyEnum::GetList([], $filter)->Fetch()) {
-            $this->cache->set($item[$primaryField->getCode()], (int)$enum['ID']);
+            $this->cache->set($item[$primaryField->getIn()], (int)$enum['ID']);
             return true;
         }
 
@@ -112,7 +112,7 @@ class PropertyEnumeration extends IBlock
         if ($enumId = CIBlockPropertyEnum::Add($fields)) {
             $result->setData((int)$enumId);
             $this->logger?->debug(sprintf('Added the value of the list with the ID "%s"', $enumId));
-            $this->cache->set($item[$this->getPrimaryField()->getCode()], (int)$enumId);
+            $this->cache->set($item[$this->getPrimaryField()->getIn()], (int)$enumId);
         } else {
             $result->addError(new Error('An error occurred when creating the list value', 500, $fields));
         }
@@ -137,7 +137,7 @@ class PropertyEnumeration extends IBlock
         $result = new DataResult;
         $primaryField = $this->getPrimaryField();
 
-        $enumId = (int)$this->cache->get($item[$primaryField->getCode()]);
+        $enumId = (int)$this->cache->get($item[$primaryField->getIn()]);
 
         if (!$enumId) {
             return $this->add($item);
@@ -173,7 +173,7 @@ class PropertyEnumeration extends IBlock
      */
     protected function isMultipleField(FieldInterface $field): bool
     {
-        $repository = $this->getPropertyRepository()->get($field->getCode());
+        $repository = $this->getPropertyRepository()->get($field->getIn());
         return $repository && $repository['MULTIPLE'] === 'Y';
     }
 
@@ -193,8 +193,8 @@ class PropertyEnumeration extends IBlock
         $supportedFields = $this->getSupportedFields();
 
         foreach ($this->getMap() as $field) {
-            if (in_array($field->getCode(), $supportedFields)) {
-                $result[$field->getCode()] = $item[$field->getCode()];
+            if (in_array($field->getIn(), $supportedFields)) {
+                $result[$field->getIn()] = $item[$field->getIn()];
             }
         }
 

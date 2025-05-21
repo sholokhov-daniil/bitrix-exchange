@@ -53,8 +53,8 @@ abstract class AbstractIBlockImport extends AbstractImport
     {
         $target->setMap([
             (new Field)
-                ->setPath(0)
-                ->setCode($this->primary)
+                ->setOut(0)
+                ->setIn($this->primary)
                 ->setPrimary(),
         ]);
 

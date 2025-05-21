@@ -52,7 +52,7 @@ class File extends Exchange
     protected function exists(array $item): bool
     {
         $keyField = $this->getPrimaryField();
-        $externalID = $this->getExternalId((string)$item[$keyField->getCode()]);
+        $externalID = $this->getExternalId((string)$item[$keyField->getIn()]);
 
         if ($this->cache->has($externalID)) {
             return true;
@@ -75,7 +75,7 @@ class File extends Exchange
     protected function add(array $item): DataResultInterface
     {
         $result = new DataResult;
-        $path = $item[$this->getPrimaryField()->getCode()];
+        $path = $item[$this->getPrimaryField()->getIn()];
         $file = CFile::MakeFileArray($path);
 
         if (!$file) {
@@ -108,7 +108,7 @@ class File extends Exchange
     protected function update(array $item): DataResultInterface
     {
         $keyField = $this->getPrimaryField();
-        $externalID = $this->getExternalId((string)$item[$keyField->getCode()]);
+        $externalID = $this->getExternalId((string)$item[$keyField->getIn()]);
 
         if (!$this->cache->has($externalID)) {
             $this->add($item);

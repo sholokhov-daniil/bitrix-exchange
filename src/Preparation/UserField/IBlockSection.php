@@ -42,7 +42,7 @@ class IBlockSection extends AbstractIBlockSection
      */
     protected function getFieldIBlockID(FieldInterface $field): int
     {
-        $property = $this->getFieldRepository()->get($field->getCode());
+        $property = $this->getFieldRepository()->get($field->getIn());
         return (int)($property['SETTINGS']['IBLOCK_ID'] ?? 0);
     }
 
@@ -58,7 +58,7 @@ class IBlockSection extends AbstractIBlockSection
      */
     public function supported(mixed $value, FieldInterface $field): bool
     {
-        $property = $this->getFieldRepository()->get($field->getCode());
+        $property = $this->getFieldRepository()->get($field->getIn());
         return $property && $property['USER_TYPE_ID'] === 'iblock_section' && $property['SETTINGS']['IBLOCK_ID'];
     }
 }

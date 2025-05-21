@@ -11,7 +11,7 @@ use Sholokhov\BitrixExchange\Fields\FieldInterface;
  * @version 1.0.0
  * @since 1.0.0
  */
-abstract class AbstractPrepare implements PrepareInterface
+abstract class AbstractPrepare implements PreparationInterface
 {
     /**
      * Преобразование значения

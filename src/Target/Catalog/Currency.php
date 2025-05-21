@@ -36,20 +36,20 @@ class Currency extends Exchange
     {
         $keyField = $this->getPrimaryField();
 
-        if ($this->cache->has($item[$keyField->getCode()])) {
+        if ($this->cache->has($item[$keyField->getIn()])) {
             return true;
         }
 
         $currency = CurrencyTable::getRow([
             'filter' => [
-                $keyField->getCode() => $item[$keyField->getCode()],
+                $keyField->getIn() => $item[$keyField->getIn()],
             ],
             'select' => ['ID'],
             'cache' => ['ttl' => 36000]
         ]);
 
         if ($currency) {
-            $this->cache->set($item[$keyField->getCode()], (int)$currency['ID']);
+            $this->cache->set($item[$keyField->getIn()], (int)$currency['ID']);
             return true;
         }
 
@@ -73,7 +73,7 @@ class Currency extends Exchange
         if ($id = CCurrency::Add($preparedItem)) {
             $result->setData((int)$id);
             $this->logger?->debug("A currency with an identifier was created: $id");
-            $this->cache->set($item[$this->getPrimaryField()->getCode()], (int)$id);
+            $this->cache->set($item[$this->getPrimaryField()->getIn()], (int)$id);
         } else {
             $result->addError(new Error('Failed to create currency', 500, $preparedItem));
         }
