@@ -1,6 +1,10 @@
 export default `
-use Sholokhov\\Exchange\\Fields;
+use Sholokhov\\BitrixExchange\\Fields\\Field;
 use Sholokhov\\BitrixExchange\\Target\\IBlock\\Element;
+
+$options = [
+    'iblock_id' => 13
+];
 
 $data = [
     [
@@ -14,16 +18,29 @@ $data = [
 ];
 
 $map = [
-    (new Fields\\Field)
-        ->setPath('id')
-        ->setCode('XML_ID')
+    (new Field)
+        ->setOut('id')
+        ->setIn('XML_ID')
         ->setPrimary(),
-    (new Fields\\Field)
-        ->setPath('name')
-        ->setCode('NAME'),
+    (new Field)
+        ->setOut('name')
+        ->setIn('NAME'),
 ];
 
-$exchange = new Element;
+$exchange = new Element($options);
 $exchange->setMap($map);
 $result = $exchange->execute($data);
+`
+
+export const deactivate = `
+$config = [
+    'deactivate' => true,
+];
+
+new Exchange($config);
+`;
+
+export const setResult = `
+$exchange = new Exchange;
+$exchange->setResultRepository($callback);
 `

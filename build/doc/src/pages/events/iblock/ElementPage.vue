@@ -32,9 +32,7 @@ const data = reactive({
     <p>Класс <a href="/api/classes/Sholokhov-BitrixExchange-Target-IBlock-Element.html" target="_blank">Element</a></p>
 
     <h2 class="pt-2">События</h2>
-    <table-contents
-      :items="data.tableContents"
-    />
+    <table-contents :items="data.tableContents" />
   </section>
 
     <section class="card mt-5 mb-5">

@@ -1,15 +1,28 @@
 export default () => [
     {
-        title: 'Главная страница',
-        code: 'home',
+        title: 'Начало работы',
+        children: [
+            {
+                title: 'Установка',
+                code: 'installation',
+            },
+            {
+                title: 'Конфигурация',
+                code: 'configuration',
+            },
+            {
+                title: 'Создание обмена',
+                code: 'created',
+            },
+        ]
     },
     {
         title: 'Документация кода',
         link: './api/index.html',
     },
     {
-        title: 'Использование',
-        code: 'started',
+      title: 'Импорт',
+      code: 'import',
     },
     {
         title: 'События',

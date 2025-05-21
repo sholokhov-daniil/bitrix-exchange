@@ -7,7 +7,7 @@ import LeftMenuTree from "@/components/menu/left/LeftMenuTree.vue";
   <div class="container-fluid">
     <div class="row">
       <div class="col-2">
-        <h1><RouterLink to="/">Инструкция</RouterLink></h1>
+        <h1><RouterLink to="/">Exchange</RouterLink></h1>
       </div>
     </div>
     <div class="row">

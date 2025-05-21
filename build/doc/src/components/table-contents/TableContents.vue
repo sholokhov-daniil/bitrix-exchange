@@ -1,18 +1,35 @@
 <script setup>
-import {defineProps} from 'vue';
+import {defineProps, watch, onMounted} from 'vue';
+import {useRoute} from "vue-router";
+import NodeTree from "@/components/table-contents/NodeTree.vue";
+
+const route = useRoute();
 
 defineProps({
   items: {type: Array, default: () => []},
 });
 
-const scroll = (hash) => document.getElementById(hash)?.scrollIntoView({behavior: 'smooth'});
+onMounted(() => {
+  if (route.params?.hash) {
+    scroll(route.params.hash);
+  }
+})
+
+watch(
+    () => route.path,
+    () => scroll(route.params.hash)
+)
+const scroll = (hash) => {
+  setTimeout(
+      () => document.getElementById(hash)?.scrollIntoView({behavior: 'smooth'}),
+      400
+  )
+}
 </script>
 
 <template>
   <ul class="table-contents">
-    <li v-for="row in items" :key="row.title" @click="scroll(row.hash)">
-      {{ row.title }}
-    </li>
+    <node-tree v-for="row in items" :key="row.title" :item="row" @click="scroll"/>
   </ul>
 </template>
 
