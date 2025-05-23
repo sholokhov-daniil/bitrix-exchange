@@ -1,6 +1,7 @@
 <script setup>
 import CodeBlock from "@/components/block-code/CodeBlock.vue";
 import {BeforeAdd, CancelBeforeAdd, AfterAdd, BeforeUpdate, CancelBeforeUpdate, AfterUpdate} from "@/data/codes/php/events/highload/element/import";
+import AlertMessage from "@/components/messages/AlertMessage.vue";
 </script>
 
 <template>
@@ -26,12 +27,12 @@ import {BeforeAdd, CancelBeforeAdd, AfterAdd, BeforeUpdate, CancelBeforeUpdate, 
         <h3 class="pt-2">Параметры события</h3>
         <table class="table table-dark table-striped">
           <thead>
-          <tr>
-            <td>Название</td>
-            <td>Тип данных</td>
-            <td>Обязательность</td>
-            <td>Примечание</td>
-          </tr>
+            <tr>
+              <td>Название</td>
+              <td>Тип данных</td>
+              <td>Обязательность</td>
+              <td>Примечание</td>
+            </tr>
           </thead>
           <tbody>
           <tr>
@@ -46,10 +47,13 @@ import {BeforeAdd, CancelBeforeAdd, AfterAdd, BeforeUpdate, CancelBeforeUpdate, 
         <h3 class="pt-2">Пример подписки на событие</h3>
         <code-block :code="BeforeAdd" />
 
-        <div class="alert alert-info mt-2" role="alert">
-          <p>Присутствует возможность отмены добавления значения.</p>
+        <alert-message>
+          <template #header>
+            Присутствует возможность отмены добавления значения.
+          </template>
+
           <p>Если отменить добавление, то в лог файле появится соответствующее сообщение, но в результате работы импорта это не отобразится.</p>
-        </div>
+        </alert-message>
 
         <h3 class="pt-2">Пример отмены добавления</h3>
         <code-block :code="CancelBeforeAdd" />
@@ -138,10 +142,13 @@ import {BeforeAdd, CancelBeforeAdd, AfterAdd, BeforeUpdate, CancelBeforeUpdate, 
 
         <code-block :code="BeforeUpdate" />
 
-        <div class="alert alert-info mt-2" role="alert">
-          <p>Присутствует возможность отмены изменения элемента.</p>
+        <alert-message>
+          <template #header>
+            Присутствует возможность отмены изменения элемента.
+          </template>
+
           <p>Если отменить изменение, то в лог файле появится соответствующее сообщение, но в результате работы импорта это не отобразится.</p>
-        </div>
+        </alert-message>
 
         <h3 class="pt-2">Пример отмены добавления</h3>
         <code-block :code="CancelBeforeUpdate" />

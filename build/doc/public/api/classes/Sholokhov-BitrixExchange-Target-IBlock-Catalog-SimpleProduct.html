@@ -419,13 +419,6 @@
 <dd>Конфигурация обмена</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -protected">
-    <a class="" href="classes/Sholokhov-BitrixExchange-Exchange.html#method_conversionValueByMultiplicity">conversionValueByMultiplicity()</a>
-    <span>
-                                &nbsp;: mixed    </span>
-</dt>
-<dd>Приведение формата значения согласно его кратности</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -protected">
     <a class="" href="classes/Sholokhov-BitrixExchange-Target-IBlock-Element.html#method_deactivate">deactivate()</a>
     <span>
                                 &nbsp;: void    </span>
@@ -620,13 +613,6 @@
                                 &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-DataResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\DataResultInterface">DataResultInterface</abbr></a>    </span>
 </dt>
 <dd>Преобразование значения</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -private">
-    <a class="" href="classes/Sholokhov-BitrixExchange-Exchange.html#method_runTarget">runTarget()</a>
-    <span>
-                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-Messages-ExchangeResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ExchangeResultInterface">ExchangeResultInterface</abbr></a>    </span>
-</dt>
-<dd>Вызов вложенного импорта указанного в свойстве</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -private">
     <a class="" href="classes/Sholokhov-BitrixExchange-Target-IBlock-Catalog-SimpleProduct.html#method_setPrice">setPrice()</a>
@@ -1664,7 +1650,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">addPrepared</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Sholokhov-BitrixExchange-Preparation-PrepareInterface.html"><abbr title="\Sholokhov\BitrixExchange\Preparation\PrepareInterface">PrepareInterface</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$prepare</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">$this</span></code>
+                    <span class="phpdocumentor-signature__name">addPrepared</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Sholokhov-BitrixExchange-Preparation-PreparationInterface.html"><abbr title="\Sholokhov\BitrixExchange\Preparation\PreparationInterface">PreparationInterface</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$prepare</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">$this</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -1674,7 +1660,7 @@
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
                 <span class="phpdocumentor-signature__argument__name">$prepare</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Sholokhov-BitrixExchange-Preparation-PrepareInterface.html"><abbr title="\Sholokhov\BitrixExchange\Preparation\PrepareInterface">PrepareInterface</abbr></a></span>
+                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Sholokhov-BitrixExchange-Preparation-PreparationInterface.html"><abbr title="\Sholokhov\BitrixExchange\Preparation\PreparationInterface">PreparationInterface</abbr></a></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                 
@@ -2288,81 +2274,6 @@
     
     
     
-
-    
-
-    
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -protected
-                                                -final        "
->
-    <h4 class="phpdocumentor-element__name" id="method_conversionValueByMultiplicity">
-        conversionValueByMultiplicity()
-        <a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_conversionValueByMultiplicity" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">532</span>
-
-    </aside>
-
-        <p class="phpdocumentor-summary">Приведение формата значения согласно его кратности</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">protected</span>
-        <span class="phpdocumentor-signature__final">final</span>            <span class="phpdocumentor-signature__name">conversionValueByMultiplicity</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html"><abbr title="\Sholokhov\BitrixExchange\Fields\FieldInterface">FieldInterface</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$field</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$value</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$field</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html"><abbr title="\Sholokhov\BitrixExchange\Fields\FieldInterface">FieldInterface</abbr></a></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_conversionValueByMultiplicity#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                            <span class="phpdocumentor-tag-link">1.0.0</span>
-                                                                                
-                                             
-                                    </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">version</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                            <span class="phpdocumentor-tag-link">1.0.0</span>
-                                                                                
-                                             
-                                    </dd>
-                                            </dl>
 
     
 
@@ -3589,7 +3500,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">586</span>
+    <span class="phpdocumentor-element-found-in__line">539</span>
 
     </aside>
 
@@ -3674,7 +3585,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">569</span>
+    <span class="phpdocumentor-element-found-in__line">522</span>
 
     </aside>
 
@@ -4043,7 +3954,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">553</span>
+    <span class="phpdocumentor-element-found-in__line">506</span>
 
     </aside>
 
@@ -4116,7 +4027,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">511</span>
+    <span class="phpdocumentor-element-found-in__line">481</span>
 
     </aside>
 
@@ -4246,85 +4157,6 @@
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
         <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-DataResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\DataResultInterface">DataResultInterface</abbr></a></span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -private
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_runTarget">
-        runTarget()
-        <a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_runTarget" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="src/Exchange.php"><a href="files/src-exchange.html"><abbr title="src/Exchange.php">Exchange.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">484</span>
-
-    </aside>
-
-        <p class="phpdocumentor-summary">Вызов вложенного импорта указанного в свойстве</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-                    <span class="phpdocumentor-signature__name">runTarget</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html"><abbr title="\Sholokhov\BitrixExchange\Fields\FieldInterface">FieldInterface</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$field</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ExchangeResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ExchangeResultInterface">ExchangeResultInterface</abbr></a></span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
-    <dl class="phpdocumentor-argument-list">
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$value</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-                    <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$field</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html"><abbr title="\Sholokhov\BitrixExchange\Fields\FieldInterface">FieldInterface</abbr></a></span>
-                            </dt>
-            <dd class="phpdocumentor-argument-list__definition">
-                
-            </dd>
-            </dl>
-
-    
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_runTarget#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                            <span class="phpdocumentor-tag-link">1.0.0</span>
-                                                                                
-                                             
-                                    </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">version</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                            <span class="phpdocumentor-tag-link">1.0.0</span>
-                                                                                
-                                             
-                                    </dd>
-                                            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-Messages-ExchangeResultInterface.html"><abbr title="\Sholokhov\BitrixExchange\Messages\ExchangeResultInterface">ExchangeResultInterface</abbr></a></span>
             </section>
 
 </article>
@@ -4583,7 +4415,6 @@
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-IBlock-Element.html#method_bootstrapPrepares">bootstrapPrepares()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-IBlock-IBlock.html#method_cleanCache">cleanCache()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-IBlock-Catalog-SimpleProduct.html#method_configure">configure()</a></li>
-                                            <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_conversionValueByMultiplicity">conversionValueByMultiplicity()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-IBlock-Element.html#method_deactivate">deactivate()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-IBlock-Element.html#method_exists">exists()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-IBlock-IBlock.html#method_getIBlockID">getIBlockID()</a></li>
@@ -4612,7 +4443,6 @@
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_mapValidate">mapValidate()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_normalize">normalize()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_prepared">prepared()</a></li>
-                                            <li class=""><a href="classes/Sholokhov-BitrixExchange-Exchange.html#method_runTarget">runTarget()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-IBlock-Catalog-SimpleProduct.html#method_setPrice">setPrice()</a></li>
                                             <li class=""><a href="classes/Sholokhov-BitrixExchange-Target-IBlock-IBlock.html#method_validateOptions">validateOptions()</a></li>
                                     </ul>

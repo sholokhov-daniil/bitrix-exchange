@@ -141,12 +141,12 @@ class Field implements FieldInterface
     /**
      * Получение цели значения свойства
      *
-     * @return PreparationInterface|null
+     * @return callable|null
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function getPreparation(): ?PreparationInterface
+    public function getPreparation(): ?callable
     {
         return $this->getContainer()->get('preparation');
     }
@@ -154,13 +154,13 @@ class Field implements FieldInterface
     /**
      * Установка цели значения свойства
      *
-     * @param PreparationInterface $target
+     * @param callable $target
      * @return static
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function setPreparation(PreparationInterface $target): self
+    public function setPreparation(callable $target): self
     {
         $this->getContainer()->set('preparation', $target);
         return $this;
@@ -182,47 +182,29 @@ class Field implements FieldInterface
     /**
      * Получение нормализаторов значения свйоства
      *
-     * @return callable[]
+     * @return callable|null
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function getNormalizers(): array
+    public function getNormalizer(): ?callable
     {
-        return $this->getContainer()->get('normalizers', []);
+        return $this->getContainer()->get('normalizer');
     }
 
     /**
      * Указание нормализаторов свойства
      *
-     * @param array $normalizers
+     * @param callable $normalizer
      * @return $this
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function setNormalizers(array $normalizers): self
+    public function setNormalizer(callable $normalizer): self
     {
-        $this->getContainer()->set('normalizers', []);
-        array_walk($normalizers, [$this, 'addNormalizer']);
+        $this->getContainer()->set('normalizer', $normalizer);
 
-        return $this;
-    }
-
-    /**
-     * Добавление нормализатора данных
-     *
-     * @param callable $callback
-     * @return $this
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public function addNormalizer(callable $callback): self
-    {
-        $data = $this->getNormalizers();
-        $data[] = $callback;
-        $this->getContainer()->set('normalizers', $data);
         return $this;
     }
 

@@ -454,8 +454,8 @@ abstract class Exchange extends Application implements MappingExchangeInterface
             $value = $this->normalize($value, $field);
 
 
-            if ($field->getPreparation()) {
-                $value = $this->customPreparation($value, $field);
+            if (is_callable($field->getPreparation())) {
+                $value = call_user_func($field->getPreparation(), $value, $field);
             } else {
                 $value = $this->getPrepares()->prepare($value, $field);
             }
@@ -466,27 +466,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
         $result->setData($data);
 
         return $result;
-    }
-
-    /**
-     * Вызов вложенного импорта указанного в свойстве
-     *
-     * @param mixed $value
-     * @param FieldInterface $field
-     * @return ExchangeResultInterface
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    private function customPreparation(mixed $value, FieldInterface $field): mixed
-    {
-        $preparation = $field->getPreparation();
-
-        if ($this->logger && $preparation instanceof LoggerAwareInterface) {
-            $preparation->setLogger($this->logger);
-        }
-
-        return $preparation->prepare($value, $field);
     }
 
     /**
@@ -509,8 +488,8 @@ abstract class Exchange extends Application implements MappingExchangeInterface
             $value = reset($value);
         }
 
-        foreach ($field->getNormalizers() as $validator) {
-            $value = call_user_func_array($validator, [$value, $field]);
+        if (is_callable($field->getNormalizer())) {
+            $value = call_user_func($field->getNormalizer(), $value, $field);
         }
 
         return $value;

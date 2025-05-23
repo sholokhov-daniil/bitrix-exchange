@@ -3,6 +3,7 @@ import {reactive} from 'vue';
 import CodeBlock from "@/components/block-code/CodeBlock.vue";
 import {BeforeAdd, CancelBeforeAdd, AfterAdd, BeforeUpdate, CancelBeforeUpdate, AfterUpdate} from "@/data/codes/php/events/iblock/element/import";
 import TableContents from "@/components/table-contents/TableContents.vue";
+import AlertMessage from "@/components/messages/AlertMessage.vue";
 
 const data = reactive({
   tableContents: [
@@ -64,10 +65,12 @@ const data = reactive({
           <h3 class="pt-2">Пример подписки на событие</h3>
           <code-block :code="BeforeAdd" />
 
-          <div class="alert alert-info mt-2" role="alert">
-            <p>Присутствует возможность отмены добавления значения.</p>
+          <alert-message>
+            <template #header>
+              Присутствует возможность отмены добавления значения.
+            </template>
             <p>Если отменить добавление, то в лог файле появится соответствующее сообщение, но в результате работы импорта это не отобразится.</p>
-          </div>
+          </alert-message>
 
           <h3 class="pt-2">Пример отмены добавления</h3>
           <code-block :code="CancelBeforeAdd" />
@@ -156,10 +159,13 @@ const data = reactive({
 
           <code-block :code="BeforeUpdate" />
 
-          <div class="alert alert-info mt-2" role="alert">
-            <p>Присутствует возможность отмены изменения элемента.</p>
+          <alert-message>
+            <template #header>
+              Присутствует возможность отмены изменения элемента.
+            </template>
+
             <p>Если отменить изменение, то в лог файле появится соответствующее сообщение, но в результате работы импорта это не отобразится.</p>
-          </div>
+          </alert-message>
 
           <h3 class="pt-2">Пример отмены добавления</h3>
           <code-block :code="CancelBeforeUpdate" />

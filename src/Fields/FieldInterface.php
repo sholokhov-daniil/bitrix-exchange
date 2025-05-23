@@ -63,12 +63,12 @@ interface FieldInterface
     /**
      * Цель значения
      *
-     * @return ?PreparationInterface
+     * @return ?callable
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function getPreparation(): ?PreparationInterface;
+    public function getPreparation(): ?callable;
 
     /**
      * Получение дочернего элемента
@@ -81,12 +81,12 @@ interface FieldInterface
     public function getChildren(): ?FieldInterface;
 
     /**
-     * Получение валидаторов значения свойства
+     * Получение подготовителя значения перед преобразованием на основе настроек сущности
      *
-     * @return callable[]
+     * @return callable|null
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function getNormalizers(): array;
+    public function getNormalizer(): ?callable;
 }

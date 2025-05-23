@@ -2,8 +2,9 @@
 import {reactive} from "vue";
 import MainContainer from "@/components/container/MainContainer.vue";
 import CodeBlock from "@/components/block-code/CodeBlock.vue";
-import {deactivate, setResult} from '@/data/codes/php/started';
+import {deactivate, setResult, map, logger, preparation} from '@/data/codes/php/started';
 import TableContents from "@/components/table-contents/TableContents.vue";
+import ApiLink from "@/components/link/ApiLink.vue";
 
 const data = reactive({
   tableContents: [
@@ -12,18 +13,24 @@ const data = reactive({
       hash: 'vvedenie',
     },
     {
-      title: 'Стандартная конфигурация',
-      hash: 'standart-config',
-      children: [
-        {
-          title: 'Включение деактивации',
-          hash: 'on-deactivate'
-        },
-        {
-          title: 'Результат обмена',
-          hash: 'set-result'
-        }
-      ]
+      title: 'Включение деактивации',
+      hash: 'on-deactivate'
+    },
+    {
+      title: 'Результат обмена',
+      hash: 'set-result'
+    },
+    {
+      title: 'Карта обмена',
+      hash: 'map'
+    },
+    {
+      title: 'Логирование',
+      hash: 'logger',
+    },
+    {
+      title: 'Преобразователь',
+      hash: 'preparation'
     }
   ]
 });
@@ -33,7 +40,6 @@ const data = reactive({
   <main-container>
     <h2>Конфигурирование</h2>
     <table-contents :items="data.tableContents" />
-
   </main-container>
 
   <main-container>
@@ -52,24 +58,21 @@ const data = reactive({
       Конфигурация позволяет настроить поведение вашего обмена и указать куда производится обмен.
       Если указать некорректную конфигурацию, то при инициализации обмена мы можем получить исключение - стоит учесть данный момент.
     </p>
-  </main-container>
 
-  <main-container>
-    <template #header>
-      <h2 id="standart-config">Стандартная конфигурация</h2>
-    </template>
     <p>
       Все стандартные обмены являются наследниками класса <a href="./api/classes/Sholokhov-BitrixExchange-Exchange.html" target="_blank">Exchange</a>, который позволяет настроить:
     </p>
     <ul>
       <li>Включение деактивации</li>
       <li>Результат обмена</li>
+      <li>Карта обмена</li>
     </ul>
 
     <p>
       Каждый отдельно взятый обмен содержит свои доступные параметры и значения. Все доступные обмены описаны в блоке <router-link :to="{name: 'import'}">Импорт</router-link>
     </p>
   </main-container>
+
   <main-container>
     <h3 id="on-deactivate">Включение деактивации</h3>
     <p>
@@ -97,8 +100,56 @@ const data = reactive({
     <code-block :code="setResult" />
 
     <p>
-      Метод <strong>setResultRepository</strong> принимает значение, которое является <a href="https://www.php.net/manual/en/language.types.callable.php" target="_blank">callable</a>,
+      Метод <b>setResultRepository</b> принимает значение, которое является <a href="https://www.php.net/manual/en/language.types.callable.php" target="_blank">callable</a>,
       и вернет новый объект хранилища реализующий интерфейс <a href="./api/classes/Sholokhov-BitrixExchange-Repository-Result-ResultRepositoryInterface.html" target="_blank">ResultRepositoryInterface</a>.
     </p>
+  </main-container>
+
+  <main-container>
+    <h2 id="map">Карта обмена</h2>
+    <p>
+      Карта обмена указывается через отдельный сеттер <b>setMap</b>, который ожидает массив объектов <router-link :to="{name: 'map'}">описывающих связи</router-link>.
+      <br>
+      Разберем простой пример импорта элементов информационного блока:
+      Необходимо импортировать название элемента и изображение в <router-link :to="{name: 'map-iblock-property'}">пользовательское свойство</router-link>.
+    </p>
+
+    <code-block :code="map" />
+  </main-container>
+
+  <main-container>
+    <h2 id="logger">Логирование</h2>
+    <p>
+      Каждый обмен обязан производить логирование результата своей работы.
+      Логирование реализована посредством <a href="https://www.php-fig.org/psr/psr-3/" target="_blank">PSR-3</a>, и позволяет использовать произвольный механизм журналирования.
+      <br>
+      Обмен по умолчанию не инициализирует механизм логирования, а производит делегирование на разработчика, который подключает обмен.
+      <br>
+      Рассмотрим пример указания произвольного механизма журналирования
+    </p>
+    <code-block :code="logger" />
+  </main-container>
+
+  <main-container>
+    <h2 id="preparation">Преобразователь</h2>
+    <p>
+      Преобразователь данных работает с нормализованными данными(обработанными и приведенными к типу данных с которой умеет работать сущность).
+      <br>
+      Основное предназначение преобразователя:
+    </p>
+
+    <ul>
+      <li>Изменение типа данных</li>
+      <li>Запуск вложенного импорта, если значение свойства связано с другой сущностью</li>
+    </ul>
+
+    <p>
+      Все стандартные обмены имеют свой набор зарегистрированных преобразователей.
+      Обмен дает возможность указать свои пользовательские преобразователи, которые будут вызываться в первую очередь.
+      Преобразователь реализовывает интерфейс <api-link path="classes/Sholokhov-BitrixExchange-Preparation-PreparationInterface.html">PreparationInterface</api-link>.
+    </p>
+
+    <code-block :code="preparation" />
+
   </main-container>
 </template>

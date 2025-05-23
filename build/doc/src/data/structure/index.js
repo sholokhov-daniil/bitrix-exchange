@@ -11,6 +11,20 @@ export default () => [
                 code: 'configuration',
             },
             {
+                title: 'Карта обмена',
+                code: 'map',
+                children: [
+                    {
+                        title: 'Основное свойство',
+                        code: 'map-base',
+                    },
+                    {
+                        title: 'Свойство информационного блока',
+                        code: 'map-iblock-property',
+                    }
+                ],
+            },
+            {
                 title: 'Создание обмена',
                 code: 'created',
             },
@@ -19,6 +33,15 @@ export default () => [
     {
         title: 'Документация кода',
         link: './api/index.html',
+    },
+    {
+        title: 'Источник данных',
+        code: 'source',
+        meta: {
+            seo: {
+                h1: 'Источники данных'
+            }
+        }
     },
     {
       title: 'Импорт',
