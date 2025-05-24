@@ -26,6 +26,7 @@ const componentMap = {
     'source': () => import('@/pages/SectionPage.vue'),
     'map': () => import('@/pages/SectionPage.vue'),
     'map-base': () => import('@/pages/started/map/BasePage.vue'),
+    'map-iblock-property': () => import('@/pages/started/map/iblock/IBlockPage.vue'),
     'import': () => import('@/pages/SectionPage.vue'),
     'events': () => import("@/pages/events/EventPage.vue"),
     'events-highload': () => import("@/pages/SectionPage.vue"),

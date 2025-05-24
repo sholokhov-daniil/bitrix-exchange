@@ -19,7 +19,7 @@ export default () => [
                         code: 'map-base',
                     },
                     {
-                        title: 'Свойство информационного блока',
+                        title: 'Информационный блок',
                         code: 'map-iblock-property',
                     }
                 ],
