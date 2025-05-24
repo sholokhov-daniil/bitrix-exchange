@@ -46,6 +46,12 @@ export default () => [
     {
       title: 'Импорт',
       code: 'import',
+        children: [
+            {
+                title: 'Файл',
+                code: 'import-file',
+            }
+        ]
     },
     {
         title: 'События',

@@ -19,6 +19,7 @@ use Bitrix\Main\ObjectPropertyException;
 /**
  * Импорт файла
  *
+ * @todo Переделать логику
  * @package Target
  * @version 1.0.0
  */
@@ -84,7 +85,7 @@ class File extends Exchange
         }
 
         $file['external_id'] = $this->getExternalId($path);
-        $file['MODULE_ID'] = $this->getOptions()->get('MODULE_ID');
+        $file['MODULE_ID'] = $this->getOptions()->get('module_id');
 
         if ($fileId = (int)CFile::SaveFile($file, $file['MODULE_ID'])) {
             $this->cache->set($path, $fileId);
