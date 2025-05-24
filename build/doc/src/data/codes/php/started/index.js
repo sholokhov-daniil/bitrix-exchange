@@ -19,12 +19,12 @@ $data = [
 
 $map = [
     (new Field)
-        ->setOut('id')
-        ->setIn('XML_ID')
+        ->setFrom('id')
+        ->setTo('XML_ID')
         ->setPrimary(),
     (new Field)
-        ->setOut('name')
-        ->setIn('NAME'),
+        ->setFrom('name')
+        ->setTo('NAME'),
 ];
 
 $exchange = new Element($options);
@@ -68,12 +68,12 @@ $source = [
 
 $map = [
     (new Field)
-        ->setOut('name')
-        ->setIn('NAME')
+        ->setFrom('name')
+        ->setTo('NAME')
         ->setPrimary(),
     (new IBlockElementField)
-        ->setOut('image')
-        ->setIn('MORE_PHOTO')
+        ->setFrom('image')
+        ->setTo('MORE_PHOTO')
 ];
 
 $exchange->setMap($map);

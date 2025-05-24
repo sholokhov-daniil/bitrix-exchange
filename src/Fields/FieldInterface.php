@@ -48,7 +48,7 @@ interface FieldInterface
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function getOut(): string;
+    public function getFrom(): string;
 
     /**
      * Код свойства в которое необходимо записать значение
@@ -58,7 +58,7 @@ interface FieldInterface
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function getIn(): string;
+    public function getTo(): string;
 
     /**
      * Цель значения

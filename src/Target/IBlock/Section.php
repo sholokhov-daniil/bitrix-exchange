@@ -68,22 +68,22 @@ class Section extends IBlock
     {
         $keyField = $this->getPrimaryField();
 
-        if (!isset($item[$keyField->getIn()])) {
+        if (!isset($item[$keyField->getTo()])) {
             return false;
         }
 
-        if ($this->cache->has($item[$keyField->getIn()])) {
+        if ($this->cache->has($item[$keyField->getTo()])) {
             return true;
         }
 
         $filter = [
             'IBLOCK_ID' => $this->getIBlockID(),
-            $keyField->getIn() => $item[$keyField->getIn()],
+            $keyField->getTo() => $item[$keyField->getTo()],
         ];
 
         if ($section = CIBlockSection::GetList([], $filter)->Fetch()) {
             // TODO: Проверить хэш импорта
-            $this->cache->set($item[$keyField->getIn()], (int)$section['ID']);
+            $this->cache->set($item[$keyField->getTo()], (int)$section['ID']);
             return true;
         }
 
@@ -113,7 +113,7 @@ class Section extends IBlock
             $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the %s information block', $this->getIBlockID(), $id));
 
             if ($keyField = $this->getPrimaryField()) {
-                $this->cache->set($item[$keyField->getIn()], (int)$id);
+                $this->cache->set($item[$keyField->getTo()], (int)$id);
             }
         } else {
             $result->addError(new Error('Error while adding IBLOCK section: ' . strip_tags($section->getLastError()), 500, $fields));
@@ -137,7 +137,7 @@ class Section extends IBlock
         $keyField = $this->getPrimaryField();
 
         $section = new CIBlockSection;
-        $sectionId = $this->cache->get($item[$keyField->getIn()]);
+        $sectionId = $this->cache->get($item[$keyField->getTo()]);
 
         if (!$sectionId) {
             return $this->add($item);
@@ -182,17 +182,17 @@ class Section extends IBlock
         $translitOptions = $this->getIBlockInfo()->get('FIELDS')['CODE']['DEFAULT_VALUE'] ?? [];
 
         foreach ($this->getMap() as $field) {
-            $value = $item[$field->getIn()] ?? '';
+            $value = $item[$field->getTo()] ?? '';
 
-            if ($field->getIn() === 'CODE' && $translitOptions) {
+            if ($field->getTo() === 'CODE' && $translitOptions) {
                 $value = CUtil::translit($value, Site::getLanguage(), $translitOptions);
             }
 
-            $result[$field->getIn()] = $value;
+            $result[$field->getTo()] = $value;
         }
 
         if (!isset($result['NAME'])) {
-            $result['NAME'] = $item[$this->getPrimaryField()?->getIn()] ?? '';
+            $result['NAME'] = $item[$this->getPrimaryField()?->getTo()] ?? '';
         }
 
         if (!isset($result['CODE'])) {
@@ -244,7 +244,7 @@ class Section extends IBlock
     protected function isMultipleField(FieldInterface $field): bool
     {
         $repository = $this->getFieldRepository();
-        return $repository->has($field->getIn()) && $repository->get($field->getIn())['MULTIPLE'] === 'Y';
+        return $repository->has($field->getTo()) && $repository->get($field->getTo())['MULTIPLE'] === 'Y';
     }
 
     /**

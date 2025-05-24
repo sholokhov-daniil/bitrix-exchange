@@ -53,7 +53,7 @@ class IBlockSection extends AbstractIBlockSection
      */
     protected function getTarget(FieldInterface $field): ExchangeInterface
     {
-        $property = $this->getPropertyRepository()->get($field->getIn());
+        $property = $this->getPropertyRepository()->get($field->getTo());
         return new Section([
             'result_repository' => new SimpleFactory,
             'iblock_id' => $property['LINK_IBLOCK_ID']
@@ -71,7 +71,7 @@ class IBlockSection extends AbstractIBlockSection
      */
     protected function getFieldIBlockID(FieldInterface $field): int
     {
-        $property = $this->getPropertyRepository()->get($field->getIn());
+        $property = $this->getPropertyRepository()->get($field->getTo());
         return (int)($property['LINK_IBLOCK_ID'] ?? 0);
     }
 
@@ -88,7 +88,7 @@ class IBlockSection extends AbstractIBlockSection
     public function supported(mixed $value, FieldInterface $field): bool
     {
         return $field instanceof ElementFieldInterface
-            && ($property = $this->getPropertyRepository()->get($field->getIn()))
+            && ($property = $this->getPropertyRepository()->get($field->getTo()))
             && $property['PROPERTY_TYPE'] === PropertyTable::TYPE_SECTION
             && !$property['USER_TYPE']
             && $property['LINK_IBLOCK_ID'];

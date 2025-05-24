@@ -50,7 +50,7 @@ class MapValidator implements ValidatorInterface
                 }
             }
 
-            if ($field->getOut() === '') {
+            if ($field->getFrom() === '') {
                 $result->addError(new Error('Field path is required', 400, $field));
             }
         }

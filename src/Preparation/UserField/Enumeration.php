@@ -49,7 +49,7 @@ class Enumeration extends AbstractEnumeration
         return new Target([
             'result_repository' => new SimpleFactory,
             'entity_id' => $this->entityId,
-            'property_code' => $field->getIn(),
+            'property_code' => $field->getTo(),
         ]);
     }
 
@@ -64,6 +64,6 @@ class Enumeration extends AbstractEnumeration
      */
     public function supported(mixed $value, FieldInterface $field): bool
     {
-        return ($property = $this->getFieldRepository()->get($field->getIn())) && $property['USER_TYPE_ID'] === 'enumeration';
+        return ($property = $this->getFieldRepository()->get($field->getTo())) && $property['USER_TYPE_ID'] === 'enumeration';
     }
 }

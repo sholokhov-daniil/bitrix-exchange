@@ -58,7 +58,7 @@ class HandbookElement extends AbstractIBlockImport
      */
     protected function getTarget(FieldInterface $field): ExchangeInterface
     {
-        $property = $this->getPropertyRepository()->get($field->getIn());
+        $property = $this->getPropertyRepository()->get($field->getTo());
 
         $result = HLT::query()
             ->where('TABLE_NAME', $property['USER_TYPE_SETTINGS']['TABLE_NAME'])
@@ -90,7 +90,7 @@ class HandbookElement extends AbstractIBlockImport
     protected function normalize(mixed $value, FieldInterface $field): mixed
     {
         if (!is_array($value) && $this->primary <> 'ID') {
-            $property = $this->getPropertyRepository()->get($field->getIn());
+            $property = $this->getPropertyRepository()->get($field->getTo());
             $provider = $this->cache[$property['USER_TYPE_SETTINGS']['TABLE_NAME']] ??= ProviderFactory::createByTable($property['USER_TYPE_SETTINGS']['TABLE_NAME']);
 
             $item = $provider::getRow([
@@ -119,7 +119,7 @@ class HandbookElement extends AbstractIBlockImport
     public function supported(mixed $value, FieldInterface $field): bool
     {
         return $field instanceof ElementFieldInterface
-            && ($property = $this->getPropertyRepository()->get($field->getIn()))
+            && ($property = $this->getPropertyRepository()->get($field->getTo()))
             && $property['USER_TYPE'] === PropertyTable::USER_TYPE_DIRECTORY
             && $property['USER_TYPE_SETTINGS']['TABLE_NAME'];
     }

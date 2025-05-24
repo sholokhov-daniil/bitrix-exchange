@@ -23,7 +23,7 @@ class FieldHelper
      */
     public static function getValue(array $item, FieldInterface $field): mixed
     {
-        return $field->getChildren() ? self::getTreeValue($item, $field) : Helper::getArrValueByPath($item, $field->getOut());
+        return $field->getChildren() ? self::getTreeValue($item, $field) : Helper::getArrValueByPath($item, $field->getFrom());
     }
 
     /**
@@ -40,7 +40,7 @@ class FieldHelper
     {
         $result = [];
 
-        $root = Helper::getArrValueByPath($item, $field->getOut());
+        $root = Helper::getArrValueByPath($item, $field->getFrom());
 
         if (!is_array($root)) {
             return null;

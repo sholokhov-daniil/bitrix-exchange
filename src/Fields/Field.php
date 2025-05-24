@@ -90,7 +90,7 @@ class Field implements FieldInterface
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function getOut(): string
+    public function getFrom(): string
     {
         return $this->getContainer()->get('out', '');
     }
@@ -104,7 +104,7 @@ class Field implements FieldInterface
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function setOut(string $path): self
+    public function setFrom(string $path): self
     {
         $this->getContainer()->set('out', $path);
         return $this;
@@ -118,7 +118,7 @@ class Field implements FieldInterface
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function getIn(): string
+    public function getTo(): string
     {
         return $this->getContainer()->get('in', '');
     }
@@ -132,7 +132,7 @@ class Field implements FieldInterface
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function setIn(string $code): self
+    public function setTo(string $code): self
     {
         $this->getContainer()->set('in', $code);
         return $this;

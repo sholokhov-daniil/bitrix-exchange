@@ -45,7 +45,7 @@ class Date extends AbstractDate
      */
     public function supported(mixed $value, FieldInterface $field): bool
     {
-        $code = $field->getIn();
+        $code = $field->getTo();
 
         if ($field instanceof ElementFieldInterface) {
             $property = $this->getPropertyRepository()->get($code);

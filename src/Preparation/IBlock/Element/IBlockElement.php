@@ -46,7 +46,7 @@ class IBlockElement extends AbstractIBlockElement
      */
     protected function getFieldIBlockID(FieldInterface $field): int
     {
-        $property = $this->getPropertyRepository()->get($field->getIn());
+        $property = $this->getPropertyRepository()->get($field->getTo());
         return (int)($property['LINK_IBLOCK_ID'] ?? 0);
     }
 
@@ -62,7 +62,7 @@ class IBlockElement extends AbstractIBlockElement
     public function supported(mixed $value, FieldInterface $field): bool
     {
         return $field instanceof ElementFieldInterface
-            && ($property = $this->getPropertyRepository()->get($field->getIn()))
+            && ($property = $this->getPropertyRepository()->get($field->getTo()))
             && $property['PROPERTY_TYPE'] === PropertyTable::TYPE_ELEMENT
             && !$property['USER_TYPE']
             && $property['LINK_IBLOCK_ID'];

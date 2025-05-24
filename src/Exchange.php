@@ -460,7 +460,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
                 $value = $this->getPrepares()->prepare($value, $field);
             }
 
-            $data[$field->getIn()] = $value;
+            $data[$field->getTo()] = $value;
         }
 
         $result->setData($data);

@@ -42,7 +42,7 @@ class Date extends AbstractDate implements LoggerAwareInterface
      */
     public function supported(mixed $value, FieldInterface $field): bool
     {
-        $property = $this->getFieldRepository()->get($field->getIn());
+        $property = $this->getFieldRepository()->get($field->getTo());
         return $property && $property['USER_TYPE_ID'] === 'date';
     }
 }

@@ -53,7 +53,7 @@ class Element extends IBlock
     {
         $keyField = $this->getPrimaryField();
 
-        if ($this->cache->has($item[$keyField->getIn()])) {
+        if ($this->cache->has($item[$keyField->getTo()])) {
             return true;
         }
 
@@ -63,14 +63,14 @@ class Element extends IBlock
         ];
 
         if ($keyField instanceof ElementFieldInterface) {
-            $filter['PROPERTY_' . $keyField->getIn()] = $item[$keyField->getIn()];
+            $filter['PROPERTY_' . $keyField->getTo()] = $item[$keyField->getTo()];
         } else {
-            $filter[$keyField->getIn()] = $item[$keyField->getIn()];
+            $filter[$keyField->getTo()] = $item[$keyField->getTo()];
         }
 
         if ($element = CIBlockElement::GetList([], $filter)->Fetch()) {
             // TODO: Проверить хэш импорта
-            $this->cache->set($item[$keyField->getIn()], (int)$element['ID']);
+            $this->cache->set($item[$keyField->getTo()], (int)$element['ID']);
 
             return true;
         }
@@ -104,7 +104,7 @@ class Element extends IBlock
             // TODO: записываем хэш
             $result->setData((int)$itemId);
             $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the %s information block', $this->getIBlockID(), $itemId));
-            $this->cache->set($item[$this->getPrimaryField()->getIn()], (int)$itemId);
+            $this->cache->set($item[$this->getPrimaryField()->getTo()], (int)$itemId);
         } else {
             $result->addError(new Error('Error while adding IBLOCK element: ' . strip_tags($iblock->getLastError()), 500, $data));
         }
@@ -127,7 +127,7 @@ class Element extends IBlock
         $keyField = $this->getPrimaryField();
 
         $iBlock = new CIBlockElement;
-        $itemID = $this->cache->get($item[$keyField->getIn()]);
+        $itemID = $this->cache->get($item[$keyField->getTo()]);
 
         if (!$itemID) {
             return $this->add($item);
@@ -179,11 +179,11 @@ class Element extends IBlock
 
         foreach ($this->getMap() as $field) {
             $group = 'FIELDS';
-            $value = $item[$field->getIn()] ?? null;
+            $value = $item[$field->getTo()] ?? null;
 
             if ($field instanceof ElementFieldInterface) {
                 $group = 'PROPERTIES';
-            } elseif ($field->getIn() === 'CODE') {
+            } elseif ($field->getTo() === 'CODE') {
                 $translitOptions = $this->getIBlockInfo()->get('FIELDS')['CODE']['DEFAULT_VALUE'] ?? [];
 
                 if ($translitOptions) {
@@ -191,13 +191,13 @@ class Element extends IBlock
                 }
             }
 
-            $result[$group][$field->getIn()] = $value;
+            $result[$group][$field->getTo()] = $value;
         }
 
         $requiredFields = ['NAME', 'CODE', 'XML_ID'];
         array_walk($requiredFields, function($field) use (&$result, $item) {
             if (!isset($result['FIELDS'][$field])) {
-                $result['FIELDS'][$field] = $item[$this->getPrimaryField()?->getIn()] ?? '';
+                $result['FIELDS'][$field] = $item[$this->getPrimaryField()?->getTo()] ?? '';
             }
         });
 
@@ -342,7 +342,7 @@ class Element extends IBlock
      */
     protected function isMultipleField(FieldInterface $field): bool
     {
-        $property = $this->getPropertyRepository()->get($field->getIn());
+        $property = $this->getPropertyRepository()->get($field->getTo());
         return $property && $property['MULTIPLE'] === 'Y';
     }
 

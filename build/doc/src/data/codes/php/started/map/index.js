@@ -21,12 +21,12 @@ $source = [
 
 $map = [
     (new Field)
-        ->setOut('name')
-        ->setIn('NAME')
+        ->setFrom('name')
+        ->setTo('NAME')
         ->setPrimary(),
     (new Field)
-        ->setOut('image')
-        ->setIn('PREVIEW_PICTURE')
+        ->setFrom('image')
+        ->setTo('PREVIEW_PICTURE')
 ];
 
 $exchange->setMap($map);
@@ -46,8 +46,8 @@ $data = [
 ];
 
 $nameField = new Field;
-$nameField->setOut('user');
-$nameField->setIn('USER')
+$nameField->setFrom('user');
+$nameField->setTo('USER')
 $nameField->setNormalizer(fn(mixed $value, FieldInterface $field) => stristr($value, '|', true));
 `;
 
@@ -106,14 +106,14 @@ $source = [
 
 // ${isRight} Хорошо 
 $field = new Field;
-$field->setOut('images.image');
+$field->setFrom('images.image');
 $field->setChildren(
-    (new Field)->setOut('sdn')
+    (new Field)->setFrom('sdn')
 );
 
 // ${crossMark} Плохо
 $field = new Field;
-$field->setOut('images.image.sdn');
+$field->setFrom('images.image.sdn');
 `;
 
 export const codeChildrenLvl = `
@@ -145,13 +145,13 @@ $source = [
 ];
 
 $field = new Field;
-$field->setOut('images.image');
+$field->setFrom('images.image');
 $field->setChildren(
     (new Field)
-        ->setOut('sdn')
+        ->setFrom('sdn')
         ->setChildren(
             (new Field)
-                ->setOut('path')
+                ->setFrom('path')
         )
 );
 `;
@@ -178,5 +178,5 @@ $source = [
 
 $field = new Field;
 // т.к. в image хранится перечисляемый массив, то нам достаточно указать номер ключа
-$field->setOut('images.image.0.sdn');
+$field->setFrom('images.image.0.sdn');
 `;

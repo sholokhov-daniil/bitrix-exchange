@@ -98,8 +98,8 @@ abstract class AbstractIBlockSection extends AbstractPrepare implements LoggerAw
 
         $exchange->setMap([
             (new Field)
-                ->setOut(0)
-                ->setIn($this->primary)
+                ->setFrom(0)
+                ->setTo($this->primary)
                 ->setPrimary(),
         ]);
 
