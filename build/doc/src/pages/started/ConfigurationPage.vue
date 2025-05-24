@@ -5,6 +5,7 @@ import CodeBlock from "@/components/block-code/CodeBlock.vue";
 import {deactivate, setResult, map, logger, preparation} from '@/data/codes/php/started';
 import TableContents from "@/components/table-contents/TableContents.vue";
 import ApiLink from "@/components/link/ApiLink.vue";
+import AlertMessage from "@/components/messages/AlertMessage.vue";
 
 const data = reactive({
   tableContents: [
@@ -147,6 +148,10 @@ const data = reactive({
       Все стандартные обмены имеют свой набор зарегистрированных преобразователей.
       Обмен дает возможность указать свои пользовательские преобразователи, которые будут вызываться в первую очередь.
       Преобразователь реализовывает интерфейс <api-link path="classes/Sholokhov-BitrixExchange-Preparation-PreparationInterface.html">PreparationInterface</api-link>.
+      <br>
+      <alert-message>
+        Вызывается <b>только первый</b> подходящий преобразователь
+      </alert-message>
     </p>
 
     <code-block :code="preparation" />

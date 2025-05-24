@@ -1,4 +1,5 @@
 <script setup>
+import {reactive} from "vue";
 import MainContainer from "@/components/container/MainContainer.vue";
 import ApiLink from "@/components/link/ApiLink.vue";
 import {
@@ -11,11 +12,43 @@ import {
 } from "@/data/codes/php/started/map";
 import CodeBlock from "@/components/block-code/CodeBlock.vue";
 import AlertMessage from "@/components/messages/AlertMessage.vue";
+import TableContents from "@/components/table-contents/TableContents.vue";
+
+const data = reactive({
+  tableContents: [
+    {
+      title: 'Введение',
+      hash: 'start'
+    },
+    {
+      title: 'Структура',
+      hash: 'structure',
+    },
+    {
+      title: 'Нормализация',
+      hash: 'normalize',
+    },
+    {
+      title: 'Преобразователь',
+      hash: 'preparation',
+    },
+    {
+      title: 'Вложенность',
+      hash: 'depth',
+    }
+  ]
+});
 </script>
 
 <template>
   <main-container>
-    <h2>Введение</h2>
+    <h1>Маршрутизация обмена</h1>
+
+    <table-contents :items="data.tableContents" />
+  </main-container>
+
+  <main-container>
+    <h2 id="start">Введение</h2>
     <p>
       Карта обмена является неотъемлемый частью в успешном обмене.
       Карта позволяет связать данные из <router-link :to="{name: 'source'}">источника</router-link> со <router-link :to="{name: 'import'}">сущностью</router-link> в которую вставляются данные источника.
@@ -41,7 +74,7 @@ import AlertMessage from "@/components/messages/AlertMessage.vue";
   </main-container>
 
   <main-container>
-    <h2>Структура</h2>
+    <h2 id="structure">Структура</h2>
     <p>Класс: <api-link path="classes/Sholokhov-BitrixExchange-Fields-Field.html">Field</api-link></p>
 
     <p>
@@ -109,7 +142,7 @@ import AlertMessage from "@/components/messages/AlertMessage.vue";
   </main-container>
 
   <main-container>
-    <h3>Нормализатор значения</h3>
+    <h2 id="normalize">Нормализация значения</h2>
     <p>
       Рассмотрим пример использования пользовательского обработчика значений, в поле "user" хранятся значения формата <b>{фамилия}|{возраст}</b>.
       В рамках данной задачи нам необходимо из этой строки получить фамилию.
@@ -125,7 +158,7 @@ import AlertMessage from "@/components/messages/AlertMessage.vue";
   </main-container>
 
   <main-container>
-    <h3>Преобразователь значения</h3>
+    <h2 id="preparation">Преобразователь значения</h2>
     <p>
       Каждое свойство наделено возможностью указания собственного преобразователя данных, если значение необходимо обработать уникальным подходом и игнорировать альтернативные решения.
       Указав свойству собственный нормализатор, в таком случае все зарегистрированные нормализаторы внутри обмена игнорируются.
@@ -146,7 +179,7 @@ import AlertMessage from "@/components/messages/AlertMessage.vue";
   </main-container>
 
   <main-container>
-    <h3>Вложенный путь</h3>
+    <h2 id="depth">Вложенный путь</h2>
     <p>
       В некоторых случаях нам может потребоваться получить значения внутри итерируемого объекта.
       Рассмотрим пример на массиве, где нужно получить путь до изображения
@@ -166,7 +199,7 @@ import AlertMessage from "@/components/messages/AlertMessage.vue";
       В примере мы дошли до массива изображений, и тут встала задача получения значения ключа "sdn" у каждого изображения.
       <br>
       Метод <b>setChildren</b> сообщает парсеру, что нужно зайти в каждый элемент массива и достать из него значение.
-      Вложенные пути могут быть более сложными - допускается возможность указания N вложенность
+      Вложенные пути могут быть более сложными - допускается возможность указать N вложенность
     </p>
     <code-block :code="codeChildrenLvl" />
 

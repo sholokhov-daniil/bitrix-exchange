@@ -43,7 +43,7 @@ const pathMap = {
     'source': '/source',
     'map': '/map',
     'map-iblock-property': 'iblock-property',
-    'map-base': 'base',
+    'map-base': 'base/:hash?',
     'import': '/target',
     'events': '/events',
     'events-highload': 'highload',

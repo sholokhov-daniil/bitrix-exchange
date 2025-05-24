@@ -104,14 +104,14 @@ $source = [
     // ...
 ];
 
-// ${isRight} Хорошо 
+// ${isRight} Работает 
 $field = new Field;
 $field->setFrom('images.image');
 $field->setChildren(
     (new Field)->setFrom('sdn')
 );
 
-// ${crossMark} Плохо
+// ${crossMark} Не работает
 $field = new Field;
 $field->setFrom('images.image.sdn');
 `;
