@@ -52,6 +52,14 @@ export default () => [
                 code: 'import-file',
             },
             {
+                title: 'Элемент инфоблока',
+                code: 'import-iblock-element',
+            },
+            {
+                title: 'Раздел инфоблока',
+                code: 'import-iblock-section',
+            },
+            {
                 title: 'Пользовательские свойства',
                 code: 'import-uf',
                 meta: {

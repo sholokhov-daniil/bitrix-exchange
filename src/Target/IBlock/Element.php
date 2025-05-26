@@ -2,24 +2,23 @@
 
 namespace Sholokhov\BitrixExchange\Target\IBlock;
 
-use Bitrix\Main\Diag\Debug;
 use Exception;
 use CIBlockElement;
 
+use Sholokhov\BitrixExchange\Exception\Target\ExchangeItemStoppedException;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Helper\Helper;
 use Sholokhov\BitrixExchange\Messages\DataResultInterface;
-use Sholokhov\BitrixExchange\Messages\ResultInterface;
 use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Sholokhov\BitrixExchange\Messages\Type\DataResult;
 
 use Sholokhov\BitrixExchange\Helper\Site;
-use Sholokhov\BitrixExchange\Messages\Type\Result;
 use Sholokhov\BitrixExchange\Preparation\IBlock\Element as Prepare;
+use Sholokhov\BitrixExchange\Messages\Type\EventResult;
 use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
 
 use Bitrix\Main\Event;
-use Bitrix\Main\EventResult;
+use Bitrix\Main\EventResult as BxEventResult;
 use Bitrix\Main\Type\DateTime;
 use Bitrix\Iblock\ElementTable;
 use Bitrix\Main\SystemException;
@@ -100,6 +99,10 @@ class Element extends IBlock
             return $result->addErrors($resultBeforeAdd->getErrors());
         }
 
+        if ($resultBeforeAdd->isStopped()) {
+            return $result;
+        }
+
         if ($itemId = $iblock->Add($data)) {
             // TODO: записываем хэш
             $result->setData((int)$itemId);
@@ -109,7 +112,7 @@ class Element extends IBlock
             $result->addError(new Error('Error while adding IBLOCK element: ' . strip_tags($iblock->getLastError()), 500, $data));
         }
 
-        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => $itemId, 'FIELDS' => $data, 'RESULT' => $result]))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['id' => $itemId, 'fields' => $data, 'result' => $result]))->send();
 
         return $result;
     }
@@ -143,6 +146,10 @@ class Element extends IBlock
             return $result->addErrors($resultBeforeUpdate->getErrors());
         }
 
+        if ($resultBeforeUpdate->isSuccess()) {
+            return $result;
+        }
+
         if (!$iBlock->Update($itemID, $preparedItem['FIELDS'])) {
             return $result->addError(new Error('Error while updating IBLOCK element: ' . $iBlock->getLastError(), 500, ['ID' => $itemID, 'FIELDS' => $preparedItem['FIELDS']]));
         }
@@ -156,7 +163,7 @@ class Element extends IBlock
 
         $result->setData((int)$itemID);
 
-        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['FIELDS' => $preparedItem, 'ID' => $itemID, 'RESULT' => $result]))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['fields' => $preparedItem, 'id' => $itemID, 'result' => $result]))->send();
 
         return $result;
     }
@@ -223,7 +230,7 @@ class Element extends IBlock
 
         $parameters = compact('filter', 'select');
 
-        (new Event(Helper::getModuleID(), self::BEFORE_DEACTIVATE, ['PARAMETERS' => &$parameters]))->send();
+        (new Event(Helper::getModuleID(), self::BEFORE_DEACTIVATE, ['parameters' => &$parameters]))->send();
 
         $iBlock = new CIBlockElement;
         $iterator = ElementTable::getList($parameters);
@@ -238,28 +245,33 @@ class Element extends IBlock
      *
      * @param int $id
      * @param array $item
-     * @return ResultInterface
+     * @return EventResult
      */
-    private function beforeUpdate(int $id, array &$item): ResultInterface
+    private function beforeUpdate(int $id, array &$item): EventResult
     {
-        $result = new Result;
+        $result = new EventResult;
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['FIELDS' => &$item['FIELDS'], 'ID' => $id]);
-        $event->send();
+        try {
+            $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['fields' => &$item['FIELDS'], 'id' => $id, 'exchange' => $this]);
+            $event->send();
 
-        foreach ($event->getResults() as $eventResult) {
-            if ($eventResult->getType() === EventResult::SUCCESS) {
-                continue;
-            }
+            foreach ($event->getResults() as $eventResult) {
+                if ($eventResult->getType() === BxEventResult::SUCCESS) {
+                    continue;
+                }
 
-            $parameters = $eventResult->getParameters();
-            if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                $result->addError(new Error('Error while updating IBLOCK element: stopped', 300, $item));
-            } else {
-                foreach ($parameters['ERRORS'] as $error) {
-                    $result->addError(new Error($error, 300, $item));
+                $parameters = $eventResult->getParameters();
+                if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
+                    $result->addError(new Error('Error while updating IBLOCK element: stopped', 300, $item));
+                } else {
+                    foreach ($parameters['ERRORS'] as $error) {
+                        $result->addError(new Error($error, 300, $item));
+                    }
                 }
             }
+        } catch (ExchangeItemStoppedException $exception) {
+            $this->logger?->warning($exception->getMessage() ?: 'The update of the iblock element has been stopped');
+            $result->setStopped();
         }
 
         return $result;
@@ -269,28 +281,34 @@ class Element extends IBlock
      * Событие перед созданием элемента
      *
      * @param array $item
-     * @return ResultInterface
+     * @return EventResult
      */
-    private function beforeAdd(array $item): ResultInterface
+    private function beforeAdd(array $item): EventResult
     {
-        $result = new Result;
+        $result = new EventResult();
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['FIELDS' => &$item]);
-        $event->send();
+        try {
+            $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['fields' => &$item]);
+            $event->send();
 
-        foreach ($event->getResults() as $eventResult) {
-            if ($eventResult->getType() === EventResult::SUCCESS) {
-                continue;
-            }
+            foreach ($event->getResults() as $eventResult) {
+                if ($eventResult->getType() === BxEventResult::SUCCESS) {
+                    continue;
+                }
 
-            $parameters = $eventResult->getParameters();
-            if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                $result->addError(new Error('Error while adding IBLOCK element: stopped', 300, $item));
-            } else {
-                foreach ($parameters['ERRORS'] as $error) {
-                    $result->addError(new Error($error, 300, $item));
+                $parameters = $eventResult->getParameters();
+                if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
+                    $result->addError(new Error('Error while adding IBLOCK element: stopped', 300, $item));
+                } else {
+                    foreach ($parameters['ERRORS'] as $error) {
+                        $result->addError(new Error($error, 300, $item));
+                    }
                 }
             }
+        } catch (ExchangeItemStoppedException $exception) {
+            $this->logger?->warning($exception->getMessage() ?: 'The adding of the iblock element has been stopped');
+            $result->setStopped();
+
         }
 
         return $result;

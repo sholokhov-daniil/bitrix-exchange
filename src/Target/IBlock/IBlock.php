@@ -4,7 +4,6 @@ namespace Sholokhov\BitrixExchange\Target\IBlock;
 
 use CIBlock;
 
-
 use Sholokhov\BitrixExchange\Exchange;
 use Sholokhov\BitrixExchange\Messages\Type\Result;
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
@@ -22,6 +21,31 @@ use Bitrix\Main\LoaderException;
  */
 abstract class IBlock extends Exchange
 {
+    /**
+     * Информационный блок в который идет импорт
+     *
+     * @final
+     * @return int
+     */
+    final public function getIBlockID(): int
+    {
+        return (int)$this->getOptions()->get('iblock_id');
+    }
+
+    /**
+     * Получение информации об информационном блоке
+     *
+     * @return IBlockRepository|null
+     *
+     * @final
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    final public function getIBlockInfo(): ?IBlockRepository
+    {
+        return $this->repository->get('iblock_info');
+    }
+
     /**
      * Обработка конфигураций обмена
      *
@@ -44,32 +68,6 @@ abstract class IBlock extends Exchange
     {
         CIBlock::CleanCache($this->getIBlockID());
         CIBlock::clearIblockTagCache($this->getIBlockID());
-    }
-
-
-    /**
-     * Информационный блок в который идет импорт
-     *
-     * @final
-     * @return int
-     */
-    final protected function getIBlockID(): int
-    {
-        return (int)$this->getOptions()->get('iblock_id');
-    }
-
-    /**
-     * Получение информации об информационном блоке
-     *
-     * @return IBlockRepository|null
-     *
-     * @final
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    final protected function getIBlockInfo(): ?IBlockRepository
-    {
-        return $this->repository->get('iblock_info');
     }
 
     /**

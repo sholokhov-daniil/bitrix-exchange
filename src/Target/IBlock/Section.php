@@ -6,24 +6,25 @@ use CUtil;
 use Exception;
 use CIBlockSection;
 
+use Sholokhov\BitrixExchange\Exception\ExchangeException;
+use Sholokhov\BitrixExchange\Exception\Target\ExchangeItemStoppedException;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Helper\Helper;
 use Sholokhov\BitrixExchange\Helper\Site;
 
 use Sholokhov\BitrixExchange\Preparation\UserField as Prepare;
 use Sholokhov\BitrixExchange\Messages\DataResultInterface;
-use Sholokhov\BitrixExchange\Messages\ResultInterface;
 use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Messages\Type\EventResult;
 
 use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Bitrix\Main\Event;
-use Bitrix\Main\EventResult;
+use Bitrix\Main\EventResult as BXEventResult;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Iblock\SectionTable;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\Type\DateTime;
-use Sholokhov\BitrixExchange\Messages\Type\Result;
 use Sholokhov\BitrixExchange\Repository\Fields\UFRepository;
 use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 
@@ -55,6 +56,19 @@ class Section extends IBlock
         }
 
         return $options->get('uf_entity_id');
+    }
+
+    /**
+     * Получить хранилище данных свойств
+     *
+     * @return UFRepository
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    public function getFieldRepository(): UFRepository
+    {
+        return $this->repository->get('uf_repository');
     }
 
     /**
@@ -108,6 +122,10 @@ class Section extends IBlock
             return $result->addErrors($resultBeforeAdd->getErrors());
         }
 
+        if ($resultBeforeAdd->isStopped()) {
+            return $result;
+        }
+
         if ($id = $section->Add($fields)) {
             $result->setData((int)$id);
             $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the %s information block', $this->getIBlockID(), $id));
@@ -119,7 +137,7 @@ class Section extends IBlock
             $result->addError(new Error('Error while adding IBLOCK section: ' . strip_tags($section->getLastError()), 500, $fields));
         }
 
-        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => $id, 'FIELDS' => $fields]))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['id' => $id, 'fields' => $fields, 'result' => $result]))->send();
 
         return $result;
     }
@@ -150,9 +168,13 @@ class Section extends IBlock
             $preparedItem['ACTIVE'] = 'Y';
         }
 
-        $resultBeforeUpdate = $this->beforeUpdate($preparedItem);
+        $resultBeforeUpdate = $this->beforeUpdate($sectionId, $preparedItem);
         if (!$resultBeforeUpdate->isSuccess()) {
             return $result->addErrors($resultBeforeUpdate->getErrors());
+        }
+
+        if ($resultBeforeUpdate->isStopped()) {
+            return $result;
         }
 
         if (!$section->Update($sectionId, $preparedItem)) {
@@ -162,7 +184,7 @@ class Section extends IBlock
         $this->logger?->debug('Updated properties IBLOCK section: ' . $sectionId);
         $this->cleanCache();
 
-        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, $preparedItem))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['fields' => $preparedItem, 'id' => $sectionId, 'result' => $result]))->send();
 
         return $result;
     }
@@ -224,7 +246,7 @@ class Section extends IBlock
 
         $parameters = compact('filter', 'select');
 
-        (new Event(Helper::getModuleID(), self::BEFORE_DEACTIVATE, ['PARAMETERS' => &$parameters]))->send();
+        (new Event(Helper::getModuleID(), self::BEFORE_DEACTIVATE, ['parameetrs' => &$parameters]))->send();
 
         $iterator = SectionTable::getList($parameters);
         while ($section = $iterator->fetch()) {
@@ -248,19 +270,6 @@ class Section extends IBlock
     }
 
     /**
-     * Получить хранилище данных свойств
-     *
-     * @return UFRepository
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    protected function getFieldRepository(): UFRepository
-    {
-        return $this->repository->get('uf_repository');
-    }
-
-    /**
      * Конфигурация механизмов обмена
      *
      * @return void
@@ -277,29 +286,35 @@ class Section extends IBlock
     /**
      * Событие перед обновлением раздела
      *
+     * @param int $id
      * @param array $item
-     * @return ResultInterface
+     * @return EventResult
      */
-    private function beforeUpdate(array &$item): ResultInterface
+    private function beforeUpdate(int $id, array &$item): EventResult
     {
-        $result = new Result;
+        $result = new EventResult;
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['FIELDS' => &$item]);
-        $event->send();
+        try {
+            $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['fields' => &$item, 'id' => $id, 'exchange' => $this]);
+            $event->send();
 
-        foreach ($event->getResults() as $eventResult) {
-            if ($eventResult->getType() === EventResult::SUCCESS) {
-                continue;
-            }
+            foreach ($event->getResults() as $eventResult) {
+                if ($eventResult->getType() === BXEventResult::SUCCESS) {
+                    continue;
+                }
 
-            $parameters = $eventResult->getParameters();
-            if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                $result->addError(new Error('Error while updating IBLOCK section: stopped', 300, $item));
-            } else {
-                foreach ($parameters['ERRORS'] as $error) {
-                    $result->addError(new Error($error, 300, $item));
+                $parameters = $eventResult->getParameters();
+                if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
+                    $result->addError(new Error('Error while updating IBLOCK section: stopped', 300, $item));
+                } else {
+                    foreach ($parameters['ERRORS'] as $error) {
+                        $result->addError(new Error($error, 300, $item));
+                    }
                 }
             }
+        } catch (ExchangeException $e) {
+            $this->logger?->warning(($e->getMessage() ?: 'Error while updating IBLOCK section') . ': ' . $id);
+            $result->setStopped();
         }
 
         return $result;
@@ -309,28 +324,34 @@ class Section extends IBlock
      * Событие перед созданием раздела
      *
      * @param array $item
-     * @return ResultInterface
+     * @return EventResult
      */
-    private function beforeAdd(array $item): ResultInterface
+    private function beforeAdd(array $item): EventResult
     {
-        $result = new Result;
+        $result = new EventResult();
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['ITEM' => &$item]);
-        $event->send();
+        try {
+            $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['fields' => &$item, 'exchange' => $this]);
+            $event->send();
 
-        foreach ($event->getResults() as $eventResult) {
-            if ($eventResult->getType() === EventResult::SUCCESS) {
-                continue;
-            }
+            foreach ($event->getResults() as $eventResult) {
+                if ($eventResult->getType() === BXEventResult::SUCCESS) {
+                    continue;
+                }
 
-            $parameters = $eventResult->getParameters();
-            if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                $result->addError(new Error('Error while adding IBLOCK section: stopped', 300, $item));
-            } else {
-                foreach ($parameters['ERRORS'] as $error) {
-                    $result->addError(new Error($error, 300, $item));
+                $parameters = $eventResult->getParameters();
+                if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
+                    $result->addError(new Error('Error while adding IBLOCK section: stopped', 300, $item));
+                } else {
+                    foreach ($parameters['ERRORS'] as $error) {
+                        $result->addError(new Error($error, 300, $item));
+                    }
                 }
             }
+        } catch (ExchangeItemStoppedException $e) {
+            $this->logger?->warning(($e->getMessage() ?: 'Error while updating IBLOCK section') . ': ' . json_encode($item));
+            $result->setStopped();
+
         }
 
         return $result;
