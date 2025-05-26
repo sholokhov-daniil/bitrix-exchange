@@ -7,6 +7,7 @@ use Exception;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Messages\DataResultInterface;
 use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Messages\Type\EventResult;
 use Sholokhov\BitrixExchange\Messages\Type\Result;
 use Sholokhov\BitrixExchange\Preparation\UserField as Prepare;
 use Sholokhov\BitrixExchange\Exchange;
@@ -20,7 +21,7 @@ use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Bitrix\Main\Event;
 use Bitrix\Main\Loader;
-use Bitrix\Main\EventResult;
+use Bitrix\Main\EventResult as BXEventResult;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\LoaderException;
 use Bitrix\Main\ArgumentException;
@@ -146,7 +147,7 @@ class Element extends Exchange
         $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the "%s" highloadblock', $addResult->getId(), $this->getHlID()));
         $this->cache->set($item[$this->getPrimaryField()->getTo()], $addResult->getId());
 
-        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => $item, 'FIELDS' => $item, 'RESULT' => $result]))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['id' => $item, 'fields' => $item, 'result' => $result]))->send();
 
         return $result;
     }
@@ -169,9 +170,13 @@ class Element extends Exchange
             return $this->add($item);
         }
 
-        $resultBeforeUpdate = $this->beforeUpdate($item);
+        $resultBeforeUpdate = $this->beforeUpdate($itemID, $item);
         if (!$resultBeforeUpdate->isSuccess()) {
             return $result->addErrors($resultBeforeUpdate->getErrors());
+        }
+
+        if ($resultBeforeUpdate->isStopped()) {
+            return $result;
         }
 
         $updateResult = $this->entity::update($itemID, $item);
@@ -198,7 +203,7 @@ class Element extends Exchange
 
         $result->setData($itemID);
 
-        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['FIELDS' => $item, 'ID' => $itemID, 'RESULT' => $result]))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['fields' => $item, 'id' => $itemID, 'result' => $result]))->send();
 
         return $result;
     }
@@ -258,29 +263,35 @@ class Element extends Exchange
     /**
      * Событие перед обновлением элемента
      *
+     * @param int $id
      * @param array $item
-     * @return ResultInterface
+     * @return EventResult
      */
-    private function beforeUpdate(array &$item): ResultInterface
+    private function beforeUpdate(int $id, array &$item): EventResult
     {
-        $result = new Result;
+        $result = new EventResult();
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['FIELDS' => &$item['FIELDS']]);
-        $event->send();
+        try {
+            $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['fields' => &$item['FIELDS'], 'id' => $id, 'exchange' => $this,]);
+            $event->send();
 
-        foreach ($event->getResults() as $eventResult) {
-            if ($eventResult->getType() === EventResult::SUCCESS) {
-                continue;
-            }
+            foreach ($event->getResults() as $eventResult) {
+                if ($eventResult->getType() === BXEventResult::SUCCESS) {
+                    continue;
+                }
 
-            $parameters = $eventResult->getParameters();
-            if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                $result->addError(new Error('Error while updating IBLOCK element: stopped', 300, $item));
-            } else {
-                foreach ($parameters['ERRORS'] as $error) {
-                    $result->addError(new Error($error, 300, $item));
+                $parameters = $eventResult->getParameters();
+                if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
+                    $result->addError(new Error('Error while updating IBLOCK element: stopped', 300, $item));
+                } else {
+                    foreach ($parameters['ERRORS'] as $error) {
+                        $result->addError(new Error($error, 300, $item));
+                    }
                 }
             }
+        } catch (Exception $ex) {
+            $this->logger?->warning(($ex->getMessage() ?: 'An error occurred while updating IBLOCK element') . ': ' . $id);
+            $result->setStopped();
         }
 
         return $result;
@@ -290,28 +301,33 @@ class Element extends Exchange
      * Событие перед созданием элемента
      *
      * @param array $item
-     * @return ResultInterface
+     * @return EventResult
      */
-    private function beforeAdd(array $item): ResultInterface
+    private function beforeAdd(array $item): EventResult
     {
-        $result = new Result;
+        $result = new EventResult();
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['FIELDS' => &$item]);
-        $event->send();
+        try {
+            $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['fields' => &$item, 'exchange' => $this]);
+            $event->send();
 
-        foreach ($event->getResults() as $eventResult) {
-            if ($eventResult->getType() === EventResult::SUCCESS) {
-                continue;
-            }
+            foreach ($event->getResults() as $eventResult) {
+                if ($eventResult->getType() === BXEventResult::SUCCESS) {
+                    continue;
+                }
 
-            $parameters = $eventResult->getParameters();
-            if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                $result->addError(new Error('Error while adding Highloadblock element: stopped', 300, $item));
-            } else {
-                foreach ($parameters['ERRORS'] as $error) {
-                    $result->addError(new Error($error, 300, $item));
+                $parameters = $eventResult->getParameters();
+                if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
+                    $result->addError(new Error('Error while adding Highloadblock element: stopped', 300, $item));
+                } else {
+                    foreach ($parameters['ERRORS'] as $error) {
+                        $result->addError(new Error($error, 300, $item));
+                    }
                 }
             }
+        } catch (Exception $ex) {
+            $this->logger?->warning(($ex->getMessage() ?: 'An error occurred while adding highloadblock element') . ': ' . json_encode($item));
+            $result->setStopped();
         }
 
         return $result;

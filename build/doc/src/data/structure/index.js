@@ -60,6 +60,10 @@ export default () => [
                 code: 'import-iblock-section',
             },
             {
+                title: 'Элемент справочника',
+                code: 'import-hl-element',
+            },
+            {
                 title: 'Пользовательские свойства',
                 code: 'import-uf',
                 meta: {
