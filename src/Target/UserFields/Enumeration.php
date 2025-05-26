@@ -5,12 +5,14 @@ namespace Sholokhov\BitrixExchange\Target\UserFields;
 use Exception;
 use CUserFieldEnum;
 
+use Sholokhov\BitrixExchange\Exception\Target\ExchangeItemStoppedException;
 use Sholokhov\BitrixExchange\Exchange;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Helper\Helper;
 use Sholokhov\BitrixExchange\Messages\DataResultInterface;
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
 use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Messages\Type\EventResult;
 use Sholokhov\BitrixExchange\Messages\Type\ExchangeResult;
 use Sholokhov\BitrixExchange\Messages\Type\Result;
 use Sholokhov\BitrixExchange\Repository\Fields\UFRepository;
@@ -19,7 +21,7 @@ use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 
 use Bitrix\Main\Event;
 use Sholokhov\BitrixExchange\Messages\Type\Error;
-use Bitrix\Main\EventResult;
+use Bitrix\Main\EventResult as BXEventResult;
 
 class Enumeration extends Exchange
 {
@@ -58,6 +60,19 @@ class Enumeration extends Exchange
     public function getEntityId(): string
     {
         return $this->getOptions()->get('entity_id', '');
+    }
+
+    /**
+     * Получение кода свойства в которое производится импорт данных
+     *
+     * @return string
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    public function getPropertyCode(): string
+    {
+        return $this->getOptions()->get('property_code', '');
     }
 
     /**
@@ -108,6 +123,10 @@ class Enumeration extends Exchange
             return $result->addErrors($beforeAdd->getErrors());
         }
 
+        if ($beforeAdd->isStopped()) {
+            return $result;
+        }
+
         $uf = new CUserFieldEnum;
         $setResult = $uf->SetEnumValues(
             $this->getUserField()['ID'],
@@ -131,7 +150,7 @@ class Enumeration extends Exchange
         $this->cache->set($item[$primary->getTo()], (int)$enum['ID']);
         $result->setData((int)$enum['ID']);
 
-        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => (int)$enum['ID'], 'FIELDS' => $fields, 'RESULT' => $result]))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['id' => (int)$enum['ID'], 'fields' => $fields, 'result' => $result]))->send();
 
         return $result;
     }
@@ -164,6 +183,10 @@ class Enumeration extends Exchange
             return $result->addErrors($beforeUpdate->getErrors());
         }
 
+        if ($beforeUpdate->isStopped()) {
+            return $result;
+        }
+
         $this->searchEnum($fields[$primary->getTo()]);
 
         $uf = new CUserFieldEnum;
@@ -174,7 +197,7 @@ class Enumeration extends Exchange
         $this->logger?->debug(sprintf('Updated the value of the list with the ID "%s"', $enumId));
         $result->setData($enumId);
 
-        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['FIELDS' => $fields, 'ID' => $enumId, 'RESULT' => $result]))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['fields' => $fields, 'id' => $enumId, 'result' => $result]))->send();
 
         return $result;
     }
@@ -304,19 +327,6 @@ class Enumeration extends Exchange
     }
 
     /**
-     * Получение кода свойства в которое производится импорт данных
-     *
-     * @return string
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    private function getPropertyCode(): string
-    {
-        return $this->getOptions()->get('property_code', '');
-    }
-
-    /**
      * Список поддерживаемых полей значения свойства, для импортирования
      *
      * @return string[]
@@ -333,20 +343,21 @@ class Enumeration extends Exchange
      * Событие перед созданием
      *
      * @param array $item
-     * @return ResultInterface
+     * @return EventResult
      *
      * @version 1.0.0
      * @since 1.0.0
      */
-    private function beforeAdd(array $item): ResultInterface
+    private function beforeAdd(array $item): EventResult
     {
-        $result = new Result;
+        $result = new EventResult;
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['FIELDS' => &$item]);
+        try {
+        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['fields' => &$item]);
         $event->send();
 
         foreach ($event->getResults() as $eventResult) {
-            if ($eventResult->getType() === EventResult::SUCCESS) {
+            if ($eventResult->getType() === BXEventResult::SUCCESS) {
                 continue;
             }
 
@@ -359,6 +370,10 @@ class Enumeration extends Exchange
                 }
             }
         }
+        } catch (ExchangeItemStoppedException $exception) {
+            $this->logger?->warning('Adding of the UF property has been stopped:' . json_encode($item));
+            $result->setStopped();
+        }
 
         return $result;
     }
@@ -368,31 +383,36 @@ class Enumeration extends Exchange
      *
      * @param int $id
      * @param array $item
-     * @return ResultInterface
+     * @return EventResult
      *
      * @version 1.0.0
      * @since 1.0.0
      */
-    private function beforeUpdate(int $id, array $item): ResultInterface
+    private function beforeUpdate(int $id, array $item): EventResult
     {
-        $result = new Result;
+        $result = new EventResult;
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['FIELDS' => &$item, 'ID' => $id]);
-        $event->send();
+        try {
+            $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['fields' => &$item, 'id' => $id]);
+            $event->send();
 
-        foreach ($event->getResults() as $eventResult) {
-            if ($eventResult->getType() === EventResult::SUCCESS) {
-                continue;
-            }
+            foreach ($event->getResults() as $eventResult) {
+                if ($eventResult->getType() === BXEventResult::SUCCESS) {
+                    continue;
+                }
 
-            $parameters = $eventResult->getParameters();
-            if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                $result->addError(new Error('Error updating UF list property: stopped', 300, $item));
-            } else {
-                foreach ($parameters['ERRORS'] as $error) {
-                    $result->addError(new Error($error, 300, $item));
+                $parameters = $eventResult->getParameters();
+                if (empty($parameters['errors']) || !is_array($parameters['errors'])) {
+                    $result->addError(new Error('Error updating UF list property: stopped', 300, $item));
+                } else {
+                    foreach ($parameters['errors'] as $error) {
+                        $result->addError(new Error($error, 300, $item));
+                    }
                 }
             }
+        } catch (ExchangeItemStoppedException $exception) {
+            $this->logger?->warning(($exception->getMessage() ?: 'Updating of the UF property has been stopped') . ':' . json_encode($item));
+            $result->setStopped();
         }
 
         return $result;

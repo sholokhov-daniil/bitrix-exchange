@@ -50,6 +50,21 @@ export default () => [
             {
                 title: 'Файл',
                 code: 'import-file',
+            },
+            {
+                title: 'Пользовательские свойства',
+                code: 'import-uf',
+                meta: {
+                    seo: {
+                        h1: 'Импорт пользовательских свойств UF'
+                    }
+                },
+                children: [
+                    {
+                        title: 'Значение списка',
+                        code: 'import-uf-enumeration-value',
+                    }
+                ]
             }
         ]
     },

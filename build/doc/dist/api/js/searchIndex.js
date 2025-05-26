@@ -91,6 +91,36 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Sholokhov-BitrixExchange-Bootstrap-Validator.html#property_exchange"
         },                {
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Exception\\ExchangeException",
+            "name": "ExchangeException",
+            "summary": "\u041E\u0441\u043D\u043E\u0432\u043D\u043E\u0435\u0020\u0438\u0441\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435\u0020\u043E\u0431\u043C\u0435\u043D\u0430",
+            "url": "classes/Sholokhov-BitrixExchange-Exception-ExchangeException.html"
+        },                {
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Exception\\ExchangeException\u003A\u003AgetContext\u0028\u0029",
+            "name": "getContext",
+            "summary": "\u041F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u0435\u0020\u043A\u043E\u043D\u0442\u0435\u043A\u0441\u0442\u0430\u0020\u0438\u0441\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044F",
+            "url": "classes/Sholokhov-BitrixExchange-Exception-ExchangeException.html#method_getContext"
+        },                {
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Exception\\ExchangeException\u003A\u003AsetContext\u0028\u0029",
+            "name": "setContext",
+            "summary": "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0430\u0020\u043A\u043E\u043D\u0442\u0435\u043A\u0441\u0442\u0430\u0020\u0438\u0441\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044F",
+            "url": "classes/Sholokhov-BitrixExchange-Exception-ExchangeException.html#method_setContext"
+        },                {
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Exception\\ExchangeException\u003A\u003A\u0024context",
+            "name": "context",
+            "summary": "\u041A\u043E\u043D\u0442\u0435\u043A\u0441\u0442\u0020\u0438\u0441\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044F",
+            "url": "classes/Sholokhov-BitrixExchange-Exception-ExchangeException.html#property_context"
+        },                {
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Exception\\Target\\ExchangeItemStoppedException",
+            "name": "ExchangeItemStoppedException",
+            "summary": "\u0418\u0441\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435\u0020\u043E\u0437\u043D\u0430\u0447\u0430\u044E\u0449\u0435\u0435\u0020\u043F\u0440\u0438\u043D\u0443\u0434\u0438\u0442\u0435\u043B\u044C\u043D\u0443\u044E\u0020\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0443\u0020\u043E\u0431\u043C\u0435\u043D\u0430\u0020\u044D\u043B\u0435\u043C\u0435\u043D\u0442\u0430.",
+            "url": "classes/Sholokhov-BitrixExchange-Exception-Target-ExchangeItemStoppedException.html"
+        },                {
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Exception\\Target\\ExchangeItemStoppedException\u003A\u003A__construct\u0028\u0029",
+            "name": "__construct",
+            "summary": "",
+            "url": "classes/Sholokhov-BitrixExchange-Exception-Target-ExchangeItemStoppedException.html#method___construct"
+        },                {
             "fqsen": "\\Sholokhov\\BitrixExchange\\Exchange",
             "name": "Exchange",
             "summary": "",
@@ -346,25 +376,25 @@ Search.appendIndex(
             "summary": "\u041F\u0440\u0438\u0020\u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u0438\u0020\u0441\u0443\u0449\u043D\u043E\u0441\u0442\u0438\u0020\u043F\u043E\u043F\u044B\u0442\u0430\u0435\u0442\u0441\u044F\u0020\u0441\u043E\u0437\u0434\u0430\u0442\u044C",
             "url": "classes/Sholokhov-BitrixExchange-Fields-Field.html#method_setCreatedLink"
         },                {
-            "fqsen": "\\Sholokhov\\BitrixExchange\\Fields\\Field\u003A\u003AgetOut\u0028\u0029",
-            "name": "getOut",
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Fields\\Field\u003A\u003AgetFrom\u0028\u0029",
+            "name": "getFrom",
             "summary": "\u041F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u0435\u0020\u043F\u0443\u0442\u0438\u0020\u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u0438\u044F\u0020\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u044F\u0020\u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0430",
-            "url": "classes/Sholokhov-BitrixExchange-Fields-Field.html#method_getOut"
+            "url": "classes/Sholokhov-BitrixExchange-Fields-Field.html#method_getFrom"
         },                {
-            "fqsen": "\\Sholokhov\\BitrixExchange\\Fields\\Field\u003A\u003AsetOut\u0028\u0029",
-            "name": "setOut",
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Fields\\Field\u003A\u003AsetFrom\u0028\u0029",
+            "name": "setFrom",
             "summary": "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0430\u0020\u043F\u0443\u0442\u0438\u0020\u0440\u0430\u0437\u043C\u0435\u0449\u0435\u043D\u0438\u044F\u0020\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u044F\u0020\u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0430",
-            "url": "classes/Sholokhov-BitrixExchange-Fields-Field.html#method_setOut"
+            "url": "classes/Sholokhov-BitrixExchange-Fields-Field.html#method_setFrom"
         },                {
-            "fqsen": "\\Sholokhov\\BitrixExchange\\Fields\\Field\u003A\u003AgetIn\u0028\u0029",
-            "name": "getIn",
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Fields\\Field\u003A\u003AgetTo\u0028\u0029",
+            "name": "getTo",
             "summary": "\u041A\u043E\u0434\u0020\u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0430\u0020\u0432\u0020\u043A\u043E\u0442\u043E\u0440\u043E\u0435\u0020\u0431\u0443\u0434\u0435\u0442\u0020\u0437\u0430\u043F\u0438\u0441\u0430\u043D\u043E\u0020\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435",
-            "url": "classes/Sholokhov-BitrixExchange-Fields-Field.html#method_getIn"
+            "url": "classes/Sholokhov-BitrixExchange-Fields-Field.html#method_getTo"
         },                {
-            "fqsen": "\\Sholokhov\\BitrixExchange\\Fields\\Field\u003A\u003AsetIn\u0028\u0029",
-            "name": "setIn",
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Fields\\Field\u003A\u003AsetTo\u0028\u0029",
+            "name": "setTo",
             "summary": "\u0423\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0430\u0020\u043A\u043E\u0434\u0430\u0020\u0432\u0020\u043A\u043E\u0442\u043E\u0440\u044B\u0439\u0020\u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C\u043E\u0020\u0437\u0430\u043F\u0438\u0441\u0430\u0442\u044C\u0020\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435",
-            "url": "classes/Sholokhov-BitrixExchange-Fields-Field.html#method_setIn"
+            "url": "classes/Sholokhov-BitrixExchange-Fields-Field.html#method_setTo"
         },                {
             "fqsen": "\\Sholokhov\\BitrixExchange\\Fields\\Field\u003A\u003AgetPreparation\u0028\u0029",
             "name": "getPreparation",
@@ -421,15 +451,15 @@ Search.appendIndex(
             "summary": "\u041F\u0440\u0438\u0020\u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0438\u0438\u0020\u0441\u0432\u044F\u0437\u0443\u044E\u0449\u0435\u0439\u0020\u0441\u0443\u0449\u043D\u043E\u0441\u0442\u0438\u0020\u043F\u0440\u043E\u0438\u0437\u0432\u0435\u0441\u0442\u0438\u0020\u0435\u0433\u043E\u0020\u0441\u043E\u0437\u0434\u0430\u043D\u0438\u0435.",
             "url": "classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_isCreatedLink"
         },                {
-            "fqsen": "\\Sholokhov\\BitrixExchange\\Fields\\FieldInterface\u003A\u003AgetOut\u0028\u0029",
-            "name": "getOut",
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Fields\\FieldInterface\u003A\u003AgetFrom\u0028\u0029",
+            "name": "getFrom",
             "summary": "\u041F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u0435\u0020\u043F\u0443\u0442\u0438\u0020\u0445\u0440\u0430\u043D\u0435\u043D\u0438\u044F\u0020\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u044F",
-            "url": "classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getOut"
+            "url": "classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getFrom"
         },                {
-            "fqsen": "\\Sholokhov\\BitrixExchange\\Fields\\FieldInterface\u003A\u003AgetIn\u0028\u0029",
-            "name": "getIn",
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Fields\\FieldInterface\u003A\u003AgetTo\u0028\u0029",
+            "name": "getTo",
             "summary": "\u041A\u043E\u0434\u0020\u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0430\u0020\u0432\u0020\u043A\u043E\u0442\u043E\u0440\u043E\u0435\u0020\u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C\u043E\u0020\u0437\u0430\u043F\u0438\u0441\u0430\u0442\u044C\u0020\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435",
-            "url": "classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getIn"
+            "url": "classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getTo"
         },                {
             "fqsen": "\\Sholokhov\\BitrixExchange\\Fields\\FieldInterface\u003A\u003AgetPreparation\u0028\u0029",
             "name": "getPreparation",
@@ -710,6 +740,26 @@ Search.appendIndex(
             "name": "context",
             "summary": "",
             "url": "classes/Sholokhov-BitrixExchange-Messages-Type-Error.html#property_context"
+        },                {
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Messages\\Type\\EventResult",
+            "name": "EventResult",
+            "summary": "\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0020\u0432\u044B\u0437\u043E\u0432\u0430\u0020\u0441\u043E\u0431\u044B\u0442\u0438\u044F\u0020\u043E\u0431\u043C\u0435\u043D\u0430",
+            "url": "classes/Sholokhov-BitrixExchange-Messages-Type-EventResult.html"
+        },                {
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Messages\\Type\\EventResult\u003A\u003AisStopped\u0028\u0029",
+            "name": "isStopped",
+            "summary": "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430\u0020\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0438\u0020\u043E\u0431\u043C\u0435\u043D\u0430\u0020\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435\u043C",
+            "url": "classes/Sholokhov-BitrixExchange-Messages-Type-EventResult.html#method_isStopped"
+        },                {
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Messages\\Type\\EventResult\u003A\u003AsetStopped\u0028\u0029",
+            "name": "setStopped",
+            "summary": "\u0424\u043B\u0430\u0433\u0020\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043A\u0438\u0020\u043E\u0431\u043C\u0435\u043D\u0430\u0020\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u044F",
+            "url": "classes/Sholokhov-BitrixExchange-Messages-Type-EventResult.html#method_setStopped"
+        },                {
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Messages\\Type\\EventResult\u003A\u003A\u0024stopped",
+            "name": "stopped",
+            "summary": "\u041E\u0431\u043C\u0435\u043D\u0020\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u0435\u043C\u0020\u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u0435\u043D\u043E",
+            "url": "classes/Sholokhov-BitrixExchange-Messages-Type-EventResult.html#property_stopped"
         },                {
             "fqsen": "\\Sholokhov\\BitrixExchange\\Messages\\Type\\ExchangeResult",
             "name": "ExchangeResult",
@@ -2651,6 +2701,11 @@ Search.appendIndex(
             "summary": "\u041F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u0435\u0020\u0438\u0434\u0435\u043D\u0442\u0438\u0444\u0438\u043A\u0430\u0442\u043E\u0440\u0430\u0020\u0441\u0443\u0449\u043D\u043E\u0441\u0442\u0438\u0020\u043A\u043E\u0442\u043E\u0440\u043E\u0439\u0020\u043E\u0442\u043D\u043E\u0441\u0438\u0442\u0441\u044F\u0020\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u0441\u043A\u043E\u0435\u0020\u0441\u0432\u043E\u0439\u0441\u0442\u0432\u043E\u0028UF\u0029",
             "url": "classes/Sholokhov-BitrixExchange-Target-UserFields-Enumeration.html#method_getEntityId"
         },                {
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Target\\UserFields\\Enumeration\u003A\u003AgetPropertyCode\u0028\u0029",
+            "name": "getPropertyCode",
+            "summary": "\u041F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u0435\u0020\u043A\u043E\u0434\u0430\u0020\u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0430\u0020\u0432\u0020\u043A\u043E\u0442\u043E\u0440\u043E\u0435\u0020\u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0441\u044F\u0020\u0438\u043C\u043F\u043E\u0440\u0442\u0020\u0434\u0430\u043D\u043D\u044B\u0445",
+            "url": "classes/Sholokhov-BitrixExchange-Target-UserFields-Enumeration.html#method_getPropertyCode"
+        },                {
             "fqsen": "\\Sholokhov\\BitrixExchange\\Target\\UserFields\\Enumeration\u003A\u003Aexists\u0028\u0029",
             "name": "exists",
             "summary": "\u041F\u0440\u043E\u0432\u0435\u0440\u043A\u0430\u0020\u043D\u0430\u043B\u0438\u0447\u0438\u044F\u0020\u0437\u043D\u0430\u0447\u0435\u043D\u0438\u044F\u0020\u0441\u043F\u0438\u0441\u043A\u0430",
@@ -2700,11 +2755,6 @@ Search.appendIndex(
             "name": "getUfRepository",
             "summary": "\u041F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u0435\u0020\u0445\u0440\u0430\u043D\u0438\u043B\u0438\u0449\u0430\u0020\u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u0438\u0020\u043E\u0020\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u0441\u043A\u0438\u0445\u0020\u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0430\u0445\u0020\u0028UF\u0029",
             "url": "classes/Sholokhov-BitrixExchange-Target-UserFields-Enumeration.html#method_getUfRepository"
-        },                {
-            "fqsen": "\\Sholokhov\\BitrixExchange\\Target\\UserFields\\Enumeration\u003A\u003AgetPropertyCode\u0028\u0029",
-            "name": "getPropertyCode",
-            "summary": "\u041F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u0435\u0020\u043A\u043E\u0434\u0430\u0020\u0441\u0432\u043E\u0439\u0441\u0442\u0432\u0430\u0020\u0432\u0020\u043A\u043E\u0442\u043E\u0440\u043E\u0435\u0020\u043F\u0440\u043E\u0438\u0437\u0432\u043E\u0434\u0438\u0442\u0441\u044F\u0020\u0438\u043C\u043F\u043E\u0440\u0442\u0020\u0434\u0430\u043D\u043D\u044B\u0445",
-            "url": "classes/Sholokhov-BitrixExchange-Target-UserFields-Enumeration.html#method_getPropertyCode"
         },                {
             "fqsen": "\\Sholokhov\\BitrixExchange\\Target\\UserFields\\Enumeration\u003A\u003AgetSupportedFields\u0028\u0029",
             "name": "getSupportedFields",
@@ -2780,6 +2830,16 @@ Search.appendIndex(
             "name": "Bootstrap",
             "summary": "",
             "url": "namespaces/sholokhov-bitrixexchange-bootstrap.html"
+        },                {
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Exception",
+            "name": "Exception",
+            "summary": "",
+            "url": "namespaces/sholokhov-bitrixexchange-exception.html"
+        },                {
+            "fqsen": "\\Sholokhov\\BitrixExchange\\Exception\\Target",
+            "name": "Target",
+            "summary": "",
+            "url": "namespaces/sholokhov-bitrixexchange-exception-target.html"
         },                {
             "fqsen": "\\Sholokhov\\BitrixExchange\\Factory\\Highloadblock",
             "name": "Highloadblock",

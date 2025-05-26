@@ -9,7 +9,11 @@ import {exampleDataFormat} from "@/data/codes/php/target/import/file";
 <template>
   <main-container>
     <h1>Импорт файлов</h1>
-    <p>Класс: <api-link path="classes/Sholokhov-BitrixExchange-Target-File.html">File</api-link></p>
+    <p>
+      Класс: <api-link path="classes/Sholokhov-BitrixExchange-Target-File.html">File</api-link>
+      <br>
+      Наследник класса: <api-link path="classes/Sholokhov-BitrixExchange-Exchange.html">Exchange</api-link>
+    </p>
   </main-container>
 
   <main-container>
