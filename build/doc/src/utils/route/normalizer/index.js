@@ -34,13 +34,6 @@ const componentMap = {
     'import-hl-element': () => import('@/pages/target/import/hl/ElementPage.vue'),
     'import-uf': () => import('@/pages/SectionPage.vue'),
     'import-uf-enumeration-value': () => import('@/pages/target/import/uf/enumeration/ValuePage.vue'),
-    'events': () => import("@/pages/events/EventPage.vue"),
-    'events-highload': () => import("@/pages/SectionPage.vue"),
-    'events-highload-import-element': () => import("@/pages/events/highload/ElementPage.vue"),
-    'events-iblock': () => import("@/pages/SectionPage.vue"),
-    'events-iblock-element': () => import("@/pages/events/iblock/ElementPage.vue"),
-    'events-iblock-property': () => import("@/pages/SectionPage.vue"),
-    'events-iblock-property-list-enumeration': () => import("@/pages/events/iblock/property/ListEnumiration.vue"),
 };
 
 const pathMap = {
@@ -58,13 +51,6 @@ const pathMap = {
     'import-hl-element': 'hl-element/:hash?',
     'import-uf': 'uf',
     'import-uf-enumeration-value': 'enum-value/:hash?',
-    'events': '/events',
-    'events-highload': 'highload',
-    'events-highload-import-element': 'element',
-    'events-iblock': 'iblock',
-    'events-iblock-element': 'element/:hash?',
-    'events-iblock-property': 'property',
-    'events-iblock-property-list-enumeration': 'list-enumeration/:hash?',
 }
 
 
