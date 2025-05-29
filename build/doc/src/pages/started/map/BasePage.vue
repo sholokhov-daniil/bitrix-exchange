@@ -13,6 +13,8 @@ import {
 import CodeBlock from "@/components/block-code/CodeBlock.vue";
 import AlertMessage from "@/components/messages/AlertMessage.vue";
 import TableContents from "@/components/table-contents/TableContents.vue";
+import TableBlock from "@/components/table/TableBlock.vue";
+import CardContainer from "@/components/container/CardContainer.vue";
 
 const data = reactive({
   tableContents: [
@@ -47,7 +49,7 @@ const data = reactive({
     <table-contents :items="data.tableContents" />
   </main-container>
 
-  <main-container>
+  <card-container>
     <h2 id="start">Введение</h2>
     <p>
       Карта обмена является неотъемлемый частью в успешном обмене.
@@ -71,9 +73,9 @@ const data = reactive({
       <br>
       Если вы внимательный читатель, то могли обратить внимание на сеттер <b>setPrimary</b> - указывает, что данное поле является ключевым на основе которого будет происходит поиск других элементов, и приниматься решение необходимости добавления или обновления.
     </p>
-  </main-container>
+  </card-container>
 
-  <main-container>
+  <card-container>
     <h2 id="structure">Структура</h2>
     <p>Класс: <api-link path="classes/Sholokhov-BitrixExchange-Fields-Field.html">Field</api-link></p>
 
@@ -81,15 +83,15 @@ const data = reactive({
       Класс описания имеет стандартный набор методов, позволяющий настроить взаимодействие между источником данных и сущностью в которую производится запись.
       Все стандартные классы описывающие свойство являются наследниками данного объекта.
     </p>
-    <table class="table table-dark table-striped">
-      <thead>
-        <tr>
-          <td>Наименование</td>
-          <td>Обязательное</td>
-          <td>Тип данных</td>
-          <td>Описание</td>
-        </tr>
-      </thead>
+    <table-block>
+
+      <tr>
+        <td>Наименование</td>
+        <td>Обязательное</td>
+        <td>Тип данных</td>
+        <td>Описание</td>
+      </tr>
+
       <tr>
         <td>setPrimary</td>
         <td><b>Да</b></td>
@@ -131,7 +133,7 @@ const data = reactive({
           Наш нормализатор произведет форматирование значения к нужному формату
         </td>
       </tr>
-    </table>
+    </table-block>
 
     <alert-message>
       <template #header>
@@ -139,9 +141,9 @@ const data = reactive({
       </template>
       <p>В карте должно быть только одно свойство, которое выступает идентификационным <b>(setPrimary)</b></p>
     </alert-message>
-  </main-container>
+  </card-container>
 
-  <main-container>
+  <card-container>
     <h2 id="normalize">Нормализация значения</h2>
     <p>
       Рассмотрим пример использования пользовательского обработчика значений, в поле "user" хранятся значения формата <b>{фамилия}|{возраст}</b>.
@@ -155,9 +157,9 @@ const data = reactive({
     </ul>
 
     <code-block :code="codeNormalize" />
-  </main-container>
+  </card-container>
 
-  <main-container>
+  <card-container>
     <h2 id="preparation">Преобразователь значения</h2>
     <p>
       Каждое свойство наделено возможностью указания собственного преобразователя данных, если значение необходимо обработать уникальным подходом и игнорировать альтернативные решения.
@@ -176,9 +178,9 @@ const data = reactive({
     </p>
 
     <code-block :code="codePreparation" />
-  </main-container>
+  </card-container>
 
-  <main-container>
+  <card-container>
     <h2 id="depth">Вложенный путь</h2>
     <p>
       В некоторых случаях нам может потребоваться получить значения внутри итерируемого объекта.
@@ -210,5 +212,5 @@ const data = reactive({
     </p>
 
     <code-block :code="codeChildrenFirst" />
-  </main-container>
+  </card-container>
 </template>

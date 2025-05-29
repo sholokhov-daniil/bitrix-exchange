@@ -4,6 +4,7 @@ import ApiLink from "@/components/link/ApiLink.vue";
 import AlertMessage from "@/components/messages/AlertMessage.vue";
 import CodeBlock from "@/components/block-code/CodeBlock.vue";
 import {exampleDataFormat} from "@/data/codes/php/target/import/file";
+import TableBlock from "@/components/table/TableBlock.vue";
 </script>
 
 <template>
@@ -44,8 +45,8 @@ import {exampleDataFormat} from "@/data/codes/php/target/import/file";
       Импорт поддерживает следующий формат конфигурации (иные ключи пропускаются и не используются):
     </p>
 
-    <table class="table table-dark table-striped">
-      <thead>
+    <table-block>
+      <template #head>
         <tr>
           <td>Название</td>
           <td>Обязательное</td>
@@ -53,7 +54,8 @@ import {exampleDataFormat} from "@/data/codes/php/target/import/file";
           <td>Значение по умолчанию</td>
           <td>Описание</td>
         </tr>
-      </thead>
+      </template>
+
       <tr>
         <td>module_id</td>
         <td>Нет</td>
@@ -61,6 +63,7 @@ import {exampleDataFormat} from "@/data/codes/php/target/import/file";
         <td>iblock</td>
         <td>Модуль, которому относится файл</td>
       </tr>
-    </table>
+    </table-block>
+
   </main-container>
 </template>

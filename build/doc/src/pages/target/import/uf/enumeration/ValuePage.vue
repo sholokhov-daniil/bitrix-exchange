@@ -14,6 +14,7 @@ import {
 import CardContainer from "@/components/container/CardContainer.vue";
 import {reactive} from "vue";
 import TableContents from "@/components/table-contents/TableContents.vue";
+import TableBlock from "@/components/table/TableBlock.vue";
 
 const data = reactive({
   tableContents: [
@@ -96,16 +97,17 @@ const data = reactive({
       Импорт поддерживает следующий формат конфигурации (иные ключи пропускаются и не используются):
     </p>
 
-    <table class="table table-dark table-striped">
-      <thead>
-      <tr>
-        <td>Название</td>
-        <td>Обязательное</td>
-        <td>Тип данных</td>
-        <td>Значение по умолчанию</td>
-        <td>Описание</td>
-      </tr>
-      </thead>
+    <table-block>
+      <template #head>
+        <tr>
+          <td>Название</td>
+          <td>Обязательное</td>
+          <td>Тип данных</td>
+          <td>Значение по умолчанию</td>
+          <td>Описание</td>
+        </tr>
+      </template>
+
       <tr>
         <td>entity_id</td>
         <td>Да</td>
@@ -120,7 +122,7 @@ const data = reactive({
         <td>Нет</td>
         <td>Свойство, в которое производится импорт значения</td>
       </tr>
-    </table>
+    </table-block>
   </card-container>
 
   <card-container>
@@ -159,16 +161,17 @@ const data = reactive({
       Передаваемые параметры в обработчик
     </p>
 
-    <table class="table table-dark table-striped">
-      <thead>
-      <tr>
-        <td>Название</td>
-        <td>Обязательное</td>
-        <td>Тип данных</td>
-        <td>Передается по ссылке</td>
-        <td>Описание</td>
-      </tr>
-      </thead>
+    <table-block>
+      <template #head>
+        <tr>
+          <td>Название</td>
+          <td>Обязательное</td>
+          <td>Тип данных</td>
+          <td>Передается по ссылке</td>
+          <td>Описание</td>
+        </tr>
+      </template>
+
       <tr>
         <td>fields</td>
         <td>Да</td>
@@ -183,7 +186,7 @@ const data = reactive({
         <td>Нет</td>
         <td>Идентификатор значения списка, который было обновляться</td>
       </tr>
-    </table>
+    </table-block>
 
     <alert-message>
       <template #header>Внимание</template>
@@ -220,16 +223,17 @@ const data = reactive({
       Передаваемые параметры в обработчик
     </p>
 
-    <table class="table table-dark table-striped">
-      <thead>
-      <tr>
-        <td>Название</td>
-        <td>Обязательное</td>
-        <td>Тип данных</td>
-        <td>Передается по ссылке</td>
-        <td>Описание</td>
-      </tr>
-      </thead>
+    <table-block>
+      <template #head>
+        <tr>
+          <td>Название</td>
+          <td>Обязательное</td>
+          <td>Тип данных</td>
+          <td>Передается по ссылке</td>
+          <td>Описание</td>
+        </tr>
+      </template>
+
       <tr>
         <td>fields</td>
         <td>Да</td>
@@ -253,7 +257,7 @@ const data = reactive({
         <td>Нет</td>
         <td>Результат обновления элемента</td>
       </tr>
-    </table>
+    </table-block>
 
     <p>Событие не позволяет вмешаться в процесс обмена, а только служит флагом, дря разработчика</p>
     <h4>Пример подписки на событие</h4>
@@ -272,16 +276,17 @@ const data = reactive({
       Передаваемые параметры в обработчик
     </p>
 
-    <table class="table table-dark table-striped">
-      <thead>
-      <tr>
-        <td>Название</td>
-        <td>Обязательное</td>
-        <td>Тип данных</td>
-        <td>Передается по ссылке</td>
-        <td>Описание</td>
-      </tr>
-      </thead>
+    <table-block>
+      <template #head>
+        <tr>
+          <td>Название</td>
+          <td>Обязательное</td>
+          <td>Тип данных</td>
+          <td>Передается по ссылке</td>
+          <td>Описание</td>
+        </tr>
+      </template>
+
       <tr>
         <td>fields</td>
         <td>Да</td>
@@ -289,7 +294,7 @@ const data = reactive({
         <td>Да</td>
         <td>Подготовленные данные, которые будут принимать участие в обновлении.</td>
       </tr>
-    </table>
+    </table-block>
 
     <alert-message>
       <template #header>Внимание</template>
@@ -326,16 +331,17 @@ const data = reactive({
       Передаваемые параметры в обработчик
     </p>
 
-    <table class="table table-dark table-striped">
-      <thead>
-      <tr>
-        <td>Название</td>
-        <td>Обязательное</td>
-        <td>Тип данных</td>
-        <td>Передается по ссылке</td>
-        <td>Описание</td>
-      </tr>
-      </thead>
+    <table-block>
+      <template #head>
+        <tr>
+          <td>Название</td>
+          <td>Обязательное</td>
+          <td>Тип данных</td>
+          <td>Передается по ссылке</td>
+          <td>Описание</td>
+        </tr>
+      </template>
+
       <tr>
         <td>fields</td>
         <td>Да</td>
@@ -359,7 +365,7 @@ const data = reactive({
         <td>Нет</td>
         <td>Результат добавления элемента</td>
       </tr>
-    </table>
+    </table-block>
 
     <p>Событие не позволяет вмешаться в процесс обмена, а только служит флагом, дря разработчика</p>
     <h4>Пример подписки на событие</h4>

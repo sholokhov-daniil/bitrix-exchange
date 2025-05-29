@@ -1,10 +1,10 @@
 <script setup>
 import CodeBlock from "@/components/block-code/CodeBlock.vue";
-import MainContainer from "@/components/container/MainContainer.vue";
+import CardContainer from "@/components/container/CardContainer.vue";
 </script>
 
 <template>
-  <main-container>
+  <card-container>
     <template #header>
       <h2>Почему именно мы</h2>
     </template>
@@ -22,9 +22,9 @@ import MainContainer from "@/components/container/MainContainer.vue";
         <li>Минимальная версия редакция bitrix "Старт"</li>
       </ul>
     </template>
-  </main-container>
+  </card-container>
 
-  <main-container>
+  <card-container>
     <template #header>
       <h2 id="installed">Установка</h2>
     </template>
@@ -35,5 +35,5 @@ import MainContainer from "@/components/container/MainContainer.vue";
           lang="bash"
       />
     </template>
-  </main-container>
+  </card-container>
 </template>

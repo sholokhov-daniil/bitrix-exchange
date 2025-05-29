@@ -4,7 +4,7 @@ import {route} from '@/route';
 import { createVCodeBlock } from '@wdns/vue-code-block';
 
 import './App.css';
-import 'bootstrap/dist/js/bootstrap.min.js';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 import 'prismjs';

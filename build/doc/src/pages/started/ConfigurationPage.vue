@@ -6,6 +6,7 @@ import {deactivate, setResult, map, logger, preparation} from '@/data/codes/php/
 import TableContents from "@/components/table-contents/TableContents.vue";
 import ApiLink from "@/components/link/ApiLink.vue";
 import AlertMessage from "@/components/messages/AlertMessage.vue";
+import CardContainer from "@/components/container/CardContainer.vue";
 
 const data = reactive({
   tableContents: [
@@ -43,7 +44,7 @@ const data = reactive({
     <table-contents :items="data.tableContents" />
   </main-container>
 
-  <main-container>
+  <card-container>
     <template #header>
       <h2 id="vvedenie">Введение</h2>
     </template>
@@ -72,9 +73,9 @@ const data = reactive({
     <p>
       Каждый отдельно взятый обмен содержит свои доступные параметры и значения. Все доступные обмены описаны в блоке <router-link :to="{name: 'import'}">Импорт</router-link>
     </p>
-  </main-container>
+  </card-container>
 
-  <main-container>
+  <card-container>
     <h3 id="on-deactivate">Включение деактивации</h3>
     <p>
       После обмена данных производит деактивацию всех значений, которые не приняли участие.
@@ -84,9 +85,9 @@ const data = reactive({
     </p>
 
     <CodeBlock :code="deactivate" />
-  </main-container>
+  </card-container>
 
-  <main-container>
+  <card-container>
     <template #header>
       <h2 id="set-result">Результат обмена</h2>
     </template>
@@ -104,9 +105,9 @@ const data = reactive({
       Метод <b>setResultRepository</b> принимает значение, которое является <a href="https://www.php.net/manual/en/language.types.callable.php" target="_blank">callable</a>,
       и вернет новый объект хранилища реализующий интерфейс <a href="./api/classes/Sholokhov-BitrixExchange-Repository-Result-ResultRepositoryInterface.html" target="_blank">ResultRepositoryInterface</a>.
     </p>
-  </main-container>
+  </card-container>
 
-  <main-container>
+  <card-container>
     <h2 id="map">Карта обмена</h2>
     <p>
       Карта обмена указывается через отдельный сеттер <b>setMap</b>, который ожидает массив объектов <router-link :to="{name: 'map'}">описывающих связи</router-link>.
@@ -116,9 +117,9 @@ const data = reactive({
     </p>
 
     <code-block :code="map" />
-  </main-container>
+  </card-container>
 
-  <main-container>
+  <card-container>
     <h2 id="logger">Логирование</h2>
     <p>
       Каждый обмен обязан производить логирование результата своей работы.
@@ -129,9 +130,9 @@ const data = reactive({
       Рассмотрим пример указания произвольного механизма журналирования
     </p>
     <code-block :code="logger" />
-  </main-container>
+  </card-container>
 
-  <main-container>
+  <card-container>
     <h2 id="preparation">Преобразователь</h2>
     <p>
       Преобразователь данных работает с нормализованными данными(обработанными и приведенными к типу данных с которой умеет работать сущность).
@@ -156,5 +157,5 @@ const data = reactive({
 
     <code-block :code="preparation" />
 
-  </main-container>
+  </card-container>
 </template>

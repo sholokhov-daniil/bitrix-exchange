@@ -1,6 +1,11 @@
 export default () => [
     {
         title: 'Начало работы',
+        code: 'started',
+        redirect: {
+            name: 'installation'
+        },
+        isVirtualParent: true,
         children: [
             {
                 title: 'Установка',

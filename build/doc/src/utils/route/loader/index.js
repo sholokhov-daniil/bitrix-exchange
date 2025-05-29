@@ -1,24 +1,37 @@
 import Structure from "@/data/structure/index";
-import Normalize from "@/utils/route/normalizer";
+import {normalize} from "@/utils/route/normalizer";
 
 export const Routes = getItems(Structure());
 
 function getItems(iterator) {
     const result = [];
 
-    for(let item of iterator) {
-        let menuItem = Normalize(item);
-
-        if (!Object.keys(menuItem).length) {
-            continue;
+    const register = function(item) {
+        const route = makeRoute(item);
+        if (route) {
+            result.push(route);
         }
-
-        if (Array.isArray(item.children)) {
-            menuItem.children = getItems(menuItem.children) || [];
-        }
-
-        result.push(menuItem);
     }
 
+    iterator.forEach(item => {
+        if (!item.code) {
+            return;
+        }
+
+        if (item.isVirtualParent) {
+            if (item.children && item.children.length) {
+                item.children.forEach(register);
+                delete item.children;
+            }
+        }
+
+        register(item);
+    });
+
     return result;
+}
+
+function makeRoute(item) {
+    const route = normalize(item);
+    return Object.keys(route).length ? route : null;
 }

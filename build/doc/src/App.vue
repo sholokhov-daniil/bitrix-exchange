@@ -1,23 +1,16 @@
 <script setup>
 import LeftMenuSource from '@/data/structure';
-import LeftMenuTree from "@/components/menu/left/LeftMenuTree.vue";
+import SideBar from "@/components/sitebar/SideBar.vue";
 </script>
 
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-2">
-        <h1><RouterLink to="/">Exchange</RouterLink></h1>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-2">
-        <LeftMenuTree :items="LeftMenuSource()"/>
+      <div class="col-xl-2 col-lg-3 col-md">
+        <side-bar :items="LeftMenuSource()" />
       </div>
       <div class="col">
-        <transition>
-          <router-view />
-        </transition>
+        <router-view />
       </div>
     </div>
   </div>
