@@ -6,10 +6,10 @@ import SideBar from "@/components/sitebar/SideBar.vue";
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-xl-2 col-lg-3 col-md">
+      <div class="col-lg-3 col-md-6">
         <side-bar :items="LeftMenuSource()" />
       </div>
-      <div class="col">
+      <div class="col-lg-7 col-md-6">
         <router-view />
       </div>
     </div>
