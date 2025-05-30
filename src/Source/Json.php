@@ -2,13 +2,13 @@
 
 namespace Sholokhov\BitrixExchange\Source;
 
+use Bitrix\Main\Diag\Debug;
 use Iterator;
 use ArrayIterator;
+use Sholokhov\BitrixExchange\Helper\Helper;
 
 /**
  * Источник данных на основе json строки
- *
- * @internal Наследуемся на свой страх и риск
  *
  * @package Source
  * @since 1.0.0
@@ -16,6 +16,24 @@ use ArrayIterator;
  */
 class Json implements Iterator
 {
+    /**
+     * JSON строка
+     *
+     * @var string
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    private readonly string $json;
+
+    /**
+     * Конфигурация источника данных
+     *
+     * @var array
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    private readonly array $options;
+
     /**
      * JSON хранит множественное значение
      *
@@ -36,16 +54,14 @@ class Json implements Iterator
 
     /**
      * @param string $json JSON строка
-     * @param string|int|null $sourceKey Ключ из которого необходимо брать данные. Если не указать, что подгружаются все данные
-     *
+     * @param array $options Конфигурация источника
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function __construct(
-        private readonly string $json,
-        private readonly string|int|null $sourceKey = null,
-    )
+    public function __construct(string $json, array $options = [])
     {
+        $this->json = $json;
+        $this->options = $options;
     }
 
     /**
@@ -56,11 +72,7 @@ class Json implements Iterator
      */
     public function current(): mixed
     {
-        if (!isset($this->iterator)) {
-            $this->iterator = $this->loadIterator();
-        }
-
-        return $this->iterator->current();
+        return $this->getIterator()->current();
     }
 
 
@@ -73,22 +85,12 @@ class Json implements Iterator
      */
     public function isMultiple(): bool
     {
-        return $this->multiple;
+        return (bool)$this->options['multiple'];
     }
 
-    /**
-     * Указание формата данных (множественное или один элемент)
-     *
-     * @param bool $multiple
-     * @return $this
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public function setMultiple(bool $multiple = true): self
+    private function getIterator(): Iterator
     {
-        $this->multiple = $multiple;
-        return $this;
+        return $this->iterator ??= $this->loadIterator();
     }
 
     /**
@@ -102,7 +104,7 @@ class Json implements Iterator
     private function loadIterator(): Iterator
     {
         $data = $this->loadData();
-        return $this->multiple && is_array($data) ? new ArrayIterator($data) : new ArrayIterator([$data]);
+        return $this->isMultiple() && is_array($data) ? new ArrayIterator($data) : new ArrayIterator([$data]);
     }
 
     /**
@@ -121,15 +123,14 @@ class Json implements Iterator
 
         $data = json_decode($this->json, true);
 
-        if ($this->sourceKey !== null) {
-            if (is_array($data)) {
-                $data = $data[$this->sourceKey];
-            } else {
-                $data = null;
-            }
+        if (!is_array($data)) {
+            return null;
         }
 
-        return $data;
+
+        $sourceKey = $this->getSourceKey();
+
+        return $sourceKey ? Helper::getArrValueByPath($data, $sourceKey) : $data;
     }
 
     /**
@@ -140,7 +141,7 @@ class Json implements Iterator
      */
     public function next(): void
     {
-        $this->iterator->next();
+        $this->getIterator()->next();
     }
 
     /**
@@ -151,7 +152,7 @@ class Json implements Iterator
      */
     public function key(): mixed
     {
-        return $this->iterator->key();
+        return $this->getIterator()->key();
     }
 
     /**
@@ -162,7 +163,7 @@ class Json implements Iterator
      */
     public function valid(): bool
     {
-        return $this->iterator->valid();
+        return $this->getIterator()->valid();
     }
 
     /**
@@ -173,6 +174,19 @@ class Json implements Iterator
      */
     public function rewind(): void
     {
-        $this->iterator->rewind();
+        $this->getIterator()->rewind();
+    }
+
+    /**
+     * Ключ в котором хранятся данные источника
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    protected function getSourceKey(): string
+    {
+        return (string)($this->options['source_key'] ?? '');
     }
 }

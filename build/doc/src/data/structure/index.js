@@ -50,6 +50,14 @@ export default () => [
             {
                 title: 'Медленный XML',
                 code: 'source-xml',
+            },
+            {
+                title: 'Json',
+                code: 'source-json'
+            },
+            {
+                title: 'Json файл',
+                code: 'source-json-file'
             }
         ],
     },
