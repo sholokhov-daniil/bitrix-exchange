@@ -2,24 +2,27 @@
 
 namespace Sholokhov\BitrixExchange\Target\IBlock\Property;
 
+use Throwable;
 use Exception;
 use CIBlockPropertyEnum;
 
+use Sholokhov\BitrixExchange\Exception\Target\ExchangeItemStoppedException;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Messages\DataResultInterface;
 use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+use Sholokhov\BitrixExchange\Messages\Type\EventResult;
 use Sholokhov\BitrixExchange\Messages\Type\Result;
 use Sholokhov\BitrixExchange\Target\IBlock\IBlock;
 use Sholokhov\BitrixExchange\Repository\IBlock\PropertyRepository;
 
 use Sholokhov\BitrixExchange\Helper\Helper;
+use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
 use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
 
-use Sholokhov\BitrixExchange\Messages\Type\Error;
 use Bitrix\Main\Event;
-use Bitrix\Main\EventResult;
+use Bitrix\Main\EventResult as BXEventResult;
 use Bitrix\Iblock\PropertyTable;
 use Bitrix\Main\LoaderException;
 
@@ -55,6 +58,31 @@ class PropertyEnumeration extends IBlock
      * @since 1.0.0
      */
     public const AFTER_ADD_EVENT = 'onAfterIBlockPropertyEnumerationAdd';
+
+    /**
+     * Получение информации о свойстве
+     *
+     * @return array
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    public function getProperty(): array
+    {
+        return $this->getPropertyRepository()->get($this->getPropertyCode(), []);
+    }
+
+    /**
+     * Получение кода свойства в которое производится импорт данных
+     *
+     * @return string
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    public function getPropertyCode(): string
+    {
+        return $this->getOptions()->get('property_code', '');
+    }
 
     /**
      * Проверка наличия значения списка
@@ -93,8 +121,7 @@ class PropertyEnumeration extends IBlock
      *
      * @param array $item
      * @return DataResultInterface
-     * @throws LoaderException
-     *
+     * @throws Exception
      * @version 1.0.0
      * @since 1.0.0
      */
@@ -109,6 +136,10 @@ class PropertyEnumeration extends IBlock
             return $result->addErrors($beforeAdd->getErrors());
         }
 
+        if ($beforeAdd->isStopped()) {
+            return $result;
+        }
+
         if ($enumId = CIBlockPropertyEnum::Add($fields)) {
             $result->setData((int)$enumId);
             $this->logger?->debug(sprintf('Added the value of the list with the ID "%s"', $enumId));
@@ -117,7 +148,7 @@ class PropertyEnumeration extends IBlock
             $result->addError(new Error('An error occurred when creating the list value', 500, $fields));
         }
 
-        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['ID' => $enumId, 'FIELDS' => $fields, 'RESULT' => $result]))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['id' => $enumId, 'fields' => $fields, 'result' => $result]))->send();
 
         return $result;
     }
@@ -127,8 +158,7 @@ class PropertyEnumeration extends IBlock
      *
      * @param array $item
      * @return DataResultInterface
-     * @throws LoaderException
-     *
+     * @throws Exception
      * @version 1.0.0
      * @since 1.0.0
      */
@@ -150,6 +180,10 @@ class PropertyEnumeration extends IBlock
             return $result->addErrors($beforeUpdate->getErrors());
         }
 
+        if ($beforeUpdate->isStopped()) {
+            return $result;
+        }
+
         if (!CIBlockPropertyEnum::Update($enumId, $fields)) {
             return $result->addError(new Error('An error occurred when creating the list value', 500, $fields));
         }
@@ -157,7 +191,7 @@ class PropertyEnumeration extends IBlock
         $this->logger?->debug(sprintf('Updated the value of the list with the ID "%s"', $enumId));
         $result->setData($enumId);
 
-        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['FIELDS' => $fields, 'ID' => $enumId, 'RESULT' => $result]))->send();
+        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['fields' => $fields, 'id' => $enumId, 'result' => $result]))->send();
 
         return $result;
     }
@@ -182,7 +216,6 @@ class PropertyEnumeration extends IBlock
      *
      * @param array $item
      * @return array
-     * @throws LoaderException
      *
      * @version 1.0.0
      * @since 1.0.0
@@ -215,33 +248,6 @@ class PropertyEnumeration extends IBlock
     private function getSupportedFields(): array
     {
         return ['VALUE', 'ID', 'SORT', 'DEF', 'XML_ID', 'EXTERNAL_ID'];
-    }
-
-    /**
-     * Получение информации о свойстве
-     *
-     * @return array
-     * @throws LoaderException
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    private function getProperty(): array
-    {
-        return $this->getPropertyRepository()->get($this->getPropertyCode(), []);
-    }
-
-    /**
-     * Получение кода свойства в которое производится импорт данных
-     *
-     * @return string
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    private function getPropertyCode(): string
-    {
-        return $this->getOptions()->get('property_code', '');
     }
 
     /**
@@ -324,31 +330,37 @@ class PropertyEnumeration extends IBlock
      *
      * @param int $id
      * @param array $item
-     * @return ResultInterface
+     * @return EventResult
      *
      * @version 1.0.0
      * @since 1.0.0
      */
-    private function beforeUpdate(int $id, array $item): ResultInterface
+    private function beforeUpdate(int $id, array $item): EventResult
     {
-        $result = new Result;
+        $result = new EventResult;
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['FIELDS' => &$item, 'ID' => $id]);
-        $event->send();
+        try {
+            $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['fields' => &$item, 'id' => $id]);
+            $event->send();
 
-        foreach ($event->getResults() as $eventResult) {
-            if ($eventResult->getType() === EventResult::SUCCESS) {
-                continue;
-            }
+            foreach ($event->getResults() as $eventResult) {
+                if ($eventResult->getType() === BXEventResult::SUCCESS) {
+                    continue;
+                }
 
-            $parameters = $eventResult->getParameters();
-            if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                $result->addError(new Error('Error updating IBLOCK list property: stopped', 300, $item));
-            } else {
-                foreach ($parameters['ERRORS'] as $error) {
-                    $result->addError(new Error($error, 300, $item));
+                $parameters = $eventResult->getParameters();
+                if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
+                    $result->addError(new Error('Error updating IBLOCK list property: stopped', 300, $item));
+                } else {
+                    foreach ($parameters['ERRORS'] as $error) {
+                        $result->addError(new Error($error, 300, $item));
+                    }
                 }
             }
+        } catch (ExchangeItemStoppedException $exception) {
+            $stoppedMessage = $exception->getMessage() ?: ('Updating of the iblock property has been stopped: ' . json_encode($item));
+            $this->logger?->warning($stoppedMessage);
+            $result->setStopped();
         }
 
         return $result;
@@ -358,31 +370,37 @@ class PropertyEnumeration extends IBlock
      * Событие перед созданием
      *
      * @param array $item
-     * @return ResultInterface
+     * @return EventResult
      *
      * @version 1.0.0
      * @since 1.0.0
      */
-    private function beforeAdd(array $item): ResultInterface
+    private function beforeAdd(array $item): EventResult
     {
-        $result = new Result;
+        $result = new EventResult;
 
-        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['FIELDS' => &$item]);
-        $event->send();
+        try {
+            $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['fields' => &$item]);
+            $event->send();
 
-        foreach ($event->getResults() as $eventResult) {
-            if ($eventResult->getType() === EventResult::SUCCESS) {
-                continue;
-            }
+            foreach ($event->getResults() as $eventResult) {
+                if ($eventResult->getType() === BXEventResult::SUCCESS) {
+                    continue;
+                }
 
-            $parameters = $eventResult->getParameters();
-            if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                $result->addError(new Error('Error adding IBLOCK list property: stopped', 300, $item));
-            } else {
-                foreach ($parameters['ERRORS'] as $error) {
-                    $result->addError(new Error($error, 300, $item));
+                $parameters = $eventResult->getParameters();
+                if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
+                    $result->addError(new Error('Error adding IBLOCK list property: stopped', 300, $item));
+                } else {
+                    foreach ($parameters['ERRORS'] as $error) {
+                        $result->addError(new Error($error, 300, $item));
+                    }
                 }
             }
+        } catch (Throwable $throwable) {
+            $stoppedMessage = $throwable->getMessage() ?: ('Adding of the iblock property has been stopped: ' . json_encode($item));
+            $this->logger?->warning($stoppedMessage);
+            $result->setStopped();
         }
 
         return $result;

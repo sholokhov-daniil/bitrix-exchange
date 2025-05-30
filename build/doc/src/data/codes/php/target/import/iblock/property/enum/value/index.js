@@ -31,7 +31,7 @@ $source = [
 
 export const exampleStart = `
 use Sholokhov\\BitrixExchange\\Fields\\Field;
-use Sholokhov\\BitrixExchange\\Target\\UserFields\\Enumeration;
+use Sholokhov\\BitrixExchange\\Target\\IBlock\\Property\\PropertyEnumeration;
 
 $data = [
     [
@@ -55,11 +55,11 @@ $map = [
 ];
 
 $options = [
-    'entity_id' => 'HLBLOCK_1',
-    'property_code' => 'UF_COLOR'
+    'iblock_id' => '1',
+    'property_code' => 'COLOR'
 ];
 
-$exchange = new Enumeration($options);
+$exchange = new PropertyEnumeration($options);
 $exchange->setMap($map);
 $exchange->execute($data);
 
@@ -72,7 +72,7 @@ use Bitrix\\Main\\EventManager;
 
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onBeforeUFEnumerationUpdate',
+    'onBeforeIBlockPropertyEnumerationUpdate',
     function(Event $event) {
         $parameters = &$event->getParameters();
         $parameters['fields']['VALUE'] = 'Теперь такое название';
@@ -96,15 +96,15 @@ use Sholokhov\\BitrixExchange\\Exception\\Target\\ExchangeItemStoppedException;
 **/
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onBeforeUFEnumerationUpdate',
+    'onBeforeIBlockPropertyEnumerationUpdate',
     function(Event $event) {
         /** @var $exchange Enumeration **/
         $exchange = $event->getParameter('exchange');
         $parameters = $event->getParameters();
         
         if (
-            $exchange->getEntityId() === 'HLBLOCK_1'
-            && $exchange->getPropertyCode() === 'UF_COLOR'
+            $exchange->getIBlockID() === 1'
+            && $exchange->getPropertyCode() === 'COLOR'
             && $event->getParameters()['fields']['XML_ID'] === 'black'
         ) {
             throw new ExchangeItemStoppedException('Так захотелось');
@@ -121,7 +121,7 @@ use Bitrix\\Main\\EventResult;
 use Bitrix\\Main\\EventManager;
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onBeforeUFEnumerationUpdate',
+    'onBeforeIBlockPropertyEnumerationUpdate',
     fn() => new EventResult(EventResult::ERROR, ['errors' => ['Ошибка 1', 'Ошибка 2']])
 );
 `;
@@ -129,7 +129,7 @@ EventManager::getInstance()->addEventHandler(
 export const afterUpdate = `
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onAfterUFEnumerationUpdate',
+    'onAfterIBlockPropertyEnumerationUpdate',
     fn() => CEvent::Send(....)
 );
 `;
@@ -142,7 +142,7 @@ use Bitrix\\Main\\EventManager;
 
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onBeforeUFEnumerationAdd',
+    'onBeforeIBlockPropertyEnumerationAdd',
     function(Event $event) {
         $parameters = &$event->getParameters();
         $parameters['fields']['VALUE'] = 'Теперь такое название';
@@ -159,7 +159,7 @@ use Bitrix\\Main\\EventManager;
 
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onBeforeUFEnumerationAdd',
+    'onBeforeIBlockPropertyEnumerationAdd',
     fn() => throw new ExchangeItemStoppedException('Так захотелось')
 );
 `;
@@ -170,7 +170,7 @@ use Bitrix\\Main\\EventResult;
 use Bitrix\\Main\\EventManager;
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onBeforeUFEnumerationAdd',
+    'onBeforeIBlockPropertyEnumerationAdd',
     fn() => new EventResult(EventResult::ERROR, ['errors' => ['Ошибка 1', 'Ошибка 2']])
 );
 `;
@@ -178,7 +178,7 @@ EventManager::getInstance()->addEventHandler(
 export const afterAdd = `
 EventManager::getInstance()->addEventHandler(
     'sholokhov.exchange',
-    'onAfterUFEnumerationAdd',
+    'onAfterIBlockPropertyEnumerationAdd',
     fn() => CEvent::Send(....)
 );
 `;

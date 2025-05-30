@@ -69,6 +69,16 @@ export default () => [
                 code: 'import-hl-element',
             },
             {
+                title: 'Свойства информационного блока',
+                code: 'import-iblock-property',
+                children: [
+                    {
+                        title: 'Значение списка',
+                        code: 'import-iblock-enumeration-value'
+                    }
+                ]
+            },
+            {
                 title: 'Пользовательские свойства',
                 code: 'import-uf',
                 meta: {

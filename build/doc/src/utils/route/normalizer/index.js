@@ -29,6 +29,7 @@ const componentMap = {
     'import-iblock-element': () => import('@/pages/target/import/iblock/ElementPage.vue'),
     'import-iblock-section': () => import('@/pages/target/import/iblock/SectionPage.vue'),
     'import-hl-element': () => import('@/pages/target/import/hl/ElementPage.vue'),
+    'import-iblock-enumeration-value': () => import('@/pages/target/import/iblock/property/enumiration/ValuePage.vue'),
     'import-uf-enumeration-value': () => import('@/pages/target/import/uf/enumeration/ValuePage.vue'),
 };
 
@@ -43,6 +44,8 @@ const pathMap = {
     'map-base': 'base/:hash?',
     'import': '/target',
     'import-file': 'file/:hash?',
+    'import-iblock-property': 'properties',
+    'import-iblock-enumeration-value': 'enum-value/:hash?',
     'import-iblock-element': 'iblock-element/:hash?',
     'import-iblock-section': 'iblock-section/:hash?',
     'import-hl-element': 'hl-element/:hash?',

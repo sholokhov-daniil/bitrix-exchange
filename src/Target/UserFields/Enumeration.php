@@ -353,25 +353,27 @@ class Enumeration extends Exchange
         $result = new EventResult;
 
         try {
-        $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['fields' => &$item]);
-        $event->send();
+            $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['fields' => &$item]);
+            $event->send();
 
-        foreach ($event->getResults() as $eventResult) {
-            if ($eventResult->getType() === BXEventResult::SUCCESS) {
-                continue;
-            }
+            foreach ($event->getResults() as $eventResult) {
+                if ($eventResult->getType() === BXEventResult::SUCCESS) {
+                    continue;
+                }
 
-            $parameters = $eventResult->getParameters();
-            if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                $result->addError(new Error('Error adding UF list property: stopped', 300, $item));
-            } else {
-                foreach ($parameters['ERRORS'] as $error) {
-                    $result->addError(new Error($error, 300, $item));
+                $parameters = $eventResult->getParameters();
+                if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
+                    $result->addError(new Error('Error adding UF list property: stopped', 300, $item));
+                } else {
+                    foreach ($parameters['ERRORS'] as $error) {
+                        $result->addError(new Error($error, 300, $item));
+                    }
                 }
             }
-        }
         } catch (ExchangeItemStoppedException $exception) {
-            $this->logger?->warning('Adding of the UF property has been stopped:' . json_encode($item));
+            $stoppedMessage = $exception->getMessage() ?: 'Adding of the UF property has been stopped:' . json_encode($item);
+            $this->logger?->warning($stoppedMessage);
+
             $result->setStopped();
         }
 
@@ -411,7 +413,8 @@ class Enumeration extends Exchange
                 }
             }
         } catch (ExchangeItemStoppedException $exception) {
-            $this->logger?->warning(($exception->getMessage() ?: 'Updating of the UF property has been stopped') . ':' . json_encode($item));
+            $stoppedMessage = $exception->getMessage() ?: ('Updating of the UF property has been stopped: ' . json_encode($item));
+            $this->logger?->warning($stoppedMessage);
             $result->setStopped();
         }
 

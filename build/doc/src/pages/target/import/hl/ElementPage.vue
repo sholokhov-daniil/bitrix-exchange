@@ -116,6 +116,25 @@ const data = reactive({
 
   <card-container>
     <template #header>
+      <h2 id="preparation">Преобразователи</h2>
+    </template>
+
+    <p>
+      Импорт элементов справочника поддерживает свойства следующих типов:
+    </p>
+    <ul>
+      <li>Дата</li>
+      <li>Дата и время</li>
+      <li>Список</li>
+      <li>Файл</li>
+      <li>Логическое значение</li>
+      <li>Привязка к элементу информационного блока</li>
+      <li>Привязка к разделу информационного блока</li>
+    </ul>
+  </card-container>
+
+  <card-container>
+    <template #header>
       <h2 id="events">События</h2>
     </template>
 
