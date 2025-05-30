@@ -42,11 +42,16 @@ export default () => [
     {
         title: 'Источник данных',
         code: 'source',
-        meta: {
-            seo: {
-                h1: 'Источники данных'
+        children: [
+            {
+                title: 'Быстрый XML',
+                code: 'source-simple-xml',
+            },
+            {
+                title: 'Медленный XML',
+                code: 'source-xml',
             }
-        }
+        ],
     },
     {
       title: 'Импорт',

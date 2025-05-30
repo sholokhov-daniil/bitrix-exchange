@@ -33,7 +33,7 @@ class Xml extends AbstractXml
      * @var AbstractXmlDynamic|null
      */
     private ?string $dataManager = null;
-    private int $rootTagDepth = 1;
+    private int $rootTagDepth = 0;
 
     public function __construct(string $path)
     {

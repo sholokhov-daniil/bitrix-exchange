@@ -97,9 +97,17 @@ abstract class AbstractXmlDynamic extends DataManager
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    public static function getElementsByName(string $name, int $depth = 1): array
+    public static function getElementsByName(string $name, int $depth = 0): array
     {
-        $parent = self::getRow(['filter' => ['=NAME' => $name, '=DEPTH_LEVEL' => $depth]]);
+        $filter = [
+            '=NAME' => $name
+        ];
+
+        if ($depth > 0) {
+            $filter['=DEPTH_LEVEL'] = $depth;
+        }
+
+        $parent = self::getRow(compact('filter'));
 
         if (!$parent) {
             return [];

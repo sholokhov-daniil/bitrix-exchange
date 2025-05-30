@@ -5,6 +5,7 @@ import AlertMessage from "@/components/messages/AlertMessage.vue";
 import CodeBlock from "@/components/block-code/CodeBlock.vue";
 import {exampleDataFormat} from "@/data/codes/php/target/import/file";
 import TableBlock from "@/components/table/TableBlock.vue";
+import CardContainer from "@/components/container/CardContainer.vue";
 </script>
 
 <template>
@@ -17,7 +18,7 @@ import TableBlock from "@/components/table/TableBlock.vue";
     </p>
   </main-container>
 
-  <main-container>
+  <card-container>
     <h2>Введение</h2>
     <p>
       Импорт файлов предназначен, для загрузки произвольных файлов в файловую систему сервера и регистрации в битриксе.
@@ -37,9 +38,9 @@ import TableBlock from "@/components/table/TableBlock.vue";
       Рассмотрим пример ожидаемого формата данных
     </p>
     <code-block :code="exampleDataFormat" />
-  </main-container>
+  </card-container>
 
-  <main-container>
+  <card-container>
     <h2>Конфигурация</h2>
     <p>
       Импорт поддерживает следующий формат конфигурации (иные ключи пропускаются и не используются):
@@ -65,5 +66,5 @@ import TableBlock from "@/components/table/TableBlock.vue";
       </tr>
     </table-block>
 
-  </main-container>
+  </card-container>
 </template>
