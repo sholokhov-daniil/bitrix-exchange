@@ -34,12 +34,12 @@ $data = [
 
 $map = [
     (new Fields\Field)
-        ->setPath('id')
-        ->setCode('XML_ID')
+        ->setFrom('id')
+        ->setTo('XML_ID')
         ->setPrimary(),
     (new Fields\Field)
-        ->setPath('name')
-        ->setCode('NAME'),
+        ->setFrom('name')
+        ->setFo('NAME'),
 ];
 
 $exchange = new Element;
@@ -48,9 +48,7 @@ $result = $exchange->execute($data);
 ````
 
 ## Документация
-Документация хранится в папке __docs__
-
-Для открытия документации не требуется сервер
+Более подробная документация хранится в директории __docs__
 <br>
 <br>
 
