@@ -2,11 +2,9 @@
 
 namespace Sholokhov\BitrixExchange\Target\IBlock;
 
-use Bitrix\Main\Diag\Debug;
 use Exception;
 use CIBlockElement;
 
-use Sholokhov\BitrixExchange\Events\ExchangeEvent;
 use Sholokhov\BitrixExchange\Exception\Target\ExchangeItemStoppedException;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Helper\Helper;

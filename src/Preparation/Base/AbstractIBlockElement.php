@@ -2,7 +2,6 @@
 
 namespace Sholokhov\BitrixExchange\Preparation\Base;
 
-use Bitrix\Main\Diag\Debug;
 use ReflectionException;
 
 use Sholokhov\BitrixExchange\Factory\Result\SimpleFactory;

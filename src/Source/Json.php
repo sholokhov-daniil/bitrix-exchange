@@ -2,7 +2,6 @@
 
 namespace Sholokhov\BitrixExchange\Source;
 
-use Bitrix\Main\Diag\Debug;
 use Iterator;
 use ArrayIterator;
 use Sholokhov\BitrixExchange\Helper\Helper;

@@ -2,7 +2,6 @@
 
 namespace Sholokhov\BitrixExchange\Events\Factory;
 
-use Bitrix\Main\Diag\Debug;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionException;

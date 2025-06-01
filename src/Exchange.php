@@ -2,7 +2,6 @@
 
 namespace Sholokhov\BitrixExchange;
 
-use Bitrix\Main\Diag\Debug;
 use Exception;
 use Throwable;
 use ReflectionException;

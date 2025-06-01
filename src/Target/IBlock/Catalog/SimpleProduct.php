@@ -2,7 +2,6 @@
 
 namespace Sholokhov\BitrixExchange\Target\IBlock\Catalog;
 
-use Bitrix\Main\Diag\Debug;
 use CPrice;
 use Exception;
 
@@ -46,8 +45,6 @@ class SimpleProduct extends Element
         if (!$result->isSuccess()) {
             return;
         }
-
-        Debug::dump($result);
 
         if ($id = $result->getData()) {
             $map = $this->getMap();

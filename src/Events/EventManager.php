@@ -2,8 +2,6 @@
 
 namespace Sholokhov\BitrixExchange\Events;
 
-use Bitrix\Main\Diag\Debug;
-
 /**
  * Менеджер внутренних изолированных событий
  *
