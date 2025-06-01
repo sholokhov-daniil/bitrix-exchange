@@ -2,9 +2,11 @@
 
 namespace Sholokhov\BitrixExchange\Target\IBlock;
 
+use Bitrix\Main\Diag\Debug;
 use Exception;
 use CIBlockElement;
 
+use Sholokhov\BitrixExchange\Events\ExchangeEvent;
 use Sholokhov\BitrixExchange\Exception\Target\ExchangeItemStoppedException;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Helper\Helper;
@@ -315,41 +317,6 @@ class Element extends IBlock
     }
 
     /**
-     * @return void
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    #[BootstrapConfiguration]
-    protected function bootstrapPrepares(): void
-    {
-        $iBlockID = $this->getIBlockID();
-        $this->addPrepared(new Prepare\Date($iBlockID))
-            ->addPrepared(new Prepare\DateTime($iBlockID))
-            ->addPrepared(new Prepare\Number($iBlockID))
-            ->addPrepared(new Prepare\Enumeration($iBlockID))
-            ->addPrepared(new Prepare\PropertyFile($iBlockID))
-            ->addPrepared(new Prepare\IBlockElement($iBlockID))
-            ->addPrepared(new Prepare\File)
-            ->addPrepared(new Prepare\IBlockSection($iBlockID))
-            ->addPrepared(new Prepare\HtmlText($iBlockID))
-            ->addPrepared(new Prepare\HandbookElement($iBlockID));
-        // Video
-        // Деньги
-        // Привязка к яндекс.карте
-        // Привязка к Google.Maps
-        // Привязка к пользователю
-        // Привязка к разделам автозаполнения
-        // Привязка к теме форума
-        // Привязка к товару(SKU)
-        // Привязка к файлу (на сервере)
-        // Привязка к элементам в виде списка
-        // Привязка к элементам по XML_ID
-        // Привязка к элементам с автозаполнением
-        // Счетчик
-    }
-
-    /**
      * Проверка, что поле является множественным
      *
      * @param FieldInterface $field
@@ -375,6 +342,41 @@ class Element extends IBlock
     protected function getPropertyRepository(): PropertyRepository
     {
         return $this->repository->get('property_repository');
+    }
+
+    /**
+     * @return void
+     *
+     * @version 1.0.0
+     * @since 1.0.0
+     */
+    #[BootstrapConfiguration]
+    private function bootstrapPrepares(): void
+    {
+        $iBlockID = $this->getIBlockID();
+        $this->addPrepared(new Prepare\Date($iBlockID))
+            ->addPrepared(new Prepare\DateTime($iBlockID))
+            ->addPrepared(new Prepare\Number($iBlockID))
+            ->addPrepared(new Prepare\Enumeration($iBlockID))
+            ->addPrepared(new Prepare\PropertyFile($iBlockID))
+            ->addPrepared(new Prepare\IBlockElement($iBlockID))
+            ->addPrepared(new Prepare\File)
+            ->addPrepared(new Prepare\IBlockSection($iBlockID))
+            ->addPrepared(new Prepare\HtmlText($iBlockID))
+            ->addPrepared(new Prepare\HandbookElement($iBlockID));
+        // Video
+        // Деньги
+        // Привязка к яндекс.карте
+        // Привязка к Google.Maps
+        // Привязка к пользователю
+        // Привязка к разделам автозаполнения
+        // Привязка к теме форума
+        // Привязка к товару(SKU)
+        // Привязка к файлу (на сервере)
+        // Привязка к элементам в виде списка
+        // Привязка к элементам по XML_ID
+        // Привязка к элементам с автозаполнением
+        // Счетчик
     }
 
     /**

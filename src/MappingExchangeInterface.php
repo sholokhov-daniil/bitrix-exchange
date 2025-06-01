@@ -2,6 +2,8 @@
 
 namespace Sholokhov\BitrixExchange;
 
+use Sholokhov\BitrixExchange\Fields\FieldInterface;
+
 /**
  * Структура обмена согласно пользовательской карте
  *
@@ -13,7 +15,7 @@ interface MappingExchangeInterface extends ExchangeInterface
     /**
      * Указание карты обмена данных
      *
-     * @param array $map
+     * @param FieldInterface[] $map
      * @return $this
      *
      * @since 1.0.0

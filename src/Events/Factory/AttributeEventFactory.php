@@ -2,12 +2,15 @@
 
 namespace Sholokhov\BitrixExchange\Events\Factory;
 
-use Closure;
+use Bitrix\Main\Diag\Debug;
 use ReflectionClass;
-use ReflectionException;
 use ReflectionMethod;
+use ReflectionException;
+
+use Sholokhov\BitrixExchange\Helper\Entity;
 use Sholokhov\BitrixExchange\Events\Event;
 use Sholokhov\BitrixExchange\Events\EventInterface;
+use Sholokhov\BitrixExchange\Target\Attributes\Event as Attribute;
 
 /**
  * Создает объекты события, которые зарегистрированы в объекте посредством атрибутов
@@ -16,21 +19,26 @@ use Sholokhov\BitrixExchange\Events\EventInterface;
  * @since 1.0.0
  * @version 1.0.0
  */
-class AttributeEvent
+readonly class AttributeEventFactory
 {
     /**
-     * @param object $entity Объект у которого производится поиск обработчиков
-     * @param string $attribute Атрибут, которым обозначаются методы обработчика
+     * Объект у которого производится поиск обработчиков
+     *
+     * @var object
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function __construct(
-        private readonly object $entity,
-        private readonly string $attribute,
-        private readonly string $type
-    )
+    private object $entity;
+
+    /**
+     * @param object $entity Объект у которого производится поиск обработчиков
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    public function __construct(object $entity)
     {
+        $this->entity = $entity;
     }
 
     /**
@@ -44,11 +52,17 @@ class AttributeEvent
      */
     public function make(): array
     {
-        return array_map(function(ReflectionMethod $method) {
+        return array_map(function(array $item) {
+            /** @var ReflectionMethod $method */
+            $method = $item['method'];
+
+            /** @var Attribute $attribute */
+            $attribute = $item['attribute'];
+
             $context = $method->isStatic() ? null : $this->entity;
             $callback = $method->getClosure($context);
 
-            return new Event($this->type, $callback);
+            return new Event($attribute->getType()->value, $callback);
         }, $this->parsing());
     }
 
@@ -72,8 +86,12 @@ class AttributeEvent
             $methods = $reflection->getMethods();
 
             foreach ($methods as $method) {
-                if ($method->getAttributes($this->attribute)) {
-                    $handlers[] = $method;
+                /** @var Attribute|null $attribute */
+                if ($attribute = Entity::getAttributeByMethod($method, Attribute::class)) {
+                    $handlers[] = [
+                        'method' => $method,
+                        'attribute' => $attribute,
+                    ];
                 }
             }
         }

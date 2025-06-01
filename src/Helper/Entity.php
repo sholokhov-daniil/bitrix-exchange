@@ -4,6 +4,7 @@ namespace Sholokhov\BitrixExchange\Helper;
 
 use ReflectionClass;
 use ReflectionException;
+use ReflectionMethod;
 
 /**
  * @package Helper
@@ -54,6 +55,22 @@ class Entity
     }
 
     /**
+     * Получение атрибута метода
+     *
+     * @param ReflectionMethod $method
+     * @param string $attribute
+     * @return object|null
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    public static function getAttributeByMethod(ReflectionMethod $method, string $attribute): ?object
+    {
+        $attribute = $method->getAttributes($attribute)[0] ?? null;
+        return $attribute?->newInstance();
+    }
+
+    /**
      * Получение атрибута из описания класса
      *
      * @param ReflectionClass $reflection
@@ -63,7 +80,7 @@ class Entity
      * @since 1.0.0
      * @version 1.0.0
      */
-    protected static function getAttributeByReflection(ReflectionClass $reflection, string $attribute): ?object
+    public static function getAttributeByReflection(ReflectionClass $reflection, string $attribute): ?object
     {
         $attribute = $reflection->getAttributes($attribute)[0] ?? null;
         return $attribute?->newInstance();

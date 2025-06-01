@@ -2,6 +2,8 @@
 
 namespace Sholokhov\BitrixExchange\Events;
 
+use Bitrix\Main\Diag\Debug;
+
 /**
  * Менеджер внутренних изолированных событий
  *
@@ -14,7 +16,7 @@ class EventManager
     /**
      * Зарегистрированные события
      *
-     * @var array
+     * @var EventInterface[][]
      *
      * @since 1.0.0
      * @version 1.0.0
@@ -37,7 +39,7 @@ class EventManager
             return [];
         }
 
-        return array_map(fn(Event $event) => $event->send(...$args), $this->events[$type]);
+        return array_map(fn(EventInterface $event) => $event->call(...$args), $this->events[$type]);
     }
 
     /**
@@ -52,6 +54,21 @@ class EventManager
     public function registration(EventInterface $event): self
     {
         $this->events[$event->getType()][] = $event;
+        return $this;
+    }
+
+    /**
+     * Регистрация списка событий
+     *
+     * @param array $events
+     * @return $this
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    public function registrationBulk(array $events): self
+    {
+        array_walk($events, $this->registration(...));
         return $this;
     }
 }

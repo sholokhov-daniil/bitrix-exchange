@@ -2,6 +2,7 @@
 
 namespace Sholokhov\BitrixExchange;
 
+use Bitrix\Main\Diag\Debug;
 use Exception;
 use Throwable;
 use ReflectionException;
@@ -10,6 +11,9 @@ use Sholokhov\BitrixExchange\Helper\Helper;
 use Sholokhov\BitrixExchange\Bootstrap\Validator;
 use Sholokhov\BitrixExchange\Fields\FieldInterface;
 use Sholokhov\BitrixExchange\Helper\LoggerHelper;
+use Sholokhov\BitrixExchange\Events\EventManager;
+use Sholokhov\BitrixExchange\Events\ExchangeEvent;
+use Sholokhov\BitrixExchange\Events\Factory\AttributeEventFactory;
 use Sholokhov\BitrixExchange\Messages\Type\Result;
 use Sholokhov\BitrixExchange\Messages\DataResultInterface;
 use Sholokhov\BitrixExchange\Messages\ExchangeResultInterface;
@@ -34,9 +38,22 @@ use Bitrix\Main\EventResult;
 use Bitrix\Main\NotImplementedException;
 
 use Psr\Log\LoggerAwareTrait;
-use Psr\Log\LoggerAwareInterface;
 
 /**
+ * Базовый класс обмена данными
+ *
+ *  <b>Методы отвечающие за конфигурацию обмена:</b>
+ *  <ul>
+ *      <li>{@see self::bootstrapEvents()} - Инициализация системных событий</li>
+ *      <li>{@see self::bootstrapValidationMapping()} - Инициализация механизма валидации карты обмена</li>
+ *      <li>{@see self::bootstrapRepository()} - Инициализация хранилища объекта обмена</li>
+ *  </ul>
+ *
+ *  <b>Методы отвечающие за валидацию конфигурации обмена:</b>
+ *  <ul>
+ *      <li>{@see self::mapValidate()} - Проверка корректности карты обмена</li>
+ *  </ul>
+ *
  * @since 1.0.0
  * @version 1.0.0
  */
@@ -44,74 +61,6 @@ use Psr\Log\LoggerAwareInterface;
 abstract class Exchange extends Application implements MappingExchangeInterface
 {
     use LoggerAwareTrait;
-
-    /**
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public const BEFORE_RUN = 'beforeRun';
-
-    /**
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public const AFTER_RUN = 'afterRun';
-
-    /**
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public const BEFORE_ADD = 'beforeAdd';
-
-    /**
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public const AFTER_ADD = 'afterAdd';
-
-    /**
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public const BEFORE_UPDATE = 'beforeUpdate';
-
-    /**
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public const AFTER_UPDATE = 'afterUpdate';
-
-    /**
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public const BEFORE_IMPORT_ITEM = 'beforeImportItem';
-
-    /**
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public const AFTER_IMPORT_ITEM = 'afterImportItem';
-
-    /**
-     * Карта обмена
-     *
-     * @var array
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    private array $map = [];
-
-    /**
-     * Время запуска обмена
-     *
-     * @var int
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    protected int $dateUp = 0;
 
     /**
      * Хранилище данных текущего обмена
@@ -209,9 +158,8 @@ abstract class Exchange extends Application implements MappingExchangeInterface
             return $result->addErrors($validate->getErrors());
         }
 
-        $this->dateUp = time();
-
-        (new Event(Helper::getModuleID(), self::BEFORE_RUN, ['exchange' => $this]))->send();
+        $this->getEventManager()->send(ExchangeEvent::BeforeRun->value, ['exchange' => $this]);
+        (new Event(Helper::getModuleID(),  ExchangeEvent::BeforeRun->value, ['exchange' => $this]))->send();
 
         try {
             foreach ($source as $item) {
@@ -234,13 +182,12 @@ abstract class Exchange extends Application implements MappingExchangeInterface
             $this->logger?->critical(LoggerHelper::exceptionToString($throwable));
         }
 
-        (new Event(Helper::getModuleID(), self::AFTER_RUN, ['exchange' => $this]))->send();
-
         if ($this->getOptions()->get('deactivate')) {
             $this->deactivate();
         }
 
-        $this->dateUp = 0;
+        $this->getEventManager()->send(ExchangeEvent::AfterRun->value, ['exchange' => $this]);
+        (new Event(Helper::getModuleID(), ExchangeEvent::AfterRun->value, ['exchange' => $this]))->send();
 
         return $result;
     }
@@ -268,21 +215,35 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      */
     public function getMap(): array
     {
-        return $this->map;
+        return $this->repository->get('map');
     }
 
     /**
      * Указание карты данных обмена
      *
-     * @param array $map
+     * @param FieldInterface[] $map
      * @return Exchange
      *
+     * @throws Exception
      * @since 1.0.0
      * @version 1.0.0
      */
     public function setMap(array $map): static
     {
-        $this->map = $map;
+        $primaryExist = false;
+
+        foreach ($map as $field) {
+            if ($field->isPrimary()) {
+                $primaryExist = true;
+                $this->repository->set('primary_field', $field);
+            }
+        }
+
+        if (!$primaryExist) {
+            throw new Exception("No key field found");
+        }
+
+        $this->repository->set('map', $map);
         return $this;
     }
 
@@ -347,17 +308,15 @@ abstract class Exchange extends Application implements MappingExchangeInterface
     /**
      * Проверка возможности запуска обмена данных
      *
-     * @return Result
-     *
+     * @return ResultInterface
      * @throws ReflectionException
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    protected function validate(): Result
+    protected function validate(): ResultInterface
     {
-        $bootstrap = new Validator($this);
-        return $bootstrap->run();
+        return (new Validator($this))->run();
     }
 
     /**
@@ -372,13 +331,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      */
     final protected function getPrimaryField(): FieldInterface
     {
-        foreach ($this->getMap() as $field) {
-            if ($field->isPrimary()) {
-                return $field;
-            }
-        }
-
-        throw new Exception("No key field found");
+        return $this->repository->get('primary_field');
     }
 
     /**
@@ -392,7 +345,8 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      */
     private function action(array $item): DataResultInterface
     {
-        (new Event(Helper::getModuleID(), self::BEFORE_IMPORT_ITEM, ['exchange' => $this, 'item' => &$item]))->send();
+        $this->getEventManager()->send(ExchangeEvent::BeforeImportItem->value, ['exchange' => $this, 'item' => &$item]);
+        (new Event(Helper::getModuleID(), ExchangeEvent::BeforeImportItem->value, ['exchange' => $this, 'item' => &$item]))->send();
 
         $prepareResult = $this->prepared($item);
 
@@ -403,7 +357,8 @@ abstract class Exchange extends Application implements MappingExchangeInterface
         $item = $prepareResult->getData();
 
         if ($this->exists($item)) {
-            $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE, ['exchange' => $this, 'item' => &$item]);
+            $this->getEventManager()->send(ExchangeEvent::BeforeUpdate->value, ['exchange' => $this, 'item' => &$item]);
+            $event = new Event(Helper::getModuleID(), ExchangeEvent::BeforeUpdate->value, ['exchange' => $this, 'item' => &$item]);
             $event->send();
 
             foreach ($event->getResults() as $eventResult) {
@@ -414,9 +369,12 @@ abstract class Exchange extends Application implements MappingExchangeInterface
             }
 
             $result = $this->update($item);
-            (new Event(Helper::getModuleID(), self::AFTER_UPDATE, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
+
+            $this->getEventManager()->send(ExchangeEvent::AfterUpdate->value, ['exchange' => $this, 'item' => $item, 'result' => $result]);
+            (new Event(Helper::getModuleID(), ExchangeEvent::AfterUpdate->value, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
         } else {
-            $event = new Event(Helper::getModuleID(), self::BEFORE_ADD, ['exchange' => $this, 'item' => &$item]);
+            $this->getEventManager()->send(ExchangeEvent::BeforeAdd->value, ['exchange' => $this, 'item' => &$item]);
+            $event = new Event(Helper::getModuleID(), ExchangeEvent::BeforeAdd->value, ['exchange' => $this, 'item' => &$item]);
 
             foreach ($event->getResults() as $eventResult) {
                 if ($eventResult->getType()!== EventResult::SUCCESS) {
@@ -426,10 +384,12 @@ abstract class Exchange extends Application implements MappingExchangeInterface
             }
 
             $result = $this->add($item);
-            (new Event(Helper::getModuleID(), self::AFTER_ADD, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
+            $this->getEventManager()->send(ExchangeEvent::AfterAdd->value, ['exchange' => $this, 'item' => $item, 'result' => $result]);
+            (new Event(Helper::getModuleID(), ExchangeEvent::AfterAdd->value, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
         }
 
-        (new Event(Helper::getModuleID(), self::AFTER_IMPORT_ITEM, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
+        $this->getEventManager()->send(ExchangeEvent::AfterImportItem->value);
+        (new Event(Helper::getModuleID(), ExchangeEvent::AfterImportItem->value, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
 
         return $result;
     }
@@ -496,6 +456,19 @@ abstract class Exchange extends Application implements MappingExchangeInterface
     }
 
     /**
+     * Получение менеджера событий
+     *
+     * @return EventManager
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    private function getEventManager(): EventManager
+    {
+        return $this->repository->get('event_manager');
+    }
+
+    /**
      * Валидация карты обмена
      *
      * @return ResultInterface
@@ -537,7 +510,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * @version 1.0.0
      */
     #[BootstrapConfiguration]
-    private function bootstrapMap(): void
+    private function bootstrapValidationMapping(): void
     {
         /** @var MapValidator $attribute */
         $attribute = Entity::getAttributeChain($this, MapValidator::class);
@@ -548,5 +521,22 @@ abstract class Exchange extends Application implements MappingExchangeInterface
         }
 
         $this->repository->set('map_validator', new $validator);
+    }
+
+    /**
+     * Инициализация и регистрация событий
+     * 
+     * @return void
+     *
+     * @throws ReflectionException
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    #[BootstrapConfiguration]
+    private function bootstrapEvents(): void
+    {
+        $manager = new EventManager;
+        $events = (new AttributeEventFactory($this))->make();
+        $this->repository->set('event_manager', $manager->registrationBulk($events));
     }
 }

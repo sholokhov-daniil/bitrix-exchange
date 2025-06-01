@@ -7,7 +7,6 @@ use ReflectionException;
 
 use Sholokhov\BitrixExchange\Messages\ResultInterface;
 use Sholokhov\BitrixExchange\Messages\Type\Result;
-use Sholokhov\BitrixExchange\Messages\Type\ExchangeResult;
 use Sholokhov\BitrixExchange\Target\Attributes\Validate;
 
 /**
@@ -30,13 +29,13 @@ class Validator
     }
 
     /**
-     * @return Result
+     * @return ResultInterface
      * @throws ReflectionException
      *
      * @since 1.0.0
      * @version 1.0.0
      */
-    public function run(): Result
+    public function run(): ResultInterface
     {
         $result = new Result;
 
