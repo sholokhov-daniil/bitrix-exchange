@@ -15,7 +15,7 @@
     <version number="3.0.0">
         <api>
             <source dsn=".">
-                <path>./src</path>
+                <path>./lib</path>
             </source>
         </api>
     </version>

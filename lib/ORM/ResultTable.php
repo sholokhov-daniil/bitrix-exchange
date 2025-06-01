@@ -18,6 +18,14 @@ use Bitrix\Main\SystemException;
 class ResultTable extends DataManager
 {
     /**
+     * Идентификатор записи
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    public const PC_ID = "ID";
+
+    /**
      * Идентификатор обмена
      *
      * @since 1.0.0
@@ -61,6 +69,11 @@ class ResultTable extends DataManager
     public static function getMap(): array
     {
         return [
+            (new Fields\IntegerField(self::PC_ID))
+                ->configureRequired()
+                ->configurePrimary()
+                ->configureAutocomplete(),
+
             (new Fields\StringField(self::PC_UID))
                 ->configureRequired(),
 

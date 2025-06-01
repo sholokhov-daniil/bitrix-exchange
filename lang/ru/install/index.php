@@ -1,0 +1,5 @@
+<?php
+$MESS["SHOLOKHOV_EXCHANGE_MODULE_NAME"] = "Exchange";
+$MESS["SHOLOKHOV_EXCHANGE_MODULE_DESCRIPTION"] = "Механизм обмена данных";
+$MESS["SHOLOKHOV_EXCHANGE_MODULE_INSTALL"] = "Установка модуля ";
+$MESS["SHOLOKHOV_EXCHANGE_MODULE_DELETE"] = "Удаление модуля ";

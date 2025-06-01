@@ -2,7 +2,7 @@
     "name": "sholokhov/bitrix-exchange",
     "keywords": ["bitrix", "exchange"],
     "homepage": "https://github.com/sholokhov-daniil/bitrix-exchange",
-    "type": "library",
+    "type": "bitrix-module",
     "license": "MIT",
     "authors": [
         {
@@ -32,7 +32,8 @@
     "scripts": {
         "doc": [
             "docker run --rm -v \"$(pwd):/data\" \"phpdoc/phpdoc:3\""
-        ]
+        ],
+        "started": "php bin/install.php"
     },
     "config": {
         "allow-plugins": {
