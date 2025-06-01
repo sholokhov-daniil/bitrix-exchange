@@ -239,7 +239,7 @@ class Section extends IBlock
     {
         $filter = [
             'IBLOCK_ID' => $this->getIBlockID(),
-            '<TIMESTAMP_X' => DateTime::createFromTimestamp($this->dateUp),
+            '<TIMESTAMP_X' => DateTime::createFromTimestamp($this->getDateStarted()),
             'ACTIVE' => 'Y',
         ];
         $select = ['ID'];

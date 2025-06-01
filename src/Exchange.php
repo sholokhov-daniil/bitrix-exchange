@@ -129,6 +129,35 @@ abstract class Exchange extends Application implements MappingExchangeInterface
     }
 
     /**
+     * Указание карты данных обмена
+     *
+     * @param FieldInterface[] $map
+     * @return Exchange
+     *
+     * @throws Exception
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    public function setMap(array $map): static
+    {
+        $primaryExist = false;
+
+        foreach ($map as $field) {
+            if ($field->isPrimary()) {
+                $primaryExist = true;
+                $this->repository->set('primary_field', $field);
+            }
+        }
+
+        if (!$primaryExist) {
+            throw new Exception("No key field found");
+        }
+
+        $this->repository->set('map', $map);
+        return $this;
+    }
+
+    /**
      * Запуск обмена
      *
      * @param iterable $source
@@ -158,7 +187,9 @@ abstract class Exchange extends Application implements MappingExchangeInterface
             return $result->addErrors($validate->getErrors());
         }
 
-        $this->getEventManager()->send(ExchangeEvent::BeforeRun->value, ['exchange' => $this]);
+        $this->repository->set('date_up', time());
+
+        $this->getEventManager()->send(ExchangeEvent::BeforeRun->value);
         (new Event(Helper::getModuleID(),  ExchangeEvent::BeforeRun->value, ['exchange' => $this]))->send();
 
         try {
@@ -186,8 +217,10 @@ abstract class Exchange extends Application implements MappingExchangeInterface
             $this->deactivate();
         }
 
-        $this->getEventManager()->send(ExchangeEvent::AfterRun->value, ['exchange' => $this]);
+        $this->getEventManager()->send(ExchangeEvent::AfterRun->value);
         (new Event(Helper::getModuleID(), ExchangeEvent::AfterRun->value, ['exchange' => $this]))->send();
+
+        $this->repository->set('date_up', 0);
 
         return $result;
     }
@@ -219,35 +252,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
     }
 
     /**
-     * Указание карты данных обмена
-     *
-     * @param FieldInterface[] $map
-     * @return Exchange
-     *
-     * @throws Exception
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    public function setMap(array $map): static
-    {
-        $primaryExist = false;
-
-        foreach ($map as $field) {
-            if ($field->isPrimary()) {
-                $primaryExist = true;
-                $this->repository->set('primary_field', $field);
-            }
-        }
-
-        if (!$primaryExist) {
-            throw new Exception("No key field found");
-        }
-
-        $this->repository->set('map', $map);
-        return $this;
-    }
-
-    /**
      * Добавить преобразователь данных обмена
      *
      * @param PreparationInterface $prepare
@@ -276,6 +280,20 @@ abstract class Exchange extends Application implements MappingExchangeInterface
     {
         $this->getOptions()->set('result_repository', $callback);
         return $this;
+    }
+
+    /**
+     * Получить время запуска обмена
+     *
+     * @final
+     * @return int
+     *
+     * @since 1.0.0
+     * @version 1.0.0
+     */
+    final protected function getDateStarted(): int
+    {
+        return $this->repository->get('date_up', 0);
     }
 
     /**
@@ -345,7 +363,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      */
     private function action(array $item): DataResultInterface
     {
-        $this->getEventManager()->send(ExchangeEvent::BeforeImportItem->value, ['exchange' => $this, 'item' => &$item]);
+        $this->getEventManager()->send(ExchangeEvent::BeforeImportItem->value, $item);
         (new Event(Helper::getModuleID(), ExchangeEvent::BeforeImportItem->value, ['exchange' => $this, 'item' => &$item]))->send();
 
         $prepareResult = $this->prepared($item);
@@ -357,7 +375,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
         $item = $prepareResult->getData();
 
         if ($this->exists($item)) {
-            $this->getEventManager()->send(ExchangeEvent::BeforeUpdate->value, ['exchange' => $this, 'item' => &$item]);
+            $this->getEventManager()->send(ExchangeEvent::BeforeUpdate->value, $item);
             $event = new Event(Helper::getModuleID(), ExchangeEvent::BeforeUpdate->value, ['exchange' => $this, 'item' => &$item]);
             $event->send();
 
@@ -370,10 +388,10 @@ abstract class Exchange extends Application implements MappingExchangeInterface
 
             $result = $this->update($item);
 
-            $this->getEventManager()->send(ExchangeEvent::AfterUpdate->value, ['exchange' => $this, 'item' => $item, 'result' => $result]);
+            $this->getEventManager()->send(ExchangeEvent::AfterUpdate->value, $item, $result);
             (new Event(Helper::getModuleID(), ExchangeEvent::AfterUpdate->value, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
         } else {
-            $this->getEventManager()->send(ExchangeEvent::BeforeAdd->value, ['exchange' => $this, 'item' => &$item]);
+            $this->getEventManager()->send(ExchangeEvent::BeforeAdd->value, $item);
             $event = new Event(Helper::getModuleID(), ExchangeEvent::BeforeAdd->value, ['exchange' => $this, 'item' => &$item]);
 
             foreach ($event->getResults() as $eventResult) {
@@ -384,11 +402,11 @@ abstract class Exchange extends Application implements MappingExchangeInterface
             }
 
             $result = $this->add($item);
-            $this->getEventManager()->send(ExchangeEvent::AfterAdd->value, ['exchange' => $this, 'item' => $item, 'result' => $result]);
+            $this->getEventManager()->send(ExchangeEvent::AfterAdd->value, $item, $result);
             (new Event(Helper::getModuleID(), ExchangeEvent::AfterAdd->value, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
         }
 
-        $this->getEventManager()->send(ExchangeEvent::AfterImportItem->value);
+        $this->getEventManager()->send(ExchangeEvent::AfterImportItem->value, $item, $result);
         (new Event(Helper::getModuleID(), ExchangeEvent::AfterImportItem->value, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
 
         return $result;

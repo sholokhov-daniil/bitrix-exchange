@@ -2,8 +2,6 @@
 
 namespace Sholokhov\BitrixExchange\Fields\Catalog;
 
-use Sholokhov\BitrixExchange\Fields\Field;
-
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
 use Bitrix\Currency\CurrencyManager;
@@ -11,13 +9,16 @@ use Bitrix\Currency\CurrencyManager;
 /**
  * Свойство отвечающее за валюту
  *
- * @version 1.0.0
  * @package Field
+ * @since 1.0.0
+ * @version 1.0.0
  */
-class PriceField extends Field implements PriceFieldInterface
+class PriceField extends CatalogField implements PriceFieldInterface
 {
     /**
      * @throws LoaderException
+     * @since 1.0.0
+     * @version 1.0.0
      */
     public function __construct()
     {
@@ -31,6 +32,8 @@ class PriceField extends Field implements PriceFieldInterface
      * Если значение на задано, то вернет на основе настроек сайта
      *
      * @return string
+     * @since 1.0.0
+     * @version 1.0.0
      */
     public function getCurrency(): string
     {
@@ -45,6 +48,9 @@ class PriceField extends Field implements PriceFieldInterface
      *
      * @param string|null $currency Валюта в которой указана цена
      * @return $this
+     *
+     * @since 1.0.0
+     * @version 1.0.0
      */
     public function setCurrency(string $currency = null): static
     {
