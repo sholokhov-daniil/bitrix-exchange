@@ -36,10 +36,6 @@ export default () => [
         ]
     },
     {
-        title: 'Документация кода',
-        link: './api/index.html',
-    },
-    {
         title: 'Источник данных',
         code: 'source',
         children: [
@@ -107,5 +103,9 @@ export default () => [
                 ]
             }
         ]
-    }
+    },
+    {
+        title: 'Документация кода',
+        link: './api/index.html',
+    },
 ];
