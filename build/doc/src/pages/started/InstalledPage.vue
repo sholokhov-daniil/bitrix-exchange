@@ -1,7 +1,5 @@
 <script setup>
-import CodeBlock from "@/components/block-code/CodeBlock.vue";
 import CardContainer from "@/components/container/CardContainer.vue";
-import {composer} from "@/data/codes/php/installer";
 </script>
 
 <template>
@@ -31,12 +29,17 @@ import {composer} from "@/data/codes/php/installer";
     </template>
 
     <template #default>
-      <h3>Пример установки через composer</h3>
-      <p>Пример вашего composer.json с установкой модуля в local/modules/</p>
+      <p>Переходим в одну из указанных директорий: </p>
+      <ul>
+        <li>/local/modules</li>
+        <li>/bitrix/modules</li>
+      </ul>
 
-
-      <p>Обмен доступен на Packagist <a href="https://packagist.org/packages/sholokhov/bitrix-exchange" target="_blank">sholokhov/bitrix-exchange</a> и доступен в пакетном менеджере  <a href="http://getcomposer.org/" target="_blank">Composer</a></p>
-      <CodeBlock :code="composer" />
+      <p>
+        Создаем директорию с названием: <b>sholokhov.exchange</b> и переходив в нее.
+        <br>
+        Скачиваем содержимое модуля через git или архив. После скачивания заходим в маркетплейс битрикса и устанавливаем
+      </p>
     </template>
   </card-container>
 </template>
