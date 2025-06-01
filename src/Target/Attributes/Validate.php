@@ -5,7 +5,7 @@ namespace Sholokhov\BitrixExchange\Target\Attributes;
 use Attribute;
 
 /**
- * Флаг, что метод отвечает за валидацию обмена
+ * Обозначает, что метод отвечает за валидацию обмена
  *
  * @package Attribute
  * @since 1.0.0

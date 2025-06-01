@@ -8,6 +8,7 @@ use Sholokhov\BitrixExchange\Events\ExchangeEvent;
 /**
  * Производит указание, что метод подписан на системное событие обмена
  *
+ * @package Attribute
  * @since 1.0.0
  * @version 1.0.0
  */
