@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\ORM;
+namespace Sholokhov\Exchange\ORM;
 
 use Exception;
 

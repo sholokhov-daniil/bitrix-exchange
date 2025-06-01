@@ -1,9 +1,9 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Preparation;
+namespace Sholokhov\Exchange\Preparation;
 
 use Countable;
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Fields\FieldInterface;
 
 /**
  * Цепочка преобразователей данных.

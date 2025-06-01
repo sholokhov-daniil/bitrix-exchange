@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Events;
+namespace Sholokhov\Exchange\Events;
 
 /**
  * Описание структуры события

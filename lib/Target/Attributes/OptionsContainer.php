@@ -1,9 +1,9 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Target\Attributes;
+namespace Sholokhov\Exchange\Target\Attributes;
 
 use Attribute;
-use Sholokhov\BitrixExchange\Repository\Types\Memory;
+use Sholokhov\Exchange\Repository\Types\Memory;
 
 /**
  * @package Attribute

@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Fields\Catalog;
+namespace Sholokhov\Exchange\Fields\Catalog;
 
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Fields\FieldInterface;
 
 /**
  * Структура свойства каталога

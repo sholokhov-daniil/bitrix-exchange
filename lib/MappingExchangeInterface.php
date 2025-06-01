@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange;
+namespace Sholokhov\Exchange;
 
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Fields\FieldInterface;
 
 /**
  * Структура обмена согласно пользовательской карте

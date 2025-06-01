@@ -8,7 +8,7 @@ import ApiLink from "@/components/link/ApiLink.vue";
 <template>
   <main-container>
     <h1>Свойство информационного блока</h1>
-    <p>Класс: <api-link path="classes/Sholokhov-BitrixExchange-Fields-IBlock-IBlockElementField.html">IBlockElementField</api-link></p>
+    <p>Класс: <api-link path="classes/Sholokhov-Exchange-Fields-IBlock-IBlockElementField.html">IBlockElementField</api-link></p>
 
     <p>
       Класс является наследником <router-link :to="{name: 'map-base'}">стандартного свойства</router-link> и поведение идентично ему.
@@ -16,9 +16,9 @@ import ApiLink from "@/components/link/ApiLink.vue";
 
     <p>
       Текущее свойство предназначено для описания <a href="https://dev.1c-bitrix.ru/learning/course/index.php?COURSE_ID=43&LESSON_ID=3399" target="_blank">пользовательских свойств</a> информационного блока,
-      и используется импортом <api-link path="classes/Sholokhov-BitrixExchange-Target-IBlock-Element.html">элементов</api-link> информационного блока.
+      и используется импортом <api-link path="classes/Sholokhov-Exchange-Target-IBlock-Element.html">элементов</api-link> информационного блока.
       <br>
-      Если импорт в ходе следующих действий встречает класс, который реализовывает интерфейс <api-link path="classes/Sholokhov-BitrixExchange-Fields-IBlock-ElementFieldInterface.html">ElementFieldInterface</api-link>, то работает как со свойством:
+      Если импорт в ходе следующих действий встречает класс, который реализовывает интерфейс <api-link path="classes/Sholokhov-Exchange-Fields-IBlock-ElementFieldInterface.html">ElementFieldInterface</api-link>, то работает как со свойством:
     </p>
     <ul>
       <li>Преобразование значения</li>

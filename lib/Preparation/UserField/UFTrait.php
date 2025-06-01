@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Preparation\UserField;
+namespace Sholokhov\Exchange\Preparation\UserField;
 
-use Sholokhov\BitrixExchange\Repository\Fields\UFRepository;
+use Sholokhov\Exchange\Repository\Fields\UFRepository;
 
 /**
  * @package Preparation

@@ -30,8 +30,8 @@ $source = [
 
 
 export const exampleStart = `
-use Sholokhov\\BitrixExchange\\Fields\\Field;
-use Sholokhov\\BitrixExchange\\Target\\IBlock\\Property\\PropertyEnumeration;
+use Sholokhov\\Exchange\\Fields\\Field;
+use Sholokhov\\Exchange\\Target\\IBlock\\Property\\PropertyEnumeration;
 
 $data = [
     [
@@ -87,8 +87,8 @@ use Bitrix\\Main\\Event;
 use Bitrix\\Main\\EventResult;
 use Bitrix\\Main\\EventManager;
 
-use Sholokhov\\BitrixExchange\\Target\\UserFields\\Enumeration;
-use Sholokhov\\BitrixExchange\\Exception\\Target\\ExchangeItemStoppedException;
+use Sholokhov\\Exchange\\Target\\UserFields\\Enumeration;
+use Sholokhov\\Exchange\\Exception\\Target\\ExchangeItemStoppedException;
 
 /**
  *  Отмена изменения элемента нужного свойства нужной сущности 

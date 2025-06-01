@@ -1,5 +1,5 @@
 export const example = `
-use Sholokhov\\BitrixExchange\\Source\\SimpleXml;
+use Sholokhov\\Exchange\\Source\\SimpleXml;
 
 $source = new SimpleXml('https:\\\\my-web.com');
 
@@ -27,7 +27,7 @@ export const xml = `
 `;
 
 export const rootTag = `
-use Sholokhov\\BitrixExchange\\Source\\SimpleXml;
+use Sholokhov\\Exchange\\Source\\SimpleXml;
 
 $source = new SimpleXml('https:\\\\my-web.com');
 $source->setRootTag('items.item');

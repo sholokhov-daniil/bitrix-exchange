@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Repository\Types;
+namespace Sholokhov\Exchange\Repository\Types;
 
-use Sholokhov\BitrixExchange\Repository\RepositoryInterface;
+use Sholokhov\Exchange\Repository\RepositoryInterface;
 
 /**
  * Базовое представление контейнера.

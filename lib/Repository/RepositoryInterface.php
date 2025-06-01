@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Repository;
+namespace Sholokhov\Exchange\Repository;
 
 use Psr\Container\ContainerInterface as PsrContainer;
 

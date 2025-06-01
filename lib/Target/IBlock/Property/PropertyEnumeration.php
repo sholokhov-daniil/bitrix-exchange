@@ -1,25 +1,25 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Target\IBlock\Property;
+namespace Sholokhov\Exchange\Target\IBlock\Property;
 
 use Throwable;
 use Exception;
 use CIBlockPropertyEnum;
 
-use Sholokhov\BitrixExchange\Exception\Target\ExchangeItemStoppedException;
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Messages\DataResultInterface;
-use Sholokhov\BitrixExchange\Messages\Type\DataResult;
-use Sholokhov\BitrixExchange\Messages\Type\EventResult;
-use Sholokhov\BitrixExchange\Messages\Type\Result;
-use Sholokhov\BitrixExchange\Target\IBlock\IBlock;
-use Sholokhov\BitrixExchange\Repository\IBlock\PropertyRepository;
+use Sholokhov\Exchange\Exception\Target\ExchangeItemStoppedException;
+use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Messages\DataResultInterface;
+use Sholokhov\Exchange\Messages\Type\DataResult;
+use Sholokhov\Exchange\Messages\Type\EventResult;
+use Sholokhov\Exchange\Messages\Type\Result;
+use Sholokhov\Exchange\Target\IBlock\IBlock;
+use Sholokhov\Exchange\Repository\IBlock\PropertyRepository;
 
-use Sholokhov\BitrixExchange\Helper\Helper;
-use Sholokhov\BitrixExchange\Messages\Type\Error;
-use Sholokhov\BitrixExchange\Messages\ResultInterface;
-use Sholokhov\BitrixExchange\Target\Attributes\Validate;
-use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\Exchange\Helper\Helper;
+use Sholokhov\Exchange\Messages\Type\Error;
+use Sholokhov\Exchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Target\Attributes\Validate;
+use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
 
 use Bitrix\Main\Event;
 use Bitrix\Main\EventResult as BXEventResult;

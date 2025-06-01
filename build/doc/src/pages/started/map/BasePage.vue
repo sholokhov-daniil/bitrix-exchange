@@ -58,7 +58,7 @@ const data = reactive({
 
     <p>
       Каждый класс описывающий свойство принимающее участие в обмене, должен реализовывать интерфейс
-      <api-link path="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html">FieldInterface</api-link>
+      <api-link path="classes/Sholokhov-Exchange-Fields-FieldInterface.html">FieldInterface</api-link>
       <br>
       Разберем пример, который продемонстрирует легкость настройки.
     </p>
@@ -77,7 +77,7 @@ const data = reactive({
 
   <card-container>
     <h2 id="structure">Структура</h2>
-    <p>Класс: <api-link path="classes/Sholokhov-BitrixExchange-Fields-Field.html">Field</api-link></p>
+    <p>Класс: <api-link path="classes/Sholokhov-Exchange-Fields-Field.html">Field</api-link></p>
 
     <p>
       Класс описания имеет стандартный набор методов, позволяющий настроить взаимодействие между источником данных и сущностью в которую производится запись.
@@ -119,7 +119,7 @@ const data = reactive({
       <tr>
         <td>setChildren</td>
         <td>Нет</td>
-        <td><api-link path="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html">FieldInterface</api-link></td>
+        <td><api-link path="classes/Sholokhov-Exchange-Fields-FieldInterface.html">FieldInterface</api-link></td>
         <td>Указывает путь до вложенного значения. Предназначен, для получения значения внутри итерируемых элементов</td>
       </tr>
       <tr>
@@ -153,7 +153,7 @@ const data = reactive({
     </p>
     <ul>
        <li>Значение, которое необходимо нормализовать (может иметь любой тип данных)</li>
-       <li>Свойство, значение которого нормализуем. Оно имеет тип данных <api-link path="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html">FieldInterface</api-link></li>
+       <li>Свойство, значение которого нормализуем. Оно имеет тип данных <api-link path="classes/Sholokhov-Exchange-Fields-FieldInterface.html">FieldInterface</api-link></li>
     </ul>
 
     <code-block :code="codeNormalize" />
@@ -165,7 +165,7 @@ const data = reactive({
       Каждое свойство наделено возможностью указания собственного преобразователя данных, если значение необходимо обработать уникальным подходом и игнорировать альтернативные решения.
       Указав свойству собственный нормализатор, в таком случае все зарегистрированные нормализаторы внутри обмена игнорируются.
       <br>
-      Результатом работы нормализатора служит объект реализующий интерфейс <api-link path="classes/Sholokhov-BitrixExchange-Messages-DataResultInterface.html">DataResultInterface</api-link>
+      Результатом работы нормализатора служит объект реализующий интерфейс <api-link path="classes/Sholokhov-Exchange-Messages-DataResultInterface.html">DataResultInterface</api-link>
     </p>
     <h4>Пример</h4>
     <p>

@@ -1,9 +1,9 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Repository\IBlock;
+namespace Sholokhov\Exchange\Repository\IBlock;
 
 use CIBlockSection;
-use Sholokhov\BitrixExchange\Repository\AbstractRepository;
+use Sholokhov\Exchange\Repository\AbstractRepository;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;

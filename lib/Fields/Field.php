@@ -1,11 +1,11 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Fields;
+namespace Sholokhov\Exchange\Fields;
 
-use Sholokhov\BitrixExchange\ExchangeInterface;
-use Sholokhov\BitrixExchange\Preparation\PreparationInterface;
-use Sholokhov\BitrixExchange\Repository\Types\Memory;
-use Sholokhov\BitrixExchange\Repository\RepositoryInterface;
+use Sholokhov\Exchange\ExchangeInterface;
+use Sholokhov\Exchange\Preparation\PreparationInterface;
+use Sholokhov\Exchange\Repository\Types\Memory;
+use Sholokhov\Exchange\Repository\RepositoryInterface;
 
 /**
  * Описание структуры и логики работы со свойством

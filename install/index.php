@@ -4,7 +4,7 @@ use Bitrix\Main\Application;
 use Bitrix\Main\EventManager;
 use Bitrix\Main\Localization\Loc;
 
-use Sholokhov\BitrixExchange\ORM\ResultTable;
+use Sholokhov\Exchange\ORM\ResultTable;
 
 class sholokhov_exchange extends CModule
 {

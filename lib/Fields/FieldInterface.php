@@ -2,10 +2,10 @@
 
 declare (strict_types=1);
 
-namespace Sholokhov\BitrixExchange\Fields;
+namespace Sholokhov\Exchange\Fields;
 
-use Sholokhov\BitrixExchange\ExchangeInterface;
-use Sholokhov\BitrixExchange\Preparation\PreparationInterface;
+use Sholokhov\Exchange\ExchangeInterface;
+use Sholokhov\Exchange\Preparation\PreparationInterface;
 
 /**
  * Описание настроек свойства

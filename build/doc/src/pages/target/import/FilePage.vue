@@ -12,9 +12,9 @@ import CardContainer from "@/components/container/CardContainer.vue";
   <main-container>
     <h1>Импорт файлов</h1>
     <p>
-      Класс: <api-link path="classes/Sholokhov-BitrixExchange-Target-File.html">File</api-link>
+      Класс: <api-link path="classes/Sholokhov-Exchange-Target-File.html">File</api-link>
       <br>
-      Наследник класса: <api-link path="classes/Sholokhov-BitrixExchange-Exchange.html">Exchange</api-link>
+      Наследник класса: <api-link path="classes/Sholokhov-Exchange-Exchange.html">Exchange</api-link>
     </p>
   </main-container>
 

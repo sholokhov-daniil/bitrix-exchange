@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Helper;
+namespace Sholokhov\Exchange\Helper;
 
 use Bitrix\Catalog\Model\Price;
 use Bitrix\Main\SystemException;

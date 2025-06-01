@@ -1,36 +1,36 @@
 <?php
 
-namespace Sholokhov\BitrixExchange;
+namespace Sholokhov\Exchange;
 
 use Exception;
 use Throwable;
 use ReflectionException;
 
-use Sholokhov\BitrixExchange\Helper\Helper;
-use Sholokhov\BitrixExchange\Bootstrap\Validator;
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Helper\LoggerHelper;
-use Sholokhov\BitrixExchange\Events\EventManager;
-use Sholokhov\BitrixExchange\Events\ExchangeEvent;
-use Sholokhov\BitrixExchange\Events\Factory\AttributeEventFactory;
-use Sholokhov\BitrixExchange\Messages\Type\Result;
-use Sholokhov\BitrixExchange\Messages\DataResultInterface;
-use Sholokhov\BitrixExchange\Messages\ExchangeResultInterface;
-use Sholokhov\BitrixExchange\Messages\Type\DataResult;
-use Sholokhov\BitrixExchange\Messages\Type\Error;
-use Sholokhov\BitrixExchange\Messages\ResultInterface;
-use Sholokhov\BitrixExchange\Messages\Type\ExchangeResult;
-use Sholokhov\BitrixExchange\Repository\Types\Memory;
-use Sholokhov\BitrixExchange\Repository\RepositoryInterface;
-use Sholokhov\BitrixExchange\Repository\Result\ResultRepositoryInterface;
-use Sholokhov\BitrixExchange\Validators\ValidatorInterface;
-use Sholokhov\BitrixExchange\Helper\Entity;
-use Sholokhov\BitrixExchange\Helper\FieldHelper;
-use Sholokhov\BitrixExchange\Preparation\Chain;
-use Sholokhov\BitrixExchange\Preparation\PreparationInterface;
-use Sholokhov\BitrixExchange\Target\Attributes\Validate;
-use Sholokhov\BitrixExchange\Target\Attributes\MapValidator;
-use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\Exchange\Helper\Helper;
+use Sholokhov\Exchange\Bootstrap\Validator;
+use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Helper\LoggerHelper;
+use Sholokhov\Exchange\Events\EventManager;
+use Sholokhov\Exchange\Events\ExchangeEvent;
+use Sholokhov\Exchange\Events\Factory\AttributeEventFactory;
+use Sholokhov\Exchange\Messages\Type\Result;
+use Sholokhov\Exchange\Messages\DataResultInterface;
+use Sholokhov\Exchange\Messages\ExchangeResultInterface;
+use Sholokhov\Exchange\Messages\Type\DataResult;
+use Sholokhov\Exchange\Messages\Type\Error;
+use Sholokhov\Exchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Messages\Type\ExchangeResult;
+use Sholokhov\Exchange\Repository\Types\Memory;
+use Sholokhov\Exchange\Repository\RepositoryInterface;
+use Sholokhov\Exchange\Repository\Result\ResultRepositoryInterface;
+use Sholokhov\Exchange\Validators\ValidatorInterface;
+use Sholokhov\Exchange\Helper\Entity;
+use Sholokhov\Exchange\Helper\FieldHelper;
+use Sholokhov\Exchange\Preparation\Chain;
+use Sholokhov\Exchange\Preparation\PreparationInterface;
+use Sholokhov\Exchange\Target\Attributes\Validate;
+use Sholokhov\Exchange\Target\Attributes\MapValidator;
+use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
 
 use Bitrix\Main\Event;
 use Bitrix\Main\EventResult;

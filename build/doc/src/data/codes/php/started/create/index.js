@@ -23,8 +23,8 @@ $obj = new class implements Iterator {
 `
 
 export const created = `
-use Sholokhov\\BitrixExchange\\Fields\\Field;
-use Sholokhov\\BitrixExchange\\Target\\IBlock\\Element;
+use Sholokhov\\Exchange\\Fields\\Field;
+use Sholokhov\\Exchange\\Target\\IBlock\\Element;
 
 $options = [
     'iblock_id' => 13

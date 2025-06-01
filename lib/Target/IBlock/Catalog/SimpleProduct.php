@@ -1,18 +1,18 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Target\IBlock\Catalog;
+namespace Sholokhov\Exchange\Target\IBlock\Catalog;
 
 use CPrice;
 use Exception;
 
-use Sholokhov\BitrixExchange\Events\ExchangeEvent;
-use Sholokhov\BitrixExchange\Fields\Catalog\CatalogFieldInterface;
-use Sholokhov\BitrixExchange\Fields\Catalog\PriceFieldInterface;
-use Sholokhov\BitrixExchange\Messages\DataResultInterface;
-use Sholokhov\BitrixExchange\Messages\ResultInterface;
-use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
-use Sholokhov\BitrixExchange\Target\Attributes\Event;
-use Sholokhov\BitrixExchange\Target\IBlock\Element;
+use Sholokhov\Exchange\Events\ExchangeEvent;
+use Sholokhov\Exchange\Fields\Catalog\CatalogFieldInterface;
+use Sholokhov\Exchange\Fields\Catalog\PriceFieldInterface;
+use Sholokhov\Exchange\Messages\DataResultInterface;
+use Sholokhov\Exchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\Exchange\Target\Attributes\Event;
+use Sholokhov\Exchange\Target\IBlock\Element;
 
 use Bitrix\Main\Loader;
 use Bitrix\Catalog\ProductTable;

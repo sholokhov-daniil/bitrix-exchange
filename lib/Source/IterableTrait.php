@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Source;
+namespace Sholokhov\Exchange\Source;
 
 use Iterator;
 use EmptyIterator;

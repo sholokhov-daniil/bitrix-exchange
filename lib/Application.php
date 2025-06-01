@@ -1,15 +1,15 @@
 <?php
 
-namespace Sholokhov\BitrixExchange;
+namespace Sholokhov\Exchange;
 
 use Exception;
 use ReflectionException;
 
-use Sholokhov\BitrixExchange\Bootstrap\Loader;
-use Sholokhov\BitrixExchange\Helper\Entity;
-use Sholokhov\BitrixExchange\Repository\RepositoryInterface;
-use Sholokhov\BitrixExchange\Target\Attributes\CacheContainer;
-use Sholokhov\BitrixExchange\Target\Attributes\OptionsContainer;
+use Sholokhov\Exchange\Bootstrap\Loader;
+use Sholokhov\Exchange\Helper\Entity;
+use Sholokhov\Exchange\Repository\RepositoryInterface;
+use Sholokhov\Exchange\Target\Attributes\CacheContainer;
+use Sholokhov\Exchange\Target\Attributes\OptionsContainer;
 
 /**
  * @since 1.0.0

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Helper;
+namespace Sholokhov\Exchange\Helper;
 
 /**
  * @package Helper

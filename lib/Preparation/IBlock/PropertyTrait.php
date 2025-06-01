@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Preparation\IBlock;
+namespace Sholokhov\Exchange\Preparation\IBlock;
 
-use Sholokhov\BitrixExchange\Repository\IBlock\PropertyRepository;
+use Sholokhov\Exchange\Repository\IBlock\PropertyRepository;
 
 /**
  * @package Preparation

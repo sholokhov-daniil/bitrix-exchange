@@ -1,10 +1,10 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Repository\IBlock;
+namespace Sholokhov\Exchange\Repository\IBlock;
 
 use CIBlock;
 
-use Sholokhov\BitrixExchange\Repository\Fields\AbstractFieldRepository;
+use Sholokhov\Exchange\Repository\Fields\AbstractFieldRepository;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;

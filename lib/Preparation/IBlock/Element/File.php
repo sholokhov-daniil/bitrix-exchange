@@ -1,12 +1,12 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Preparation\IBlock\Element;
+namespace Sholokhov\Exchange\Preparation\IBlock\Element;
 
 use CFile;
 
-use Sholokhov\BitrixExchange\Preparation\AbstractPrepare;
+use Sholokhov\Exchange\Preparation\AbstractPrepare;
 
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Fields\FieldInterface;
 
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerAwareInterface;

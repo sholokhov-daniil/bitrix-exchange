@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Messages\Type;
+namespace Sholokhov\Exchange\Messages\Type;
 
-use Sholokhov\BitrixExchange\Messages\DataResultInterface;
+use Sholokhov\Exchange\Messages\DataResultInterface;
 
 /**
  * Результата работы с произвольными данными

@@ -1,10 +1,10 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Bootstrap;
+namespace Sholokhov\Exchange\Bootstrap;
 
 use ReflectionClass;
 use ReflectionException;
-use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
 
 /**
  * Производит вызов всех методов отвечающий за загрузку конфигураций обмена

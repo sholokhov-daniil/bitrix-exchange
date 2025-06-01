@@ -1,9 +1,9 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Preparation\UserField;
+namespace Sholokhov\Exchange\Preparation\UserField;
 
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Preparation\Base\AbstractIBlockSection;
+use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Preparation\Base\AbstractIBlockSection;
 
 /**
  * Преобразует значение имеющего связь к разделу информационного блока

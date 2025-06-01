@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Validators;
+namespace Sholokhov\Exchange\Validators;
 
-use Sholokhov\BitrixExchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Messages\ResultInterface;
 
 /**
  * Производит валидацию передаваемого значения

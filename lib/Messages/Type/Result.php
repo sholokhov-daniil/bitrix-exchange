@@ -1,9 +1,9 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Messages\Type;
+namespace Sholokhov\Exchange\Messages\Type;
 
-use Sholokhov\BitrixExchange\Messages\ErrorInterface;
-use Sholokhov\BitrixExchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Messages\ErrorInterface;
+use Sholokhov\Exchange\Messages\ResultInterface;
 
 class Result implements ResultInterface
 {

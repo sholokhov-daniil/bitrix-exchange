@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Factory\Result;
+namespace Sholokhov\Exchange\Factory\Result;
 
-use Sholokhov\BitrixExchange\Repository\Result\SimpleResultRepository;
+use Sholokhov\Exchange\Repository\Result\SimpleResultRepository;
 
 class SimpleFactory
 {
