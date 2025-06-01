@@ -2443,7 +2443,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Sholokhov\\BitrixExchange\\Target\\Attributes\\Validate",
             "name": "Validate",
-            "summary": "\u0424\u043B\u0430\u0433,\u0020\u0447\u0442\u043E\u0020\u043C\u0435\u0442\u043E\u0434\u0020\u043E\u0442\u0432\u0435\u0447\u0430\u0435\u0442\u0020\u0437\u0430\u0020\u0432\u0430\u043B\u0438\u0434\u0430\u0446\u0438\u044E\u0020\u043E\u0431\u043C\u0435\u043D\u0430",
+            "summary": "\u041E\u0431\u043E\u0437\u043D\u0430\u0447\u0430\u0435\u0442,\u0020\u0447\u0442\u043E\u0020\u043C\u0435\u0442\u043E\u0434\u0020\u043E\u0442\u0432\u0435\u0447\u0430\u0435\u0442\u0020\u0437\u0430\u0020\u0432\u0430\u043B\u0438\u0434\u0430\u0446\u0438\u044E\u0020\u043E\u0431\u043C\u0435\u043D\u0430",
             "url": "classes/Sholokhov-BitrixExchange-Target-Attributes-Validate.html"
         },                {
             "fqsen": "\\Sholokhov\\BitrixExchange\\Target\\Catalog\\Currency",
