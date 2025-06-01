@@ -78,6 +78,10 @@
 </h4>
 
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
+    <a href="packages/Event.html" class="">Event</a>
+</h4>
+
+                                    <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="packages/Field.html" class="">Field</a>
 </h4>
 
@@ -213,13 +217,6 @@
 <dd>Получение дочернего элемента</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getCode">getCode()</a>
-    <span>
-                                &nbsp;: string    </span>
-</dt>
-<dd>Код свойства в которое необходимо записать значение</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Sholokhov-BitrixExchange-Fields-Catalog-PriceFieldInterface.html#method_getCurrency">getCurrency()</a>
     <span>
                                 &nbsp;: string    </span>
@@ -227,25 +224,32 @@
 <dd>Валюта</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getNormalizers">getNormalizers()</a>
-    <span>
-                                &nbsp;: array&lt;string|int, callable&gt;    </span>
-</dt>
-<dd>Получение валидаторов значения свойства</dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getPath">getPath()</a>
+    <a class="" href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getFrom">getFrom()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
 <dd>Получение пути хранения значения</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a class="" href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getTarget">getTarget()</a>
+    <a class="" href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getNormalizer">getNormalizer()</a>
     <span>
-                                &nbsp;: <a href="classes/Sholokhov-BitrixExchange-ExchangeInterface.html"><abbr title="\Sholokhov\BitrixExchange\ExchangeInterface">ExchangeInterface</abbr></a>|null    </span>
+                                &nbsp;: callable|null    </span>
+</dt>
+<dd>Получение подготовителя значения перед преобразованием на основе настроек сущности</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getPreparation">getPreparation()</a>
+    <span>
+                                &nbsp;: callable|null    </span>
 </dt>
 <dd>Цель значения</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getTo">getTo()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Код свойства в которое необходимо записать значение</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_isCreatedLink">isCreatedLink()</a>
@@ -288,7 +292,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Fields/FieldInterface.php"><a href="files/src-fields-fieldinterface.html"><abbr title="src/Fields/FieldInterface.php">FieldInterface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">80</span>
+    <span class="phpdocumentor-element-found-in__line">81</span>
 
     </aside>
 
@@ -342,68 +346,6 @@
             -public
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_getCode">
-        getCode()
-        <a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getCode" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="src/Fields/FieldInterface.php"><a href="files/src-fields-fieldinterface.html"><abbr title="src/Fields/FieldInterface.php">FieldInterface.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">60</span>
-
-    </aside>
-
-        <p class="phpdocumentor-summary">Код свойства в которое необходимо записать значение</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getCode</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-    
-    
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getCode#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                            <span class="phpdocumentor-tag-link">1.0.0</span>
-                                                                                
-                                             
-                                    </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">version</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                            <span class="phpdocumentor-tag-link">1.0.0</span>
-                                                                                
-                                             
-                                    </dd>
-                                            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">string</span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                                        "
->
     <h4 class="phpdocumentor-element__name" id="method_getCurrency">
         getCurrency()
         <a href="classes/Sholokhov-BitrixExchange-Fields-Catalog-PriceFieldInterface.html#method_getCurrency" class="headerlink"><i class="fas fa-link"></i></a>
@@ -443,77 +385,15 @@
             -public
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_getNormalizers">
-        getNormalizers()
-        <a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getNormalizers" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_getFrom">
+        getFrom()
+        <a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getFrom" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Fields/FieldInterface.php"><a href="files/src-fields-fieldinterface.html"><abbr title="src/Fields/FieldInterface.php">FieldInterface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">90</span>
-
-    </aside>
-
-        <p class="phpdocumentor-summary">Получение валидаторов значения свойства</p>
-
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getNormalizers</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, callable&gt;</span></code>
-
-    <div class="phpdocumentor-label-line">
-        </div>
-    
-    
-    
-    
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
-        Tags
-        <a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getNormalizers#tags" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h5>
-    <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">since</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                            <span class="phpdocumentor-tag-link">1.0.0</span>
-                                                                                
-                                             
-                                    </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">version</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                            <span class="phpdocumentor-tag-link">1.0.0</span>
-                                                                                
-                                             
-                                    </dd>
-                                            </dl>
-
-    
-
-            <section>
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type">array&lt;string|int, callable&gt;</span>
-            </section>
-
-</article>
-                    <article
-        class="phpdocumentor-element
-            -method
-            -public
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="method_getPath">
-        getPath()
-        <a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getPath" class="headerlink"><i class="fas fa-link"></i></a>
-
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="src/Fields/FieldInterface.php"><a href="files/src-fields-fieldinterface.html"><abbr title="src/Fields/FieldInterface.php">FieldInterface.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">50</span>
+    <span class="phpdocumentor-element-found-in__line">51</span>
 
     </aside>
 
@@ -521,7 +401,7 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getPath</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">getFrom</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -531,7 +411,7 @@
     
     <h5 class="phpdocumentor-tag-list__heading" id="tags">
         Tags
-        <a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getPath#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getFrom#tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
@@ -567,23 +447,23 @@
             -public
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_getTarget">
-        getTarget()
-        <a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getTarget" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_getNormalizer">
+        getNormalizer()
+        <a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getNormalizer" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Fields/FieldInterface.php"><a href="files/src-fields-fieldinterface.html"><abbr title="src/Fields/FieldInterface.php">FieldInterface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">70</span>
+    <span class="phpdocumentor-element-found-in__line">91</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Цель значения</p>
+        <p class="phpdocumentor-summary">Получение подготовителя значения перед преобразованием на основе настроек сущности</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getTarget</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-ExchangeInterface.html"><abbr title="\Sholokhov\BitrixExchange\ExchangeInterface">ExchangeInterface</abbr></a>|null</span></code>
+                    <span class="phpdocumentor-signature__name">getNormalizer</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">callable|null</span></code>
 
     <div class="phpdocumentor-label-line">
         </div>
@@ -593,7 +473,7 @@
     
     <h5 class="phpdocumentor-tag-list__heading" id="tags">
         Tags
-        <a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getTarget#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getNormalizer#tags" class="headerlink"><i class="fas fa-link"></i></a>
 
     </h5>
     <dl class="phpdocumentor-tag-list">
@@ -619,7 +499,131 @@
 
             <section>
         <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-        <span class="phpdocumentor-signature__response_type"><a href="classes/Sholokhov-BitrixExchange-ExchangeInterface.html"><abbr title="\Sholokhov\BitrixExchange\ExchangeInterface">ExchangeInterface</abbr></a>|null</span>
+        <span class="phpdocumentor-signature__response_type">callable|null</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getPreparation">
+        getPreparation()
+        <a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getPreparation" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Fields/FieldInterface.php"><a href="files/src-fields-fieldinterface.html"><abbr title="src/Fields/FieldInterface.php">FieldInterface.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">71</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Цель значения</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getPreparation</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">callable|null</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getPreparation#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.0.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">version</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.0.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">callable|null</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getTo">
+        getTo()
+        <a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getTo" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Fields/FieldInterface.php"><a href="files/src-fields-fieldinterface.html"><abbr title="src/Fields/FieldInterface.php">FieldInterface.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">61</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Код свойства в которое необходимо записать значение</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getTo</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+        Tags
+        <a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getTo#tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                                    <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">since</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.0.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                                <dt class="phpdocumentor-tag-list__entry">
+                    <span class="phpdocumentor-tag__name">version</span>
+                </dt>
+                <dd class="phpdocumentor-tag-list__definition">
+                                            <span class="phpdocumentor-tag-link">1.0.0</span>
+                                                                                
+                                             
+                                    </dd>
+                                            </dl>
+
+    
+
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
             </section>
 
 </article>
@@ -637,7 +641,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Fields/FieldInterface.php"><a href="files/src-fields-fieldinterface.html"><abbr title="src/Fields/FieldInterface.php">FieldInterface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">40</span>
+    <span class="phpdocumentor-element-found-in__line">41</span>
 
     </aside>
 
@@ -708,7 +712,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Fields/FieldInterface.php"><a href="files/src-fields-fieldinterface.html"><abbr title="src/Fields/FieldInterface.php">FieldInterface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">28</span>
+    <span class="phpdocumentor-element-found-in__line">29</span>
 
     </aside>
 
@@ -872,11 +876,11 @@
                 <li>
                     <ul class="phpdocumentor-list -clean">
                                                     <li class=""><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getChildren">getChildren()</a></li>
-                                                    <li class=""><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getCode">getCode()</a></li>
                                                     <li class=""><a href="classes/Sholokhov-BitrixExchange-Fields-Catalog-PriceFieldInterface.html#method_getCurrency">getCurrency()</a></li>
-                                                    <li class=""><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getNormalizers">getNormalizers()</a></li>
-                                                    <li class=""><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getPath">getPath()</a></li>
-                                                    <li class=""><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getTarget">getTarget()</a></li>
+                                                    <li class=""><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getFrom">getFrom()</a></li>
+                                                    <li class=""><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getNormalizer">getNormalizer()</a></li>
+                                                    <li class=""><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getPreparation">getPreparation()</a></li>
+                                                    <li class=""><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_getTo">getTo()</a></li>
                                                     <li class=""><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_isCreatedLink">isCreatedLink()</a></li>
                                                     <li class=""><a href="classes/Sholokhov-BitrixExchange-Fields-FieldInterface.html#method_isPrimary">isPrimary()</a></li>
                                             </ul>
