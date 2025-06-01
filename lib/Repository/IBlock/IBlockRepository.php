@@ -1,10 +1,10 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Repository\IBlock;
+namespace Sholokhov\Exchange\Repository\IBlock;
 
 use CIBlock;
 
-use Sholokhov\BitrixExchange\Repository\Types\Memory;
+use Sholokhov\Exchange\Repository\Types\Memory;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;

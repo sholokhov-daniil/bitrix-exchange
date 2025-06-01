@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Helper;
+namespace Sholokhov\Exchange\Helper;
 
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Fields\FieldInterface;
 
 /**
  * @package Helper

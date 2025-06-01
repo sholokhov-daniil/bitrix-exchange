@@ -1,9 +1,9 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Repository\Target;
+namespace Sholokhov\Exchange\Repository\Target;
 
-use Sholokhov\BitrixExchange\Repository\Types\Memory;
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Repository\Types\Memory;
+use Sholokhov\Exchange\Fields\FieldInterface;
 
 /**
  * @since 1.0.0

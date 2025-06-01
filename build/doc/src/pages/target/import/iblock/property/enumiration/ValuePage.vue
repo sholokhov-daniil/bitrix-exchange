@@ -63,9 +63,9 @@ const data = reactive({
     </template>
 
     <p>
-      Класс: <api-link path="classes/Sholokhov-BitrixExchange-Target-IBlock-Property-PropertyEnumeration.html">Enumeration</api-link>
+      Класс: <api-link path="classes/Sholokhov-Exchange-Target-IBlock-Property-PropertyEnumeration.html">Enumeration</api-link>
       <br>
-      Наследник класса: <api-link path="classes/Sholokhov-BitrixExchange-Exchange.html">Exchange</api-link>
+      Наследник класса: <api-link path="classes/Sholokhov-Exchange-Exchange.html">Exchange</api-link>
     </p>
 
     <table-contents :items="data.tableContents" />
@@ -192,7 +192,7 @@ const data = reactive({
     <alert-message>
       <template #header>Внимание</template>
 
-      Присутствует возможность отменить обновление значения, для этого необходимо вызвать исключение <api-link path="classes/Sholokhov-BitrixExchange-Exception-Target-ExchangeItemStoppedException.html">ExchangeItemStoppedException</api-link>
+      Присутствует возможность отменить обновление значения, для этого необходимо вызвать исключение <api-link path="classes/Sholokhov-Exchange-Exception-Target-ExchangeItemStoppedException.html">ExchangeItemStoppedException</api-link>
       После отмены обновления производится запись в лог файл с возможностью переопределения сообщения. В качестве сообщения, для записи в лог берется сообщение исключения.
     </alert-message>
 
@@ -253,7 +253,7 @@ const data = reactive({
         <td>result</td>
         <td>Да</td>
         <td>
-          <api-link path="classes/Sholokhov-BitrixExchange-Messages-DataResultInterface.html">DataResultInterface</api-link>
+          <api-link path="classes/Sholokhov-Exchange-Messages-DataResultInterface.html">DataResultInterface</api-link>
         </td>
         <td>Нет</td>
         <td>Результат обновления элемента</td>
@@ -300,7 +300,7 @@ const data = reactive({
     <alert-message>
       <template #header>Внимание</template>
 
-      Присутствует возможность отменить добавления значения, для этого необходимо вызвать исключение <api-link path="classes/Sholokhov-BitrixExchange-Exception-Target-ExchangeItemStoppedException.html">ExchangeItemStoppedException</api-link>
+      Присутствует возможность отменить добавления значения, для этого необходимо вызвать исключение <api-link path="classes/Sholokhov-Exchange-Exception-Target-ExchangeItemStoppedException.html">ExchangeItemStoppedException</api-link>
       После отмены добавления производится запись в лог файл с возможностью переопределения сообщения. В качестве сообщения, для записи в лог берется сообщение исключения.
     </alert-message>
 
@@ -361,7 +361,7 @@ const data = reactive({
         <td>result</td>
         <td>Да</td>
         <td>
-          <api-link path="classes/Sholokhov-BitrixExchange-Messages-DataResultInterface.html">DataResultInterface</api-link>
+          <api-link path="classes/Sholokhov-Exchange-Messages-DataResultInterface.html">DataResultInterface</api-link>
         </td>
         <td>Нет</td>
         <td>Результат добавления элемента</td>

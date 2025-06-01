@@ -1,10 +1,10 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Preparation\Base;
+namespace Sholokhov\Exchange\Preparation\Base;
 
-use Sholokhov\BitrixExchange\Fields\Field;
-use Sholokhov\BitrixExchange\ExchangeInterface;
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Fields\Field;
+use Sholokhov\Exchange\ExchangeInterface;
+use Sholokhov\Exchange\Fields\FieldInterface;
 
 /**
  * Импорт значения в список

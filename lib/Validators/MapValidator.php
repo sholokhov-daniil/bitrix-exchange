@@ -1,13 +1,13 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Validators;
+namespace Sholokhov\Exchange\Validators;
 
 use TypeError;
 
-use Sholokhov\BitrixExchange\Messages\Type\Error;
-use Sholokhov\BitrixExchange\Messages\Type\Result;
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Messages\Type\Error;
+use Sholokhov\Exchange\Messages\Type\Result;
+use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Messages\ResultInterface;
 
 /**
  * Проверка стандартной карты обмена

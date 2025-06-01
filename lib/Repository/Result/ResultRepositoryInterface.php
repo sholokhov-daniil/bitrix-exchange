@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Repository\Result;
+namespace Sholokhov\Exchange\Repository\Result;
 
 use Stringable;
 

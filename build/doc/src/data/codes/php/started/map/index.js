@@ -1,7 +1,7 @@
 import {crossMark, isRight} from "@/utils/emojis";
 
 export const mapBase = `
-use Sholokhov\\BitrixExchange\\Fields\\Field;
+use Sholokhov\\Exchange\\Fields\\Field;
 
 $source = [
     [
@@ -33,8 +33,8 @@ $exchange->setMap($map);
 `;
 
 export const codeNormalize = `
-use Sholokhov\\BitrixExchange\\Fields\\Field;
-use Sholokhov\\BitrixExchange\\Fields\\FieldInterface;
+use Sholokhov\\Exchange\\Fields\\Field;
+use Sholokhov\\Exchange\\Fields\\FieldInterface;
 
 $data = [
     [
@@ -52,8 +52,8 @@ $nameField->setNormalizer(fn(mixed $value, FieldInterface $field) => stristr($va
 `;
 
 export const codePreparation = `
-use Sholokhov\\BitrixExchange\\Fields\\Field;
-use Sholokhov\\BitrixExchange\\Messages\\Type\\DataResult;
+use Sholokhov\\Exchange\\Fields\\Field;
+use Sholokhov\\Exchange\\Messages\\Type\\DataResult;
 
 use Bitrix\\Main\\Error;
 use Bitrix\\Main\\Web\\HttpClient;

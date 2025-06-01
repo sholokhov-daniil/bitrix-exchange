@@ -1,10 +1,10 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Target\Attributes;
+namespace Sholokhov\Exchange\Target\Attributes;
 
 use Attribute;
 
-use Sholokhov\BitrixExchange\Validators\MapValidator as Validator;
+use Sholokhov\Exchange\Validators\MapValidator as Validator;
 
 /**
  * @package Attribute

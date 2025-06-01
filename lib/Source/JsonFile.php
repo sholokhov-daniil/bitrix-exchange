@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Source;
+namespace Sholokhov\Exchange\Source;
 
-use Sholokhov\BitrixExchange\Helper\IO;
+use Sholokhov\Exchange\Helper\IO;
 
 /**
  * Источник данных на основе json файла

@@ -1,9 +1,9 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Preparation\UserField;
+namespace Sholokhov\Exchange\Preparation\UserField;
 
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Preparation\Base\AbstractDate;
+use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Preparation\Base\AbstractDate;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;

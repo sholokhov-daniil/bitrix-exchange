@@ -1,11 +1,11 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Repository\Result;
+namespace Sholokhov\Exchange\Repository\Result;
 
 use Exception;
 use Stringable;
 
-use Sholokhov\BitrixExchange\ORM\ResultTable;
+use Sholokhov\Exchange\ORM\ResultTable;
 
 use Ramsey\Uuid\Uuid;
 

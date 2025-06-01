@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Target\Catalog;
+namespace Sholokhov\Exchange\Target\Catalog;
 
 use Bitrix\Currency\CurrencyTable;
 use Bitrix\Main\ArgumentException;
@@ -10,12 +10,12 @@ use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 use CCurrency;
 use Exception;
-use Sholokhov\BitrixExchange\Exchange;
-use Sholokhov\BitrixExchange\Messages\Type\Result;
-use Sholokhov\BitrixExchange\Messages\ResultInterface;
-use Sholokhov\BitrixExchange\Messages\Type\Error;
-use Sholokhov\BitrixExchange\Messages\Type\ExchangeResult;
-use Sholokhov\BitrixExchange\Target\Attributes\Validate;
+use Sholokhov\Exchange\Exchange;
+use Sholokhov\Exchange\Messages\Type\Result;
+use Sholokhov\Exchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Messages\Type\Error;
+use Sholokhov\Exchange\Messages\Type\ExchangeResult;
+use Sholokhov\Exchange\Target\Attributes\Validate;
 
 /**
  * @package Target

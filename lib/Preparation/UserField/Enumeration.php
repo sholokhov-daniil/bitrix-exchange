@@ -1,14 +1,14 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Preparation\UserField;
+namespace Sholokhov\Exchange\Preparation\UserField;
 
 use ReflectionException;
 
-use Sholokhov\BitrixExchange\ExchangeInterface;
-use Sholokhov\BitrixExchange\Factory\Result\SimpleFactory;
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Preparation\Base\AbstractEnumeration;
-use Sholokhov\BitrixExchange\Target\UserFields\Enumeration as Target;
+use Sholokhov\Exchange\ExchangeInterface;
+use Sholokhov\Exchange\Factory\Result\SimpleFactory;
+use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Preparation\Base\AbstractEnumeration;
+use Sholokhov\Exchange\Target\UserFields\Enumeration as Target;
 
 /**
  * Производит импорт значения списка и преобразовывает значение в идентификатор значения списка

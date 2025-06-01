@@ -1,7 +1,7 @@
 import {crossMark, isRight} from "@/utils/emojis";
 
 export const example = `
-use Sholokhov\\BitrixExchange\\Source\\Xml;
+use Sholokhov\\Exchange\\Source\\Xml;
 
 $source = new Xml('https:\\\\my-web.com');
 
@@ -29,7 +29,7 @@ export const xml = `
 `;
 
 export const rootTag = `
-use Sholokhov\\BitrixExchange\\Source\\Xml;
+use Sholokhov\\Exchange\\Source\\Xml;
 
 $source = new Xml('https:\\\\my-web.com');
 $source->setRootTag('items');
@@ -84,7 +84,7 @@ export const xmlDepth = `
 `;
 
 export const rootTagDepth = `
-use Sholokhov\\BitrixExchange\\Source\\Xml;
+use Sholokhov\\Exchange\\Source\\Xml;
 
 $source = new Xml('https:\\\\my-web.com');
 $source->setRootTag('items');

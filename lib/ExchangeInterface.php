@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange;
+namespace Sholokhov\Exchange;
 
-use Sholokhov\BitrixExchange\Messages\ExchangeResultInterface;
+use Sholokhov\Exchange\Messages\ExchangeResultInterface;
 
 use Psr\Log\LoggerAwareInterface;
 

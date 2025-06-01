@@ -1,12 +1,12 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Preparation\Base;
+namespace Sholokhov\Exchange\Preparation\Base;
 
 use DateTime;
 use DateMalformedStringException;
 
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Preparation\AbstractPrepare;
+use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Preparation\AbstractPrepare;
 
 use Bitrix\Main\Type\Date as BxDate;
 

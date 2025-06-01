@@ -1,21 +1,21 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Target\IBlock;
+namespace Sholokhov\Exchange\Target\IBlock;
 
 use Exception;
 use CIBlockElement;
 
-use Sholokhov\BitrixExchange\Exception\Target\ExchangeItemStoppedException;
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Helper\Helper;
-use Sholokhov\BitrixExchange\Messages\DataResultInterface;
-use Sholokhov\BitrixExchange\Messages\Type\Error;
-use Sholokhov\BitrixExchange\Messages\Type\DataResult;
+use Sholokhov\Exchange\Exception\Target\ExchangeItemStoppedException;
+use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Helper\Helper;
+use Sholokhov\Exchange\Messages\DataResultInterface;
+use Sholokhov\Exchange\Messages\Type\Error;
+use Sholokhov\Exchange\Messages\Type\DataResult;
 
-use Sholokhov\BitrixExchange\Helper\Site;
-use Sholokhov\BitrixExchange\Preparation\IBlock\Element as Prepare;
-use Sholokhov\BitrixExchange\Messages\Type\EventResult;
-use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
+use Sholokhov\Exchange\Helper\Site;
+use Sholokhov\Exchange\Preparation\IBlock\Element as Prepare;
+use Sholokhov\Exchange\Messages\Type\EventResult;
+use Sholokhov\Exchange\Fields\IBlock\ElementFieldInterface;
 
 use Bitrix\Main\Event;
 use Bitrix\Main\EventResult as BxEventResult;
@@ -24,8 +24,8 @@ use Bitrix\Iblock\ElementTable;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectPropertyException;
-use Sholokhov\BitrixExchange\Repository\IBlock\PropertyRepository;
-use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\Exchange\Repository\IBlock\PropertyRepository;
+use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
 
 /**
  * Импортирование элемента информационного блока

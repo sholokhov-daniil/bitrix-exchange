@@ -1,16 +1,16 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Preparation\IBlock\Element;
+namespace Sholokhov\Exchange\Preparation\IBlock\Element;
 
 use ReflectionException;
 
-use Sholokhov\BitrixExchange\ExchangeInterface;
-use Sholokhov\BitrixExchange\Factory\Result\SimpleFactory;
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
-use Sholokhov\BitrixExchange\Preparation\IBlock\PropertyTrait;
-use Sholokhov\BitrixExchange\Preparation\Base\AbstractEnumeration;
-use Sholokhov\BitrixExchange\Target\IBlock\Property\PropertyEnumeration;
+use Sholokhov\Exchange\ExchangeInterface;
+use Sholokhov\Exchange\Factory\Result\SimpleFactory;
+use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Fields\IBlock\ElementFieldInterface;
+use Sholokhov\Exchange\Preparation\IBlock\PropertyTrait;
+use Sholokhov\Exchange\Preparation\Base\AbstractEnumeration;
+use Sholokhov\Exchange\Target\IBlock\Property\PropertyEnumeration;
 
 use Bitrix\Iblock\PropertyTable;
 use Bitrix\Main\LoaderException;

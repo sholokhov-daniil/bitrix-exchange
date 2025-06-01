@@ -1,13 +1,13 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Bootstrap;
+namespace Sholokhov\Exchange\Bootstrap;
 
 use ReflectionClass;
 use ReflectionException;
 
-use Sholokhov\BitrixExchange\Messages\ResultInterface;
-use Sholokhov\BitrixExchange\Messages\Type\Result;
-use Sholokhov\BitrixExchange\Target\Attributes\Validate;
+use Sholokhov\Exchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Messages\Type\Result;
+use Sholokhov\Exchange\Target\Attributes\Validate;
 
 /**
  * Производит вызов методов отвечающих за валидацию обмена

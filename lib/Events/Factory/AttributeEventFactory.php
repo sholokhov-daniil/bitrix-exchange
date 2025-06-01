@@ -1,15 +1,15 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Events\Factory;
+namespace Sholokhov\Exchange\Events\Factory;
 
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionException;
 
-use Sholokhov\BitrixExchange\Helper\Entity;
-use Sholokhov\BitrixExchange\Events\Event;
-use Sholokhov\BitrixExchange\Events\EventInterface;
-use Sholokhov\BitrixExchange\Target\Attributes\Event as Attribute;
+use Sholokhov\Exchange\Helper\Entity;
+use Sholokhov\Exchange\Events\Event;
+use Sholokhov\Exchange\Events\EventInterface;
+use Sholokhov\Exchange\Target\Attributes\Event as Attribute;
 
 /**
  * Создает объекты события, которые зарегистрированы в объекте посредством атрибутов

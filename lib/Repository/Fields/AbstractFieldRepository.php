@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Repository\Fields;
+namespace Sholokhov\Exchange\Repository\Fields;
 
-use Sholokhov\BitrixExchange\Repository\AbstractRepository;
+use Sholokhov\Exchange\Repository\AbstractRepository;
 
 /**
  * @version 1.0.0

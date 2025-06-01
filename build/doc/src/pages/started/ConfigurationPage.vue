@@ -62,7 +62,7 @@ const data = reactive({
     </p>
 
     <p>
-      Все стандартные обмены являются наследниками класса <a href="./api/classes/Sholokhov-BitrixExchange-Exchange.html" target="_blank">Exchange</a>, который позволяет настроить:
+      Все стандартные обмены являются наследниками класса <a href="./api/classes/Sholokhov-Exchange-Exchange.html" target="_blank">Exchange</a>, который позволяет настроить:
     </p>
     <ul>
       <li>Включение деактивации</li>
@@ -92,7 +92,7 @@ const data = reactive({
       <h2 id="set-result">Результат обмена</h2>
     </template>
     <p>
-      Каждый обмен обязан вернуть объект результата выполнения, который реализует интерфейс <a href="./api/classes/Sholokhov-BitrixExchange-Messages-ExchangeResultInterface.html" target="_blank">ExchangeResultInterface</a>
+      Каждый обмен обязан вернуть объект результата выполнения, который реализует интерфейс <a href="./api/classes/Sholokhov-Exchange-Messages-ExchangeResultInterface.html" target="_blank">ExchangeResultInterface</a>
       <br>
       Результат содержит все ошибки, которые возникли и все идентификаторы значений, которые принимали участие в импорте\экспорте.
       В угоду оптимизации по умолчанию результат не хранит идентификаторы значений, и для этого нам необходимо сконфигурировать обмен.
@@ -103,7 +103,7 @@ const data = reactive({
 
     <p>
       Метод <b>setResultRepository</b> принимает значение, которое является <a href="https://www.php.net/manual/en/language.types.callable.php" target="_blank">callable</a>,
-      и вернет новый объект хранилища реализующий интерфейс <a href="./api/classes/Sholokhov-BitrixExchange-Repository-Result-ResultRepositoryInterface.html" target="_blank">ResultRepositoryInterface</a>.
+      и вернет новый объект хранилища реализующий интерфейс <a href="./api/classes/Sholokhov-Exchange-Repository-Result-ResultRepositoryInterface.html" target="_blank">ResultRepositoryInterface</a>.
     </p>
   </card-container>
 
@@ -148,7 +148,7 @@ const data = reactive({
     <p>
       Все стандартные обмены имеют свой набор зарегистрированных преобразователей.
       Обмен дает возможность указать свои пользовательские преобразователи, которые будут вызываться в первую очередь.
-      Преобразователь реализовывает интерфейс <api-link path="classes/Sholokhov-BitrixExchange-Preparation-PreparationInterface.html">PreparationInterface</api-link>.
+      Преобразователь реализовывает интерфейс <api-link path="classes/Sholokhov-Exchange-Preparation-PreparationInterface.html">PreparationInterface</api-link>.
       <br>
       <alert-message>
         Вызывается <b>только первый</b> подходящий преобразователь

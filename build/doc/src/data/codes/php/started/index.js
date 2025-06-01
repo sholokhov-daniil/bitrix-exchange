@@ -13,8 +13,8 @@ $exchange->setResultRepository($callback);
 
 
 export const map = `
-use Sholokhov\\BitrixExchange\\Fields\\Field;
-use Sholokhov\\BitrixExchange\\Fields\\IBlock\\IBlockElementField;
+use Sholokhov\\Exchange\\Fields\\Field;
+use Sholokhov\\Exchange\\Fields\\IBlock\\IBlockElementField;
 
 $source = [
     [

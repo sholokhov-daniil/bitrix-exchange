@@ -23,7 +23,7 @@ export const json = `
 `;
 
 export const created = `
-use Sholokhov\\BitrixExchange\\Source\\Json;
+use Sholokhov\\Exchange\\Source\\Json;
 
 $config = [
     'source_key' => 'items.item',

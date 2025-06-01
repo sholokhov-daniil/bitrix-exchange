@@ -1,10 +1,10 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Source;
+namespace Sholokhov\Exchange\Source;
 
 use Iterator;
 use ArrayIterator;
-use Sholokhov\BitrixExchange\Helper\Helper;
+use Sholokhov\Exchange\Helper\Helper;
 
 /**
  * Источник данных на основе json строки

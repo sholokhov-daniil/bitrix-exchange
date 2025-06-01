@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Messages;
+namespace Sholokhov\Exchange\Messages;
 
 /**
  * @since 1.0.0

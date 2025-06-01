@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Preparation;
+namespace Sholokhov\Exchange\Preparation;
 
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Fields\FieldInterface;
 
 /**
  * Базовый класс преобразователей данных

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Factory\Highloadblock;
+namespace Sholokhov\Exchange\Factory\Highloadblock;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;

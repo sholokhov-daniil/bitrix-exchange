@@ -11,7 +11,7 @@ import TableBlock from "@/components/table/TableBlock.vue";
   <main-container>
     <h1>Источник данных Json</h1>
     <p>
-      Класс: <api-link path="classes/Sholokhov-BitrixExchange-Source-Json.html">Json</api-link>
+      Класс: <api-link path="classes/Sholokhov-Exchange-Source-Json.html">Json</api-link>
     </p>
   </main-container>
 

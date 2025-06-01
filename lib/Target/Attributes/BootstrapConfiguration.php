@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Target\Attributes;
+namespace Sholokhov\Exchange\Target\Attributes;
 
 use Attribute;
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Source\Entities\IBlock;
+namespace Sholokhov\Exchange\Source\Entities\IBlock;
 
 use Iterator;
 use ArrayIterator;
 use CIBlockElement;
 
-use Sholokhov\BitrixExchange\Source\IterableTrait;
+use Sholokhov\Exchange\Source\IterableTrait;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;

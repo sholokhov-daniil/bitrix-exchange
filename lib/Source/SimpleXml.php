@@ -1,12 +1,12 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Source;
+namespace Sholokhov\Exchange\Source;
 
 use ArrayIterator;
 use Iterator;
 use EmptyIterator;
 
-use Sholokhov\BitrixExchange\Helper\Helper;
+use Sholokhov\Exchange\Helper\Helper;
 
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 

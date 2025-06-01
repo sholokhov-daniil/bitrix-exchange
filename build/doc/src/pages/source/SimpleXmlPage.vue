@@ -10,7 +10,7 @@ import {example, result, rootTag, xml} from "@/data/codes/php/source/simple-xml"
   <main-container>
     <h1>Источник данных из XML</h1>
     <p>
-      Класс: <api-link path="classes/Sholokhov-BitrixExchange-Source-SimpleXml.html">SimpleXml</api-link>
+      Класс: <api-link path="classes/Sholokhov-Exchange-Source-SimpleXml.html">SimpleXml</api-link>
     </p>
   </main-container>
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Preparation\Base;
+namespace Sholokhov\Exchange\Preparation\Base;
 
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Preparation\AbstractPrepare;
+use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Preparation\AbstractPrepare;
 
 /**
  * Приводит значение к целочисленному

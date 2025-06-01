@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Repository\Fields;
+namespace Sholokhov\Exchange\Repository\Fields;
 
 use CUserTypeEntity;
 use InvalidArgumentException;

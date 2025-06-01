@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Exception;
+namespace Sholokhov\Exchange\Exception;
 
 use Exception;
 

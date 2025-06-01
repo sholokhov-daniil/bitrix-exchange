@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Messages\Type;
+namespace Sholokhov\Exchange\Messages\Type;
 
 /**
  * Результат вызова события обмена

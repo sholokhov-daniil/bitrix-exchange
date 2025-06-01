@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Fields\IBlock;
+namespace Sholokhov\Exchange\Fields\IBlock;
 
-use Sholokhov\BitrixExchange\Fields\Field;
+use Sholokhov\Exchange\Fields\Field;
 
 /**
  * Описание свойства элемента ИБ

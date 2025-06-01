@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Exception\Target;
+namespace Sholokhov\Exchange\Exception\Target;
 
-use Sholokhov\BitrixExchange\Exception\ExchangeException;
+use Sholokhov\Exchange\Exception\ExchangeException;
 use Throwable;
 
 /**

@@ -20,7 +20,7 @@ import AlertMessage from "@/components/messages/AlertMessage.vue";
   <main-container>
     <h1>Источник данных из XML</h1>
     <p>
-      Класс: <api-link path="classes/classes/Sholokhov-BitrixExchange-Source-Xml.html">Xml</api-link>
+      Класс: <api-link path="classes/classes/Sholokhov-Exchange-Source-Xml.html">Xml</api-link>
     </p>
   </main-container>
 

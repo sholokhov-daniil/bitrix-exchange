@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Events;
+namespace Sholokhov\Exchange\Events;
 
-use Sholokhov\BitrixExchange\Target\Attributes\Events as Attribute;
+use Sholokhov\Exchange\Target\Attributes\Events as Attribute;
 
 /**
  * Зарегистрированные события обмена

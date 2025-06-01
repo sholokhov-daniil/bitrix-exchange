@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Fields\Catalog;
+namespace Sholokhov\Exchange\Fields\Catalog;
 
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;

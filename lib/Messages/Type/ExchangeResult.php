@@ -1,9 +1,9 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Messages\Type;
+namespace Sholokhov\Exchange\Messages\Type;
 
-use Sholokhov\BitrixExchange\Messages\ExchangeResultInterface;
-use Sholokhov\BitrixExchange\Repository\Result\ResultRepositoryInterface;
+use Sholokhov\Exchange\Messages\ExchangeResultInterface;
+use Sholokhov\Exchange\Repository\Result\ResultRepositoryInterface;
 
 /**
  * Результат выполненных действий

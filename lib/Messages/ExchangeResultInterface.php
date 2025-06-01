@@ -1,8 +1,8 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Messages;
+namespace Sholokhov\Exchange\Messages;
 
-use Sholokhov\BitrixExchange\Repository\Result\ResultRepositoryInterface;
+use Sholokhov\Exchange\Repository\Result\ResultRepositoryInterface;
 
 /**
  * @since 1.0.0

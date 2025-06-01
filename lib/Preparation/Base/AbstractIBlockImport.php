@@ -1,11 +1,11 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Preparation\Base;
+namespace Sholokhov\Exchange\Preparation\Base;
 
-use Sholokhov\BitrixExchange\Preparation\IBlock\PropertyTrait;
+use Sholokhov\Exchange\Preparation\IBlock\PropertyTrait;
 
-use Sholokhov\BitrixExchange\Fields\Field;
-use Sholokhov\BitrixExchange\ExchangeInterface;
+use Sholokhov\Exchange\Fields\Field;
+use Sholokhov\Exchange\ExchangeInterface;
 
 /**
  * Преобразует значение имеющего связь к иной сущности

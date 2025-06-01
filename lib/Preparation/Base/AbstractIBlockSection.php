@@ -1,19 +1,19 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Preparation\Base;
+namespace Sholokhov\Exchange\Preparation\Base;
 
 use Bitrix\Main\NotImplementedException;
 use ReflectionException;
 
-use Sholokhov\BitrixExchange\Factory\Result\SimpleFactory;
-use Sholokhov\BitrixExchange\Fields\Field;
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Messages\DataResultInterface;
-use Sholokhov\BitrixExchange\Messages\ExchangeResultInterface;
-use Sholokhov\BitrixExchange\Messages\Type\DataResult;
-use Sholokhov\BitrixExchange\Preparation\AbstractPrepare;
-use Sholokhov\BitrixExchange\Repository\IBlock\SectionRepository;
-use Sholokhov\BitrixExchange\Target\IBlock\Section;
+use Sholokhov\Exchange\Factory\Result\SimpleFactory;
+use Sholokhov\Exchange\Fields\Field;
+use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Messages\DataResultInterface;
+use Sholokhov\Exchange\Messages\ExchangeResultInterface;
+use Sholokhov\Exchange\Messages\Type\DataResult;
+use Sholokhov\Exchange\Preparation\AbstractPrepare;
+use Sholokhov\Exchange\Repository\IBlock\SectionRepository;
+use Sholokhov\Exchange\Target\IBlock\Section;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;

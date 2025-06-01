@@ -1,9 +1,9 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Repository;
+namespace Sholokhov\Exchange\Repository;
 
 use Exception;
-use Sholokhov\BitrixExchange\Repository\Types\Memory;
+use Sholokhov\Exchange\Repository\Types\Memory;
 
 /**
  * @since 1.0.0

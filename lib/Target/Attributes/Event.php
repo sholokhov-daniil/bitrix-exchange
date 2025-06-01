@@ -1,9 +1,9 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Target\Attributes;
+namespace Sholokhov\Exchange\Target\Attributes;
 
 use Attribute;
-use Sholokhov\BitrixExchange\Events\ExchangeEvent;
+use Sholokhov\Exchange\Events\ExchangeEvent;
 
 /**
  * Производит указание, что метод подписан на системное событие обмена

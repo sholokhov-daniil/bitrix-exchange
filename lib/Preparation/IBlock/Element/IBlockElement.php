@@ -1,11 +1,11 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Preparation\IBlock\Element;
+namespace Sholokhov\Exchange\Preparation\IBlock\Element;
 
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
-use Sholokhov\BitrixExchange\Preparation\IBlock\PropertyTrait;
-use Sholokhov\BitrixExchange\Preparation\Base\AbstractIBlockElement;
+use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Fields\IBlock\ElementFieldInterface;
+use Sholokhov\Exchange\Preparation\IBlock\PropertyTrait;
+use Sholokhov\Exchange\Preparation\Base\AbstractIBlockElement;
 
 use Bitrix\Iblock\PropertyTable;
 

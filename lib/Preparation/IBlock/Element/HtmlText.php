@@ -1,12 +1,12 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Preparation\IBlock\Element;
+namespace Sholokhov\Exchange\Preparation\IBlock\Element;
 
-use Sholokhov\BitrixExchange\Preparation\AbstractPrepare;
-use Sholokhov\BitrixExchange\Preparation\IBlock\PropertyTrait;
-use Sholokhov\BitrixExchange\Fields\IBlock\ElementFieldInterface;
+use Sholokhov\Exchange\Preparation\AbstractPrepare;
+use Sholokhov\Exchange\Preparation\IBlock\PropertyTrait;
+use Sholokhov\Exchange\Fields\IBlock\ElementFieldInterface;
 
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Fields\FieldInterface;
 
 use Bitrix\Iblock\PropertyTable;
 use Bitrix\Main\LoaderException;

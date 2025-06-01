@@ -1,26 +1,26 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Target\UserFields;
+namespace Sholokhov\Exchange\Target\UserFields;
 
 use Exception;
 use CUserFieldEnum;
 
-use Sholokhov\BitrixExchange\Exception\Target\ExchangeItemStoppedException;
-use Sholokhov\BitrixExchange\Exchange;
-use Sholokhov\BitrixExchange\Fields\FieldInterface;
-use Sholokhov\BitrixExchange\Helper\Helper;
-use Sholokhov\BitrixExchange\Messages\DataResultInterface;
-use Sholokhov\BitrixExchange\Messages\ResultInterface;
-use Sholokhov\BitrixExchange\Messages\Type\DataResult;
-use Sholokhov\BitrixExchange\Messages\Type\EventResult;
-use Sholokhov\BitrixExchange\Messages\Type\ExchangeResult;
-use Sholokhov\BitrixExchange\Messages\Type\Result;
-use Sholokhov\BitrixExchange\Repository\Fields\UFRepository;
-use Sholokhov\BitrixExchange\Target\Attributes\Validate;
-use Sholokhov\BitrixExchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\Exchange\Exception\Target\ExchangeItemStoppedException;
+use Sholokhov\Exchange\Exchange;
+use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Helper\Helper;
+use Sholokhov\Exchange\Messages\DataResultInterface;
+use Sholokhov\Exchange\Messages\ResultInterface;
+use Sholokhov\Exchange\Messages\Type\DataResult;
+use Sholokhov\Exchange\Messages\Type\EventResult;
+use Sholokhov\Exchange\Messages\Type\ExchangeResult;
+use Sholokhov\Exchange\Messages\Type\Result;
+use Sholokhov\Exchange\Repository\Fields\UFRepository;
+use Sholokhov\Exchange\Target\Attributes\Validate;
+use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
 
 use Bitrix\Main\Event;
-use Sholokhov\BitrixExchange\Messages\Type\Error;
+use Sholokhov\Exchange\Messages\Type\Error;
 use Bitrix\Main\EventResult as BXEventResult;
 
 class Enumeration extends Exchange

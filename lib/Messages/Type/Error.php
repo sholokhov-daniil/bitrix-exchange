@@ -1,10 +1,10 @@
 <?php
 
-namespace Sholokhov\BitrixExchange\Messages\Type;
+namespace Sholokhov\Exchange\Messages\Type;
 
 use Throwable;
 
-use Sholokhov\BitrixExchange\Messages\ErrorInterface;
+use Sholokhov\Exchange\Messages\ErrorInterface;
 
 /**
  * Описание ошибки

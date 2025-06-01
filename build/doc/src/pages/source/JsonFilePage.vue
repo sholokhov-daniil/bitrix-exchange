@@ -10,9 +10,9 @@ import {created, json, result} from "@/data/codes/php/source/json-file";
   <main-container>
     <h1>Источник данных Json</h1>
     <p>
-      Класс: <api-link path="classes/Sholokhov-BitrixExchange-Source-JsonFile.html">JsonFile</api-link>
+      Класс: <api-link path="classes/Sholokhov-Exchange-Source-JsonFile.html">JsonFile</api-link>
       <br>
-       Родительский класс: <api-link path="classes/Sholokhov-BitrixExchange-Source-Json.html">Json</api-link>
+       Родительский класс: <api-link path="classes/Sholokhov-Exchange-Source-Json.html">Json</api-link>
     </p>
   </main-container>
 
