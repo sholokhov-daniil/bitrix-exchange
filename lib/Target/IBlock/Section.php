@@ -2,10 +2,13 @@
 
 namespace Sholokhov\Exchange\Target\IBlock;
 
+use Bitrix\Main\ORM\Fields\Relations\Reference;
+use Bitrix\Main\ORM\Fields\StringField;
 use CUtil;
 use Exception;
 use CIBlockSection;
 
+use Sholokhov\Exchange\Builder\SectionUtsBuilder;
 use Sholokhov\Exchange\Exception\ExchangeException;
 use Sholokhov\Exchange\Exception\Target\ExchangeItemStoppedException;
 use Sholokhov\Exchange\Fields\FieldInterface;
@@ -32,7 +35,7 @@ use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
  * Импорт разделов информационного блока
  *
  * @package Target
- * @version 1.0.0
+ * @version 1.1.0
  */
 class Section extends IBlock
 {
@@ -77,6 +80,8 @@ class Section extends IBlock
      * @param array $item
      * @return bool
      * @throws Exception
+     *
+     * @version 1.1.0
      */
     protected function exists(array $item): bool
     {
@@ -94,6 +99,10 @@ class Section extends IBlock
             'IBLOCK_ID' => $this->getIBlockID(),
             $keyField->getTo() => $item[$keyField->getTo()],
         ];
+
+        if ($hashField = $this->getHashField()) {
+            $filter[$hashField->getTo()] = $this->getHash();
+        }
 
         if ($section = CIBlockSection::GetList([], $filter)->Fetch()) {
             // TODO: Проверить хэш импорта
@@ -196,7 +205,7 @@ class Section extends IBlock
      * @return array
      * @throws Exception
      *
-     * @version 1.0.0
+     * @version 1.1.0
      */
     protected function prepareItem(array $item): array
     {
@@ -223,6 +232,10 @@ class Section extends IBlock
 
         $result['IBLOCK_ID'] = $this->getIBlockID();
 
+        if ($hashField = $this->getHashField()) {
+            $result[$hashField->getTo()] = $this->getHash();
+        }
+
         return $result;
     }
 
@@ -234,21 +247,32 @@ class Section extends IBlock
      * @throws ObjectPropertyException
      * @throws SystemException
      * @throws Exception
+     *
+     * @version 1.1.0
      */
     protected function deactivate(): void
     {
-        $filter = [
-            'IBLOCK_ID' => $this->getIBlockID(),
-            '<TIMESTAMP_X' => DateTime::createFromTimestamp($this->getDateStarted()),
-            'ACTIVE' => 'Y',
-        ];
-        $select = ['ID'];
+        $query = SectionTable::query()
+            ->where('IBLOCK_ID', $this->getIBlockID())
+            ->where('TIMESTAMP_X', '<', DateTime::createFromTimestamp($this->getDateStarted()))
+            ->where('ACTIVE', 'Y')
+            ->addSelect('ID');
 
-        $parameters = compact('filter', 'select');
+        if ($hashField = $this->getHashField()) {
+            if ($this->getFieldRepository()->has($hashField->getTo())) {
+                $factory = new SectionUtsBuilder($this->getIBlockID());
+                $uts = $factory->make([new StringField($hashField->getTo())]);
+                $query->registerRuntimeField(
+                    new Reference('UF', $uts, ['=this.ID' => 'ref.VALUE_ID'], ['join_type' => 'inner'])
+                );
+            } else {
+                $query->where($hashField->getTo(), $this->getHash());
+            }
+        }
 
-        (new Event(Helper::getModuleID(), self::BEFORE_DEACTIVATE, ['parameetrs' => &$parameters]))->send();
+        (new Event(Helper::getModuleID(), self::BEFORE_DEACTIVATE, ['query' => $query]))->send();
 
-        $iterator = SectionTable::getList($parameters);
+        $iterator = $query->exec();
         while ($section = $iterator->fetch()) {
             SectionTable::update($section['ID'], ['ACTIVE' => 'N']);
         }

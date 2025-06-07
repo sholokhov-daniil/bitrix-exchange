@@ -11,7 +11,7 @@ use Sholokhov\Exchange\Repository\RepositoryInterface;
  * Описание структуры и логики работы со свойством
  *
  * @since 1.0.0
- * @version 1.0.0
+ * @version 1.1.0
  * @package Field
  */
 class Field implements FieldInterface
@@ -40,6 +40,19 @@ class Field implements FieldInterface
     }
 
     /**
+     * Поле хранит хэш импорта
+     *
+     * @return bool
+     *
+     * @since 1.1.0
+     * @version 1.1.0
+     */
+    public function isHash(): bool
+    {
+        return $this->getContainer()->get('hash_field', false);
+    }
+
+    /**
      * При отсутствии сущности попытается создать
      *
      * @return bool
@@ -64,6 +77,21 @@ class Field implements FieldInterface
     public function setPrimary(bool $value = true): self
     {
         $this->getContainer()->set('key_field', $value);
+        return $this;
+    }
+
+    /**
+     * Установка флага, что поле хранит хэш импорта
+     *
+     * @param bool $value
+     * @return $this
+     *
+     * @since 1.1.0
+     * @version 1.1.0
+     */
+    public function setHash(bool $value = true): self
+    {
+        $this->getContainer()->set('hash_field', $value);
         return $this;
     }
 

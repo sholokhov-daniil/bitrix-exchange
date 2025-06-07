@@ -8,7 +8,7 @@ use Psr\Log\LoggerAwareInterface;
 
 /**
  * @since 1.0.0
- * @version 1.0.0
+ * @version 1.1.0
  */
 interface ExchangeInterface extends LoggerAwareInterface
 {
@@ -22,4 +22,14 @@ interface ExchangeInterface extends LoggerAwareInterface
      * @version 1.0.0
      */
     public function execute(iterable $source): ExchangeResultInterface;
+
+    /**
+     * Получение хэша обмена
+     *
+     * @return string
+     *
+     * @since 1.1.0
+     * @version 1.1.0
+     */
+    public function getHash(): string;
 }

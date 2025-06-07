@@ -395,11 +395,10 @@ const data = reactive({
       </template>
 
       <tr>
-        <td>parameters</td>
+        <td>query</td>
         <td>Да</td>
-        <td>array</td>
-        <td>Да</td>
-        <td>Параметры запроса <a href="https://dev.1c-bitrix.ru/api_d7/bitrix/iblock/elementtable/index.php" target="_blank">ElementTable::getList</a></td>
+        <td><a href="https://dev.1c-bitrix.ru/learning/course/index.php?COURSE_ID=43&LESSON_ID=5751" target="_blank">Bitrix\Main\ORM\Query\Query</a></td>        <td>Да</td>
+        <td>Конфигуратор запроса</td>
       </tr>
     </table-block>
 

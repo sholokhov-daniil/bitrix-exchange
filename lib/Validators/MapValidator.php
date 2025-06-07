@@ -14,7 +14,7 @@ use Sholokhov\Exchange\Messages\ResultInterface;
  *
  * @package Validator
  * @since 1.0.0
- * @version 1.0.0
+ * @version 1.1.0
  */
 class MapValidator implements ValidatorInterface
 {
@@ -25,7 +25,7 @@ class MapValidator implements ValidatorInterface
      * @return ResultInterface
      *
      * @since 1.0.0
-     * @version 1.0.0
+     * @version 1.1.0
      */
     public function validate(mixed $value): ResultInterface
     {
@@ -50,7 +50,7 @@ class MapValidator implements ValidatorInterface
                 }
             }
 
-            if ($field->getFrom() === '') {
+            if ($field->getFrom() === '' && !$field->isHash()) {
                 $result->addError(new Error('Field path is required', 400, $field));
             }
         }

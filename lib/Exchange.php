@@ -54,7 +54,7 @@ use Psr\Log\LoggerAwareTrait;
  *  </ul>
  *
  * @since 1.0.0
- * @version 1.0.0
+ * @version 1.1.0
  */
 #[MapValidator]
 abstract class Exchange extends Application implements MappingExchangeInterface
@@ -135,7 +135,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      *
      * @throws Exception
      * @since 1.0.0
-     * @version 1.0.0
+     * @version 1.1.0
      */
     public function setMap(array $map): static
     {
@@ -146,6 +146,10 @@ abstract class Exchange extends Application implements MappingExchangeInterface
                 $primaryExist = true;
                 $this->repository->set('primary_field', $field);
             }
+
+            if ($field->isHash()) {
+                $this->repository->set('hash_field', $field);
+            }
         }
 
         if (!$primaryExist) {
@@ -154,6 +158,18 @@ abstract class Exchange extends Application implements MappingExchangeInterface
 
         $this->repository->set('map', $map);
         return $this;
+    }
+
+    /**
+     * Получение хэша импорта
+     *
+     * @return string
+     * @since 1.1.0
+     * @version 1.1.0
+     */
+    public function getHash(): string
+    {
+        return (string)$this->getOptions()->get('hash', '');
     }
 
     /**
@@ -349,6 +365,18 @@ abstract class Exchange extends Application implements MappingExchangeInterface
     final protected function getPrimaryField(): FieldInterface
     {
         return $this->repository->get('primary_field');
+    }
+
+    /**
+     * Получение поля отвечающего за хеш
+     *
+     * @return FieldInterface|null
+     * @since 1.1.0
+     * @version 1.1.0
+     */
+    final protected function getHashField(): ?FieldInterface
+    {
+        return $this->repository->get('hash_field');
     }
 
     /**

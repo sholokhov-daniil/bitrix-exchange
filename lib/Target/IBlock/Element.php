@@ -31,7 +31,7 @@ use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
  * Импортирование элемента информационного блока
  *
  * @package Target
- * @version 1.0.0
+ * @version 1.1.0
  */
 class Element extends IBlock
 {
@@ -47,6 +47,8 @@ class Element extends IBlock
      * @param array $item
      * @return bool
      * @throws Exception
+     *
+     * @version 1.1.0
      */
     protected function exists(array $item): bool
     {
@@ -56,10 +58,13 @@ class Element extends IBlock
             return true;
         }
 
-        // TODO: Добавлять хэш импорта
         $filter = [
             'IBLOCK_ID' => $this->getIBlockID(),
         ];
+
+        if ($hashField = $this->getHashFieldCode()) {
+            $filter[$hashField] = $this->getHash();
+        }
 
         if ($keyField instanceof ElementFieldInterface) {
             $filter['PROPERTY_' . $keyField->getTo()] = $item[$keyField->getTo()];
@@ -68,7 +73,6 @@ class Element extends IBlock
         }
 
         if ($element = CIBlockElement::GetList([], $filter)->Fetch()) {
-            // TODO: Проверить хэш импорта
             $this->cache->set($item[$keyField->getTo()], (int)$element['ID']);
 
             return true;
@@ -104,7 +108,6 @@ class Element extends IBlock
         }
 
         if ($itemId = $iblock->Add($data)) {
-            // TODO: записываем хэш
             $result->setData((int)$itemId);
             $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the %s information block', $this->getIBlockID(), $itemId));
             $this->cache->set($item[$this->getPrimaryField()->getTo()], (int)$itemId);
@@ -169,13 +172,45 @@ class Element extends IBlock
     }
 
     /**
+     * Деактивация элементов, которые не пришли в импорте
+     *
+     * @return void
+     * @version 1.1.0
+     */
+    protected function deactivate(): void
+    {
+        $filter = [
+            'IBLOCK_ID' => $this->getIBlockID(),
+            '<TIMESTAMP_X' => DateTime::createFromTimestamp($this->getDateStarted()),
+            'ACTIVE' => 'Y',
+        ];
+
+        if ($hashField = $this->getHashFieldCode()) {
+            $filter[$hashField] = $this->getHash();
+        }
+
+        $select = ['ID'];
+
+        $parameters = compact('filter', 'select');
+
+        (new Event(Helper::getModuleID(), self::BEFORE_DEACTIVATE, ['parameters' => &$parameters]))->send();
+
+        $iBlock = new CIBlockElement;
+        $iterator = CIBlockElement::GetList([], $parameters['filter'], false, false, $parameters['select']);
+
+        while ($element = $iterator->fetch()) {
+            $iBlock->Update($element['ID'], ['ACTIVE' => 'N']);
+        }
+    }
+
+    /**
      * Разделение импортируемых данных на группы
      *
      * @param array{FIELDS: array, PROPERTIES: array} $item
      * @return array|array[]
      * @throws Exception
      *
-     * @version 1.0.0
+     * @version 1.1.0
      */
     protected function prepareItem(array $item): array
     {
@@ -208,36 +243,15 @@ class Element extends IBlock
             }
         });
 
-        return $result;
-    }
-
-    /**
-     * Деактивация элементов, которые не пришли в импорте
-     *
-     * @return void
-     * @throws ArgumentException
-     * @throws ObjectPropertyException
-     * @throws SystemException
-     */
-    protected function deactivate(): void
-    {
-        $filter = [
-            'IBLOCK_ID' => $this->getIBlockID(),
-            '<TIMESTAMP_X' => DateTime::createFromTimestamp($this->getDateStarted()),
-            'ACTIVE' => 'Y',
-        ];
-        $select = ['ID'];
-
-        $parameters = compact('filter', 'select');
-
-        (new Event(Helper::getModuleID(), self::BEFORE_DEACTIVATE, ['parameters' => &$parameters]))->send();
-
-        $iBlock = new CIBlockElement;
-        $iterator = ElementTable::getList($parameters);
-
-        while ($element = $iterator->fetch()) {
-            $iBlock->Update($element['ID'], ['ACTIVE' => 'N']);
+        if ($hashField = $this->getHashField()) {
+            if ($hashField instanceof ElementFieldInterface) {
+                $result['PROPERTIES'][$hashField->getTo()] = $this->getHash();
+            } else {
+                $result['FIELDS'][$hashField->getTo()] = $this->getHash();
+            }
         }
+
+        return $result;
     }
 
     /**
@@ -340,6 +354,27 @@ class Element extends IBlock
     protected function getPropertyRepository(): PropertyRepository
     {
         return $this->repository->get('property_repository');
+    }
+
+    /**
+     * Получение свойства в котором хранится хэш импорта.
+     *
+     * Если это пользовательское свойство, то автоматически преобразовывается в формат PROPERTY_xxxx
+     *
+     * @return string
+     *
+     * @since 1.1.0
+     * @version 1.1.0
+     */
+    protected function getHashFieldCode(): string
+    {
+        $field = $this->getHashField();
+
+        if (!$field) {
+            return '';
+        }
+
+        return $field instanceof ElementFieldInterface ? "PROPERTY_" . $field->getTo() : $field->getTo();
     }
 
     /**
