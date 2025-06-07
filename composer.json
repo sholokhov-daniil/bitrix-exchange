@@ -26,6 +26,7 @@
     },
     "scripts": {
         "doc": [
+            "rm -rf docs/public/api",
             "docker run --rm -v \"$(pwd):/data\" \"phpdoc/phpdoc:3\""
         ]
     },

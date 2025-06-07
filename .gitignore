@@ -1,5 +1,5 @@
 /.idea
 /vendor
 /*.log
-/build/cache
-node_modules
+/build
+/docs
