@@ -29,6 +29,16 @@ interface FieldInterface
     public function isPrimary(): bool;
 
     /**
+     * Свойство отвечает за хранение хэша
+     *
+     * @return bool
+     *
+     * @since 1.1.0
+     * @version 1.1.0
+     */
+    public function isHash(): bool;
+
+    /**
      * При отсутствии связующей сущности произвести его создание.
      *
      * @example Описываем свойство типа: привязка к элементу инфоблока. Если значение true, то при отсутствии элемента оно будет создано

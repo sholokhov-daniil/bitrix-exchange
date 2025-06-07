@@ -9,7 +9,7 @@
     <setting name="graphs.enabled" value="true" />
 
     <paths>
-        <output>build/doc/public/api</output>
+        <output>docs/public/api</output>
         <cache>build/cache</cache>
     </paths>
     <version number="3.0.0">
