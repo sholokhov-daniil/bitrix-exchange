@@ -6,6 +6,7 @@ use Illuminate\Support\Arr;
 
 /**
  * @package Helper
+ * @version 1.2.0
  */
 class Helper
 {
@@ -13,10 +14,24 @@ class Helper
      * Псевдо-идентификатор модуля
      *
      * @return string
+     * @version 1.2.0
      */
     public static function getModuleID(): string
     {
-        return 'sholokhov.exchange';
+        return GetModuleID(self::getRootDir());
+    }
+
+    /**
+     * Путь до корня модуля
+     *
+     * @return string
+     *
+     * @version 1.2.0
+     * @since 1.2.0
+     */
+    public static function getRootDir(): string
+    {
+        return dirname(__DIR__, 2);
     }
 
     /**
