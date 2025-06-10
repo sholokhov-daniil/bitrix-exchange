@@ -4,7 +4,7 @@ namespace Sholokhov\Exchange\Bootstrap;
 
 use DirectoryIterator;
 use Sholokhov\Exchange\Helper\Helper;
-use Bitrix\Main\Config\Configuration as Config;
+use Sholokhov\Exchange\Helper\Config;
 
 /**
  * Производит инициализацию конфигураций модуля
@@ -23,12 +23,11 @@ class Configuration
      */
     public function bootstrap(): void
     {
-        $registry = Config::getInstance(Helper::getModuleID());
         $iterator = new DirectoryIterator(Helper::getRootDir() . DIRECTORY_SEPARATOR . 'config');
 
         foreach ($iterator as $file) {
             if ($file->isFile() && $file->isReadable()) {
-                $registry->add($file->getBasename('.php'), @include $file->getPathname());
+                Config::add($file->getBasename('.php'), @include $file->getPathname());
             }
         }
     }
