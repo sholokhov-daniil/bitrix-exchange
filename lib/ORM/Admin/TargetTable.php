@@ -5,6 +5,7 @@ namespace Sholokhov\Exchange\ORM\Admin;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields;
+use Bitrix\Main\SystemException;
 
 /**
  * Хранит зарегистрированные обмены.
@@ -73,6 +74,7 @@ final class TargetTable extends DataManager
      *
      * @return array
      *
+     * @throws SystemException
      * @since 1.2.0
      * @version 1.2.0
      */
