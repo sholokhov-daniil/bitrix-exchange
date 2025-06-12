@@ -1,25 +1,26 @@
 <?php
 
-namespace Sholokhov\Exchange\ORM\Admin;
+namespace Sholokhov\Exchange\ORM\Settings;
 
+use Bitrix\Main\ORM\Fields;
 use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ORM\Data\DataManager;
-use Bitrix\Main\ORM\Fields;
+use Bitrix\Main\ORM\Query\Join;
 use Bitrix\Main\SystemException;
 
 /**
- * Хранит зарегистрированные обмены.
+ * Хранит зарегистрированные источники данных обмена.
  *
- * Обмен, используются в административной части сайта
+ * Источники данных используются в административной части сайта
  *
  * @final
  * @since 1.2.0
  * @version 1.2.0
  */
-final class TargetTable extends DataManager
+final class EntityTable extends DataManager
 {
     /**
-     * Уникальный символьный код обмена
+     * Уникальный символьный код источника данных
      *
      * @since 1.2.0
      * @version 1.2.0
@@ -27,7 +28,7 @@ final class TargetTable extends DataManager
     public const PC_CODE = "CODE";
 
     /**
-     * Сущность обмена
+     * Сущность позволяющая работать с источником данных
      *
      * @since 1.2.0
      * @version 1.2.0
@@ -35,7 +36,7 @@ final class TargetTable extends DataManager
     public const PC_ENTITY = "ENTITY";
 
     /**
-     * Наименование обмена
+     * Наименование источника
      *
      * Наименование выводится в визуальной части.
      * В данном свойстве хранится код из языкового файла {@see Loc::getMessage()}
@@ -46,7 +47,7 @@ final class TargetTable extends DataManager
     public const PC_NAME = "NAME";
 
     /**
-     * Описание обмена
+     * Описание источника
      *
      * Описание выводится в визуальной части.
      * В данном свойстве хранится код из языкового файла {@see Loc::getMessage()}
@@ -55,6 +56,22 @@ final class TargetTable extends DataManager
      * @version 1.2.0
      */
     public const PC_DESCRIPTION = "DESCRIPTION";
+
+    /**
+     * Тип сущности(группа)
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    public const PC_TYPE_CODE = "TYPE_CODE";
+
+    /**
+     * Привязка к таблице типа сущности {@see EntityTypeTable}
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    public const PC_TYPE = "TYPE";
 
     /**
      * Название таблицы
@@ -66,7 +83,7 @@ final class TargetTable extends DataManager
      */
     public static function getTableName(): string
     {
-        return 'sholokhov_exchange_targets';
+        return 'sholokhov_exchange_entities';
     }
 
     /**
@@ -82,8 +99,8 @@ final class TargetTable extends DataManager
     {
         return [
             (new Fields\StringField(self::PC_CODE))
-                ->configureRequired()
-                ->configurePrimary(),
+                ->configurePrimary()
+                ->configureRequired(),
 
             (new Fields\StringField(self::PC_ENTITY))
                 ->configureRequired(),
@@ -92,9 +109,18 @@ final class TargetTable extends DataManager
                 ->addFetchDataModifier(fn($value) => Loc::getMessage($value) ?: '')
                 ->configureRequired(),
 
+            (new Fields\StringField(self::PC_TYPE_CODE))
+                ->configureRequired(),
+
             (new Fields\StringField(self::PC_DESCRIPTION))
                 ->addFetchDataModifier(fn($value) => Loc::getMessage($value) ?: '')
                 ->configureDefaultValue(''),
+
+            (new Fields\Relations\Reference(
+                self::PC_TYPE,
+                EntityTable::class,
+                Join::on('this.' . self::PC_TYPE_CODE, 'ref.' . EntityTable::PC_CODE)
+            )),
         ];
     }
 }

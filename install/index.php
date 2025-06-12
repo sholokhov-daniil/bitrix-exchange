@@ -7,10 +7,13 @@ use Bitrix\Main\EventManager;
 use Bitrix\Main\Localization\Loc;
 
 use Bitrix\Main\SystemException;
-use Sholokhov\Exchange\ORM\Admin\TargetTable;
+use Sholokhov\Exchange\Builder\DynamicEntity\TypeEntityEnum;
+use Sholokhov\Exchange\ORM\Settings\EntitySettingsTable;
+use Sholokhov\Exchange\ORM\Settings\EntityTypeTable;
+use Sholokhov\Exchange\ORM\Settings\ExchangeTable;
 use Sholokhov\Exchange\Source;
 use Sholokhov\Exchange\Target;
-use Sholokhov\Exchange\ORM\Admin\SourceTable;
+use Sholokhov\Exchange\ORM\Settings\EntityTable;
 use Sholokhov\Exchange\ORM\ResultTable;
 
 /**
@@ -65,14 +68,14 @@ class sholokhov_exchange extends CModule
      *
      * @version 1.2.0
      */
-    public function DoUninstall()
+    public function DoUninstall(): void
     {
         $this->unRegistrationEvents();
 
         $connection = Application::getConnection();
         $connection->dropTable(ResultTable::getTableName());
-        $connection->dropTable(SourceTable::getTableName());
-        $connection->dropTable(TargetTable::getTableName());
+        $connection->dropTable(EntityTable::getTableName());
+        $connection->dropTable(EntityTable::getTableName());
 
         $this->Remove();
     }
@@ -87,128 +90,169 @@ class sholokhov_exchange extends CModule
      */
     public function installDB(): void
     {
-        $this->installSources();
-        $this->installTarget();
+        $connection = Application::getConnection();
 
-        if (!Application::getConnection()->isTableExists(ResultTable::getTableName())) {
-            ResultTable::getEntity()->createDbTable();
+        $this->migrationEntities();
+
+        if ($connection->isTableExists(ResultTable::getTableName())) {
+            $connection->dropTable(ResultTable::getTableName());
         }
+        ResultTable::getEntity()->createDbTable();
+
+        if ($connection->isTableExists(ExchangeTable::getTableName())) {
+            $connection->dropTable(ExchangeTable::getTableName());
+        }
+        ExchangeTable::getEntity()->createDbTable();
     }
 
     /**
      * @return void
      * @throws ArgumentException
      * @throws SystemException
+     * @throws Exception
      *
      * @since 1.2.0
      * @version 1.2.0
      */
-    private function installSources(): void
+    private function migrationEntities(): void
     {
-        $table = SourceTable::getTableName();
         $connection = Application::getConnection();
 
-        if ($connection->isTableExists($table)) {
-            $connection->truncateTable($table);
-        } else {
-            SourceTable::getEntity()->createDbTable();
+        if ($connection->isTableExists(EntityTypeTable::getTableName())) {
+            $connection->dropTable(EntityTypeTable::getTableName());
         }
+        EntityTypeTable::getEntity()->createDbTable();
 
-        SourceTable::add([
-            SourceTable::PC_CODE => 'simple_xml',
-            SourceTable::PC_ENTITY => Source\SimpleXml::class,
-            SourceTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_XML_NAME',
-            SourceTable::PC_DESCRIPTION => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_XML_DESC',
+        if ($connection->isTableExists(EntityTable::getTableName())) {
+            $connection->dropTable(EntityTable::getTableName());
+        }
+        EntityTable::getEntity()->createDbTable();
+
+        if ($connection->isTableExists(EntitySettingsTable::getTableName())) {
+            $connection->dropTable(EntitySettingsTable::getTableName());
+        }
+        EntitySettingsTable::getEntity()->createDbTable();
+
+        $this->migrationSources();
+        $this->migrationTargets();
+    }
+
+    /**
+     * Миграция источников данных
+     *
+     * @return void
+     * @throws Exception
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    private function migrationSources(): void
+    {
+        $typeResult = EntityTypeTable::add([
+            EntityTypeTable::PC_CODE => TypeEntityEnum::Source->value
         ]);
 
-        SourceTable::add([
-            SourceTable::PC_CODE => 'db_xml',
-            SourceTable::PC_ENTITY => Source\Xml::class,
-            SourceTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_SOURCE_DB_XML_NAME',
-            SourceTable::PC_DESCRIPTION => 'SHOLOKHOV_EXCHANGE_SOURCE_DB_XML_DESC',
+        EntityTable::add([
+            EntityTable::PC_CODE => 'source_simple_xml',
+            EntityTable::PC_TYPE_CODE => $typeResult->getId(),
+            EntityTable::PC_ENTITY => Source\SimpleXml::class,
+            EntityTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_XML_NAME',
+            EntityTable::PC_DESCRIPTION => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_XML_DESC',
         ]);
 
-        SourceTable::add([
-            SourceTable::PC_CODE => 'simple_csv',
-            SourceTable::PC_ENTITY => Source\Csv::class,
-            SourceTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_CSV_NAME',
-            SourceTable::PC_DESCRIPTION => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_CSV_DESC',
+        EntityTable::add([
+            EntityTable::PC_CODE => 'source_db_xml',
+            EntityTable::PC_TYPE_CODE => $typeResult->getId(),
+            EntityTable::PC_ENTITY => Source\Xml::class,
+            EntityTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_SOURCE_DB_XML_NAME',
+            EntityTable::PC_DESCRIPTION => 'SHOLOKHOV_EXCHANGE_SOURCE_DB_XML_DESC',
         ]);
 
-        SourceTable::add([
-            SourceTable::PC_CODE => 'simple_json_file',
-            SourceTable::PC_ENTITY => Source\JsonFile::class,
-            SourceTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_JSON_NAME',
-            SourceTable::PC_DESCRIPTION => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_JSON_DESC',
+        EntityTable::add([
+            EntityTable::PC_CODE => 'source_simple_csv',
+            EntityTable::PC_TYPE_CODE => $typeResult->getId(),
+            EntityTable::PC_ENTITY => Source\Csv::class,
+            EntityTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_CSV_NAME',
+            EntityTable::PC_DESCRIPTION => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_CSV_DESC',
         ]);
 
-        SourceTable::add([
-            SourceTable::PC_CODE => 'iblock_element',
-            SourceTable::PC_ENTITY => Source\Entities\IBlock\Element::class,
-            SourceTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_SOURCE_ELEMENT_IBLOCK_NAME',
+        EntityTable::add([
+            EntityTable::PC_CODE => 'source_simple_json_file',
+            EntityTable::PC_TYPE_CODE => $typeResult->getId(),
+            EntityTable::PC_ENTITY => Source\JsonFile::class,
+            EntityTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_JSON_NAME',
+            EntityTable::PC_DESCRIPTION => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_JSON_DESC',
+        ]);
+
+        EntityTable::add([
+            EntityTable::PC_CODE => 'source_iblock_element',
+            EntityTable::PC_TYPE_CODE => $typeResult->getId(),
+            EntityTable::PC_ENTITY => Source\Entities\IBlock\Element::class,
+            EntityTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_SOURCE_ELEMENT_IBLOCK_NAME',
         ]);
     }
 
     /**
      * @return void
-     * @throws ArgumentException
-     * @throws SystemException
+     * @throws Exception
      *
      * @since 1.2.0
      * @version 1.2.0
      */
-    private function installTarget(): void
+    private function migrationTargets(): void
     {
-        $table = TargetTable::getTableName();
-        $connection = Application::getConnection();
-
-        if ($connection->isTableExists($table)) {
-            $connection->truncateTable($table);
-        } else {
-            TargetTable::getEntity()->createDbTable();
-        }
-
-        TargetTable::add([
-            TargetTable::PC_CODE => 'file',
-            TargetTable::PC_ENTITY => Target\File::class,
-            TargetTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_TARGET_FILE_NAME',
-            TargetTable::PC_DESCRIPTION => 'SHOLOKHOV_EXCHANGE_TARGET_FILE_DESC',
+        $typeResult = EntityTypeTable::add([
+            EntityTypeTable::PC_CODE => TypeEntityEnum::Target->value
         ]);
 
-        TargetTable::add([
-            TargetTable::PC_CODE => 'hl_element',
-            TargetTable::PC_ENTITY => Target\Highloadblock\Element::class,
-            TargetTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_TARGET_HL_ELEMENT_NAME',
+        EntityTable::add([
+            EntityTable::PC_CODE => 'target_file',
+            EntityTable::PC_TYPE_CODE => $typeResult->getId(),
+            EntityTable::PC_ENTITY => Target\File::class,
+            EntityTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_TARGET_FILE_NAME',
+            EntityTable::PC_DESCRIPTION => 'SHOLOKHOV_EXCHANGE_TARGET_FILE_DESC',
         ]);
 
-        TargetTable::add([
-            TargetTable::PC_CODE => 'iblock_element_simple_product',
-            TargetTable::PC_ENTITY => Target\IBlock\Catalog\SimpleProduct::class,
-            TargetTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_TARGET_IBLOCK_ELEMENT_SIMPLE_PRODUCT_NAME',
+        EntityTable::add([
+            EntityTable::PC_CODE => 'target_hl_element',
+            EntityTable::PC_TYPE_CODE => $typeResult->getId(),
+            EntityTable::PC_ENTITY => Target\Highloadblock\Element::class,
+            EntityTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_TARGET_HL_ELEMENT_NAME',
         ]);
 
-        TargetTable::add([
-            TargetTable::PC_CODE => 'iblock_property_enum_value',
-            TargetTable::PC_ENTITY => Target\IBlock\Property\PropertyEnumeration::class,
-            TargetTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_TARGET_IBLOCK_PROPERTY_ENUM_VALUE_NAME',
+        EntityTable::add([
+            EntityTable::PC_CODE => 'target_iblock_element_simple_product',
+            EntityTable::PC_TYPE_CODE => $typeResult->getId(),
+            EntityTable::PC_ENTITY => Target\IBlock\Catalog\SimpleProduct::class,
+            EntityTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_TARGET_IBLOCK_ELEMENT_SIMPLE_PRODUCT_NAME',
         ]);
 
-        TargetTable::add([
-            TargetTable::PC_CODE => 'iblock_element',
-            TargetTable::PC_ENTITY => Target\IBlock\Element::class,
-            TargetTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_TARGET_IBLOCK_ELEMENT_NAME',
+        EntityTable::add([
+            EntityTable::PC_CODE => 'target_iblock_property_enum_value',
+            EntityTable::PC_TYPE_CODE => $typeResult->getId(),
+            EntityTable::PC_ENTITY => Target\IBlock\Property\PropertyEnumeration::class,
+            EntityTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_TARGET_IBLOCK_PROPERTY_ENUM_VALUE_NAME',
         ]);
 
-        TargetTable::add([
-            TargetTable::PC_CODE => 'iblock_section',
-            TargetTable::PC_ENTITY => Target\IBlock\Section::class,
-            TargetTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_TARGET_IBLOCK_SECTION_NAME',
+        EntityTable::add([
+            EntityTable::PC_CODE => 'target_iblock_element',
+            EntityTable::PC_TYPE_CODE => $typeResult->getId(),
+            EntityTable::PC_ENTITY => Target\IBlock\Element::class,
+            EntityTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_TARGET_IBLOCK_ELEMENT_NAME',
         ]);
 
-        TargetTable::add([
-            TargetTable::PC_CODE => 'uf_enum_value',
-            TargetTable::PC_ENTITY => Target\UserFields\Enumeration::class,
-            TargetTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_TARGET_UF_ENUM_VALUE_NAME',
+        EntityTable::add([
+            EntityTable::PC_CODE => 'target_iblock_section',
+            EntityTable::PC_TYPE_CODE => $typeResult->getId(),
+            EntityTable::PC_ENTITY => Target\IBlock\Section::class,
+            EntityTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_TARGET_IBLOCK_SECTION_NAME',
+        ]);
+
+        EntityTable::add([
+            EntityTable::PC_CODE => 'target_uf_enum_value',
+            EntityTable::PC_TYPE_CODE => $typeResult->getId(),
+            EntityTable::PC_ENTITY => Target\UserFields\Enumeration::class,
+            EntityTable::PC_NAME => 'SHOLOKHOV_EXCHANGE_TARGET_UF_ENUM_VALUE_NAME',
         ]);
     }
 
