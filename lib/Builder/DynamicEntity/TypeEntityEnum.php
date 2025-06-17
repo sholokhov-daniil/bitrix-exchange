@@ -25,4 +25,12 @@ enum TypeEntityEnum: string
      * @version 1.2.0
      */
     case Target = 'target';
+
+    /**
+     * Свойство описывающее карту обмена
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    case Mapping = 'mapping';
 }

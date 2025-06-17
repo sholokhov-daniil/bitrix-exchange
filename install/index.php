@@ -2,6 +2,7 @@
 
 use Bitrix\Main\Application;
 use Bitrix\Main\ArgumentException;
+use Bitrix\Main\DB\Connection;
 use Bitrix\Main\DB\SqlQueryException;
 use Bitrix\Main\EventManager;
 use Bitrix\Main\Localization\Loc;
@@ -28,7 +29,7 @@ class sholokhov_exchange extends CModule
     var $MODULE_VERSION_DATE;
     var $MODULE_DESCRIPTION;
 
-    private \Bitrix\Main\DB\Connection $connection;
+    private Connection $connection;
 
     public function __construct()
     {
@@ -75,11 +76,24 @@ class sholokhov_exchange extends CModule
      */
     public function DoUninstall(): void
     {
-        $this->unRegistrationEvents();
+        self::IncludeModule($this->MODULE_ID);
 
-        $this->connection->dropTable(ResultTable::getTableName());
-        $this->connection->dropTable(EntityTable::getTableName());
-        $this->connection->dropTable(EntityTable::getTableName());
+        $dropTables = [
+            ResultTable::getTableName(),
+            ExchangeTable::getTableName(),
+            UI\EntityUITable::getTableName(),
+            EntitySettingsTable::getTableName(),
+            EntityTable::getTableName(),
+            EntityTypeTable::getTableName(),
+        ];
+
+        foreach ($dropTables as $table) {
+            if ($this->connection->isTableExists($table)) {
+                $this->connection->dropTable($table);
+            }
+        }
+
+        $this->unRegistrationEvents();
 
         $this->Remove();
     }
@@ -110,8 +124,8 @@ class sholokhov_exchange extends CModule
 
     private function migrationUI(): void
     {
-        if (!$this->connection->isTableExists(UI\EntityUITable::class)) {
-            $this->connection->dropTable(UI\EntityUITable::class);
+        if ($this->connection->isTableExists(UI\EntityUITable::getTableName())) {
+            $this->connection->dropTable(UI\EntityUITable::getTableName());
         }
         UI\EntityUITable::getEntity()->createDbTable();
     }

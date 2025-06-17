@@ -2,12 +2,14 @@
 
 namespace Sholokhov\Exchange\ORM\UI;
 
+use Sholokhov\Exchange\Helper\Json;
+use Sholokhov\Exchange\ORM\Settings\EntityTable;
+
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Main\ORM\Fields;
 use Bitrix\Main\ORM\Query\Join;
 use Bitrix\Main\SystemException;
-use Sholokhov\Exchange\ORM\Settings\EntityTable;
 
 /**
  * @final
@@ -46,7 +48,7 @@ final class EntityUITable extends DataManager
      * @since 1.2.0
      * @version 1.2.0
      */
-    public const PC_RENDER = "RENDER";
+    public const PC_SETTINGS = "RENDER";
 
     /**
      * @return string
@@ -78,7 +80,9 @@ final class EntityUITable extends DataManager
                 ->configureRequired()
                 ->configureUnique(),
 
-            (new Fields\StringField(self::PC_RENDER))
+            (new Fields\StringField(self::PC_SETTINGS))
+                ->addFetchDataModifier(Json::decode(...))
+                ->configureAutocomplete(Json::encode(...))
                 ->configureRequired(),
 
             (new Fields\Relations\Reference(
