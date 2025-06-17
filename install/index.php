@@ -11,6 +11,7 @@ use Sholokhov\Exchange\Builder\DynamicEntity\TypeEntityEnum;
 use Sholokhov\Exchange\ORM\Settings\EntitySettingsTable;
 use Sholokhov\Exchange\ORM\Settings\EntityTypeTable;
 use Sholokhov\Exchange\ORM\Settings\ExchangeTable;
+use Sholokhov\Exchange\ORM\UI;
 use Sholokhov\Exchange\Source;
 use Sholokhov\Exchange\Target;
 use Sholokhov\Exchange\ORM\Settings\EntityTable;
@@ -27,6 +28,8 @@ class sholokhov_exchange extends CModule
     var $MODULE_VERSION_DATE;
     var $MODULE_DESCRIPTION;
 
+    private \Bitrix\Main\DB\Connection $connection;
+
     public function __construct()
     {
         $arModuleVersion = [];
@@ -39,6 +42,8 @@ class sholokhov_exchange extends CModule
             $this->MODULE_VERSION = $arModuleVersion['VERSION'];
             $this->MODULE_VERSION_DATE = $arModuleVersion['VERSION_DATE'];
         }
+
+        $this->connection = Application::getConnection();
 
         $this->MODULE_NAME = Loc::getMessage("SHOLOKHOV_EXCHANGE_MODULE_NAME");
         $this->MODULE_DESCRIPTION = Loc::getMessage("SHOLOKHOV_EXCHANGE_MODULE_DESCRIPTION");
@@ -72,10 +77,9 @@ class sholokhov_exchange extends CModule
     {
         $this->unRegistrationEvents();
 
-        $connection = Application::getConnection();
-        $connection->dropTable(ResultTable::getTableName());
-        $connection->dropTable(EntityTable::getTableName());
-        $connection->dropTable(EntityTable::getTableName());
+        $this->connection->dropTable(ResultTable::getTableName());
+        $this->connection->dropTable(EntityTable::getTableName());
+        $this->connection->dropTable(EntityTable::getTableName());
 
         $this->Remove();
     }
@@ -90,19 +94,26 @@ class sholokhov_exchange extends CModule
      */
     public function installDB(): void
     {
-        $connection = Application::getConnection();
-
         $this->migrationEntities();
+        $this->migrationUI();
 
-        if ($connection->isTableExists(ResultTable::getTableName())) {
-            $connection->dropTable(ResultTable::getTableName());
+        if ($this->connection->isTableExists(ResultTable::getTableName())) {
+            $this->connection->dropTable(ResultTable::getTableName());
         }
         ResultTable::getEntity()->createDbTable();
 
-        if ($connection->isTableExists(ExchangeTable::getTableName())) {
-            $connection->dropTable(ExchangeTable::getTableName());
+        if ($this->connection->isTableExists(ExchangeTable::getTableName())) {
+            $this->connection->dropTable(ExchangeTable::getTableName());
         }
         ExchangeTable::getEntity()->createDbTable();
+    }
+
+    private function migrationUI(): void
+    {
+        if (!$this->connection->isTableExists(UI\EntityUITable::class)) {
+            $this->connection->dropTable(UI\EntityUITable::class);
+        }
+        UI\EntityUITable::getEntity()->createDbTable();
     }
 
     /**
@@ -116,20 +127,18 @@ class sholokhov_exchange extends CModule
      */
     private function migrationEntities(): void
     {
-        $connection = Application::getConnection();
-
-        if ($connection->isTableExists(EntityTypeTable::getTableName())) {
-            $connection->dropTable(EntityTypeTable::getTableName());
+        if ($this->connection->isTableExists(EntityTypeTable::getTableName())) {
+            $this->connection->dropTable(EntityTypeTable::getTableName());
         }
         EntityTypeTable::getEntity()->createDbTable();
 
-        if ($connection->isTableExists(EntityTable::getTableName())) {
-            $connection->dropTable(EntityTable::getTableName());
+        if ($this->connection->isTableExists(EntityTable::getTableName())) {
+            $this->connection->dropTable(EntityTable::getTableName());
         }
         EntityTable::getEntity()->createDbTable();
 
-        if ($connection->isTableExists(EntitySettingsTable::getTableName())) {
-            $connection->dropTable(EntitySettingsTable::getTableName());
+        if ($this->connection->isTableExists(EntitySettingsTable::getTableName())) {
+            $this->connection->dropTable(EntitySettingsTable::getTableName());
         }
         EntitySettingsTable::getEntity()->createDbTable();
 

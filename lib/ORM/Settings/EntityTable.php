@@ -102,14 +102,14 @@ final class EntityTable extends DataManager
                 ->configurePrimary()
                 ->configureRequired(),
 
+            (new Fields\StringField(self::PC_TYPE_CODE))
+                ->configureRequired(),
+
             (new Fields\StringField(self::PC_ENTITY))
                 ->configureRequired(),
 
             (new Fields\StringField(self::PC_NAME))
                 ->addFetchDataModifier(fn($value) => Loc::getMessage($value) ?: '')
-                ->configureRequired(),
-
-            (new Fields\StringField(self::PC_TYPE_CODE))
                 ->configureRequired(),
 
             (new Fields\StringField(self::PC_DESCRIPTION))

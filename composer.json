@@ -22,8 +22,7 @@
         "psr/log": "^3.0",
         "psr/container": "^2.0",
         "phpdocumentor/shim": "^3.7",
-        "ramsey/uuid": "^4.7",
-        "twig/twig": "^3.21"
+        "ramsey/uuid": "^4.7"
     },
     "scripts": {
         "doc": [

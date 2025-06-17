@@ -9,10 +9,29 @@ use ReflectionMethod;
 /**
  * @package Helper
  * @since 1.0.0
- * @version 1.0.0
+ * @version 1.2.0
  */
 class Entity
 {
+    /**
+     * Получение символьного кода сущности
+     *
+     * @param string|object $entity
+     * @return string
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    public static function getCode(string|object $entity): string
+    {
+        if (is_object($entity)) {
+            $entity = $entity::class;
+        }
+
+        $code = str_replace('\\', '_', $entity);
+        return mb_strtolower($code);
+    }
+
     /**
      * Получение атрибута объекта
      * @throws ReflectionException
