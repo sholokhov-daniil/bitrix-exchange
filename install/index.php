@@ -9,6 +9,7 @@ use Bitrix\Main\Localization\Loc;
 
 use Bitrix\Main\SystemException;
 use Sholokhov\Exchange\Builder\DynamicEntity\TypeEntityEnum;
+use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\ORM\Settings\EntitySettingsTable;
 use Sholokhov\Exchange\ORM\Settings\EntityTypeTable;
 use Sholokhov\Exchange\ORM\Settings\ExchangeTable;
@@ -65,7 +66,23 @@ class sholokhov_exchange extends CModule
         $this->Add();
         self::IncludeModule($this->MODULE_ID);
 
-        $this->installDB();
+        $this->InstallDB();
+        $this->InstallFiles();
+    }
+
+    /**
+     * @return void
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    public function InstallFiles(): void
+    {
+        CopyDirFiles(
+            Helper::getRootDir() . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'admin',
+            $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'bitrix' . DIRECTORY_SEPARATOR . 'admin',
+            true,
+            true
+        );
     }
 
     /**
@@ -95,7 +112,21 @@ class sholokhov_exchange extends CModule
 
         $this->unRegistrationEvents();
 
+        $this->UnInstallFiles();
         $this->Remove();
+    }
+
+    /**
+     * @return void
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    public function UnInstallFiles(): void
+    {
+        DeleteDirFiles(
+            Helper::getRootDir() . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'admin',
+            $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'bitrix' . DIRECTORY_SEPARATOR . 'admin'
+        );
     }
 
     /**
@@ -106,7 +137,7 @@ class sholokhov_exchange extends CModule
      * @since 1.2.0
      * @version 1.2.0
      */
-    public function installDB(): void
+    public function InstallDB(): void
     {
         $this->migrationEntities();
         $this->migrationUI();
@@ -122,6 +153,15 @@ class sholokhov_exchange extends CModule
         ExchangeTable::getEntity()->createDbTable();
     }
 
+    /**
+     * @return void
+     * @throws ArgumentException
+     * @throws SqlQueryException
+     * @throws SystemException
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
     private function migrationUI(): void
     {
         if ($this->connection->isTableExists(UI\EntityUITable::getTableName())) {

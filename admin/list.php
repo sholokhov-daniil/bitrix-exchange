@@ -14,5 +14,8 @@ if (!$USER->IsAdmin()) {
 
 $iterator = [];
 
-$result = new CAdminList('table');
-$result->NavStart();
+//$result = new CAdminList('table');
+//$result->NavStart();
+?>
+
+Список обменов

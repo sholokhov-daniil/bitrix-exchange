@@ -5,15 +5,14 @@ use Sholokhov\Exchange\Helper\Helper;
 return [
     [
         'menu_id' => 'sholokhov_exchange',
-        'text' => 'Обмен',
-        'title' => 'Какой-то обмен',
+        'text' => 'Обмен данных',
         'sort' => 500,
         'help_section' => Helper::getModuleID(),
         'items' => [
             [
-                'text' => 'Пункт 1',
-                'title' => 'Пункт 2',
-                'url' => 'link',
+                'text' => 'Список обменов',
+                'title' => 'Список обмена | Sholokhov exchange',
+                'url' => '/bitrix/admin/sholokhov_exchange_list.php',
                 'sort' => 10
             ]
         ]

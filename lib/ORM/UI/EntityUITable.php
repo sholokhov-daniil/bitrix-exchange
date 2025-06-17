@@ -48,7 +48,7 @@ final class EntityUITable extends DataManager
      * @since 1.2.0
      * @version 1.2.0
      */
-    public const PC_SETTINGS = "RENDER";
+    public const PC_SETTINGS = "SETTINGS";
 
     /**
      * @return string
@@ -82,7 +82,7 @@ final class EntityUITable extends DataManager
 
             (new Fields\StringField(self::PC_SETTINGS))
                 ->addFetchDataModifier(Json::decode(...))
-                ->configureAutocomplete(Json::encode(...))
+                ->addSaveDataModifier(Json::encode(...))
                 ->configureRequired(),
 
             (new Fields\Relations\Reference(

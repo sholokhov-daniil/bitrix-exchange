@@ -8,5 +8,5 @@ $eventManager = EventManager::getInstance();
 $eventManager->addEventHandler(
     'main',
     'OnBuildGlobalMenu',
-    (new ModuleMenu())->make(...)
+    (new ModuleMenu)->make(...)
 );
