@@ -13,7 +13,24 @@ const data = reactive({
     attributes: {
       name: 'general[type]',
     },
-    api: 'sholokhov:exchange.UI.Provider.Target.TypeController.getAll',
+    api: {
+      action: 'sholokhov:exchange.EntityController.getByType',
+      data: {
+        code: 'target'
+      },
+      callback: function(response) {
+        if (!Array.isArray(response.data)) {
+          return [];
+        }
+
+        response.data = response.data.map(field => ({
+          value: field.CODE,
+          name: field.NAME,
+        }));
+
+        return response;
+      }
+    },
     value: null,
   }
 });
@@ -24,6 +41,14 @@ watch(() => data.field.value, (newValue) => emit('selected', newValue));
 </script>
 
 <template>
-  <InputField v-if="hidden" v-model="data.field" />
-  <SelectField v-else v-model="data.field" />
+  <InputField
+      v-if="hidden"
+      v-model="data.field.value"
+      :field="data.field"
+  />
+  <SelectField
+      v-else
+      v-model="data.field.value"
+      :field="data.field"
+  />
 </template>

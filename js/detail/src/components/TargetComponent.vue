@@ -9,9 +9,10 @@ defineProps({
 });
 
 const data = reactive(GeneralFields);
+
 const selectedTarget = (target) => {
   BX.ajax.runAction(
-      'sholokhov:exchange.UI.Provider.EntityController.get',
+      'sholokhov:exchange.EntityController.getFields',
       {
         data: {
           code: target
@@ -30,17 +31,19 @@ const selectedTarget = (target) => {
 
   <TargetTypeField @selected="selectedTarget" />
 
-  <Component
-    v-for="(field, key) in data.fields"
-    :key="key"
-    :is="field.component"
-    v-model="field.settings"
-  />
+  <div v-for="(field, key) in data.fields" :key="key">
+    <Component
+      :is="field.component"
+      v-model="field.value"
+      :field="field.settings"
+    />
+  </div>
 
   <Component
     v-for="(field, key) in data.userFields"
     :key="key"
     :is="getComponent(field)"
-    v-model="data.userFields[key]"
+    v-model="data.userFields[key].value"
+    :field="data.userFields[key]"
   />
 </template>
