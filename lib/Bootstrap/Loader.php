@@ -13,7 +13,7 @@ use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
  * @since 1.0.0
  * @version 1.0.0
  */
-class Loader
+class Loader implements BootstrapInterface
 {
     /**
      * @param object $exchange

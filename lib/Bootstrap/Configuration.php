@@ -12,7 +12,7 @@ use Sholokhov\Exchange\Helper\Config;
  * @since 1.2.0
  * @version 1.2.0
  */
-class Configuration
+class Configuration implements BootstrapInterface
 {
     /**
      * Выполнить автозагрузку
