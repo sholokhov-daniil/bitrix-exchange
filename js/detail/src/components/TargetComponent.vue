@@ -33,9 +33,9 @@ const selectedTarget = (target) => {
 
   <div v-for="(field, key) in data.fields" :key="key">
     <Component
-      :is="field.component"
+      :is="getComponent(field)"
       v-model="field.value"
-      :field="field.settings"
+      :field="field"
     />
   </div>
 
@@ -43,7 +43,7 @@ const selectedTarget = (target) => {
     v-for="(field, key) in data.userFields"
     :key="key"
     :is="getComponent(field)"
-    v-model="data.userFields[key].value"
-    :field="data.userFields[key]"
+    v-model="field.value"
+    :field="field"
   />
 </template>

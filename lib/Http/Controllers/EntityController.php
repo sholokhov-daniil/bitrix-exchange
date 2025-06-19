@@ -84,12 +84,16 @@ final class EntityController extends Controller
         $result = [];
 
         try {
-            $result = EntityUITable::getList([
+            $row = EntityUITable::getRow([
                 'filter' => [
                     EntityUITable::PC_ENTITY_CODE => $code
                 ],
                 'cache' => ['ttl' => 36000]
-            ])->fetchAll();
+            ]);
+
+            if ($row) {
+                $result = $row[EntityUITable::PC_SETTINGS];
+            }
         } catch (Throwable) {
             $this->addError(new Error(Loc::getMessage('SHOLOKHOV_EXCHANGE_CONTROLLER_ENTITY_EXCEPTION'), 500));
         }

@@ -1,5 +1,6 @@
 <script setup>
 import {defineProps, computed, onMounted, reactive, watch, defineEmits} from 'vue';
+import {queryField} from "@/utils/http/field";
 
 const props = defineProps({
   modelValue: {type: [String, Number, Array], required: true},
@@ -28,20 +29,15 @@ const value = computed({
 });
 
 const load = () => {
-  if (props.field?.api) {
-    query()
-        .then(response => {
-          if (props.field?.api?.callback) {
-            response = props.field.api?.callback(response);
-          }
-
-          data.enums = Array.isArray(response.data) ? response.data : [];
-        })
-        .catch(response => data.errors = response.errors.map(error => error.message));
-  }
+  queryField(props.field)
+      .then(response => {
+        if (props.field?.api?.callback) {
+          response = props.field.api?.callback(response);
+        }
+        data.enums = Array.isArray(response.data) ? response.data : [];
+      })
+      .catch(response => data.errors = response.errors.map(error => error.message));
 }
-
-const query = () => BX.ajax.runAction(props.field?.api?.action, {method: 'POST', data: props.field?.api?.data || {}});
 </script>
 
 <template>

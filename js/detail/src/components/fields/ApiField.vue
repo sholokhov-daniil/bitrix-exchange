@@ -1,9 +1,11 @@
 <script setup>
-import {defineProps, onMounted, ref, reactive} from "vue";
+import {defineProps, onMounted, ref, reactive, watch} from "vue";
 import {BXHtml} from "@/utils/content";
+import {queryField} from "@/utils/http/field";
 
 const props = defineProps({
-  modelValue: {type: Object, required: true},
+  modelValue: {type: [String, Number, Array], required: true},
+  field: {type: Object, required: true},
 });
 
 const data = reactive({
@@ -14,20 +16,23 @@ const container = ref(null);
 
 onMounted(() => load());
 
-const load = () => {
-  if (props.modelValue?.api) {
-    query()
-        .then(response => BXHtml(container.value, response))
-        .catch(response => data.errors = response.errors.map(error => error.message))
-  } else if (container.value) {
-    container.value = null;
-  }
-}
+watch(
+    () => props.field.api,
+    () => {
+      console.log('LOAD')
+    },
+    {deep: true}
+);
 
-const query = () => BX.ajax.runAction(props.modelValue?.api, {method: 'POST'});
+const load = () => {
+  queryField(props.field)
+      .then(response => BXHtml(container.value, response))
+      .catch(response => data.errors = response.errors.map(error => error.message))
+}
 </script>
 
 <template>
+  {{field}}
   <div ref="container"></div>
   <div v-if="data.errors.length">
     <p v-for="message in data.errors" :key="message">{{ message }}</p>
