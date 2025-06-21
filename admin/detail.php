@@ -21,6 +21,8 @@ $data = [
     'id' => $request->get('id')
 ];
 $containerId = uniqid('sholokhov_exchange_detail_');
+
+\Bitrix\Main\UI\Extension::load('sholokhov.exchange.ui');
 ?>
 <div id="<?= $containerId ?>"></div>
 <script>
