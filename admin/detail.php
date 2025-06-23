@@ -3,6 +3,8 @@
 global $USER;
 
 use Bitrix\Main\Context;
+use Bitrix\Main\Event;
+use Sholokhov\Exchange\Helper\Helper;
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_before.php");
 IncludeModuleLangFile($_SERVER["DOCUMENT_ROOT"] . BX_ROOT . "/modules/main/interface/admin_lib.php");
@@ -14,24 +16,32 @@ if (!$USER->IsAdmin()) {
     return;
 }
 
-
 $request = Context::getCurrent()->getRequest();
 
 $data = [
     'id' => $request->get('id')
 ];
-$containerId = uniqid('sholokhov_exchange_detail_');
+$targetContainer = uniqid('sholokhov_exchange_detail_target_');
 
-\Bitrix\Main\UI\Extension::load('sholokhov.exchange.ui');
+(new Event(Helper::getModuleID(), 'beforeRenderDetailSettings'))->send();
 ?>
-<div id="<?= $containerId ?>"></div>
+Тут как-то нужно инициализироваться
+
+<div id="<?= $targetContainer ?>"></div>
 <script>
     BX.ready(function() {
-        BX.loadExt('sholokhov.exchange.detail')
-            .then(() => {
-                window.Sholokhov.Exchange.Detail.mount('#<?= $containerId ?>', <?= json_encode($data) ?>);
-            })
-            .catch(response => console.error(response))
+         BX.loadExt('sholokhov.exchange.detail')
+             .then(() => {
+
+                 const target = new BX.Sholokhov.Exchange.Detail.TargetSettings(
+                     '#<?= $targetContainer ?>',
+                     <?= json_encode($data) ?>
+                 );
+                 target.view();
+
+                //BX.Sholokhov.Exchange.Detail.mount('#<?php //= $containerId ?>//', <?php //= json_encode($data) ?>//);
+             })
+             .catch(response => console.error(response))
     });
 </script>
 Детальная страница настроек обмена

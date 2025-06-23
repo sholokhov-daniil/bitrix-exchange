@@ -1,7 +1,7 @@
 <?php
 
-use Sholokhov\Exchange\Helper\Config;
 use Sholokhov\Exchange\Bootstrap;
+use Sholokhov\Exchange\Helper\Config;
 
 @require_once 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 @require_once 'events.php';

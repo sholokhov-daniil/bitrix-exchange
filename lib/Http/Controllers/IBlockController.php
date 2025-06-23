@@ -2,18 +2,14 @@
 
 namespace Sholokhov\Exchange\Http\Controllers;
 
-use Bitrix\Iblock\IblockTable;
-use Bitrix\Iblock\TypeTable;
+use Sholokhov\Exchange\Helper\IBlock;
+use Sholokhov\Exchange\Http\Middleware\ModuleLoaderMiddleware;
+
 use Bitrix\Main\ArgumentException;
-use Bitrix\Main\Context;
 use Bitrix\Main\Engine\Controller;
 use Bitrix\Main\LoaderException;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
-use CIBlockRights;
-use CMain;
-use Sholokhov\Exchange\Helper\IBlock;
-use Sholokhov\Exchange\Http\Middleware\ModuleLoaderMiddleware;
 
 /**
  * @internal
@@ -92,10 +88,7 @@ final class IBlockController extends Controller
      */
     public function getIBlocksAction(array $parameters = []): array
     {
-        $iterator = IBlock::getAvailableIBlock(
-            [
-            ]
-        );
+        $iterator = IBlock::getAvailableIBlock($parameters);
 
         return array_map(
             fn($iBlock) => [
