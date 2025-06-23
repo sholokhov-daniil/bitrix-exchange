@@ -1,5 +1,5 @@
 import {Registry} from "../container/index.ts";
-import {Render} from "../../interfaces/render.ts";
+import {Item} from "../../../@types/render/Item.d.ts";
 import {RenderRegistry} from "../builder/RenderRegistry.ts";
 
 /**
@@ -34,32 +34,13 @@ export default class {
      * @since 1.2.0
      * @version 1.2.0
      */
-    create(type, options): Element|null {
-        const builder = this.createBuilder(type, options);
+    create(type, options): Item|null {
+        const item = this.#registry.get(type);
 
-        if (!builder) {
+        if (!item) {
             return null;
         }
 
-        return builder.create();
-    }
-
-    /**
-     * Создание механизма отрисовки
-     *
-     * @param type
-     * @param options
-     *
-     * @since 1.2.0
-     * @version 1.2.0
-     */
-    createBuilder(type, options): Render|null {
-        const entity = this.#registry.get(type);
-
-        if (!entity) {
-            return null;
-        }
-
-        return new entity(options);
+        return new item(options);
     }
 }

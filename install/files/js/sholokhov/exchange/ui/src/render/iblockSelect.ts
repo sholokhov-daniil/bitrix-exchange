@@ -1,5 +1,6 @@
-import {Render} from "../interfaces/render.ts";
+import {Item} from "../../@types/render/Item.d.ts";
 import {Factory, RenderType} from 'sholokhov.exchange.ui';
+import {Select} from "../../@types/render/select.d.ts";
 
 /**
  * Генератор списка выбора инфоблока
@@ -7,16 +8,44 @@ import {Factory, RenderType} from 'sholokhov.exchange.ui';
  * @since 1.2.0
  * @version 1.2.0
  */
-export class IBlockSelect implements Render {
+export class IBlockSelect implements Item {
     /**
-     * Селектор элементов инфоблока
-     *
+     * @private
+     * 
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    _container: HTMLElement;
+
+    /**
+     * @private
+     * 
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    _type: Select;
+
+    /**
      * @private
      *
      * @since 1.2.0
      * @version 1.2.0
      */
-    #iBlockSelect: HTMLSelectElement|null = null;
+    _iBlock: Select;
+
+    constructor() {
+        this._create();
+    }
+    
+    /**
+     * DOM элемент селекторов
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    getContainer(): HTMLElement {
+        return this._container;
+    }
 
     /**
      * Создание контейнера списков
@@ -24,29 +53,31 @@ export class IBlockSelect implements Render {
      * @since 1.2.0
      * @version 1.2.0
      */
-    create(): Element {
-        const node = document.createElement('div');
-        node.append(
-            Factory.create(
-                RenderType.Select,
-                {
-                    title: 'Тип инфоблока: ',
-                    attributes: {
-                        name: 'target[iblock_type]'
-                    },
-                    api: {
-                        action: 'sholokhov:exchange.IBlockController.getTypes',
-                        data: {},
-                        callback: this.#normalizeTypeResponse
-                    },
-                    events: {
-                        onchange: (event) => this.#selectedType(event)
-                    }
-                }
-            )
-        );
+    _create(): void {
+        this._container = document.createElement('div');
 
-        const iBlockNode = Factory.create(
+        this._type = Factory.create(
+            RenderType.Select,
+            {
+                title: 'Тип инфоблока: ',
+                attributes: {
+                    name: 'target[iblock_type]'
+                },
+                api: {
+                    action: 'sholokhov:exchange.IBlockController.getTypes',
+                    data: {},
+                    callback: this._normalizeTypeResponse
+                },
+                events: {
+                    onchange: (event) => this._selectedType(event)
+                }
+            }
+        )
+
+
+        this._container.append(this._type.getContainer());
+
+        this._iBlock = Factory.create(
             RenderType.Select,
             {
                 title: 'Инфоблок: ',
@@ -56,11 +87,7 @@ export class IBlockSelect implements Render {
             }
         );
 
-        this.#iBlockSelect = iBlockNode.querySelector('select');
-
-        node.append(iBlockNode);
-
-        return node;
+        this._container.append(this._iBlock.getContainer());
     }
 
     /**
@@ -72,10 +99,12 @@ export class IBlockSelect implements Render {
      * @since 1.2.0
      * @version 1.2.0
      */
-    #selectedType(event): void {
-        for(let index = 0; index < this.#iBlockSelect.options.length; index++) {
-            if (this.#iBlockSelect.options[index].value) {
-                this.#iBlockSelect.options[index].remove();
+    _selectedType(event): void {
+        const iBlockOptions = this._iBlock.getOptions();
+
+        for(let index = 0; index < iBlockOptions.length; index++) {
+            if (iBlockOptions[index].value) {
+                this._iBlock.removeOption(index);
             }
         }
 
@@ -98,8 +127,8 @@ export class IBlockSelect implements Render {
         )
             .then(response => {
                 if (Array.isArray(response.data)) {
-                    response.data.forEach(item => {
-                        this.#iBlockSelect.add(new Option(item.name, item.id))
+                    response.data.forEach((item) => {
+                        this._iBlock.addOption(new Option(item.name, item.id))
                     })
                 }
             })
@@ -115,7 +144,7 @@ export class IBlockSelect implements Render {
      * @since 1.2.0
      * @version 1.2.0
      */
-    #normalizeTypeResponse(response): object {
+    _normalizeTypeResponse(response): object {
         if (Array.isArray(response.data)) {
             response.data = response.data.map(function(iBlock) {
                 return {

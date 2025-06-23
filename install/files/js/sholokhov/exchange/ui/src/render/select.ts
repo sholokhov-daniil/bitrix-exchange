@@ -1,44 +1,70 @@
-import {Render} from "../interfaces/render.ts";
 import {query} from "../util/http/field.ts";
+import {AbstractItem} from "./abstractItem.ts";
+import {Enumeration, SelectOptions} from "../../@types/render/options/select.d.ts";
+import {Select as SelectInterface} from '../../@types/render/select.d.ts';
 
-export class Select implements Render {
+export class Select extends AbstractItem implements SelectInterface {
+
     /**
-     * Конфигурация сборщика
+     * Список значений
      *
      * @private
      *
      * @since 1.2.0
      * @version 1.2.0
      */
-    #options: object;
+    _select: HTMLSelectElement;
 
     /**
-     * @param options {object}
+     * @param option {Option}
      *
      * @since 1.2.0
      * @version 1.2.0
      */
-    constructor(options: object = {}) {
-        this.#options = options;
+    addOption(option: Option): void {
+        this._select.add(option);
     }
 
     /**
-     * Создание объекта select
+     * Удаление значения по индексу
+     *
+     * @param index {number}
      *
      * @since 1.2.0
      * @version 1.2.0
      */
-    create(): Element {
-        const container = document.createElement('div');
+    removeOption(index: number): void {
+        this._select.options.remove(index);
+    }
 
-        const title = this.#createTitle();
-        if (title) {
-            container.append(title);
-        }
+    /**
+     * Удаление всех значений списка
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    removeAllOptions(): void {
+        this._select.options.length = 0;
+    }
 
-        container.append(this.#createValue());
+    /**
+     * Получение коллекции значений списка
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    getOptions(): HTMLOptionsCollection {
+        return this._select.options;
+    }
 
-        return container;
+    /**
+     * @param index {number}
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    getOption(index: number) {
+        return this._select.options.item(index);
     }
 
     /**
@@ -51,9 +77,7 @@ export class Select implements Render {
      * @version 1.2.0
      */
     setAttribute(key: string, value: any): void {
-        const attributes = this.attributes;
-        attributes[key] = value;
-        this.attributes = attributes;
+        this._select.setAttribute(key, value);
     }
 
     /**
@@ -89,7 +113,9 @@ export class Select implements Render {
      * @version 1.2.0
      */
     set attributes(attributes: object) {
-        this.#options.attributes = attributes;
+        for (let name in attributes) {
+            this._select.setAttribute(name, attributes[name]);
+        }
     }
 
     /**
@@ -99,29 +125,12 @@ export class Select implements Render {
      * @version 1.2.0
      */
     get attributes(): object {
-        return this.#options?.attributes || {};
+        const attributes = {};
+        this._select.getAttributeNames().forEach(name => attributes[name] = this._select.getAttribute(name));
+        
+        return attributes;
     }
-
-    /**
-     * Создание заголовка
-     *
-     * @private
-     *
-     * @since 1.2.0
-     * @version 1.2.0
-     */
-    #createTitle(): Element|null {
-        let title = null;
-
-        if (this.#options.title) {
-            title = document.createElement('div');
-            title.innerText  = this.#options.title;
-            title.className = 'title';
-        }
-
-        return title;
-    }
-
+    
     /**
      * Создание контейнера списка значений
      *
@@ -130,47 +139,45 @@ export class Select implements Render {
      * @since 1.2.0
      * @version 1.2.0
      */
-    #createValue(): Element {
-        const container = document.createElement('div');
-        container.className = 'value';
+    _createValue(options: SelectOptions): HTMLElement {
+        this._select = document.createElement('select');
+        this._select.add(new Option('-- Выберите значение --', '', true));
 
-        const select = document.createElement('select');
-        select.add(new Option('-- Выберите значение --', '', true));
-
-        if (typeof this.#options.events === 'object') {
-            for (let eventName in this.#options.events) {
-                select[eventName] = this.#options.events[eventName];
+        if (typeof options.events === 'object') {
+            for (let eventName in options.events) {
+                this._select[eventName] = options.events[eventName];
             }
         }
 
         for(let name in this.attributes) {
-            select.setAttribute(name, this.attributes[name]);
+            this._select.setAttribute(name, this.attributes[name]);
         }
 
-        query(this.#options)
+        query(options)
             .then(response => {
-                if (this.#options.api?.callback) {
-                    response = this.#options.api.callback(response);
+                if (options.api?.callback) {
+                    response = options.api.callback(response);
                 }
 
                 let enums = [];
 
                 if (Array.isArray(response.data)) {
                     enums = response.data;
-                } else if (Array.isArray(this.#options?.enums)) {
-                    enums = this.#options.enums;
+                } else if (Array.isArray(options?.enums)) {
+                    enums = options.enums;
                 }
 
-                enums.forEach(item => {
-                    const option = new Option(item.name, item.value, false, this.#options?.value === item.value);
-                    select.add(option);
+                enums.forEach((item: Enumeration) => {
+                    this.addOption(
+                        new Option(item.name, item.value, false)
+                    )
                 })
             })
             .catch(response => {
                 console.error(response);
-                alert(`Ошибка получения значений списка "${this.#options.title}"`);
+                alert(`Ошибка получения значений списка "${options.title}"`);
             })
 
-        return select;
+        return this._select;
     }
 }

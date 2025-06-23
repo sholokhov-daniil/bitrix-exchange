@@ -14,7 +14,7 @@ export class TargetSettings {
      * @since 1.2.0
      * @version 1.2.0
      */
-    #node: Element|null = null;
+    _node: Element|null = null;
 
     /**
      * Контейнер хранения пользовательских полей
@@ -24,7 +24,7 @@ export class TargetSettings {
      * @since 1.2.0
      * @version 1.2.0
      */
-    #customFieldNode: Element|null = null;
+    _customFieldNode: Element|null = null;
 
     /**
      * Конфигурация отрисовки
@@ -34,7 +34,7 @@ export class TargetSettings {
      * @since 1.2.0
      * @version 1.2.0
      */
-    #options: object;
+    _options: object;
 
     /**
      * @param {Element|string} node Контейнер в который будет производиться отрисовка
@@ -42,16 +42,16 @@ export class TargetSettings {
      */
     constructor(node: string|Element, options: object = {}) {
         if (typeof node === 'string') {
-            this.#node = document.querySelector(node);
+            this._node = document.querySelector(node);
         } else if (node){
-            this.#node = node;
+            this._node = node;
         }
 
-        if (!this.#node) {
+        if (!this._node) {
             throw 'Invalid target settings node';
         }
 
-        this.#options = options;
+        this._options = options;
     }
 
     /**
@@ -63,10 +63,10 @@ export class TargetSettings {
      * @version 1.2.0
      */
     view(): void {
-        this.#node.innerHTML = '';
-        this.#appendType();
-        this.#appendFields(this.#node, Config.fields);
-        this.#appendCustomFields();
+        this._node.innerHTML = '';
+        this._appendType();
+        this._appendFields(this._node, Config.fields);
+        this._appendCustomFields();
     }
 
     /**
@@ -78,7 +78,7 @@ export class TargetSettings {
      * @since 1.2.0
      * @version 1.2.0
      */
-    #loadFields(target) {
+    _loadFields(target) {
         BX.ajax.runAction(
             'sholokhov:exchange.EntityController.getFields',
             {
@@ -88,9 +88,9 @@ export class TargetSettings {
             }
         )
             .then(response => {
-                this.#customFieldNode.innerHTML = '';
+                this._customFieldNode.innerHTML = '';
                 if (Array.isArray(response.data)) {
-                    this.#appendFields(this.#customFieldNode, response.data);
+                    this._appendFields(this._customFieldNode, response.data);
                 }
             })
             .catch(response => console.error(response))
@@ -105,7 +105,7 @@ export class TargetSettings {
      * @since 1.2.0
      * @version 1.2.0
      */
-    #appendType(): void {
+    _appendType(): void {
         let view;
         let options = {
             title: 'Тип обмена:',
@@ -113,11 +113,11 @@ export class TargetSettings {
                 name: 'target[type]',
             },
             events: {
-                onchange: (event) => this.#loadFields(event.target.value),
+                onchange: (event) => this._loadFields(event.target.value),
             }
         };
 
-        if (this.#options.id) {
+        if (this._options.id) {
             view = RenderType.Input;
             options.attributes.type = 'hidden';
 
@@ -143,7 +143,7 @@ export class TargetSettings {
             };
         }
 
-        this.#node.append(Factory.create(view, options));
+        this._node.append(Factory.create(view, options).getContainer());
     }
 
     /**
@@ -154,9 +154,9 @@ export class TargetSettings {
      * @since 1.2.0
      * @version 1.2.0
      */
-    #appendCustomFields(): void {
-        this.#customFieldNode = document.createElement('div');
-        this.#node.append(this.#customFieldNode);
+    _appendCustomFields(): void {
+        this._customFieldNode = document.createElement('div');
+        this._node.append(this._customFieldNode);
     }
 
     /**
@@ -169,11 +169,11 @@ export class TargetSettings {
      * @since 1.2.0
      * @version 1.2.0
      */
-    #appendFields(node: Element, iterator: Array<object>): void {
+    _appendFields(node: Element, iterator: Array<object>): void {
         iterator.forEach(field => {
             const element = Factory.create(field.view, field.options);
             if (element) {
-                node.append(element);
+                node.append(element.getContainer());
             }
         })
     }
