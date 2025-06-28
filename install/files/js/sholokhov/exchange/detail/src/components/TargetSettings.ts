@@ -108,7 +108,7 @@ export class TargetSettings {
     _appendType(): void {
         let view;
         let options = {
-            title: 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TITLE_FIELD_TYPE',
+            title: 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_TITLE_FIELD_TYPE',
             attributes: {
                 name: 'target[type]',
             },

@@ -4,10 +4,11 @@ global $USER;
 
 use Bitrix\Main\Context;
 use Bitrix\Main\Event;
+use Bitrix\Main\Localization\Loc;
 use Sholokhov\Exchange\Helper\Helper;
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_before.php");
-IncludeModuleLangFile($_SERVER["DOCUMENT_ROOT"] . BX_ROOT . "/modules/main/interface/admin_lib.php");
+Loc::loadMessages($_SERVER["DOCUMENT_ROOT"] . BX_ROOT . "/modules/main/interface/admin_lib.php");
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_after.php");
 
 
@@ -23,10 +24,8 @@ $data = [
 ];
 $targetContainer = uniqid('sholokhov_exchange_detail_target_');
 
-(new Event(Helper::getModuleID(), 'beforeRenderDetailSettings'))->send();
+(new Event(Helper::getModuleID(), 'beforeRenderDetailSettings', $data))->send();
 ?>
-Тут как-то нужно инициализироваться
-
 <div id="<?= $targetContainer ?>"></div>
 <script>
     BX.ready(function() {
@@ -44,4 +43,3 @@ $targetContainer = uniqid('sholokhov_exchange_detail_target_');
              .catch(response => console.error(response))
     });
 </script>
-Детальная страница настроек обмена

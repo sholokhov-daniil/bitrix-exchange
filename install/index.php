@@ -406,7 +406,7 @@ class sholokhov_exchange extends CModule
                     [
                         'view' => 'input',
                         'options' => [
-                            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TITLE_FIELD_DEACTIVATE',
+                            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_TITLE_FIELD_DEACTIVATE',
                             'attributes' => [
                                 'type' => 'checkbox',
                                 'name' => 'target[deactivate]',
@@ -418,6 +418,24 @@ class sholokhov_exchange extends CModule
                         'options' => [],
                     ],
                 ]),
+            ]
+        );
+
+        $this->connection->add(
+            'sholokhov_exchange_entity_ui',
+            [
+                'ENTITY_CODE' => 'target_file',
+                'SETTINGS' => json_encode([
+                    [
+                        'view' => 'input',
+                        'options' => [
+                            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_FILE_TITLE_FIELD_MODULE_ID',
+                            'attributes' => [
+                                'name' => 'target[module_id]',
+                            ],
+                        ]
+                    ]
+                ])
             ]
         );
     }

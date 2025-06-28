@@ -4,7 +4,7 @@ export default {
         {
             view: RenderType.Input,
             options: {
-                title: 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TITLE_FIELD_HASH',
+                title: 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_TITLE_FIELD_HASH',
                 attributes: {
                     name: 'target[hash]'
                 },
@@ -13,7 +13,7 @@ export default {
         {
             view: RenderType.Input,
             options: {
-                title: 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TITLE_FIELD_ACTIVE',
+                title: 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_TITLE_FIELD_ACTIVE',
                 attributes: {
                     type: 'checkbox',
                     name: 'target[active]'
