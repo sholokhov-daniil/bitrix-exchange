@@ -403,8 +403,20 @@ class sholokhov_exchange extends CModule
             [
                 'ENTITY_CODE' => 'target_iblock_element',
                 'SETTINGS' => json_encode([
-                    'view' => 'iblock-selector',
-                    'options' => [],
+                    [
+                        'view' => 'input',
+                        'options' => [
+                            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TITLE_FIELD_DEACTIVATE',
+                            'attributes' => [
+                                'type' => 'checkbox',
+                                'name' => 'target[deactivate]',
+                            ]
+                        ]
+                    ],
+                    [
+                        'view' => 'iblock-selector',
+                        'options' => [],
+                    ],
                 ]),
             ]
         );
