@@ -94,7 +94,7 @@ export class AbstractItem implements SimpleItem {
      */
     _createTitle(options: Options): HTMLDivElement {
         const title = document.createElement('div');
-        title.innerText  = BX.message(options.title);
+        title.innerText  = BX.message(options?.title);
         title.className = 'title';
 
         return title;

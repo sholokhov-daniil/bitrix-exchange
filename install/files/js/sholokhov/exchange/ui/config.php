@@ -10,6 +10,8 @@ return [
 	'rel' => [
 		'main.polyfill.core',
 		'sholokhov.exchange.ui',
+		'ui.entity-selector',
+		'ui.tag-selector',
 	],
 	'skip_core' => true,
 ];

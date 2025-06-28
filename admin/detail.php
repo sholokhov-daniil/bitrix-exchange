@@ -31,14 +31,11 @@ $targetContainer = uniqid('sholokhov_exchange_detail_target_');
     BX.ready(function() {
          BX.loadExt('sholokhov.exchange.detail')
              .then(() => {
-
                  const target = new BX.Sholokhov.Exchange.Detail.TargetSettings(
                      '#<?= $targetContainer ?>',
                      <?= json_encode($data) ?>
                  );
                  target.view();
-
-                //BX.Sholokhov.Exchange.Detail.mount('#<?php //= $containerId ?>//', <?php //= json_encode($data) ?>//);
              })
              .catch(response => console.error(response))
     });

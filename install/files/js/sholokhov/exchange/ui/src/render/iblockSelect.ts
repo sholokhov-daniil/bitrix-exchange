@@ -33,6 +33,10 @@ export class IBlockSelect implements Item {
      */
     _iBlock: Select;
 
+    /**
+     * @since 1.2.0
+     * @version 1.2.0
+     */
     constructor() {
         this._create();
     }
