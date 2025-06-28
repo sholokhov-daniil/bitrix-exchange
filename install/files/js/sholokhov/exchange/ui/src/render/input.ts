@@ -122,7 +122,7 @@ export class Input extends AbstractItem {
 
         if (options.attributes) {
             for (let name in options.attributes) {
-                this._input.setAttribute(name, this.attributes[name]);
+                this._input.setAttribute(name, options.attributes[name]);
             }
         }
 

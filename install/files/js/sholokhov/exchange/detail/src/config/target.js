@@ -4,7 +4,7 @@ export default {
         {
             view: RenderType.Input,
             options: {
-                title: 'ID импорта:',
+                title: 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TITLE_FIELD_HASH',
                 attributes: {
                     name: 'target[hash]'
                 },
@@ -13,20 +13,10 @@ export default {
         {
             view: RenderType.Input,
             options: {
-                title: 'Активность:',
+                title: 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TITLE_FIELD_ACTIVE',
                 attributes: {
                     type: 'checkbox',
                     name: 'target[active]'
-                },
-            }
-        },
-        {
-            view: RenderType.Input,
-            options: {
-                title: 'Деактивировать элементы, которые не пришли в импорте:',
-                attributes: {
-                    type: 'checkbox',
-                    name: 'target[deactivate]'
                 },
             }
         },

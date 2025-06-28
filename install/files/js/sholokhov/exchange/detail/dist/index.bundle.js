@@ -9,7 +9,7 @@ this.BX.Sholokhov.Exchange = this.BX.Sholokhov.Exchange || {};
       fields: [{
         view: sholokhov_exchange_ui.RenderType.Input,
         options: {
-          title: 'ID импорта:',
+          title: 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TITLE_FIELD_HASH',
           attributes: {
             name: 'target[hash]'
           }
@@ -17,19 +17,10 @@ this.BX.Sholokhov.Exchange = this.BX.Sholokhov.Exchange || {};
       }, {
         view: sholokhov_exchange_ui.RenderType.Input,
         options: {
-          title: 'Активность:',
+          title: 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TITLE_FIELD_ACTIVE',
           attributes: {
             type: 'checkbox',
             name: 'target[active]'
-          }
-        }
-      }, {
-        view: sholokhov_exchange_ui.RenderType.Input,
-        options: {
-          title: 'Деактивировать элементы, которые не пришли в импорте:',
-          attributes: {
-            type: 'checkbox',
-            name: 'target[deactivate]'
           }
         }
       }]
@@ -135,7 +126,7 @@ this.BX.Sholokhov.Exchange = this.BX.Sholokhov.Exchange || {};
           var _this2 = this;
           var view;
           var options = {
-            title: 'Тип обмена:',
+            title: 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TITLE_FIELD_TYPE',
             attributes: {
               name: 'target[type]'
             },

@@ -59,7 +59,7 @@ export class IBlockSelect implements Item {
         this._type = Factory.create(
             RenderType.Select,
             {
-                title: 'Тип инфоблока: ',
+                title: 'SHOLOKHOV_EXCHANGE_SETTINGS_UI_TITLE_RENDER_IBLOCK_SELECT_TYPE',
                 attributes: {
                     name: 'target[iblock_type]'
                 },
@@ -80,7 +80,7 @@ export class IBlockSelect implements Item {
         this._iBlock = Factory.create(
             RenderType.Select,
             {
-                title: 'Инфоблок: ',
+                title: 'SHOLOKHOV_EXCHANGE_SETTINGS_UI_TITLE_RENDER_IBLOCK_SELECT_IBLOCK',
                 attributes: {
                     name: 'target[iblock_id]'
                 }
