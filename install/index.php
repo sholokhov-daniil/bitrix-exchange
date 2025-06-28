@@ -439,6 +439,34 @@ class sholokhov_exchange extends CModule
         $this->connection->add(
             'sholokhov_exchange_entity_ui',
             [
+                'ENTITY_CODE' => 'target_hl_element',
+                'SETTINGS' => json_encode([
+                    [
+                        'view' => 'entity-selector',
+                        'options' => [
+                            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_UI_TITLE_RENDER_IBLOCK_SELECT_IBLOCK',
+                            'selector' => [
+                                'multiple' => false,
+                                'addButtonCaption' => 'SHOLOHKOV_EXCHANGE_UI_ENTITY_SELECTOR_DIALOG_ADD_BUTTON_CAPTION_SELECT',
+                                'dialogOptions' => [
+                                    'entities' => [
+                                        [
+                                            'id' => 'sholokhov-exchange-highloadblock',
+                                            'dynamicSearch' => true,
+                                            'dynamicLoad' => true,
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ])
+            ]
+        );
+
+        $this->connection->add(
+            'sholokhov_exchange_entity_ui',
+            [
                 'ENTITY_CODE' => 'target_file',
                 'SETTINGS' => json_encode([
                     [

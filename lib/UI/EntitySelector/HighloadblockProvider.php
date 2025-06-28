@@ -2,29 +2,29 @@
 
 namespace Sholokhov\Exchange\UI\EntitySelector;
 
-use Sholokhov\Exchange\Helper\IBlock;
-
-use Bitrix\Main\Loader;
-use Bitrix\Main\Localization\Loc;
-use Bitrix\UI\EntitySelector\Tab;
-use Bitrix\UI\EntitySelector\Dialog;
-use Bitrix\UI\EntitySelector\SearchQuery;
+use Bitrix\Highloadblock\HighloadBlockRightsTable;
+use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\ArgumentException;
+use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
+use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 use Bitrix\UI\EntitySelector\BaseProvider;
+use Bitrix\UI\EntitySelector\Dialog;
 use Bitrix\UI\EntitySelector\Item;
+use Bitrix\UI\EntitySelector\SearchQuery;
+use Bitrix\UI\EntitySelector\Tab;
 
 /**
- * Провайдер данных, для списка инфоблоков
+ * Провайдер данных, для списка справочников
  *
- * @final
  * @internal
+ * @final
  * @since 1.2.0
  * @version 1.2.0
  */
-final class IBlockProvider extends BaseProvider
+final class HighloadblockProvider extends BaseProvider
 {
     /**
      * ID провайдера сущности
@@ -32,7 +32,7 @@ final class IBlockProvider extends BaseProvider
      * @since 1.2.0
      * @version 1.2.0
      */
-    public const ENTITY_ID = 'sholokhov-exchange-iblock';
+    public const ENTITY_ID = 'sholokhov-exchange-highloadblock';
 
     /**
      * Ограничение количества отображаемых элементов в диалоге
@@ -60,6 +60,12 @@ final class IBlockProvider extends BaseProvider
      */
     public const QUERY_BEGIN = 'B';
 
+    /**
+     * @param array $options
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
     public function __construct(array $options = [])
     {
         parent::__construct();
@@ -77,7 +83,7 @@ final class IBlockProvider extends BaseProvider
      */
     public function isAvailable(): bool
     {
-        return Loader::includeModule('iblock');
+        return Loader::includeModule('highloadblock');
     }
 
     /**
@@ -98,11 +104,12 @@ final class IBlockProvider extends BaseProvider
         $parameters = $this->getOption('parameters', []);
         $parameters['filter']['=ID'] = $ids;
         $parameters['limit'] = self::ITEM_LIMIT;
+        $parameters['select'][] = '*';
 
         $iterator = $this->query($parameters);
 
-        foreach ($iterator as $iBlock) {
-            $items[] = $this->makeItem($iBlock);
+        foreach ($iterator as $item) {
+            $items[] = $this->makeItem($item);
         }
 
         return $items;
@@ -193,17 +200,27 @@ final class IBlockProvider extends BaseProvider
      * @param array $parameters
      * @return array
      * @throws ArgumentException
-     * @throws LoaderException
      * @throws ObjectPropertyException
      * @throws SystemException
-     * @throws \DateInvalidOperationException
      *
      * @since 1.2.0
      * @version 1.2.0
      */
     private function query(array $parameters = []): array
     {
-        return IBlock::getAvailableIBlock($parameters);
+        $parameters['select'] = [
+            '*',
+            'LANG_' => 'LANG',
+        ];
+
+        $iterator = HighloadBlockTable::getList($parameters)->fetchAll();
+
+        if (!$GLOBALS['USER']->IsAdmin() && $iterator) {
+            $rights = HighloadBlockRightsTable::getOperationsName(array_column($iterator, 'ID'));
+            $iterator = array_filter($iterator, fn($hl) => isset($rights[$hl['ID']]));
+        }
+
+        return $iterator;
     }
 
     /**
@@ -217,7 +234,8 @@ final class IBlockProvider extends BaseProvider
     {
         return new Item([
             'id' => $item['ID'],
-            'title' => $item['NAME'],
+            'lid' => $item['LANG_LID'],
+            'title' => $item['LANG_NAME'] ?: $item['NAME'],
             'entityId' => self::ENTITY_ID,
             'tabs' => $this->getTabs(),
         ]);
@@ -268,7 +286,7 @@ final class IBlockProvider extends BaseProvider
 
         $tab = new Tab([
             'id' => self::ENTITY_ID,
-            'title' => Loc::getMessage('SHOLOKHOV_EXCHANGE_UI_ENTITY_SELECTOR_IBLOCK_PROVIDER_TAB_NAME'),
+            'title' => Loc::getMessage('SHOLOKHOV_EXCHANGE_UI_ENTITY_SELECTOR_HANDBOOK_PROVIDER_TAB_NAME'),
             'stub' => true,
             'icon' => [
                 'default' => $icon,

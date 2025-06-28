@@ -11,6 +11,13 @@ return [
                 'moduleId' => Helper::getModuleID(),
                 'className' => EntitySelector\IBlockProvider::class
             ]
-        ]
+        ],
+        [
+            'entityId' => EntitySelector\HighloadblockProvider::ENTITY_ID,
+            'provider' => [
+                'moduleId' => Helper::getModuleID(),
+                'className' => EntitySelector\HighloadblockProvider::class
+            ]
+        ],
     ],
 ];
