@@ -94,6 +94,7 @@ final class IBlockProvider extends BaseProvider
         $items = [];
         $parameters = $this->getOption('parameters', []);
         $parameters['filter']['=ID'] = $ids;
+        $parameters['limit'] = self::ITEM_LIMIT;
 
         $iterator = $this->query($parameters);
 

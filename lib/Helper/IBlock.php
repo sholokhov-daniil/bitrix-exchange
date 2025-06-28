@@ -6,7 +6,6 @@ use Bitrix\Iblock\IblockTable;
 use Bitrix\Iblock\TypeTable;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\Context;
-use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
 use Bitrix\Main\ObjectPropertyException;
@@ -19,7 +18,7 @@ class IBlock
     /**
      * Получение доступных инфоблоков
      *
-     * @param array{permission: string, order: array, filter: array, select: array} $parameters
+     * @param array{permission: string, order: array, filter: array, select: array, limit: int} $parameters
      * @return array
      * @throws ArgumentException
      * @throws LoaderException
@@ -42,6 +41,10 @@ class IBlock
 
         if ($order = $parameters['order'] ?? []) {
             $query->setOrder($order);
+        }
+
+        if ($limit = $parameters['limit'] ?? null) {
+            $query->setLimit($limit);
         }
 
         if ($select = $parameters['select'] ?? []) {
