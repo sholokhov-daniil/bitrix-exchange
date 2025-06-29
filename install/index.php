@@ -480,7 +480,14 @@ class sholokhov_exchange extends CModule
                 'ENTITY_CODE' => 'target_iblock_property_enum_value',
                 'SETTINGS' => json_encode([
                     [
-                        'view' => 'iblock-property'
+                        'view' => 'iblock-property',
+                        'options' => [
+                            'property' => [
+                                'api' => [
+                                    'propertyType' => 'L'
+                                ]
+                            ]
+                        ]
                     ]
                 ])
             ]

@@ -35,6 +35,12 @@ export class IBlockProperty implements Item {
      */
     _property: EntitySelector;
 
+    _options: object;
+
+    constructor(options) {
+        this._options = options;
+    }
+
     /**
      * Получение контейнера списков
      *
@@ -142,7 +148,8 @@ export class IBlockProperty implements Item {
                             dynamicLoad: true,
                             options: {
                                 iblockId: iblockId,
-                                nameTemplate: '#NAME# (#CODE#)'
+                                nameTemplate: '#NAME# (#CODE#)',
+                                ...this._options?.property?.api || {}
                             }
                         }
                     ]

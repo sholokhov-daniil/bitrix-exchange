@@ -199,6 +199,10 @@ final class PropertyProvider extends BaseProvider
             $parameters['filter']['IBLOCK_ID'] = $iBlockID;
         }
 
+        if ($type = $this->getOption('propertyType')) {
+            $parameters['filter']['PROPERTY_TYPE'] = $type;
+        }
+
         return PropertyTable::getList($parameters)->fetchAll();
     }
 
