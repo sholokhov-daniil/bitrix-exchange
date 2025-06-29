@@ -75,7 +75,7 @@ export class AbstractItem implements SimpleItem {
         this._container = document.createElement('div');
 
         this._title = this._createTitle(options);
-        this._container.append(this._title );
+        this._container.append(this._title);
 
         const valueContainer = document.createElement('div');
         valueContainer.className = 'value';

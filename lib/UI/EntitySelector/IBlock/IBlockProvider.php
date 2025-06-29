@@ -1,6 +1,6 @@
 <?php
 
-namespace Sholokhov\Exchange\UI\EntitySelector;
+namespace Sholokhov\Exchange\UI\EntitySelector\IBlock;
 
 use Sholokhov\Exchange\Helper\IBlock;
 

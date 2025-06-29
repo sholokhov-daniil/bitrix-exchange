@@ -6,10 +6,17 @@ use Sholokhov\Exchange\UI\EntitySelector;
 return [
     'entities' => [
         [
-            'entityId' => EntitySelector\IBlockProvider::ENTITY_ID,
+            'entityId' => EntitySelector\IBlock\IBlockProvider::ENTITY_ID,
             'provider' => [
                 'moduleId' => Helper::getModuleID(),
-                'className' => EntitySelector\IBlockProvider::class
+                'className' => EntitySelector\IBlock\IBlockProvider::class
+            ]
+        ],
+        [
+            'entityId' => EntitySelector\IBlock\PropertyProvider::ENTITY_ID,
+            'provider' => [
+                'moduleId' => Helper::getModuleID(),
+                'className' => EntitySelector\IBlock\PropertyProvider::class
             ]
         ],
         [

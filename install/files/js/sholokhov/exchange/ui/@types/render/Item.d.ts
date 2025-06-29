@@ -1,6 +1,5 @@
 export interface Item {
     getContainer(): HTMLElement;
-    getTitle(): HTMLElement;
 }
 
 export interface SimpleItem extends Item {

@@ -477,6 +477,18 @@ class sholokhov_exchange extends CModule
         $this->connection->add(
             'sholokhov_exchange_entity_ui',
             [
+                'ENTITY_CODE' => 'target_iblock_property_enum_value',
+                'SETTINGS' => json_encode([
+                    [
+                        'view' => 'iblock-property'
+                    ]
+                ])
+            ]
+        );
+
+        $this->connection->add(
+            'sholokhov_exchange_entity_ui',
+            [
                 'ENTITY_CODE' => 'target_hl_element',
                 'SETTINGS' => json_encode([
                     [

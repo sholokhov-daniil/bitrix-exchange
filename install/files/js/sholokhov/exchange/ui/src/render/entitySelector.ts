@@ -19,6 +19,10 @@ export class EntitySelector extends AbstractItem {
      */
     _selector: TagSelector;
 
+    constructor(options: EntitySelectorOptions) {
+        super(options);
+    }
+
     /**
      * Создание списка сущностей
      *
@@ -30,17 +34,22 @@ export class EntitySelector extends AbstractItem {
     _createValue(options: EntitySelectorOptions): HTMLElement {
         const container = document.createElement('div');
 
-        console.log(options.selector);
-
         if (options?.selector?.addButtonCaption) {
             options.selector.addButtonCaption = BX.message(options.selector.addButtonCaption) || options.selector.addButtonCaption;
         }
 
-        this._selector = new TagSelector(options.selector || {});
-        this._selector.renderTo(container);
-
-        // TODO: Вот тут думаю нужно будет бросить событие, а может и не нужно :)
+        this._selector = new TagSelector(options?.selector || {});
+        this.selector.renderTo(container);
 
         return container;
+    }
+
+    /**
+     * @return {TagSelector}
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    get selector(): TagSelector {
+        return this._selector;
     }
 }
