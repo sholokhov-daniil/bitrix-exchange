@@ -1,9 +1,11 @@
 <?php
 
-namespace Sholokhov\Exchange\UI\EntitySelector\IBlock;
+namespace Sholokhov\Exchange\UI\EntitySelector;
 
 use Bitrix\Iblock\PropertyTable;
+use Bitrix\Main\Application;
 use Bitrix\Main\ArgumentException;
+use Bitrix\Main\Context;
 use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Loader;
 use Bitrix\Main\LoaderException;
@@ -16,12 +18,7 @@ use Bitrix\UI\EntitySelector\Item;
 use Bitrix\UI\EntitySelector\SearchQuery;
 use Bitrix\UI\EntitySelector\Tab;
 
-/**
- * @internal
- * @since 1.2.0
- * @version 1.2.0
- */
-final class PropertyProvider extends BaseProvider
+final class UserFieldProvider extends BaseProvider
 {
     /**
      * ID провайдера сущности
@@ -29,7 +26,7 @@ final class PropertyProvider extends BaseProvider
      * @since 1.2.0
      * @version 1.2.0
      */
-    public const ENTITY_ID = 'sholokhov-exchange-iblock-property';
+    public const ENTITY_ID = 'sholokhov-exchange-user-field';
 
     /**
      * Ограничение количества отображаемых элементов в диалоге
@@ -70,37 +67,27 @@ final class PropertyProvider extends BaseProvider
     }
 
     /**
-     * Доступность провайдера
-     *
      * @return bool
      *
-     * @throws LoaderException
      * @since 1.2.0
      * @version 1.2.0
      */
     public function isAvailable(): bool
     {
-        // TODO: Проверить доступ к ИБ
-        return Loader::includeModule('iblock') && $this->getIBlockID();
+        return mb_strlen($this->getEntityId());
     }
 
     /**
      * @param array $ids
      * @return array|Item[]
-     * @throws ArgumentException
-     * @throws ObjectPropertyException
-     * @throws SystemException
      * @since 1.2.0
      * @version 1.2.0
      */
     public function getItems(array $ids): array
     {
         $items = [];
-        $parameters = $this->getOption('parameters', []);
-        $parameters['filter']['=ID'] = $ids;
-        $parameters['limit'] = self::ITEM_LIMIT;
 
-        $iterator = $this->query($parameters);
+        $iterator = $this->query();
 
         foreach ($iterator as $iBlock) {
             $items[] = $this->makeItem($iBlock);
@@ -112,12 +99,6 @@ final class PropertyProvider extends BaseProvider
     /**
      * @param Dialog $dialog
      * @return void
-     * @throws ArgumentException
-     * @throws LoaderException
-     * @throws ObjectPropertyException
-     * @throws SystemException
-     * @throws \DateInvalidOperationException
-     *
      * @since 1.2.0
      * @version 1.2.0
      */
@@ -156,11 +137,6 @@ final class PropertyProvider extends BaseProvider
      * @param Dialog $dialog
      * @return void
      *
-     * @throws ArgumentException
-     * @throws LoaderException
-     * @throws ObjectPropertyException
-     * @throws SystemException
-     * @throws \DateInvalidOperationException
      * @since 1.2.0
      * @version 1.2.0
      */
@@ -172,14 +148,8 @@ final class PropertyProvider extends BaseProvider
             return;
         }
 
-        $elementList = $this->query([
-            'filter' => $filter,
-            'limit' => self::ITEM_LIMIT,
-        ]);
-        if (count($elementList) === self::ITEM_LIMIT)
-        {
-            $searchQuery->setCacheable(false);
-        }
+        $elementList = $this->query();
+
         foreach ($elementList as $element)
         {
             $dialog->addItem(
@@ -189,31 +159,25 @@ final class PropertyProvider extends BaseProvider
     }
 
     /**
-     * Получение доступных инфоблоков
-     *
-     * @param array $parameters
      * @return array
-     * @throws ArgumentException
-     * @throws ObjectPropertyException
-     * @throws SystemException
+     *
      * @since 1.2.0
      * @version 1.2.0
      */
-    private function query(array $parameters = []): array
+    private function query(): array
     {
-        if (!isset($parameters['order'])) {
-            $parameters['order'] = ['NAME' => 'ASC'];
-        }
+        global $USER_FIELD_MANAGER;
 
-        if ($iBlockID = $this->getIBlockID()) {
-            $parameters['filter']['IBLOCK_ID'] = $iBlockID;
-        }
+        $lang = Context::getCurrent()->getLanguage();
+        $iterator = $USER_FIELD_MANAGER->GetUserFields($this->getEntityId(), 0, $lang);
 
-        if ($type = $this->getOption('propertyType')) {
-            $parameters['filter']['PROPERTY_TYPE'] = $type;
-        }
+        return array_filter($iterator, function($field)  {
+            if (($type = $this->getOption('propertyType')) && $field['USER_TYPE_ID'] <> $type) {
+                return false;
+            }
 
-        return PropertyTable::getList($parameters)->fetchAll();
+            return true;
+        });
     }
 
     /**
@@ -225,9 +189,11 @@ final class PropertyProvider extends BaseProvider
      */
     private function makeItem(array $item): Item
     {
+
+
         return new Item([
             'id' => $item['ID'],
-            'code' => $item['CODE'],
+            'fieldName' => $item['FIELD_NAME'],
             'title' => str_replace(
                 array_map(fn($name) => "#$name#", array_keys($item)),
                 array_values($item),
@@ -283,7 +249,7 @@ final class PropertyProvider extends BaseProvider
 
         $tab = new Tab([
             'id' => self::ENTITY_ID,
-            'title' => Loc::getMessage('SHOLOKHOV_EXCHANGE_UI_ENTITY_SELECTOR_IBLOCK_PROPERTY_PROVIDER_TAB_NAME'),
+            'title' => 'UF',
             'stub' => true,
             'icon' => [
                 'default' => $icon,
@@ -319,17 +285,6 @@ HTML;
     }
 
     /**
-     * @return int
-     *
-     * @since 1.2.0
-     * @version 1.2.0
-     */
-    private function getIBlockID(): int
-    {
-        return (int)$this->getOption('iblockId', 0);
-    }
-
-    /**
      * @return string
      *
      * @since 1.2.0
@@ -352,6 +307,17 @@ HTML;
     }
 
     /**
+     * @return string
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    private function getEntityId(): string
+    {
+        return (string)$this->getOption('entityId', '');
+    }
+
+    /**
      * @param array $options
      * @return array
      *
@@ -360,10 +326,10 @@ HTML;
      */
     private function normalizeOptions(array $options): array
     {
-        $options['iblockId'] = (int)($options['iblockId'] ?? 0);
+        $options['entityId'] = (string)($options['entityId'] ?? '');
 
         if (empty($options['nameTemplate'])) {
-            $options['nameTemplate'] = '#NAME#';
+            $options['nameTemplate'] = '#LIST_COLUMN_LABEL#';
         }
 
         return $options;

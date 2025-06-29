@@ -26,5 +26,12 @@ return [
                 'className' => EntitySelector\HighloadblockProvider::class
             ]
         ],
+        [
+            'entityId' => EntitySelector\UserFieldProvider::ENTITY_ID,
+            'provider' => [
+                'moduleId' => Helper::getModuleID(),
+                'className' => EntitySelector\UserFieldProvider::class
+            ]
+        ],
     ],
 ];

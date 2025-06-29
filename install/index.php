@@ -10,9 +10,6 @@ use Bitrix\Main\Localization\Loc;
 
 use Bitrix\Main\SystemException;
 
-/**
- * @version 1.2.0
- */
 class sholokhov_exchange extends CModule
 {
     var $MODULE_ID = "sholokhov.exchange";
@@ -57,8 +54,6 @@ class sholokhov_exchange extends CModule
      * @return void
      * @throws ArgumentException
      * @throws SystemException
-     *
-     * @version 1.2.0
      */
     public function DoInstall(): void
     {
@@ -73,8 +68,6 @@ class sholokhov_exchange extends CModule
     /**
      * @return void
      * @throws SqlQueryException
-     *
-     * @version 1.2.0
      */
     public function DoUninstall(): void
     {
@@ -92,8 +85,6 @@ class sholokhov_exchange extends CModule
 
     /**
      * @return void
-     * @since 1.2.0
-     * @version 1.2.0
      */
     public function InstallFiles(): void
     {
@@ -107,8 +98,6 @@ class sholokhov_exchange extends CModule
 
     /**
      * @return void
-     * @since 1.2.0
-     * @version 1.2.0
      */
     public function UnInstallFiles(): void
     {
@@ -122,9 +111,6 @@ class sholokhov_exchange extends CModule
      * @return void
      * @throws ArgumentException
      * @throws SystemException
-     *
-     * @since 1.2.0
-     * @version 1.2.0
      */
     public function InstallDB(): void
     {
@@ -231,9 +217,6 @@ class sholokhov_exchange extends CModule
      * @throws ArgumentException
      * @throws SystemException
      * @throws Exception
-     *
-     * @since 1.2.0
-     * @version 1.2.0
      */
     private function migrationEntities(): void
     {
@@ -247,9 +230,6 @@ class sholokhov_exchange extends CModule
      *
      * @return void
      * @throws Exception
-     *
-     * @since 1.2.0
-     * @version 1.2.0
      */
     private function migrationEntitySources(): void
     {
@@ -315,9 +295,6 @@ class sholokhov_exchange extends CModule
     /**
      * @return void
      * @throws Exception
-     *
-     * @since 1.2.0
-     * @version 1.2.0
      */
     private function migrationEntityTargets(): void
     {
@@ -439,6 +416,44 @@ class sholokhov_exchange extends CModule
         $this->connection->add(
             'sholokhov_exchange_entity_ui',
             [
+                'ENTITY_CODE' => 'target_iblock_section',
+                'SETTINGS' => json_encode([
+                    [
+                        'view' => 'input',
+                        'options' => [
+                            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_TITLE_FIELD_DEACTIVATE',
+                            'attributes' => [
+                                'type' => 'checkbox',
+                                'name' => 'target[deactivate]',
+                            ]
+                        ]
+                    ],
+                    [
+                        'view' => 'entity-selector',
+                        'options' => [
+                            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_UI_TITLE_RENDER_IBLOCK_SELECT_IBLOCK',
+                            'selector' => [
+                                'multiple' => false,
+                                'addButtonCaption' => 'SHOLOHKOV_EXCHANGE_UI_ENTITY_SELECTOR_DIALOG_ADD_BUTTON_CAPTION_SELECT',
+                                'dialogOptions' => [
+                                    'entities' => [
+                                        [
+                                            'id' => 'sholokhov-exchange-iblock',
+                                            'dynamicSearch' => true,
+                                            'dynamicLoad' => true,
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]),
+            ]
+        );
+
+        $this->connection->add(
+            'sholokhov_exchange_entity_ui',
+            [
                 'ENTITY_CODE' => 'target_iblock_element_simple_product',
                 'SETTINGS' => json_encode([
                     [
@@ -485,6 +500,25 @@ class sholokhov_exchange extends CModule
                             'property' => [
                                 'api' => [
                                     'propertyType' => 'L'
+                                ]
+                            ]
+                        ]
+                    ]
+                ])
+            ]
+        );
+
+        $this->connection->add(
+            'sholokhov_exchange_entity_ui',
+            [
+                'ENTITY_CODE' => 'target_uf_enum_value',
+                'SETTINGS' => json_encode([
+                    [
+                        'view' => 'uf-property',
+                        'options' => [
+                            'property' => [
+                                'api' => [
+                                    'propertyType' => 'enumeration'
                                 ]
                             ]
                         ]
