@@ -11,6 +11,7 @@ return [
 		'main.polyfill.core',
 		'ui.entity-selector',
 		'ui.tag-selector',
+		'ui.forms',
 	],
 	'skip_core' => true,
 ];

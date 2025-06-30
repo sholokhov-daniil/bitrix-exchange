@@ -1,3 +1,4 @@
-import {TargetSettings} from "./components/TargetSettings.ts";
+import {Target} from "./components/target.ts";
+import {Detail} from "./components/detail.ts";
 
-export {TargetSettings};
+export {Target, Detail};

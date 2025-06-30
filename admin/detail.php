@@ -22,21 +22,81 @@ $request = Context::getCurrent()->getRequest();
 $data = [
     'id' => $request->get('id')
 ];
+
+$generalContainer = uniqid('sholokhov_exchange_detail_general_');
 $targetContainer = uniqid('sholokhov_exchange_detail_target_');
+
+$tabs = [
+    [
+        'DIV' => 'general',
+        'TAB' => "Основные",
+        "TITLE" => 'Основные настройки',
+    ],
+    [
+        'DIV' => 'target',
+        'TAB' => "Обмен",
+        "TITLE" => 'Настройки обмена данных',
+    ],
+    [
+        'DIV' => 'source',
+        'TAB' => "Источник данных",
+        "TITLE" => 'Настройки источника данных',
+    ],
+    [
+        'DIV' => 'map',
+        'TAB' => "Карта обмена",
+        "TITLE" => 'Настройки карты обмена',
+    ],
+];
+$control = new CAdminTabControl('se_detail_control', $tabs);
 
 (new Event(Helper::getModuleID(), 'beforeRenderDetailSettings', $data))->send();
 ?>
-<div id="<?= $targetContainer ?>"></div>
+<form method="POST">
+    <?php
+    $control->Begin();
+    $control->BeginNextTab();
+    ?>
+    <div id="<?= $generalContainer ?>"></div>
+
+    <?php
+    $control->BeginNextTab();
+    ?>
+    <div id="<?= $targetContainer ?>"></div>
+
+    <?php
+    $control->BeginNextTab();
+    ?>
+
+    Тут настройки источника
+    <?php
+    $control->BeginNextTab();
+    ?>
+    Тут настройки карты
+    <?php
+    $control->End();
+    ?>
+</form>
+
+<?php
+$options = [
+    'container' => [
+        'general' => '#' . $generalContainer,
+        'target' => '#' . $targetContainer,
+        'source' => '',
+        'map' => ''
+    ]
+];
+?>
 <script>
     BX.ready(function() {
-         BX.loadExt('sholokhov.exchange.detail')
-             .then(() => {
-                 const target = new BX.Sholokhov.Exchange.Detail.TargetSettings(
-                     '#<?= $targetContainer ?>',
-                     <?= json_encode($data) ?>
-                 );
-                 target.view();
-             })
-             .catch(response => console.error(response))
+        BX.loadExt('sholokhov.exchange.detail')
+            .then(() => {
+                const detail = new BX.Sholokhov.Exchange.Detail.Detail(<?= json_encode($data) ?>, <?= json_encode($options) ?>);
+                detail.view();
+            })
+            .catch(() => {
+
+            })
     });
 </script>

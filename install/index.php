@@ -381,11 +381,10 @@ class sholokhov_exchange extends CModule
                 'ENTITY_CODE' => 'target_iblock_element',
                 'SETTINGS' => json_encode([
                     [
-                        'view' => 'input',
+                        'view' => 'checkbox',
                         'options' => [
                             'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_TITLE_FIELD_DEACTIVATE',
                             'attributes' => [
-                                'type' => 'checkbox',
                                 'name' => 'target[deactivate]',
                             ]
                         ]
@@ -419,11 +418,10 @@ class sholokhov_exchange extends CModule
                 'ENTITY_CODE' => 'target_iblock_section',
                 'SETTINGS' => json_encode([
                     [
-                        'view' => 'input',
+                        'view' => 'checkbox',
                         'options' => [
                             'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_TITLE_FIELD_DEACTIVATE',
                             'attributes' => [
-                                'type' => 'checkbox',
                                 'name' => 'target[deactivate]',
                             ]
                         ]
@@ -457,11 +455,10 @@ class sholokhov_exchange extends CModule
                 'ENTITY_CODE' => 'target_iblock_element_simple_product',
                 'SETTINGS' => json_encode([
                     [
-                        'view' => 'input',
+                        'view' => 'checkbox',
                         'options' => [
                             'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_TITLE_FIELD_DEACTIVATE',
                             'attributes' => [
-                                'type' => 'checkbox',
                                 'name' => 'target[deactivate]',
                             ]
                         ]

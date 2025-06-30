@@ -140,7 +140,15 @@ export class Select extends AbstractItem implements SelectInterface {
      * @version 1.2.0
      */
     _createValue(options: SelectOptions): HTMLElement {
+        const container = document.createElement('div');
+        container.className = 'ui-ctl ui-ctl-after-icon ui-ctl-dropdown';
+
+        const angle = document.createElement('div');
+        angle.className = 'ui-ctl-after ui-ctl-icon-angle';
+        container.append(angle);
+
         this._select = document.createElement('select');
+        this._select.className = 'ui-ctl-element';
         this._select.add(new Option('-- Выберите значение --', '', true));
 
         if (typeof options.events === 'object') {
@@ -178,6 +186,8 @@ export class Select extends AbstractItem implements SelectInterface {
                 alert(`Ошибка получения значений списка "${options.title}"`);
             })
 
-        return this._select;
+        container.append(this._select);
+
+        return container;
     }
 }

@@ -5,7 +5,7 @@ import {Options} from "../../@types/render/options/options.d.ts";
  * @since 1.2.0
  * @version 1.2.0
  */
-export class Input extends AbstractItem {
+export class Checkbox extends AbstractItem {
     /**
      * @private
      *
@@ -109,11 +109,11 @@ export class Input extends AbstractItem {
      * @version 1.2.0
      */
     _createValue(options: Options): HTMLElement {
-        const container = document.createElement('div');
-        container.className = 'ui-ctl ui-ctl-textbox';
+        const container = document.createElement('label');
+        container.className = 'ui-ctl ui-ctl-checkbox';
 
         this._input = document.createElement('input');
-        this._input.className = 'ui-ctl-element';
+        // this._input.className = 'ui-ctl-element';
 
         if (options.events) {
             for (let eventName in options.events) {
@@ -126,6 +126,8 @@ export class Input extends AbstractItem {
                 this._input.setAttribute(name, options.attributes[name]);
             }
         }
+
+        this._input.type = 'checkbox';
 
         container.append(this._input);
 
