@@ -1,12 +1,9 @@
-import Config from '../config/target.js';
 import {Factory, RenderType} from 'sholokhov.exchange.ui';
+
+import Config from '../config/source.js';
 import {normalizeTypeResponse} from "../utils/helper.ts";
 
-/**
- * @since 1.2.0
- * @version 1.2.0
- */
-export class Target {
+export class Source {
     /**
      * Контейнер UI
      *
@@ -65,75 +62,9 @@ export class Target {
      */
     view(): void {
         this._node.innerHTML = '';
-        this._appendType();
+        this._appendTypeField();
         this._appendFields(this._node, Config.fields);
         this._appendCustomFields();
-    }
-
-    /**
-     * Загрузка пользовательских полей
-     *
-     * @param target
-     * @private
-     *
-     * @since 1.2.0
-     * @version 1.2.0
-     */
-    _loadFields(target): void {
-        BX.ajax.runAction(
-            'sholokhov:exchange.EntityController.getFields',
-            {
-                data: {
-                    code: target
-                }
-            }
-        )
-            .then(response => {
-                this._customFieldNode.innerHTML = '';
-                if (Array.isArray(response.data)) {
-                    this._appendFields(this._customFieldNode, response.data);
-                }
-            })
-            .catch(response => console.error(response))
-    }
-
-    /**
-     * Добавление списка доступных обменов
-     *
-     * @private
-     * @return void
-     *
-     * @since 1.2.0
-     * @version 1.2.0
-     */
-    _appendType(): void {
-        let view;
-        let options = {
-            title: 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_TITLE_FIELD_TYPE',
-            attributes: {
-                name: 'target[type]',
-            },
-            events: {
-                onchange: (event) => this._loadFields(event.target.value),
-            }
-        };
-
-        if (this._options.id) {
-            view = RenderType.Input;
-            options.attributes.type = 'hidden';
-
-        } else {
-            view = RenderType.Select;
-            options.api = {
-                action: 'sholokhov:exchange.EntityController.getByType',
-                data: {
-                    code: 'target'
-                },
-                callback: normalizeTypeResponse
-            };
-        }
-
-        this._node.append(Factory.create(view, options).getContainer());
     }
 
     /**
@@ -147,6 +78,36 @@ export class Target {
     _appendCustomFields(): void {
         this._customFieldNode = document.createElement('div');
         this._node.append(this._customFieldNode);
+    }
+
+    /**
+     * Добавление списка доступных источников
+     *
+     * @private
+     * @return void
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    _appendTypeField(): void {
+        const options = {
+            title: 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_SOURCE_TITLE_FIELD_TYPE',
+            attributes: {
+                name: 'source[type]'
+            },
+            events: {
+                onchange: (event) => this._loadFields(event.target.value)
+            },
+            api: {
+                action: 'sholokhov:exchange.EntityController.getByType',
+                data: {
+                    code: 'source'
+                },
+                callback: normalizeTypeResponse,
+            }
+        };
+
+        this._node.append(Factory.create(RenderType.Select, options).getContainer());
     }
 
     /**
@@ -166,5 +127,32 @@ export class Target {
                 node.append(element.getContainer());
             }
         })
+    }
+
+    /**
+     * Загрузка пользовательских полей
+     *
+     * @param source {string}
+     * @private
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    _loadFields(source: string): void {
+        BX.ajax.runAction(
+            'sholokhov:exchange.EntityController.getFields',
+            {
+                data: {
+                    code: source
+                }
+            }
+        )
+            .then(response => {
+                this._customFieldNode.innerHTML = '';
+                if (Array.isArray(response.data)) {
+                    this._appendFields(this._customFieldNode, response.data);
+                }
+            })
+            .catch(response => console.error(response))
     }
 }

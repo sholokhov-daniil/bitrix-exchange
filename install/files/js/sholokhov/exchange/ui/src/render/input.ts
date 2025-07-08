@@ -1,5 +1,5 @@
 import {AbstractItem} from './abstractItem.ts';
-import {Options} from "../../@types/render/options/options.d.ts";
+import {Options} from "../interfaces/render/options/options.d.ts";
 
 /**
  * @since 1.2.0

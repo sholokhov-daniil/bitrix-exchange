@@ -1,8 +1,6 @@
-export interface Item {
-    getContainer(): HTMLElement;
-}
+import {Item} from "./item.d.ts";
 
-export interface SimpleItem extends Item {
+interface SimpleItem extends Item {
     value: any;
 
     /**
@@ -16,3 +14,5 @@ export interface SimpleItem extends Item {
      */
     setAttribute(key: string, value: any): void;
 }
+
+export {SimpleItem}

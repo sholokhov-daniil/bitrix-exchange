@@ -25,6 +25,7 @@ $data = [
 
 $generalContainer = uniqid('sholokhov_exchange_detail_general_');
 $targetContainer = uniqid('sholokhov_exchange_detail_target_');
+$sourceController = uniqid('sholokhov_exchange_detail_source_');
 
 $tabs = [
     [
@@ -68,7 +69,7 @@ $control = new CAdminTabControl('se_detail_control', $tabs);
     $control->BeginNextTab();
     ?>
 
-    Тут настройки источника
+    <div id="<?= $sourceController ?>"></div>
     <?php
     $control->BeginNextTab();
     ?>
@@ -83,7 +84,7 @@ $options = [
     'container' => [
         'general' => '#' . $generalContainer,
         'target' => '#' . $targetContainer,
-        'source' => '',
+        'source' => '#' . $sourceController,
         'map' => ''
     ]
 ];

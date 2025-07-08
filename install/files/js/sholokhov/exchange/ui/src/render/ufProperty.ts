@@ -1,6 +1,6 @@
-import {Item} from "../../@types/render/Item.d.ts";
+import {Item} from "../interfaces/render/item.d.ts";
 import {EntitySelector} from "./entitySelector.ts";
-import {TagEvent} from "../../@types/render/entity-selector/events/tagSelector.d.ts";
+import {TagEvent} from "../interfaces/render/entity-selector/events/tagSelector.d.ts";
 
 /**
  * Селектор выбора пользовательских свойств определенного инфоблока

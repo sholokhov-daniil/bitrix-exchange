@@ -1,5 +1,5 @@
-import {SimpleItem} from "../../@types/render/Item.d.ts";
-import {Options} from "../../@types/render/options/options.d.ts";
+import {SimpleItem} from "../interfaces/render/simpleItem.d.ts";
+import {Options} from "../interfaces/render/options/options.d.ts";
 
 export class AbstractItem implements SimpleItem {
     /**

@@ -1,4 +1,4 @@
-import {SimpleItem} from "./Item.d.ts";
+import {SimpleItem} from "./simpleItem.d.ts";
 
 export interface Select extends SimpleItem {
     /**

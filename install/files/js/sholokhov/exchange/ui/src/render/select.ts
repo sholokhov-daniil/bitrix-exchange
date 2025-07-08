@@ -1,7 +1,7 @@
 import {query} from "../util/http/field.ts";
 import {AbstractItem} from "./abstractItem.ts";
-import {Enumeration, SelectOptions} from "../../@types/render/options/select.d.ts";
-import {Select as SelectInterface} from '../../@types/render/select.d.ts';
+import {Enumeration, SelectOptions} from "../interfaces/render/options/select.d.ts";
+import {Select as SelectInterface} from '../interfaces/render/select.d.ts';
 
 export class Select extends AbstractItem implements SelectInterface {
 

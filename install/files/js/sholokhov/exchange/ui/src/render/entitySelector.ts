@@ -1,6 +1,6 @@
 import {TagSelector} from 'ui.entity-selector';
 import {AbstractItem} from "./abstractItem.ts";
-import {EntitySelectorOptions} from '../../@types/render/options/entitySelector.d.ts'
+import {EntitySelectorOptions} from '../interfaces/render/options/entitySelector.d.ts'
 
 /**
  * Генератор списка элементов сущности

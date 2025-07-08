@@ -375,200 +375,34 @@ class sholokhov_exchange extends CModule
 
     private function migrationEntityUI(): void
     {
-        $this->connection->add(
-            'sholokhov_exchange_entity_ui',
-            [
-                'ENTITY_CODE' => 'target_iblock_element',
-                'SETTINGS' => json_encode([
-                    [
-                        'view' => 'checkbox',
-                        'options' => [
-                            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_TITLE_FIELD_DEACTIVATE',
-                            'attributes' => [
-                                'name' => 'target[deactivate]',
-                            ]
-                        ]
-                    ],
-                    [
-                        'view' => 'entity-selector',
-                        'options' => [
-                            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_UI_TITLE_RENDER_IBLOCK_SELECT_IBLOCK',
-                            'selector' => [
-                                'multiple' => false,
-                                'addButtonCaption' => 'SHOLOHKOV_EXCHANGE_UI_ENTITY_SELECTOR_DIALOG_ADD_BUTTON_CAPTION_SELECT',
-                                'dialogOptions' => [
-                                    'entities' => [
-                                        [
-                                            'id' => 'sholokhov-exchange-iblock',
-                                            'dynamicSearch' => true,
-                                            'dynamicLoad' => true,
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ]),
-            ]
-        );
+        $iterator = [
+            'source_db_xml',
+            'target_iblock_element',
+            'target_iblock_section',
+            'target_iblock_element_simple_product',
+            'target_iblock_property_enum_value',
+            'target_uf_enum_value',
+            'target_hl_element',
+            'target_file',
+            'source_simple_xml',
+            'source_simple_csv',
+            'source_simple_json_file',
+        ];
 
-        $this->connection->add(
-            'sholokhov_exchange_entity_ui',
-            [
-                'ENTITY_CODE' => 'target_iblock_section',
-                'SETTINGS' => json_encode([
-                    [
-                        'view' => 'checkbox',
-                        'options' => [
-                            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_TITLE_FIELD_DEACTIVATE',
-                            'attributes' => [
-                                'name' => 'target[deactivate]',
-                            ]
-                        ]
-                    ],
-                    [
-                        'view' => 'entity-selector',
-                        'options' => [
-                            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_UI_TITLE_RENDER_IBLOCK_SELECT_IBLOCK',
-                            'selector' => [
-                                'multiple' => false,
-                                'addButtonCaption' => 'SHOLOHKOV_EXCHANGE_UI_ENTITY_SELECTOR_DIALOG_ADD_BUTTON_CAPTION_SELECT',
-                                'dialogOptions' => [
-                                    'entities' => [
-                                        [
-                                            'id' => 'sholokhov-exchange-iblock',
-                                            'dynamicSearch' => true,
-                                            'dynamicLoad' => true,
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ]),
-            ]
-        );
+        foreach ($iterator as $code) {
+            $this->connection->add(
+                'sholokhov_exchange_entity_ui',
+                [
+                    'ENTITY_CODE' => $code,
+                    'SETTINGS' => json_encode($this->getUiConfig($code))
+                ]
+            );
+        }
+    }
 
-        $this->connection->add(
-            'sholokhov_exchange_entity_ui',
-            [
-                'ENTITY_CODE' => 'target_iblock_element_simple_product',
-                'SETTINGS' => json_encode([
-                    [
-                        'view' => 'checkbox',
-                        'options' => [
-                            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_TITLE_FIELD_DEACTIVATE',
-                            'attributes' => [
-                                'name' => 'target[deactivate]',
-                            ]
-                        ]
-                    ],
-                    [
-                        'view' => 'entity-selector',
-                        'options' => [
-                            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_UI_TITLE_RENDER_IBLOCK_SELECT_IBLOCK',
-                            'selector' => [
-                                'multiple' => false,
-                                'addButtonCaption' => 'SHOLOHKOV_EXCHANGE_UI_ENTITY_SELECTOR_DIALOG_ADD_BUTTON_CAPTION_SELECT',
-                                'dialogOptions' => [
-                                    'entities' => [
-                                        [
-                                            'id' => 'sholokhov-exchange-iblock',
-                                            'dynamicSearch' => true,
-                                            'dynamicLoad' => true,
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ]),
-            ]
-        );
-
-        $this->connection->add(
-            'sholokhov_exchange_entity_ui',
-            [
-                'ENTITY_CODE' => 'target_iblock_property_enum_value',
-                'SETTINGS' => json_encode([
-                    [
-                        'view' => 'iblock-property',
-                        'options' => [
-                            'property' => [
-                                'api' => [
-                                    'propertyType' => 'L'
-                                ]
-                            ]
-                        ]
-                    ]
-                ])
-            ]
-        );
-
-        $this->connection->add(
-            'sholokhov_exchange_entity_ui',
-            [
-                'ENTITY_CODE' => 'target_uf_enum_value',
-                'SETTINGS' => json_encode([
-                    [
-                        'view' => 'uf-property',
-                        'options' => [
-                            'property' => [
-                                'api' => [
-                                    'propertyType' => 'enumeration'
-                                ]
-                            ]
-                        ]
-                    ]
-                ])
-            ]
-        );
-
-        $this->connection->add(
-            'sholokhov_exchange_entity_ui',
-            [
-                'ENTITY_CODE' => 'target_hl_element',
-                'SETTINGS' => json_encode([
-                    [
-                        'view' => 'entity-selector',
-                        'options' => [
-                            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_UI_TITLE_RENDER_IBLOCK_SELECT_IBLOCK',
-                            'selector' => [
-                                'multiple' => false,
-                                'addButtonCaption' => 'SHOLOHKOV_EXCHANGE_UI_ENTITY_SELECTOR_DIALOG_ADD_BUTTON_CAPTION_SELECT',
-                                'dialogOptions' => [
-                                    'entities' => [
-                                        [
-                                            'id' => 'sholokhov-exchange-highloadblock',
-                                            'dynamicSearch' => true,
-                                            'dynamicLoad' => true,
-                                        ]
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ])
-            ]
-        );
-
-        $this->connection->add(
-            'sholokhov_exchange_entity_ui',
-            [
-                'ENTITY_CODE' => 'target_file',
-                'SETTINGS' => json_encode([
-                    [
-                        'view' => 'input',
-                        'options' => [
-                            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_FILE_TITLE_FIELD_MODULE_ID',
-                            'attributes' => [
-                                'name' => 'target[module_id]',
-                            ],
-                        ]
-                    ]
-                ])
-            ]
-        );
+    private function getUiConfig(string $name): array
+    {
+        return @include(__DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'ui' . DIRECTORY_SEPARATOR . $name . '.php') ?: [];
     }
 
     private function registrationEvents(): void

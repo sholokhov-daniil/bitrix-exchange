@@ -1,5 +1,5 @@
 import {Registry} from "../container/index.ts";
-import {Item} from "../../../@types/render/Item.d.ts";
+import {Item} from "../../interfaces/render/item.d.ts"
 import {RenderRegistry} from "../builder/RenderRegistry.ts";
 
 /**
@@ -28,13 +28,13 @@ export default class {
     /**
      * Создание DOM элемента
      *
-     * @param type
-     * @param options
+     * @param type {string|number}
+     * @param options {object}
      *
      * @since 1.2.0
      * @version 1.2.0
      */
-    create(type, options): Item|null {
+    create(type: string|number, options: object): Item|null {
         const item = this.#registry.get(type);
 
         if (!item) {

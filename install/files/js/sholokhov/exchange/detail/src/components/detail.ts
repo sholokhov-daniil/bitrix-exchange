@@ -1,6 +1,7 @@
 import {Options} from "../../@types/detail.d.ts";
 import {Target} from "./target.ts";
 import {General} from "./general.ts";
+import {Source} from "./source.ts";
 
 /**
  * @since 1.2.0
@@ -42,6 +43,10 @@ export class Detail {
 
         if (this._options?.container?.target) {
             (new Target(this._options.container.target, this._data)).view();
+        }
+
+        if (this._options?.container?.source) {
+            (new Source(this._options.container.source, this._data)).view();
         }
     }
 }
