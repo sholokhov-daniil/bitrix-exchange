@@ -190,11 +190,11 @@ final class ExchangeTable extends DataManager
 
             (new Fields\DatetimeField(self::PC_DATE_CREATE))
                 ->configureRequired()
-                ->configureDefaultValueNow(),
+                ->configureDefaultValue(new DateTime),
 
             (new Fields\DatetimeField(self::PC_DATE_UPDATE))
                 ->configureRequired()
-                ->configureDefaultValueNow()
+                ->configureDefaultValue(new DateTime)
                 ->addSaveDataModifier(fn() => new DateTime),
 
             (new Fields\IntegerField(self::PC_USER_ID_CREATED))

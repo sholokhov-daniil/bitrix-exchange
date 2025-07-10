@@ -176,12 +176,10 @@ class sholokhov_exchange extends CModule
                     ->configureRequired(),
 
                 'DATE_CREATE' => (new Fields\DatetimeField('DATE_CREATE'))
-                    ->configureRequired()
-                    ->configureDefaultValueNow(),
+                    ->configureRequired(),
 
                 'DATE_UPDATE' => (new Fields\DatetimeField('DATE_UPDATE'))
-                    ->configureRequired()
-                    ->configureDefaultValueNow(),
+                    ->configureRequired(),
 
                 'USER_ID_CREATED' => (new Fields\IntegerField('USER_ID_CREATED'))
                     ->configureRequired(),
