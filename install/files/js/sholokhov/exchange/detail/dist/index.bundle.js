@@ -496,12 +496,14 @@ this.BX.Sholokhov.Exchange = this.BX.Sholokhov.Exchange || {};
           var input = sholokhov_exchange_ui.Factory.create(sholokhov_exchange_ui.RenderType.Input, this._options);
           var label = document.createElement('span');
           label.innerText = 'Сгенерировать';
+          label.className = "hash-text-generator";
           label.onclick = function () {
             // Отправляем ajax запрос
             BX.ajax.runAction('sholokhov:exchange.SecureController.generateHash');
             input.value = "OPA";
           };
-          input.getContainer().append(label);
+          input.valueCell.style.display = 'flex';
+          input.valueCell.append(label);
           return input.getContainer();
         }
       }]);

@@ -26,20 +26,21 @@ $data = [
 $generalContainer = uniqid('sholokhov_exchange_detail_general_');
 $targetContainer = uniqid('sholokhov_exchange_detail_target_');
 $sourceController = uniqid('sholokhov_exchange_detail_source_');
+$mapController = uniqid('sholokhov_exchange_detail_map_');
 
 $tabs = [
     [
-        'DIV' => 'general',
+        'DIV' => $generalContainer,
         'TAB' => "Основные",
         "TITLE" => 'Основные настройки',
     ],
     [
-        'DIV' => 'target',
+        'DIV' => $targetContainer,
         'TAB' => "Обмен",
         "TITLE" => 'Настройки обмена данных',
     ],
     [
-        'DIV' => 'source',
+        'DIV' => $sourceController,
         'TAB' => "Источник данных",
         "TITLE" => 'Настройки источника данных',
     ],
@@ -52,29 +53,18 @@ $tabs = [
 $control = new CAdminTabControl('se_detail_control', $tabs);
 
 (new Event(Helper::getModuleID(), 'beforeRenderDetailSettings', $data))->send();
+
+$control->Begin();
 ?>
 <form method="POST">
     <?php
-    $control->Begin();
-    $control->BeginNextTab();
-    ?>
-    <div id="<?= $generalContainer ?>"></div>
-
-    <?php
-    $control->BeginNextTab();
-    ?>
-    <div id="<?= $targetContainer ?>"></div>
-
-    <?php
-    $control->BeginNextTab();
-    ?>
-
-    <div id="<?= $sourceController ?>"></div>
-    <?php
-    $control->BeginNextTab();
-    ?>
-    Тут настройки карты
-    <?php
+    array_walk($tabs, fn() => $control->BeginNextTab());
+    $control->Buttons([
+        'btnSave' => true,
+        'btnApply' => false,
+        'btnSaveAndAdd' => false,
+        'ajaxMode' => true,
+    ]);
     $control->End();
     ?>
 </form>
@@ -82,10 +72,10 @@ $control = new CAdminTabControl('se_detail_control', $tabs);
 <?php
 $options = [
     'container' => [
-        'general' => '#' . $generalContainer,
-        'target' => '#' . $targetContainer,
-        'source' => '#' . $sourceController,
-        'map' => ''
+        'general' => "#{$generalContainer}_edit_table",
+        'target' => "#{$targetContainer}_edit_table",
+        'source' => "#{$sourceController}_edit_table",
+        'map' => "#{$mapController}_edit_table",
     ]
 ];
 ?>

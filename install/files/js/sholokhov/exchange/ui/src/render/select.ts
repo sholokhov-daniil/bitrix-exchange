@@ -139,7 +139,7 @@ export class Select extends AbstractItem implements SelectInterface {
      * @since 1.2.0
      * @version 1.2.0
      */
-    _createValue(options: SelectOptions): HTMLElement {
+    _createValue(options: SelectOptions): HTMLDivElement {
         const container = document.createElement('div');
         container.className = 'ui-ctl ui-ctl-after-icon ui-ctl-dropdown';
 

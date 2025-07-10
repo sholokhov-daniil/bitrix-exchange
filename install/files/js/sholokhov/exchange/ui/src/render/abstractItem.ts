@@ -10,17 +10,19 @@ export class AbstractItem implements SimpleItem {
      * @since 1.2.0
      * @version 1.2.0
      */
-    _container: HTMLElement;
+    _container: HTMLTableRowElement;
 
     /**
-     * Заголовок элемента
-     *
-     * @private
-     *
      * @since 1.2.0
      * @version 1.2.0
      */
-    _title: HTMLElement;
+    _titleCell: HTMLTableCellElement;
+
+    /**
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    _valueCell: HTMLTableCellElement;
 
     /**
      * Создание контейнера значения
@@ -43,13 +45,19 @@ export class AbstractItem implements SimpleItem {
     }
 
     /**
-     * DOM элемент заголовка
-     *
      * @since 1.2.0
      * @version 1.2.0
      */
-    getTitle(): HTMLElement {
-        return this._title;
+    get titleCell() {
+        return this._titleCell;
+    }
+
+    /**
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    get valueCell() {
+        return this._valueCell;
     }
 
     /**
@@ -58,7 +66,7 @@ export class AbstractItem implements SimpleItem {
      * @since 1.2.0
      * @version 1.2.0
      */
-    getContainer(): HTMLElement {
+    getContainer(): HTMLTableRowElement {
         return this._container;
     }
 
@@ -72,31 +80,19 @@ export class AbstractItem implements SimpleItem {
      * @version 1.2.0
      */
     _create(options: Options): void {
-        this._container = document.createElement('div');
+        this._container = document.createElement('tr');
 
-        this._title = this._createTitle(options);
-        this._container.append(this._title);
+        this._titleCell = document.createElement('td');
+        this._titleCell.width = "40%";
+        this._titleCell.className = 'adm-detail-content-cell-l';
+        this._titleCell.innerText = BX.message(options?.title);
 
-        const valueContainer = document.createElement('div');
-        valueContainer.className = 'value';
-        valueContainer.append(this._createValue(options));
+        this._valueCell = document.createElement('td');
+        this._valueCell.width = "60%"
+        this._valueCell.className = 'adm-detail-content-cell-r';
+        this._valueCell.append(this._createValue(options));
 
-        this._container.append(valueContainer);
-    }
-
-    /**
-     * Создание заголовка
-     *
-     * @param options {Options}
-     *
-     * @since 1.2.0
-     * @version 1.2.0
-     */
-    _createTitle(options: Options): HTMLDivElement {
-        const title = document.createElement('div');
-        title.innerText  = BX.message(options?.title);
-        title.className = 'title';
-
-        return title;
+        this.getContainer().append(this._titleCell);
+        this.getContainer().append(this._valueCell);
     }
 }

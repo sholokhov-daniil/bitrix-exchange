@@ -1,0 +1,8 @@
+.hash-text-generator {
+    margin: 0 0 0 10px;
+    -ms-flex-line-pack: center;
+        align-content: center;
+    text-decoration: underline;
+    color: dodgerblue;
+    cursor: pointer;
+}

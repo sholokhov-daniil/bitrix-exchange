@@ -1,4 +1,5 @@
 import {Factory, RenderType} from 'sholokhov.exchange.ui';
+import "./hash.css";
 
 export class Hash {
     _container: HTMLElement;
@@ -17,6 +18,7 @@ export class Hash {
 
         const label = document.createElement('span');
         label.innerText = 'Сгенерировать';
+        label.className = "hash-text-generator";
         label.onclick = () => {
             // Отправляем ajax запрос
             BX.ajax.runAction(
@@ -25,7 +27,8 @@ export class Hash {
             input.value = "OPA";
         }
 
-        input.getContainer().append(label);
+        input.valueCell.style.display = 'flex';
+        input.valueCell.append(label);
 
         return input.getContainer();
     }
