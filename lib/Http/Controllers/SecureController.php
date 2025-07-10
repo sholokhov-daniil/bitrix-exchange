@@ -40,7 +40,7 @@ final class SecureController extends Controller
      * @since 1.2.0
      * @version 1.2.0
      */
-    public function generateHash(): string
+    public function generateHashAction(): string
     {
         return Uuid::uuid4()->toString();
     }
