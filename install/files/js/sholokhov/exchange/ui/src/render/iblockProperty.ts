@@ -106,6 +106,7 @@ export class IBlockProperty implements Item {
     _createIBlockSelector(): EntitySelector {
         return this._iBlock = new EntitySelector({
             title: 'SHOLOKHOV_EXCHANGE_SETTINGS_UI_TITLE_RENDER_IBLOCK_SELECT_IBLOCK',
+            name: this._options?.iblock?.name,
             selector: {
                 multiple: false,
                 addButtonCaption: 'SHOLOHKOV_EXCHANGE_UI_ENTITY_SELECTOR_DIALOG_ADD_BUTTON_CAPTION_SELECT',
@@ -137,6 +138,7 @@ export class IBlockProperty implements Item {
     _createPropertySelector(iblockId: number = 0): EntitySelector {
         return this._property = new EntitySelector({
             title: 'SHOLOKHOV_EXCHANGE_UI_ENTITY_PROPERTY_SELECTOR',
+            name: this._options?.property?.name,
             selector: {
                 multiple: false,
                 addButtonCaption: 'SHOLOHKOV_EXCHANGE_UI_ENTITY_SELECTOR_DIALOG_ADD_BUTTON_CAPTION_SELECT',

@@ -157,8 +157,8 @@ export class Select extends AbstractItem implements SelectInterface {
             }
         }
 
-        for(let name in this.attributes) {
-            this._select.setAttribute(name, this.attributes[name]);
+        for(let name in options.attributes) {
+            this._select.setAttribute(name, options.attributes[name]);
         }
 
         query(options)
@@ -168,7 +168,6 @@ export class Select extends AbstractItem implements SelectInterface {
                 }
 
                 let enums = [];
-
                 if (Array.isArray(response.data)) {
                     enums = response.data;
                 } else if (Array.isArray(options?.enums)) {

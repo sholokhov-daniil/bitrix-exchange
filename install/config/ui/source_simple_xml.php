@@ -6,7 +6,7 @@ return [
         'options' => [
             'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_FILE_PATH',
             'attributes' => [
-                'name' => 'source[path]'
+                'name' => 'fields[source][path]'
             ]
         ]
     ],
@@ -15,7 +15,7 @@ return [
         'options' => [
             'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_ENCODE',
             'attributes' => [
-                'name' => 'source[encode]',
+                'name' => 'fields[source][encode]',
             ]
         ]
     ],
@@ -24,7 +24,7 @@ return [
         'options' => [
             'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_SOURCE_CSV_SEPARATOR',
             'attributes' => [
-                'name' => 'source[separator]',
+                'name' => 'fields[source][separator]',
                 'maxlength' => 1,
             ]
         ]
@@ -34,7 +34,7 @@ return [
         'options' => [
             'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_SOURCE_CSV_ENCLOSURE',
             'attributes' => [
-                'name' => 'source[enclosure]',
+                'name' => 'fields[source][enclosure]',
             ]
         ]
     ],
@@ -43,7 +43,7 @@ return [
         'options' => [
             'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_SOURCE_CSV_ESCAPE',
             'attributes' => [
-                'name' => 'source[escape]',
+                'name' => 'fields[source][escape]',
             ]
         ]
     ],

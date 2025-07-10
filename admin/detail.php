@@ -13,7 +13,7 @@ $APPLICATION->IncludeComponent(
         'sholokhov:exchange.settings.detail',
     '',
     [
-        'ID' => $request->get('id')
+        'ID' => $request->get('id'),
     ]
 );
 ?>

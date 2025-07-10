@@ -24,7 +24,8 @@ export class Hash {
             BX.ajax.runAction(
                 'sholokhov:exchange.SecureController.generateHash'
             )
-            input.value = "OPA";
+                .then(response => input.value = response.data)
+                .catch(() => alert('Ошибка генерации идентификатора'))
         }
 
         input.valueCell.style.display = 'flex';

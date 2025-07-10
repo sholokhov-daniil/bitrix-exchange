@@ -1,6 +1,6 @@
-import {Options} from './options.d.ts';
+import {HTMLOptions} from './options.d.ts';
 
-export interface SelectOptions extends Options {
+export interface SelectOptions extends HTMLOptions {
     api: ApiOptions,
     enums: Array<Enumeration>
 }

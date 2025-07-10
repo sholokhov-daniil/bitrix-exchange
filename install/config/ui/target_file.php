@@ -6,7 +6,7 @@ return [
         'options' => [
             'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_FILE_TITLE_FIELD_MODULE_ID',
             'attributes' => [
-                'name' => 'target[module_id]',
+                'name' => 'fields[target][module_id]',
             ],
         ]
     ]

@@ -19,6 +19,8 @@ export class EntitySelector extends AbstractItem {
      */
     _selector: TagSelector;
 
+    _values: Array<HTMLElement> = [];
+
     constructor(options: EntitySelectorOptions) {
         super(options);
     }
@@ -38,7 +40,36 @@ export class EntitySelector extends AbstractItem {
             options.selector.addButtonCaption = BX.message(options.selector.addButtonCaption) || options.selector.addButtonCaption;
         }
 
-        this._selector = new TagSelector(options?.selector || {});
+        const selectorOptions = {
+            ...options?.selector,
+        };
+
+        if (!selectorOptions.hasOwnProperty('events')) {
+            selectorOptions.events = {};
+        }
+
+        if (selectorOptions.events?.onAfterTagAdd) {
+            const afterAdd = selectorOptions.events?.onAfterTagAdd;
+            selectorOptions.events.onAfterTagAdd = (event) => {
+                this._generateHiddenInputs(event.target, options);
+                afterAdd(event);
+            }
+        } else {
+            selectorOptions.events.onAfterTagAdd = (event) => this._generateHiddenInputs(event.target, options);
+        }
+
+        if (selectorOptions.events?.onAfterTagRemove) {
+            const afterRemove = selectorOptions.events?.onAfterTagRemove;
+            selectorOptions.events.onAfterTagRemove = (event) => {
+                this._generateHiddenInputs(event.target, options);
+                afterRemove(event);
+            }
+        } else {
+            selectorOptions.events.onAfterTagRemove = (event) => this._generateHiddenInputs(event.target, options);
+        }
+
+
+        this._selector = new TagSelector(selectorOptions);
         this.selector.renderTo(container);
 
         return container;
@@ -51,5 +82,30 @@ export class EntitySelector extends AbstractItem {
      */
     get selector(): TagSelector {
         return this._selector;
+    }
+
+    /**
+     * @param tagSelector {TagSelector}
+     * @param options {EntitySelectorOptions}
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    _generateHiddenInputs(tagSelector: TagSelector, options: EntitySelectorOptions) {
+        this._values.forEach((input) => input.remove());
+
+        if (!options.name) {
+            return;
+        }
+
+        tagSelector.getTags().forEach((tag: {id: string}) => {
+            const input = document.createElement('input');
+            input.name = options.name;
+            input.type = 'hidden';
+            input.value = tag.id;
+
+            this._values.push(input);
+            this.getContainer().append(input);
+        });
     }
 }
