@@ -1,0 +1,26 @@
+{
+  "name": "ui",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "vite build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "vue": "^3.5.17",
+    "utils": "file:../utils"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.0",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.5",
+    "vue-tsc": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=23.0.0"
+  }
+}

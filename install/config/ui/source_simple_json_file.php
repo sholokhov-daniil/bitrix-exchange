@@ -3,29 +3,20 @@
 return [
     [
         'view' => 'input',
-        'options' => [
-            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_FILE_PATH',
-            'attributes' => [
-                'name' => 'fields[source][path]'
-            ]
-        ]
+        'name' => 'path',
+        'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_FILE_PATH',
+        'options' => []
     ],
     [
         'view' => 'input',
-        'options' => [
-            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_SOURCE_JSON_SOURCE_KEY',
-            'attributes' => [
-                'name' => 'fields[source][source_key]'
-            ]
-        ]
+        'name' => 'source_key',
+        'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_SOURCE_JSON_SOURCE_KEY',
+        'options' => []
     ],
     [
         'view' => 'checkbox',
-        'options' => [
-            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_FILE_PATH',
-            'attributes' => [
-                'name' => 'fields[source][multiple]'
-            ]
-        ]
+        'name' => 'multiple',
+        'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_FILE_PATH',
+        'options' => []
     ],
 ];

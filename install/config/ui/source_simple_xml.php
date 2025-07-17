@@ -3,48 +3,36 @@
 return [
     [
         'view' => 'input',
-        'options' => [
-            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_FILE_PATH',
-            'attributes' => [
-                'name' => 'fields[source][path]'
-            ]
-        ]
+        'name' => 'path',
+        'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_FILE_PATH',
+        'options' => []
     ],
     [
         'view' => 'input',
-        'options' => [
-            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_ENCODE',
-            'attributes' => [
-                'name' => 'fields[source][encode]',
-            ]
-        ]
+        'name' => 'encode',
+        'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_ENCODE',
+        'options' => []
     ],
     [
         'view' => 'input',
+        'name' => 'separator',
+        'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_SOURCE_CSV_SEPARATOR',
         'options' => [
-            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_SOURCE_CSV_SEPARATOR',
             'attributes' => [
-                'name' => 'fields[source][separator]',
                 'maxlength' => 1,
             ]
         ]
     ],
     [
         'view' => 'input',
-        'options' => [
-            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_SOURCE_CSV_ENCLOSURE',
-            'attributes' => [
-                'name' => 'fields[source][enclosure]',
-            ]
-        ]
+        'name' => 'enclosure',
+        'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_SOURCE_CSV_ENCLOSURE',
+        'options' => []
     ],
     [
         'view' => 'input',
-        'options' => [
-            'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_SOURCE_CSV_ESCAPE',
-            'attributes' => [
-                'name' => 'fields[source][escape]',
-            ]
-        ]
+        'name' => 'escape',
+        'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_SOURCE_CSV_ESCAPE',
+        'options' => []
     ],
 ];

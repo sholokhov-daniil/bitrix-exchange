@@ -3,12 +3,10 @@
 return [
     [
         'view' => 'uf-property',
+        'name' => 'property',
         'options' => [
-            'iblock' => [
-                'name' => 'fields[target][iblock_id]'
-            ],
+            'iblock' => [],
             'property' => [
-                'name' => 'fields[target][property_id]',
                 'api' => [
                     'propertyType' => 'enumeration'
                 ]

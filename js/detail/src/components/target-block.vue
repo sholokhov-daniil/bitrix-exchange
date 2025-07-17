@@ -1,70 +1,66 @@
 <script setup>
-import {defineProps, defineEmits, computed, reactive, watch} from 'vue';
-import {getMessage} from "@/utils/message";
-import SelectField from '@/components/fields/select-field.vue';
+import {computed, reactive, watch, defineModel} from 'vue';
+import {getMessage, runAction} from "utils";
+import {Select as SelectField, DynamicField} from 'ui';
+import GridRow from "@/components/grid-row.vue";
 
-const emit = defineEmits(['update:modelValue']);
-const props = defineProps({
-  modelValue: {type: Object, required: true}
-});
-
-reactive({
+const model = defineModel();
+const data = reactive({
   targets: [],
   fields: [],
 });
 
-const store = computed({
-  get() {
-    return props.modelValue;
-  },
-  set(newValue) {
-    emit('update:modelValue', newValue)
-  }
-});
 const fieldApi = computed(() => ({
   action: 'sholokhov:exchange.EntityController.getByType',
   data: {code: 'target'},
   callback: normalizeTypeResponse,
 }));
 
-watch(() => props.modelValue.type, (newValue) => loadFields(newValue));
+watch(() => model.value.type, (newValue) => {
+  model.value = {
+    type: model.value.type
+  };
+
+  loadFields(newValue);
+});
 
 const normalizeTypeResponse = (response) => {
-  console.log(response);
-
   if (Array.isArray(response.data)) {
     response.data = response.data.map(type => ({
       value: type.CODE,
       name: type.NAME,
-    }))
+    }));
   }
 
   return response;
 }
 
 const loadFields = (type) => {
-  BX.ajax.runAction(
-      'sholokhov:exchange.EntityController.getFields',
-      {
-        data: {code: type}
-      }
-  )
-      .then(response => {
-        console.log(response);
-      })
-      .catch(() => console.error(response))
+  runAction('sholokhov:exchange.EntityController.getFields', {code: type})
+      .then(response => data.fields = Array.isArray(response.data) ? response.data : [])
+      .catch(response => console.error(response));
 }
 </script>
 
 <template>
-  <tr>
-    <td width="40%">{{ getMessage('SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_TITLE_FIELD_TYPE') }}</td>
-    <td width="60%">
-      <SelectField
-        v-model="store.type"
-        :api="fieldApi"
-        name="type"
+  <grid-row>
+    <template #title>{{ getMessage('SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_TITLE_FIELD_TYPE') }}</template>
+    <template #content>
+      <SelectField v-model="model.type" :api="fieldApi" name="type" />
+    </template>
+  </grid-row>
+
+  <grid-row v-for="(field, key) in data.fields" :key="key">
+    <template #title>
+      {{ getMessage(field?.title) }}
+    </template>
+    <template #content>
+      <dynamic-field
+          v-model="model[field.name]"
+          :view="field.view"
+          :entity="model.type"
+          :options="field.options"
       />
-    </td>
-  </tr>
+    </template>
+  </grid-row>
 </template>
