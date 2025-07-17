@@ -72,22 +72,20 @@ const propertyOptions = computed(() => ({
 </script>
 
 <template>
-  <table>
-    <tr>
-      <td width="40%">
-        {{ getMessage('SHOLOKHOV_EXCHANGE_SETTINGS_UI_TITLE_RENDER_IBLOCK_SELECT_IBLOCK') }}
-      </td>
-      <td width="60%">
-        <EntitySelector v-model="iBlockId" :selector="data.iBlockOptions"/>
-      </td>
-    </tr>
-    <tr v-if="iBlockId">
-      <td width="40%">
-        {{ getMessage('SHOLOKHOV_EXCHANGE_UI_ENTITY_PROPERTY_SELECTOR') }}
-      </td>
-      <td width="60%">
-        <EntitySelector v-model="propertyId" :selector="propertyOptions"/>
-      </td>
-    </tr>
-  </table>
+  <tr>
+    <td width="40%">
+      {{ getMessage('SHOLOKHOV_EXCHANGE_SETTINGS_UI_TITLE_RENDER_IBLOCK_SELECT_IBLOCK') }}
+    </td>
+    <td width="60%">
+      <EntitySelector v-model="iBlockId" :selector="data.iBlockOptions"/>
+    </td>
+  </tr>
+  <tr v-if="iBlockId">
+    <td width="40%">
+      {{ getMessage('SHOLOKHOV_EXCHANGE_UI_ENTITY_PROPERTY_SELECTOR') }}
+    </td>
+    <td width="60%">
+      <EntitySelector v-model="propertyId" :selector="propertyOptions"/>
+    </td>
+  </tr>
 </template>

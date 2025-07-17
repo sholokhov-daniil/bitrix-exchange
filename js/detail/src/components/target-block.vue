@@ -50,17 +50,26 @@ const loadFields = (type) => {
     </template>
   </grid-row>
 
-  <grid-row v-for="(field, key) in data.fields" :key="key">
-    <template #title>
-      {{ getMessage(field?.title) }}
-    </template>
-    <template #content>
-      <dynamic-field
-          v-model="model[field.name]"
-          :view="field.view"
-          :entity="model.type"
-          :options="field.options"
-      />
-    </template>
-  </grid-row>
+  <template v-for="(field, key) in data.fields" :key="key">
+    <dynamic-field
+        v-if="field.isConstructor"
+        v-model="model[field.name]"
+        :view="field.view"
+        :entity="model.type"
+        :options="field.options"
+    />
+    <grid-row v-else>
+      <template #title>
+        {{ getMessage(field?.title) }}
+      </template>
+      <template #content>
+        <dynamic-field
+            v-model="model[field.name]"
+            :view="field.view"
+            :entity="model.type"
+            :options="field.options"
+        />
+      </template>
+    </grid-row>
+  </template>
 </template>
