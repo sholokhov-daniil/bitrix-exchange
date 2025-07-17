@@ -4,7 +4,6 @@ import {getMessage, runAction} from "utils";
 
 const model = defineModel();
 const props = defineProps({
-  modelValue: {type: String, default: () => null },
   name: {type: String, required: true},
   attributes: {type: Object, default: () => {}},
   api: {type: Object, default: () => {}},

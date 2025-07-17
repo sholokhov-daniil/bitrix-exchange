@@ -2,7 +2,7 @@
 import {defineProps, defineEmits, ref, onMounted, reactive, watch, defineModel} from 'vue'
 import {getMessage} from "utils"
 
-const model = defineModel({default: ''});
+const model = defineModel();
 const container = ref()
 const emit = defineEmits([
   'onTagAdd',
@@ -39,7 +39,7 @@ onMounted(() => {
 watch(
     () => model.value,
     (newValue) => {
-      if (newValue != data.value) {
+      if (newValue !== data.value) {
         render();
       }
     }

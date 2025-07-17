@@ -4,7 +4,5 @@ export function runAction(action, data, parameters = {}) {
         data: data
     };
 
-    console.log(options);
-
     return BX.ajax.runAction(action, options);
 }

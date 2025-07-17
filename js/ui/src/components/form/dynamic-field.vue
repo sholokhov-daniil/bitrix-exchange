@@ -1,9 +1,9 @@
 <script setup>
-import {defineProps, computed, watch} from 'vue'
+import {defineProps, computed, watch, defineModel} from 'vue'
 import {EventManager} from 'utils'
 import {getFormComponent} from "../../utils/factory/component"
 
-const model = defineModel({default: ''});
+const model = defineModel();
 const props = defineProps({
   view: {type: String, required: true},
   entity: {type: String, default: () => ''},
