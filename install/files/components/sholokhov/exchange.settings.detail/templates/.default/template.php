@@ -8,29 +8,31 @@
  */
 
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
-
-    die('ss');
+    die('');
 }
 
 /** @var CAdminTabControl $control */
 $control = $arResult['CONTROL'];
 $control->Begin();
+$arResult['JS_DATA']['OPTIONS']['formContainer'] = '#detailSettingsForm';
+\Bitrix\Main\Diag\Debug::dump($arResult['JS_DATA']);
+CJSCore::Init(['sholokhov.exchange.detail']);
+
+\Bitrix\Main\UI\Extension::load(['main.core.landing', 'main.core']);
 ?>
 
-<form method="POST">
+<div id="test"></div>
+
+<form method="POST" id="detailSettingsForm">
     <?php
     foreach ($control->tabs as $tab) {
         $control->BeginNextTab();
-    }
 
-    if ($arResult['CUSTOM_TABS']) {
-        $control->tabs = $arResult['CUSTOM_TABS'];
-
-        foreach ($control->tabs as $tab) {
-            $control->BeginNextTab();
+        if (is_callable($tab['RENDER'])) {
+            echo call_user_func($tab['RENDER'], $tab);
         }
     }
-
+    
     $control->Buttons([
         'btnSave' => true,
         'btnApply' => false,
@@ -43,16 +45,23 @@ $control->Begin();
 
 <script>
     BX.ready(function() {
-        BX.loadExt('sholokhov.exchange.detail')
-            .then(() => {
-                const detail = new BX.Sholokhov.Exchange.Detail.Detail(
-                    <?= json_encode($arResult['JS_DATA']['DATA']) ?>,
-                    <?= json_encode($arResult['JS_DATA']['OPTIONS']) ?>
-                );
-                detail.view();
-            })
-            .catch(() => {
+        console.log(BX.Loc.getMessage('LANGUAGE_ID'))
+        // debugger;
 
-            })
+        // BX.loadExt('sholokhov.exchange.detail')
+        //     .then(() => {
+                Sholokhov.Exchange.Detail.mounted('#test', <?= json_encode($arResult['JS_DATA']['OPTIONS']) ?>);
+
+
+
+                //const detail = new BX.Sholokhov.Exchange.Detail.Detail(
+                //    <?php //= json_encode($arResult['JS_DATA']['DATA']) ?>//,
+                //    <?php //= json_encode($arResult['JS_DATA']['OPTIONS']) ?>
+                //);
+                //detail.view();
+            // })
+            // .catch(() => {
+            //     alert('error')
+            // })
     });
 </script>

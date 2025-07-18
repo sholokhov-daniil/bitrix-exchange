@@ -5,13 +5,25 @@ use Sholokhov\Exchange\Helper\Helper;
 use Bitrix\Main\Event;
 use Bitrix\Main\EventResult;
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\Error;
+use Bitrix\Main\Engine\Contract\Controllerable;
+use Bitrix\Main\Errorable;
+use Bitrix\Main\ErrorCollection;
 
 /**
  * @since 1.2.0
  * @version 1.2.0
  */
-class SholokhovExchangeSettingDetails extends \CBitrixComponent
+class SholokhovExchangeSettingDetails extends CBitrixComponent implements Errorable, Controllerable
 {
+    /**
+     * @var ErrorCollection
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    private ErrorCollection $errorCollection;
+
     /**
      * @param $arParams
      * @return array
@@ -21,9 +33,45 @@ class SholokhovExchangeSettingDetails extends \CBitrixComponent
      */
     public function onPrepareComponentParams($arParams): array
     {
+        $this->errorCollection = new ErrorCollection;
         $arParams['ID'] = (int)$arParams['ID'];
 
         return $arParams;
+    }
+
+    /**
+     * @return array[]
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    public function configureActions(): array
+    {
+        return [
+            'saveAction' => [
+                '+prefilters' => [
+                    // TODO: Добавить проверку прав доступа
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @return string[]
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    public function listKeysSignedParameters(): array
+    {
+        return ['ID'];
+    }
+
+    public function saveAction(array $fields): array
+    {
+        $result = [];
+
+        return $result;
     }
 
     /**
@@ -39,13 +87,44 @@ class SholokhovExchangeSettingDetails extends \CBitrixComponent
             return;
         }
 
-        $tabs = $this->getDefaultTabs();
-        $this->loadCustomTabs();
-
-        $this->arResult['CONTROL'] = new CAdminTabControl('se_detail_control', $tabs);
-        $this->arResult['JS_DATA'] = $this->getJsData($this->arResult['CONTROL']);
+        $this->arResult['CONTROL'] = new CAdminTabControl('se_detail_control', $this->getTabs());
 
         $this->includeComponentTemplate();
+    }
+
+    /**
+     * @param Error $error
+     * @return void
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    public function addError(Error $error): void
+    {
+        $this->errorCollection->setError($error);
+    }
+
+    /**
+     * @return array|Error[]
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    public function getErrors(): array
+    {
+        return $this->errorCollection->getValues();
+    }
+
+    /**
+     * @param $code
+     * @return Error|null
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    public function getErrorByCode($code): ?Error
+    {
+        return $this->errorCollection->getErrorByCode($code);
     }
 
     /**
@@ -59,6 +138,7 @@ class SholokhovExchangeSettingDetails extends \CBitrixComponent
     {
         $result = [
             'OPTIONS' => [
+                'signed' => $this->getSignedParameters(),
                 'container' => []
             ],
             'DATA' => [
@@ -71,6 +151,18 @@ class SholokhovExchangeSettingDetails extends \CBitrixComponent
         }
 
         return $result;
+    }
+
+    /**
+     * Получение доступных табов
+     *
+     * @return array
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    private function getTabs(): array
+    {
+        return array_merge($this->getDefaultTabs(), $this->getUserTabs());
     }
 
     /**
@@ -119,14 +211,14 @@ class SholokhovExchangeSettingDetails extends \CBitrixComponent
     /**
      * Загрузка пользовательских пунктов
      *
-     * @return void
+     * @return array
      *
      * @since 1.2.0
      * @version 1.2.0
      */
-    private function loadCustomTabs(): void
+    private function getUserTabs(): array
     {
-        $this->arResult['CUSTOM_TABS'] = [];
+        $result = [];
 
         $eventParameters = [
             'id' => $this->arParams['ID']
@@ -135,14 +227,16 @@ class SholokhovExchangeSettingDetails extends \CBitrixComponent
         $event = new Event(Helper::getModuleID(), 'onAdminDetailTabs', $eventParameters);
         $event->send();
 
-        foreach($event->getResults() as $result) {
-            if ($result->getType() === EventResult::SUCCESS) {
-                $customTabs = $result->getParameters();
+        foreach($event->getResults() as $eventResult) {
+            if ($eventResult->getType() === EventResult::SUCCESS) {
+                $tabs = $eventResult->getParameters();
 
-                if (is_array($customTabs) && is_callable($customTabs['RENDER'])) {
-                    $this->arResult['CUSTOM_TABS'] = array_merge($this->arResult['CUSTOM_TABS'], $customTabs);
+                if (is_array($tabs)) {
+                    $result = array_merge($result, $tabs);
                 }
             }
         }
+
+        return $result;
     }
 }
