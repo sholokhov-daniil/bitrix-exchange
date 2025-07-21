@@ -15,7 +15,8 @@ const data = reactive({
     target: {},
     source: {},
     map: {},
-  }
+  },
+  userForm: {},
 });
 
 onMounted(() => initEvents());
@@ -34,10 +35,22 @@ const submit = (event) => {
 
   // BX.adminPanel.closeWait()
 }
+
+const updateUserData = () => {
+  data.userForm = {};
+
+  const form = Sholokhov.Exchange.Detail.getExternalRegistry().getAll();
+  for(let id in form) {
+    data.userForm[id] = form[id];
+  }
+}
 </script>
 
 <template>
   {{ data.form }}
+  <br>
+  <br>
+  {{ data.userForm }}
 
   <Teleport v-if="teleport.general" :to="teleport.general">
     <GeneralBlock v-model="data.form.general" />
@@ -46,4 +59,6 @@ const submit = (event) => {
   <Teleport v-if="teleport.target" :to="teleport.target">
     <TargetBlock v-model="data.form.target" />
   </Teleport>
+
+  <button type="button" @click="updateUserData">OPA</button>
 </template>

@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import {ExternalRegistry} from "@/registry/external";
 
 if (!window.Sholokhov) {
     window.Sholokhov = {};
@@ -12,6 +13,7 @@ if (!window.Sholokhov.Exchange) {
 if (!window.Sholokhov.Exchange.Detail) {
     window.Sholokhov.Exchange.Detail = new class {
         _app;
+        _externalRegistry;
 
         mounted(node, options) {
             console.log(BX.Loc.getMessage('LANGUAGE_ID'));
@@ -21,6 +23,10 @@ if (!window.Sholokhov.Exchange.Detail) {
 
         unmount() {
             this._app?.unmount();
+        }
+
+        getExternalRegistry() {
+            return this._externalRegistry ??= new ExternalRegistry;
         }
     }
 }
