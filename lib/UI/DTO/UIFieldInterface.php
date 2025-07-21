@@ -11,6 +11,15 @@ namespace Sholokhov\Exchange\UI\DTO;
 interface UIFieldInterface
 {
     /**
+     * Преобразование настроек в массив, который воспринимает сборщик ui
+     *
+     * @return array
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    public function toArray(): array;
+
+    /**
      * Формат отображения поля
      *
      * @return string

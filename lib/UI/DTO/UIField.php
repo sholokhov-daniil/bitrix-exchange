@@ -4,6 +4,10 @@ namespace Sholokhov\Exchange\UI\DTO;
 
 use Sholokhov\Exchange\Repository\Types\MemoryTrait;
 
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+
 /**
  * Конфигурация отображения HTML элемента
  *
@@ -13,6 +17,20 @@ use Sholokhov\Exchange\Repository\Types\MemoryTrait;
 class UIField implements UIFieldInterface
 {
     use MemoryTrait;
+
+    /**
+     * Преобразование настроек в массив воспиримаемый UI
+     *
+     * @return array
+     * @throws ExceptionInterface
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    public function toArray(): array
+    {
+        $serializer = new Serializer([new ObjectNormalizer]);
+        return (array)$serializer->normalize($this);
+    }
 
     /**
      * Указание механизма отображения
