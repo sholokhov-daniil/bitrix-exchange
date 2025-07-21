@@ -1,8 +1,8 @@
 <script setup>
 import {computed, reactive, watch, defineModel} from 'vue';
 import {getMessage, runAction} from "utils";
-import {Select as SelectField, DynamicField} from 'ui';
-import GridRow from "@/components/grid-row.vue";
+import {Select as SelectField, GridRow} from 'ui';
+import DynamicFields from "@/components/dynamic-fields.vue";
 
 const model = defineModel();
 const data = reactive({
@@ -43,33 +43,12 @@ const loadFields = (type) => {
 </script>
 
 <template>
-  <grid-row>
+  <GridRow>
     <template #title>{{ getMessage('SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_TARGET_TITLE_FIELD_TYPE') }}</template>
     <template #content>
       <SelectField v-model="model.type" :api="fieldApi" name="type" />
     </template>
-  </grid-row>
+  </GridRow>
 
-  <template v-for="(field, key) in data.fields" :key="key">
-    <dynamic-field
-        v-if="field.isConstructor"
-        v-model="model[field.name]"
-        :view="field.view"
-        :entity="model.type"
-        :options="field.options"
-    />
-    <grid-row v-else>
-      <template #title>
-        {{ getMessage(field?.title) }}
-      </template>
-      <template #content>
-        <dynamic-field
-            v-model="model[field.name]"
-            :view="field.view"
-            :entity="model.type"
-            :options="field.options"
-        />
-      </template>
-    </grid-row>
-  </template>
+  <DynamicFields v-model="model" :fields="data.fields" />
 </template>

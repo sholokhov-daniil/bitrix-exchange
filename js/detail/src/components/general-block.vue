@@ -1,29 +1,28 @@
 <script setup>
 import {defineModel} from 'vue';
-import {InputHash, CheckBox} from 'ui';
+import {InputHash, CheckBox, GridRow} from 'ui';
 import {getMessage} from "utils";
 
 const model = defineModel();
 </script>
 
 <template>
-  <tr>
-    <td width="40%"></td>
-    <td width="60%">
+  <GridRow>
+    <template #content>
       <CheckBox
           v-model="model.active"
           :label="getMessage('SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_GENERAL_TITLE_FIELD_ACTIVE')"
           name="active"
       />
-    </td>
-  </tr>
+    </template>
+  </GridRow>
 
-  <tr>
-    <td width="40%">
+  <GridRow>
+    <template #title>
       {{ getMessage('SHOLOKHOV_EXCHANGE_SETTINGS_ENTITY_UI_GENERAL_TITLE_FIELD_HASH') }}
-    </td>
-    <td width="60%">
+    </template>
+    <template #content>
       <InputHash v-model="model.hash" name="hash" />
-    </td>
-  </tr>
+    </template>
+  </GridRow>
 </template>

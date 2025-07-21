@@ -8,3 +8,5 @@
     </td>
   </tr>
 </template>
+<script setup lang="ts">
+</script>
