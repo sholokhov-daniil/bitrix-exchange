@@ -10,15 +10,14 @@
 if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die('');
 }
-
-/** @var CAdminTabControl $control */
-$control = $arResult['CONTROL'];
-$control->Begin();
-$arResult['JS_DATA']['OPTIONS']['formContainer'] = '#detailSettingsForm';
 \Bitrix\Main\Diag\Debug::dump($arResult['JS_DATA']);
 CJSCore::Init(['sholokhov.exchange.detail']);
 
 \Bitrix\Main\UI\Extension::load(['main.core.landing', 'main.core']);
+
+/** @var CAdminTabControl $control */
+$control = $arResult['CONTROL'];
+$control->Begin();
 ?>
 
 <div id="test"></div>
@@ -45,7 +44,6 @@ CJSCore::Init(['sholokhov.exchange.detail']);
 
 <script>
     BX.ready(function() {
-        console.log(BX.Loc.getMessage('LANGUAGE_ID'))
         // debugger;
 
         // BX.loadExt('sholokhov.exchange.detail')

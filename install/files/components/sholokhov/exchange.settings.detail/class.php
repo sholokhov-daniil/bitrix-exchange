@@ -2,6 +2,8 @@
 
 use Sholokhov\Exchange\Helper\Helper;
 
+use Sholokhov\Exchange\UI\DTO\UIFieldInterface;
+
 use Bitrix\Main\Event;
 use Bitrix\Main\EventResult;
 use Bitrix\Main\Localization\Loc;
@@ -88,6 +90,7 @@ class SholokhovExchangeSettingDetails extends CBitrixComponent implements Errora
         }
 
         $this->arResult['CONTROL'] = new CAdminTabControl('se_detail_control', $this->getTabs());
+        $this->arResult['JS_DATA'] = $this->getJsData($this->arResult['CONTROL']);
 
         $this->includeComponentTemplate();
     }
@@ -139,15 +142,26 @@ class SholokhovExchangeSettingDetails extends CBitrixComponent implements Errora
         $result = [
             'OPTIONS' => [
                 'signed' => $this->getSignedParameters(),
-                'container' => []
+                'teleport' => [],
+                'fields' => [],
             ],
             'DATA' => [
-                'id' => $this->arParams['ID']
+                'id' => $this->arParams['ID'],
             ]
         ];
 
         foreach ($control->tabs as $tab) {
-            $result['OPTIONS']['container'][$tab['CONTAINER']] = '#' . $tab['DIV'];
+            if ($tab['CONTAINER']) {
+                $result['OPTIONS']['teleport'][$tab['CONTAINER']] = '#' . $tab['DIV'] . '_edit_table';
+            }
+
+            if (!empty($tab['FIELDS']) && is_array($tab['FIELDS'])) {
+                foreach ($tab['FIELDS'] as $field) {
+                    if ($field instanceof UIFieldInterface) {
+                        $result['OPTIONS']['fields']['#' . $tab['DIV'] . '_edit_table'][] = $field->toArray();
+                    }
+                }
+            }
         }
 
         return $result;
