@@ -16,4 +16,3 @@ $APPLICATION->IncludeComponent(
         'ID' => $request->get('id'),
     ]
 );
-?>

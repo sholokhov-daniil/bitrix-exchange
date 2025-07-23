@@ -3,6 +3,7 @@ import {defineProps, reactive, onMounted} from 'vue';
 import GeneralBlock from "@/components/general-block.vue";
 import DynamicFields from "@/components/dynamic-fields.vue";
 import TargetBlock from "@/components/target-block.vue";
+import SourceBlock from "@/components/source-block.vue";
 
 const props = defineProps({
   teleport: {type: Object, required: true},
@@ -61,6 +62,10 @@ const submit = (event) => {
 
   <Teleport v-if="teleport.target" :to="teleport.target">
     <TargetBlock v-model="data.form.target" />
+  </Teleport>
+
+  <Teleport v-if="teleport.source" :to="teleport.source">
+    <SourceBlock v-model="data.form.source" />
   </Teleport>
 
   <Teleport v-for="(iterator, target) in fields" :key="target" :to="target">
