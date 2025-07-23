@@ -1,5 +1,7 @@
 <?php
 
+use Bitrix\Main\IO\Directory;
+use Bitrix\Main\Loader;
 use Bitrix\Main\ORM\Fields;
 use Bitrix\Main\Application;
 use Bitrix\Main\ArgumentException;
@@ -88,9 +90,18 @@ class sholokhov_exchange extends CModule
      */
     public function InstallFiles(): void
     {
+        $root = Loader::getDocumentRoot();
+
         CopyDirFiles(
             __DIR__ . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'admin',
-            $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'bitrix' . DIRECTORY_SEPARATOR . 'admin',
+            $root . DIRECTORY_SEPARATOR . 'bitrix' . DIRECTORY_SEPARATOR . 'admin',
+            true,
+            true
+        );
+
+        CopyDirFiles(
+            __DIR__ . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'components',
+            $root . DIRECTORY_SEPARATOR . 'bitrix' . DIRECTORY_SEPARATOR . 'components',
             true,
             true
         );
@@ -101,10 +112,14 @@ class sholokhov_exchange extends CModule
      */
     public function UnInstallFiles(): void
     {
+        $root = Loader::getDocumentRoot();
+
         DeleteDirFiles(
             __DIR__ . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'admin',
-            $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'bitrix' . DIRECTORY_SEPARATOR . 'admin'
+            $root . DIRECTORY_SEPARATOR . 'bitrix' . DIRECTORY_SEPARATOR . 'admin'
         );
+
+        Directory::deleteDirectory($root . DIRECTORY_SEPARATOR . 'bitrix' . DIRECTORY_SEPARATOR . 'components' . DIRECTORY_SEPARATOR . 'sholokhov');
     }
 
     /**
