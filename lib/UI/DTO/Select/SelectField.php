@@ -3,6 +3,10 @@
 namespace Sholokhov\Exchange\UI\DTO\Select;
 
 use Sholokhov\Exchange\UI\DTO;
+use Sholokhov\Exchange\UI\Normalizers\SelectNormalizer;
+
+use Symfony\Component\Serializer\Attribute\Ignore;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class SelectField extends DTO\UIField implements ApiSelectInterface
 {
@@ -18,13 +22,16 @@ class SelectField extends DTO\UIField implements ApiSelectInterface
      * @since 1.2.0
      * @version 1.2.0
      */
+    #[Ignore]
     public function getApi(): DTO\ApiInterface
     {
-        if (!$this->getRepository()->has('api')) {
-            $this->setApi(new DTO\Api);
+        $api = $this->getOption('api');
+        if (!$api) {
+            $api = new DTO\Api;
+            $this->setApi($api);
         }
 
-        return $this->getRepository()->get('api');
+        return $api;
     }
 
     /**
@@ -37,8 +44,7 @@ class SelectField extends DTO\UIField implements ApiSelectInterface
      */
     public function setApi(DTO\ApiInterface $api): static
     {
-        $this->getRepository()->set('api', $api);
-        return $this;
+        return $this->addOption('api', $api);
     }
 
     /**
@@ -50,7 +56,7 @@ class SelectField extends DTO\UIField implements ApiSelectInterface
      */
     public function getEnums(): array
     {
-        return $this->getRepository()->get('enums', []);
+        return (array)$this->getOption('enums', []);
     }
 
     /**
@@ -63,7 +69,6 @@ class SelectField extends DTO\UIField implements ApiSelectInterface
      */
     public function setEnums(array $enums): static
     {
-        $this->getRepository()->delete('enums');
         array_walk($enums, $this->addEnum(...));
 
         return $this;
@@ -82,8 +87,18 @@ class SelectField extends DTO\UIField implements ApiSelectInterface
         $iterator = $this->getEnums();
         $iterator[] = $enum;
 
-        $this->getRepository()->set('enums', $iterator);
+        return $this->addOption('enums', $iterator);
+    }
 
-        return $this;
+    /**
+     * Создание нормализатора данных, который используется в преобразование объекта
+     *
+     * @return NormalizerInterface
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    protected function createNormalizer(): NormalizerInterface
+    {
+        return new SelectNormalizer;
     }
 }

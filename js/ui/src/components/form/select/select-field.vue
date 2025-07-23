@@ -7,7 +7,7 @@ const props = defineProps({
   name: {type: String, required: true},
   attributes: {type: Object, default: () => {}},
   api: {type: Object, default: () => {}},
-  values: {type: Array, default: () => []},
+  enums: {type: Array, default: () => []},
 });
 
 const data = reactive({
@@ -17,22 +17,25 @@ const data = reactive({
 onMounted(() => {
   if (props.api?.action) {
     queryEnums();
-  } else if (props.values) {
-    data.enums = props.values;
+  } else if (props.enums) {
+    data.enums = props.enums;
   }
 });
 
 watch(() => props.api, () => queryEnums(), {deep: true});
 
-watch(() => props.values, (newValue) => data.enums = newValue);
+watch(() => props.enums, (newValue) => data.enums = newValue);
 
 const queryEnums = () => {
+  if (!props?.api?.action) {
+    return;
+  }
+
   runAction(props.api.action, props.api?.data || {})
       .then(response => {
         if (props.api?.callback) {
           response = props.api?.callback(response);
         }
-
         data.enums = Array.isArray(response.data) ? response.data : [];
       })
       .catch(response => {
@@ -45,6 +48,7 @@ const queryEnums = () => {
 <template>
   <div class="ui-ctl ui-ctl-after-icon ui-ctl-dropdown">
     <div class="ui-ctl-after ui-ctl-icon-angle">
+      {{ data }}
       <select v-model="model" :name="name" class="ui-ctl-element" v-bind="attributes">
         <option value="">{{ getMessage('SHOLOKHOV_EXCHANGE_SETTINGS_SELECT_SELECTED_VALUE') }}</option>
         <option v-for="item in data.enums" :key="item.value" :value="item.value">{{ item.name }}</option>

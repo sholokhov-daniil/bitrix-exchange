@@ -4,6 +4,8 @@ namespace Sholokhov\Exchange\UI\DTO;
 
 use Sholokhov\Exchange\Repository\Types\MemoryTrait;
 
+use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -29,7 +31,14 @@ class UIField implements UIFieldInterface
     public function toArray(): array
     {
         $serializer = new Serializer([new ObjectNormalizer]);
-        return (array)$serializer->normalize($this);
+        $data = (array)$serializer->normalize($this);
+
+        $normalizer = $this->createNormalizer();
+        if ($normalizer && $normalizer->supportsNormalization($data, 'array')) {
+            $data = (array)$normalizer->normalize($data, 'array');
+        }
+
+        return $data;
     }
 
     /**
@@ -111,7 +120,7 @@ class UIField implements UIFieldInterface
     }
 
     /**
-     * Установка конфигурации механизма отрисовки
+     * Указание дополнительных настроек
      *
      * @param array $options
      * @return $this
@@ -125,7 +134,7 @@ class UIField implements UIFieldInterface
     }
 
     /**
-     * Конфигурация отображения поля
+     * Получение дополнительных настроек
      *
      * @return array
      * @since 1.2.0
@@ -134,5 +143,48 @@ class UIField implements UIFieldInterface
     public function getOptions(): array
     {
         return $this->getRepository()->get('options', []);
+    }
+
+    /**
+     * Добавление дополнительной настройки
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return $this
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    public function addOption(string $key, mixed $value): static
+    {
+        $options = $this->getOptions();
+        $options[$key] = $value;
+
+        return $this->setOptions($options);
+    }
+
+    /**
+     * Получение дополнительной настройки
+     *
+     * @param string $key
+     * @param mixed|null $default
+     * @return mixed
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    public function getOption(string $key, mixed $default = null): mixed
+    {
+        return $this->getOptions()[$key] ?? $default;
+    }
+
+    /**
+     * Создание нормализатора данных, который используется в преобразование объекта
+     *
+     * @return NormalizerInterface|null
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    protected function createNormalizer(): ?NormalizerInterface
+    {
+        return null;
     }
 }

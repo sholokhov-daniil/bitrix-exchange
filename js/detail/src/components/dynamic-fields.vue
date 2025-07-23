@@ -23,6 +23,8 @@ defineProps({
         {{ getMessage(field?.title) }}
       </template>
       <template #content>
+        {{ field }}
+
         <DynamicField
             v-model="model[field.name]"
             :view="field.view"
