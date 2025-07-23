@@ -3,6 +3,7 @@
 namespace Sholokhov\Exchange\UI\DTO\Select;
 
 use Sholokhov\Exchange\Repository\Types\MemoryTrait;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 
 /**
  * Описание значения списка
@@ -47,6 +48,7 @@ class EnumValue implements EnumValueInterface
      * @since 1.2.0
      * @version 1.2.0
      */
+    #[SerializedName('name')]
     public function getTitle(): string
     {
         return $this->getRepository()->get('title', '');

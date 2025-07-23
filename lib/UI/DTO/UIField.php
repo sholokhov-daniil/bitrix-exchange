@@ -4,11 +4,14 @@ namespace Sholokhov\Exchange\UI\DTO;
 
 use Sholokhov\Exchange\Repository\Types\MemoryTrait;
 
-use Symfony\Component\Serializer\NameConverter\NameConverterInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\NameConverter\MetadataAwareNameConverter;
+use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 
 /**
  * Конфигурация отображения HTML элемента
@@ -30,15 +33,12 @@ class UIField implements UIFieldInterface
      */
     public function toArray(): array
     {
-        $serializer = new Serializer([new ObjectNormalizer]);
-        $data = (array)$serializer->normalize($this);
+        $metadataFactory = new ClassMetadataFactory(new AttributeLoader);
+        $nameConverter = new MetadataAwareNameConverter($metadataFactory);
+        $normalizer = new ObjectNormalizer($metadataFactory, $nameConverter, null, new ReflectionExtractor);
 
-        $normalizer = $this->createNormalizer();
-        if ($normalizer && $normalizer->supportsNormalization($data, 'array')) {
-            $data = (array)$normalizer->normalize($data, 'array');
-        }
-
-        return $data;
+        $serializer = new Serializer([$normalizer]);
+        return (array)$serializer->normalize($this);
     }
 
     /**
@@ -171,20 +171,9 @@ class UIField implements UIFieldInterface
      * @since 1.2.0
      * @version 1.2.0
      */
+    #[Ignore]
     public function getOption(string $key, mixed $default = null): mixed
     {
         return $this->getOptions()[$key] ?? $default;
-    }
-
-    /**
-     * Создание нормализатора данных, который используется в преобразование объекта
-     *
-     * @return NormalizerInterface|null
-     * @since 1.2.0
-     * @version 1.2.0
-     */
-    protected function createNormalizer(): ?NormalizerInterface
-    {
-        return null;
     }
 }

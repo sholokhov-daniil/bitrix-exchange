@@ -24,9 +24,6 @@ class SelectNormalizer implements NormalizerInterface
      */
     public function normalize(mixed $data, ?string $format = null, array $context = []): float|int|bool|\ArrayObject|array|string|null
     {
-        unset($data['api']);
-        unset($data['enums']);
-
         if (!empty($data['options']['enums']) && is_array($data['options']['enums'])) {
             $data['options']['enums'] = array_map(function(array $enum) {
                 return [

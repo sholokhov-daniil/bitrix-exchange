@@ -3,10 +3,8 @@
 namespace Sholokhov\Exchange\UI\DTO\Select;
 
 use Sholokhov\Exchange\UI\DTO;
-use Sholokhov\Exchange\UI\Normalizers\SelectNormalizer;
 
 use Symfony\Component\Serializer\Attribute\Ignore;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class SelectField extends DTO\UIField implements ApiSelectInterface
 {
@@ -54,6 +52,7 @@ class SelectField extends DTO\UIField implements ApiSelectInterface
      * @since 1.2.0
      * @version 1.2.0
      */
+    #[Ignore]
     public function getEnums(): array
     {
         return (array)$this->getOption('enums', []);
@@ -88,17 +87,5 @@ class SelectField extends DTO\UIField implements ApiSelectInterface
         $iterator[] = $enum;
 
         return $this->addOption('enums', $iterator);
-    }
-
-    /**
-     * Создание нормализатора данных, который используется в преобразование объекта
-     *
-     * @return NormalizerInterface
-     * @since 1.2.0
-     * @version 1.2.0
-     */
-    protected function createNormalizer(): NormalizerInterface
-    {
-        return new SelectNormalizer;
     }
 }
