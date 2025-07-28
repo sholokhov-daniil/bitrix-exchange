@@ -166,41 +166,17 @@ class sholokhov_exchange extends CModule
         $this->connection->createTable(
             'sholokhov_exchange_settings',
             [
-                'HASH' => (new Fields\StringField('HASH'))
-                    ->configurePrimary(),
-
-                'ACTIVE' => (new Fields\BooleanField('ACTIVE'))
-                    ->configureRequired()
-                    ->configureDefaultValue(true),
-
-                'NAME' => (new Fields\StringField('NAME'))
-                    ->configureSize(255)
-                    ->configureDefaultValue(''),
-
-                'DESCRIPTION' => (new Fields\StringField('DESCRIPTION'))
-                    ->configureSize(255)
-                    ->configureDefaultValue(''),
-
-                'SETTINGS' => (new Fields\TextField('SETTINGS'))
-                    ->configureDefaultValue(''),
-
-                'SOURCE_SETTINGS_ID' => (new Fields\IntegerField('SOURCE_SETTINGS_ID'))
-                    ->configureRequired(),
-
-                'TARGET_SETTINGS_ID' => (new Fields\IntegerField('TARGET_SETTINGS_ID'))
-                    ->configureRequired(),
-
-                'DATE_CREATE' => (new Fields\DatetimeField('DATE_CREATE'))
-                    ->configureRequired(),
-
-                'DATE_UPDATE' => (new Fields\DatetimeField('DATE_UPDATE'))
-                    ->configureRequired(),
-
-                'USER_ID_CREATED' => (new Fields\IntegerField('USER_ID_CREATED'))
-                    ->configureRequired(),
-
-                'USER_ID_UPDATED' => (new Fields\IntegerField('USER_ID_UPDATED'))
-                    ->configureRequired(),
+                'HASH' => new Fields\StringField('HASH'),
+                'ACTIVE' => new Fields\BooleanField('ACTIVE'),
+                'NAME' => new Fields\StringField('NAME'),
+                'DESCRIPTION' => new Fields\StringField('DESCRIPTION'),
+                'SETTINGS' => new Fields\TextField('SETTINGS'),
+                'SOURCE_SETTINGS_ID' => new Fields\IntegerField('SOURCE_SETTINGS_ID'),
+                'TARGET_SETTINGS_ID' => new Fields\IntegerField('TARGET_SETTINGS_ID'),
+                'DATE_CREATE' => new Fields\DatetimeField('DATE_CREATE'),
+                'DATE_UPDATE' => new Fields\DatetimeField('DATE_UPDATE'),
+                'USER_ID_CREATED' => new Fields\IntegerField('USER_ID_CREATED'),
+                'USER_ID_UPDATED' => new Fields\IntegerField('USER_ID_UPDATED'),
             ],
             ['HASH']
         );
@@ -208,14 +184,9 @@ class sholokhov_exchange extends CModule
         $this->connection->createTable(
             'sholokhov_exchange_entity_ui',
             [
-                'ID' => (new Fields\IntegerField('ID')),
-
-                'ENTITY_CODE' => (new Fields\StringField('ENTITY_CODE'))
-                    ->configureRequired()
-                    ->configureUnique(),
-
-                'SETTINGS' => (new Fields\TextField('SETTINGS'))
-                    ->configureRequired(),
+                'ID' => new Fields\IntegerField('ID'),
+                'ENTITY_CODE' => new Fields\StringField('ENTITY_CODE'),
+                'SETTINGS' => new Fields\TextField('SETTINGS'),
             ],
             ['ID'],
             ['ID']
@@ -233,9 +204,16 @@ class sholokhov_exchange extends CModule
      */
     private function migrationEntities(): void
     {
+        $this->migrationEntityTypes();
         $this->migrationEntitySources();
-        $this->migrationEntityTargets();
         $this->migrationEntityUI();
+    }
+
+    private function migrationEntityTypes(): void
+    {
+        $this->connection->add('sholokhov_exchange_entity_type', ['CODE' => 'source']);
+        $this->connection->add('sholokhov_exchange_entity_type', ['CODE' => 'target']);
+        $this->connection->add('sholokhov_exchange_entity_type', ['CODE' => 'map']);
     }
 
     /**
@@ -246,176 +224,39 @@ class sholokhov_exchange extends CModule
      */
     private function migrationEntitySources(): void
     {
-        $type = 'source';
-        $this->connection->add('sholokhov_exchange_entity_type', [
-            'CODE' => $type,
-        ]);
+        $directory = new Directory($this->getEntityConfigPath());
+        $iterator = $directory->getChildren();
 
-        $this->connection->add(
-            'sholokhov_exchange_entities',
-            [
-                "CODE" => 'source_simple_xml',
-                "TYPE_CODE" => $type,
-                "ENTITY" => 'Sholokhov\\Exchange\\Source\\SimpleXml',
-                "NAME" => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_XML_NAME',
-                "DESCRIPTION" => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_XML_DESC',
-            ]
-        );
-
-        $this->connection->add(
-            'sholokhov_exchange_entities',
-            [
-                "CODE" => 'source_db_xml',
-                "TYPE_CODE" => $type,
-                "ENTITY" => 'Sholokhov\\Exchange\\Source\\Xml',
-                "NAME" => 'SHOLOKHOV_EXCHANGE_SOURCE_DB_XML_NAME',
-                "DESCRIPTION" => 'SHOLOKHOV_EXCHANGE_SOURCE_DB_XML_DESC',
-            ]
-        );
-
-        $this->connection->add(
-            'sholokhov_exchange_entities',
-            [
-                "CODE" => 'source_simple_csv',
-                "TYPE_CODE" => $type,
-                "ENTITY" => 'Sholokhov\\Exchange\\Source\\Csv',
-                "NAME" => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_CSV_NAME',
-                "DESCRIPTION" => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_CSV_DESC',
-            ]
-        );
-        $this->connection->add(
-            'sholokhov_exchange_entities',
-            [
-                "CODE" => 'source_simple_json_file',
-                "TYPE_CODE" => $type,
-                "ENTITY" => 'Sholokhov\\Exchange\\Source\\JsonFile',
-                "NAME" => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_JSON_NAME',
-                "DESCRIPTION" => 'SHOLOKHOV_EXCHANGE_SOURCE_SIMPLE_JSON_DESC',
-            ]
-        );
-
-        $this->connection->add(
-            'sholokhov_exchange_entities',
-            [
-                "CODE" => 'source_iblock_element',
-                "TYPE_CODE" => $type,
-                "ENTITY" => 'Sholokhov\\Exchange\\Source\\Entities\\IBlock\\Element',
-                "NAME" => 'SHOLOKHOV_EXCHANGE_SOURCE_ELEMENT_IBLOCK_NAME',
-            ]
-        );
-    }
-
-    /**
-     * @return void
-     * @throws Exception
-     */
-    private function migrationEntityTargets(): void
-    {
-        $type = 'target';
-        $this->connection->add('sholokhov_exchange_entity_type', ['CODE' => $type]);
-
-        $this->connection->add(
-            'sholokhov_exchange_entities',
-            [
-                "CODE" => 'target_file',
-                "TYPE_CODE" => $type,
-                "ENTITY" => 'Sholokhov\\Exchange\\Target\\File',
-                "NAME" => 'SHOLOKHOV_EXCHANGE_TARGET_FILE_NAME',
-                "DESCRIPTION" => 'SHOLOKHOV_EXCHANGE_TARGET_FILE_DESC',
-            ]
-        );
-
-        $this->connection->add(
-            'sholokhov_exchange_entities',
-            [
-                "CODE" => 'target_hl_element',
-                "TYPE_CODE" => $type,
-                "ENTITY" => 'Sholokhov\\Exchange\\Target\\Highloadblock\\Element',
-                "NAME" => 'SHOLOKHOV_EXCHANGE_TARGET_HL_ELEMENT_NAME',
-            ]
-        );
-
-        $this->connection->add(
-            'sholokhov_exchange_entities',
-            [
-                "CODE" => 'target_iblock_element_simple_product',
-                "TYPE_CODE" => $type,
-                "ENTITY" => 'Sholokhov\\Exchange\\Target\\IBlock\\Catalog\\SimpleProduct',
-                "NAME" => 'SHOLOKHOV_EXCHANGE_TARGET_IBLOCK_ELEMENT_SIMPLE_PRODUCT_NAME',
-            ]
-        );
-
-        $this->connection->add(
-            'sholokhov_exchange_entities',
-            [
-                "CODE" => 'target_iblock_property_enum_value',
-                "TYPE_CODE" => $type,
-                "ENTITY" => 'Sholokhov\\Exchange\\Target\\IBlock\\Property\\PropertyEnumeration',
-                "NAME" => 'SHOLOKHOV_EXCHANGE_TARGET_IBLOCK_PROPERTY_ENUM_VALUE_NAME',
-            ]
-        );
-
-        $this->connection->add(
-            'sholokhov_exchange_entities',
-            [
-                "CODE" => 'target_iblock_element',
-                "TYPE_CODE" => $type,
-                "ENTITY" => 'Sholokhov\\Exchange\\Target\\IBlock\\Element',
-                "NAME" => 'SHOLOKHOV_EXCHANGE_TARGET_IBLOCK_ELEMENT_NAME',
-            ]
-        );
-
-        $this->connection->add(
-            'sholokhov_exchange_entities',
-            [
-                "CODE" => 'target_iblock_section',
-                "TYPE_CODE" => $type,
-                "ENTITY" => 'Sholokhov\\Exchange\\Target\\IBlock\\Section',
-                "NAME" => 'SHOLOKHOV_EXCHANGE_TARGET_IBLOCK_SECTION_NAME',
-            ]
-        );
-
-        $this->connection->add(
-            'sholokhov_exchange_entities',
-            [
-                "CODE" => 'target_uf_enum_value',
-                "TYPE_CODE" => $type,
-                "ENTITY" => 'Sholokhov\\Exchange\\Target\\UserFields\\Enumeration',
-                "NAME" => 'SHOLOKHOV_EXCHANGE_TARGET_UF_ENUM_VALUE_NAME',
-            ]
-        );
+        foreach ($iterator as $children) {
+            if ($children->isFile()) {
+                $config = (array)@include $children->getPath();
+                $this->connection->add('sholokhov_exchange_entities', $config);
+            }
+        }
     }
 
     private function migrationEntityUI(): void
     {
-        $iterator = [
-            'source_db_xml',
-            'target_iblock_element',
-            'target_iblock_section',
-            'target_iblock_element_simple_product',
-            'target_iblock_property_enum_value',
-            'target_uf_enum_value',
-            'target_hl_element',
-            'target_file',
-            'source_simple_xml',
-            'source_simple_csv',
-            'source_simple_json_file',
-        ];
+        $directory = new Directory($this->getEntityUiConfigPath());
+        $iterator = $directory->getChildren();
 
-        foreach ($iterator as $code) {
-            $this->connection->add(
-                'sholokhov_exchange_entity_ui',
-                [
-                    'ENTITY_CODE' => $code,
-                    'SETTINGS' => json_encode($this->getUiConfig($code))
-                ]
-            );
+        foreach ($iterator as $children) {
+            if ($children->isFile()) {
+                $config = (array)@include $children->getPath();
+
+                $this->connection->add('sholokhov_exchange_entity_ui', $config);
+            }
         }
     }
 
-    private function getUiConfig(string $name): array
+    private function getEntityConfigPath(): string
     {
-        return @include(__DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'ui' . DIRECTORY_SEPARATOR . $name . '.php') ?: [];
+        return __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'entities';
+    }
+
+    private function getEntityUiConfigPath(): string
+    {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'ui';
     }
 
     private function registrationEvents(): void

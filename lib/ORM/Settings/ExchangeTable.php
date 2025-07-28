@@ -174,7 +174,6 @@ final class ExchangeTable extends DataManager
                 ->configureDefaultValue(''),
 
             (new Fields\StringField(self::PC_DESCRIPTION))
-                ->configureSize(255)
                 ->configureDefaultValue(''),
 
             (new Fields\TextField(self::PC_SETTINGS))

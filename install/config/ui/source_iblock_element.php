@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'ENTITY_CODE' => 'target_hl_element',
+    'ENTITY_CODE' => 'source_iblock_element',
     'SETTINGS' => json_encode(
         [
             [
                 'view' => 'entity-selector',
-                'name' => 'entity_id',
+                'name' => 'iblock_id',
                 'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_UI_TITLE_RENDER_IBLOCK_SELECT_IBLOCK',
                 'options' => [
                     'selector' => [
@@ -15,7 +15,7 @@ return [
                         'dialogOptions' => [
                             'entities' => [
                                 [
-                                    'id' => 'sholokhov-exchange-highloadblock',
+                                    'id' => 'sholokhov-exchange-iblock',
                                     'dynamicSearch' => true,
                                     'dynamicLoad' => true,
                                 ]
