@@ -1,3 +1,14 @@
+<template>
+  <div class="ui-ctl ui-ctl-after-icon ui-ctl-dropdown">
+    <div class="ui-ctl-after ui-ctl-icon-angle">
+      <select v-model="model" :name="name" class="ui-ctl-element" v-bind="attributes">
+        <option value="">{{ getMessage('SHOLOKHOV_EXCHANGE_SETTINGS_SELECT_SELECTED_VALUE') }}</option>
+        <option v-for="item in data.enums" :key="item.value" :value="item.value">{{ item.name }}</option>
+      </select>
+    </div>
+  </div>
+</template>
+
 <script setup>
 import {watch, reactive, onMounted} from 'vue';
 import {getMessage, runAction} from "utils";
@@ -44,15 +55,3 @@ const queryEnums = () => {
       })
 }
 </script>
-
-<template>
-  <div class="ui-ctl ui-ctl-after-icon ui-ctl-dropdown">
-    <div class="ui-ctl-after ui-ctl-icon-angle">
-      {{ data }}
-      <select v-model="model" :name="name" class="ui-ctl-element" v-bind="attributes">
-        <option value="">{{ getMessage('SHOLOKHOV_EXCHANGE_SETTINGS_SELECT_SELECTED_VALUE') }}</option>
-        <option v-for="item in data.enums" :key="item.value" :value="item.value">{{ item.name }}</option>
-      </select>
-    </div>
-  </div>
-</template>

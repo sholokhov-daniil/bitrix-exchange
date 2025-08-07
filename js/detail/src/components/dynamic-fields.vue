@@ -1,37 +1,43 @@
+<template v-if="type">
+  <Component v-if="view" :is="view" v-model="model"/>
+  <div v-else ref="externalContainerRef">
+  </div>
+</template>
+
 <script setup>
-import {getMessage} from "utils";
+import {computed, ref, watch} from 'vue';
 import {defineModel, defineProps} from 'vue';
-import {DynamicField, GridRow} from 'ui';
+import {internalView} from "@/view/factory";
 
 const model = defineModel({default: {}});
-defineProps({
-  fields: {type: Array, default: () => []}
-})
+const props = defineProps({
+  type: {type: String, default: () => ''}
+});
+
+const externalContainerRef = ref();
+
+const view = computed(() => internalView(props.type));
+watch(
+    () => props.type,
+    (newValue) => {
+      if (!newValue || view.value) {
+        return;
+      }
+
+      const registry = Sholokhov.Exchange.Detail.entityRegistry;
+
+      console.log({
+        type: props.type,
+        registry: registry
+      });
+
+      if (registry.has(props.type)) {
+        const render = registry.get(props.type);
+        render({
+          container: externalContainerRef,
+          data: model,
+        })
+      }
+    }
+)
 </script>
-
-<template>
-  <template v-for="(field, key) in fields" :key="key">
-    <DynamicField
-        v-if="field.isConstructor"
-        v-model="model[field.name]"
-        :view="field.view"
-        :entity="model.type"
-        :options="field.options"
-    />
-    <GridRow v-else>
-      <template #title>
-        {{ getMessage(field?.title) }}
-      </template>
-      <template #content>
-        {{ field }}
-
-        <DynamicField
-            v-model="model[field.name]"
-            :view="field.view"
-            :entity="model.type"
-            :options="field.options"
-        />
-      </template>
-    </GridRow>
-  </template>
-</template>

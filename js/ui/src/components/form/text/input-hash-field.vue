@@ -1,10 +1,9 @@
 <script setup>
 import {defineProps, defineModel} from 'vue';
-import {runAction} from "utils";
+import {runAction, getMessage} from "utils";
 
 const model = defineModel({default: ''});
 const props = defineProps({
-  name: {type: String, required: true},
   label: {type: String, default: () => '' }
 });
 
@@ -18,6 +17,8 @@ const generate = () => {
 <template>
   <div class="ui-ctl ui-ctl-textbox">
     <input v-model="model" type="text" class="ui-ctl-element">
-    <span class="hash-text-generator" @click="generate">Сгенерировать</span>
+    <span class="hash-text-generator" @click="generate">
+      {{ getMessage('SHOLOKHOV_EXCHANGE_UI_GENERATE') }}
+    </span>
   </div>
 </template>

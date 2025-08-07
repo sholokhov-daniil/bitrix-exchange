@@ -27,8 +27,6 @@ class sholokhov_exchange extends CModule
         'sholokhov_exchange_entity_type',
         'sholokhov_exchange_entities',
         'sholokhov_exchange_settings',
-        'sholokhov_exchange_entity_ui',
-        'sholokhov_exchange_target_map_ui'
     ];
 
     public function __construct()
@@ -123,8 +121,6 @@ class sholokhov_exchange extends CModule
     {
         $this->fillTable('sholokhov_exchange_entity_type', $this->getConfigPath('types'));
         $this->fillTable('sholokhov_exchange_entities', $this->getConfigPath('entities'));
-        $this->fillTable('sholokhov_exchange_entity_ui', $this->getConfigPath('ui'));
-        $this->fillTable('sholokhov_exchange_target_map_ui', $this->getConfigPath('ui/map'));
     }
 
     private function fillTable(string $table, string $path): void
