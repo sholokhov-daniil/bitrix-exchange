@@ -23,7 +23,7 @@ const emit = defineEmits([
   'afterRender'
 ])
 const props = defineProps({
-  selector: {type: Object},
+  options: {type: Object},
 })
 const data = reactive({
   value: '',
@@ -46,7 +46,7 @@ watch(
 )
 
 const setOptions = () => {
-  data.options = {...props.selector};
+  data.options = {...props.options};
 
   if (data.options?.addButtonCaption) {
     data.options.addButtonCaption = getMessage(data.options.addButtonCaption) || data.options.addButtonCaption;

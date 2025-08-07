@@ -1,15 +1,16 @@
 <script setup>
 import {defineProps, reactive, onMounted} from 'vue';
 import GeneralBlock from "@/components/general-block.vue";
-import DynamicFields from "@/components/dynamic-fields.vue";
 import TargetBlock from "@/components/target-block.vue";
 import SourceBlock from "@/components/source-block.vue";
+import MapBlock from "@/components/map-block.vue";
+import {registration} from "@/view";
 
 const props = defineProps({
   teleport: {type: Object, required: true},
   formContainer: {type: String, required: true},
+  id: {type: Number, default: () => 0},
   signed: {type: String, required: false, default: () => ''},
-  fields: {type: Object, default: () => {}}
 });
 
 const data = reactive({
@@ -27,11 +28,15 @@ onMounted(() => {
     data.form[target] = {};
   }
 
-  initEvents()
+  registration(
+      'TEST_1',
+      () => Component
+  )
+
+  initEvents();
 });
 
 const initEvents = () => {
-  console.log(props);
   const form = document.querySelector(props.formContainer);
   if (form) {
     form.addEventListener('submit', (e) => submit(e));
@@ -68,7 +73,7 @@ const submit = (event) => {
     <SourceBlock v-model="data.form.source" />
   </Teleport>
 
-  <Teleport v-for="(iterator, target) in fields" :key="target" :to="target">
-    <DynamicFields v-model="data.form[target]" :fields="iterator" />
+  <Teleport v-if="teleport.map" :to="teleport.map">
+    <MapBlock v-model="data.form.map" :target="data.form?.target?.type" />
   </Teleport>
 </template>

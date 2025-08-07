@@ -1,5 +1,5 @@
 <script setup>
-import {Select, GridRow, CheckBoxб Input} from 'ui';
+import {Select, GridRow, CheckBox, Input} from 'ui';
 </script>
 
 <template>

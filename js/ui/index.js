@@ -5,3 +5,4 @@ export {default as Input} from './src/components/form/text/input-field.vue'
 export {default as InputHash} from './src/components/form/text/input-hash-field.vue'
 export {default as DynamicField} from './src/components/form/dynamic-field.vue'
 export {default as GridRow} from './src/components/grid/grid-row.vue'
+export {default as Alert} from './src/components/message/alert-message.vue';

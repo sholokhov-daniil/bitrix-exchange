@@ -2,6 +2,7 @@
 
 namespace Sholokhov\Exchange\ORM\UI;
 
+use Sholokhov\Exchange\Helper\Json;
 use Sholokhov\Exchange\ORM\Settings\EntityTable;
 
 use Bitrix\Main\ArgumentException;
@@ -60,6 +61,14 @@ final class TargetMapTable extends DataManager
     public const PC_MAP = "MAP";
 
     /**
+     * Настройки отображения
+     *
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    public const PC_FIELDS = "FIELDS";
+
+    /**
      * @return string
      *
      * @since 1.2.0
@@ -67,7 +76,7 @@ final class TargetMapTable extends DataManager
      */
     public static function getTableName(): string
     {
-        return 'sholokhov_exchange_target_map';
+        return 'sholokhov_exchange_target_map_ui';
     }
 
     /**
@@ -91,6 +100,11 @@ final class TargetMapTable extends DataManager
                 ->configureRequired(),
 
             (new Fields\StringField(self::PC_MAP_CODE))
+                ->configureRequired(),
+
+            (new Fields\TextField(self::PC_FIELDS))
+                ->addFetchDataModifier(Json::decode(...))
+                ->addSaveDataModifier(Json::encode(...))
                 ->configureRequired(),
 
             (new Fields\Relations\Reference(

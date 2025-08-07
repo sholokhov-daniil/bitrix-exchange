@@ -31,14 +31,10 @@ final class EntityController extends Controller
     {
         return [
             'getByType' => [
-                '+prefilters' => [
-                    new ModuleRightMiddleware
-                ],
+                '+prefilters' => [new ModuleRightMiddleware],
             ],
             'getFields' => [
-                '+prefilters' => [
-                    new ModuleRightMiddleware
-                ],
+                '+prefilters' => [new ModuleRightMiddleware],
             ],
         ];
     }

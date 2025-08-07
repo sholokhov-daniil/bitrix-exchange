@@ -1,12 +1,30 @@
 <script setup>
-import {defineModel} from 'vue';
+import {defineModel, onMounted, ref} from 'vue';
 import {InputHash, CheckBox, GridRow} from 'ui';
 import {getMessage} from "utils";
+import {view} from "@/view";
 
+const containerRef = ref();
 const model = defineModel();
+
+onMounted(() => {
+  view('TEST_1', {
+    container: containerRef,
+    store: model
+  });
+
+
+
+})
 </script>
 
 <template>
+  <GridRow>
+    <template #content>
+      <div ref="containerRef"></div>
+    </template>
+  </GridRow>
+
   <GridRow>
     <template #content>
       <CheckBox

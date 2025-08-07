@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import {ExternalRegistry} from "@/registry/external";
+import {EntityRegistry} from "@/registry/ui-registry";
+import {sendBefore, events as initEvents} from '@/events/init';
 
 if (!window.Sholokhov) {
     window.Sholokhov = {};
@@ -13,10 +14,13 @@ if (!window.Sholokhov.Exchange) {
 if (!window.Sholokhov.Exchange.Detail) {
     window.Sholokhov.Exchange.Detail = new class {
         _app;
-        _externalRegistry;
+        _entityRegistry;
 
         mounted(node, options) {
-            console.log(BX.Loc.getMessage('LANGUAGE_ID'));
+            sendBefore({
+                id: options?.id
+            });
+
             this._app = createApp(App, options);
             this._app.mount(node);
         }
@@ -25,8 +29,14 @@ if (!window.Sholokhov.Exchange.Detail) {
             this._app?.unmount();
         }
 
-        getExternalRegistry() {
-            return this._externalRegistry ??= new ExternalRegistry;
+        get events() {
+            return {
+                init: initEvents
+            }
+        }
+
+        get entityRegistry() {
+            return this._entityRegistry ??= new EntityRegistry;
         }
     }
 }

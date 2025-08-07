@@ -7,7 +7,7 @@ return [
             [
                 'view' => 'entity-selector',
                 'name' => 'entity_id',
-                'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_UI_TITLE_RENDER_IBLOCK_SELECT_IBLOCK',
+                'title' => 'SHOLOKHOV_EXCHANGE_SETTINGS_UI_TITLE_RENDER_HL_SELECT_IBLOCK',
                 'options' => [
                     'selector' => [
                         'multiple' => false,
