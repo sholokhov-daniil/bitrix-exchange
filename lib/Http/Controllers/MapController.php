@@ -50,17 +50,15 @@ final class MapController extends Controller
                 ->where(TargetMapTable::PC_TARGET_CODE, $target)
                 ->addSelect(TargetMapTable::PC_ID)
                 ->addSelect(TargetMapTable::PC_MAP_CODE)
-                ->addSelect(TargetMapTable::PC_FIELDS)
                 ->addSelect(TargetMapTable::PC_MAP . "." . EntityTable::PC_NAME, 'NAME')
                 ->setCacheTtl(360000)
                 ->exec();
 
             while ($item = $iterator->fetch()) {
                 $result[] = [
-                    'id' => $item[TargetMapTable::PC_ID],
+                    'id' => (int)$item[TargetMapTable::PC_ID],
                     'code' => $item[TargetMapTable::PC_MAP_CODE],
                     'name' => $item['NAME'],
-                    'fields' => $item[TargetMapTable::PC_FIELDS],
                 ];
             }
 

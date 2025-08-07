@@ -1,9 +1,8 @@
 <script setup>
-import {defineModel, defineProps, reactive, watch, onMounted} from 'vue';
+import {defineModel, defineProps, reactive, watch, onMounted, computed} from 'vue';
 import {Alert, GridRow} from "ui";
 import {runAction} from "utils";
-import CreatePopup from './create-map-field.vue';
-// import MapField from "@/components/fields/map-field.vue";
+import DynamicFields from "@/components/dynamic-fields.vue";
 
 const model = defineModel();
 
@@ -14,7 +13,6 @@ const props = defineProps({
 const data = reactive({
   templates: {},
   errors: [],
-  openAddPopup: false,
 });
 
 onMounted(() => {
@@ -22,6 +20,8 @@ onMounted(() => {
     showEmptyError();
   }
 })
+
+const templates = computed(() => data.templates[target] || []);
 
 watch(
     () => props.target,
@@ -56,10 +56,15 @@ const loadTemplates = async (target) => {
   response.data.forEach(map => data.templates[target][map.code] = map.fields || [])
 }
 
-const openAddPopup = () => {
-  console.log('OPEN');
-  data.openAddPopup = true
-};
+const add = () => {
+  if (!Array.isArray(model.map)) {
+    model.map = [];
+  }
+
+  model.map.push({
+    type: templates.value[0].
+  });
+}
 </script>
 
 <template>
@@ -71,7 +76,7 @@ const openAddPopup = () => {
 
       <template v-if="target">
         Тут выводим список доступных типов карт
-        <button type="button" @click="openAddPopup">Добавить</button>
+        <button type="button" @click="add">Добавить</button>
       </template>
       <Alert v-else v-for="message in data.errors" :key="message" type="danger">
         {{ message }}
@@ -79,9 +84,10 @@ const openAddPopup = () => {
     </template>
   </GridRow>
 
-  <CreatePopup
-      :show="data.openAddPopup"
-      @closed="data.openAddPopup = false"
-      @opened="data.openAddPopup = true"
+  <DynamicFields
+    v-for="(field, index) in model.maps"
+    :key="index"
+    v-model="model.maps[field.type]"
+    type="field.type"
   />
 </template>
