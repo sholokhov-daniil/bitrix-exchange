@@ -172,6 +172,7 @@ final class UserFieldProvider extends BaseProvider
         $iterator = $USER_FIELD_MANAGER->GetUserFields($this->getEntityId(), 0, $lang);
 
         return array_filter($iterator, function($field)  {
+            Debug::dumpToFile($field);
             if (($type = $this->getOption('propertyType')) && $field['USER_TYPE_ID'] <> $type) {
                 return false;
             }

@@ -1,12 +1,17 @@
 <template>
-  <tr>
-    <td width="40%" class="adm-detail-content-cell-l">
+  <RowTable v-bind="$attrs">
+    <ColumnTitleTable>
       <slot name="title"></slot>
-    </td>
-    <td width="60%" class="adm-detail-content-cell-r">
+    </ColumnTitleTable>
+
+    <ColumnValueTable>
       <slot name="content"></slot>
-    </td>
-  </tr>
+    </ColumnValueTable>
+  </RowTable>
 </template>
-<script setup lang="ts">
+
+<script setup>
+import ColumnTitleTable from "../table/column-title-table.vue";
+import ColumnValueTable from "../table/column-value-table.vue";
+import RowTable from "../table/row-table.vue";
 </script>

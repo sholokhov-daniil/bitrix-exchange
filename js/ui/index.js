@@ -6,3 +6,6 @@ export {default as InputHash} from './src/components/form/text/input-hash-field.
 export {default as DynamicField} from './src/components/form/dynamic-field.vue'
 export {default as GridRow} from './src/components/grid/grid-row.vue'
 export {default as Alert} from './src/components/message/alert-message.vue';
+export {default as ColumnTitleTable} from './src/components/table/column-title-table.vue';
+export {default as ColumnValueTable} from './src/components/table/column-value-table.vue';
+export {default as RowTable} from './src/components/table/row-table.vue';

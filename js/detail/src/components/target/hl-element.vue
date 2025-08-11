@@ -5,7 +5,7 @@
     </template>
     <template #content>
       <EntitySelector
-          v-model="model"
+          v-model="model.entityId"
           :options="{
         multiple: false,
         addButtonCaption: 'SHOLOHKOV_EXCHANGE_UI_ENTITY_SELECTOR_DIALOG_ADD_BUTTON_CAPTION_SELECT',

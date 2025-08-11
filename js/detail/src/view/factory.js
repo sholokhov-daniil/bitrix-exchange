@@ -1,43 +1,32 @@
 import { defineAsyncComponent } from 'vue';
 
 export const internalView = (template) => {
-    let component = null;
-
     switch (template) {
+        case 'map_field':
+            return defineAsyncComponent(() => import('@/components/map/base-field.vue'));
         case 'source_db_xml':
-            component = defineAsyncComponent(() => import('@/components/source/bd-xml.vue'));
-            break;
+            return defineAsyncComponent(() => import('@/components/source/bd-xml.vue'));
         case 'source_iblock_element':
-            component = defineAsyncComponent(() => import('@/components/source/iblock-element.vue'));
-            break;
+            return  defineAsyncComponent(() => import('@/components/source/iblock-element.vue'));
         case 'source_simple_csv':
-            component = defineAsyncComponent(() => import('@/components/source/simple-csv.vue'));
-            break;
+            return defineAsyncComponent(() => import('@/components/source/simple-csv.vue'));
         case 'source_simple_json_file':
-            component = defineAsyncComponent(() => import('@/components/source/simple-json-file.vue'));
-            break;
+            return defineAsyncComponent(() => import('@/components/source/simple-json-file.vue'));
         case 'source_simple_xml':
-            component = defineAsyncComponent(() => import('@/components/source/simple-xml.vue'));
-            break;
+            return defineAsyncComponent(() => import('@/components/source/simple-xml.vue'));
         case 'target_hl_element':
-            component = defineAsyncComponent(() => import('@/components/target/hl-element.vue'));
-            break;
+            return defineAsyncComponent(() => import('@/components/target/hl-element.vue'));
         case 'target_iblock_element':
-            component = defineAsyncComponent(() => import('@/components/target/iblock-element.vue'));
-            break;
+            return defineAsyncComponent(() => import('@/components/target/iblock-element.vue'));
         case 'target_iblock_element_simple_product':
-            component = defineAsyncComponent(() => import('@/components/target/iblock-simple-product.vue'))
-            break;
+            return defineAsyncComponent(() => import('@/components/target/iblock-simple-product.vue'))
         case 'target_iblock_property_enum_value':
-            component = defineAsyncComponent(() => import('@/components/target/iblock-property-enum.vue'));
-            break;
+            return defineAsyncComponent(() => import('@/components/target/iblock-property-enum.vue'));
         case 'target_iblock_section':
-            component = defineAsyncComponent(() => import('@/components/target/iblock-section.vue'));
-            break;
+            return defineAsyncComponent(() => import('@/components/target/iblock-section.vue'));
         case 'target_uf_enum_value':
-            component = defineAsyncComponent(() => import('@/components/target/uf-enum-value.vue'));
-            break;
+            return defineAsyncComponent(() => import('@/components/target/uf-enum-value.vue'));
+        default:
+            return null;
     }
-
-    return component;
 }

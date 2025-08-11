@@ -1,14 +1,20 @@
 <template v-if="type">
-  <Component v-if="view" :is="view" v-model="model"/>
+  <Component
+      v-if="view"
+      :is="view"
+      v-model="model"
+      v-bind="attr" />
   <div v-else ref="externalContainerRef">
   </div>
 </template>
 
 <script setup>
-import {computed, ref, watch} from 'vue';
+import {computed, ref, watch, useAttrs} from 'vue';
 import {defineModel, defineProps} from 'vue';
 import {internalView} from "@/view/factory";
+import {view as ExternalView} from "@/view";
 
+const attr = useAttrs();
 const model = defineModel({default: {}});
 const props = defineProps({
   type: {type: String, default: () => ''}
@@ -24,20 +30,14 @@ watch(
         return;
       }
 
-      const registry = Sholokhov.Exchange.Detail.entityRegistry;
-
-      console.log({
-        type: props.type,
-        registry: registry
-      });
-
-      if (registry.has(props.type)) {
-        const render = registry.get(props.type);
-        render({
-          container: externalContainerRef,
-          data: model,
-        })
-      }
+      ExternalView(
+          model.type,
+          {
+            container: externalContainerRef,
+            data: model,
+            ...attr
+          }
+      );
     }
 )
 </script>

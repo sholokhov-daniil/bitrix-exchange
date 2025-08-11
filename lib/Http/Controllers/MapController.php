@@ -8,6 +8,8 @@ use Bitrix\Main\Localization\Loc;
 use Sholokhov\Exchange\Http\Middleware\ModuleRightMiddleware;
 use Sholokhov\Exchange\ORM\Settings\EntityTable;
 use Sholokhov\Exchange\ORM\UI\TargetMapTable;
+use Sholokhov\Exchange\UI\Map\Factory;
+use Throwable;
 
 /**
  * Контроллер карты обмена
@@ -29,7 +31,10 @@ final class MapController extends Controller
         return [
             'getTemplates' => [
                 '+prefilters' => [new ModuleRightMiddleware]
-            ]
+            ],
+            'getToSelectorOptions' => [
+                '+prefilters' => [new ModuleRightMiddleware]
+            ],
         ];
     }
 
@@ -62,8 +67,39 @@ final class MapController extends Controller
                 ];
             }
 
-        } catch (\Throwable $throwable) {
-            $this->addError(new Error(Loc::getMessage('SHOLOKHOV_EXCHANGE_CONTROLLER_ENTITY_EXCEPTION'), 500));
+        } catch (Throwable $throwable) {
+            $this->addError(new Error(Loc::getMessage('SHOLOKHOV_EXCHANGE_CONTROLLER_MAP_EXCEPTION'), 500));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Формирует данные, для селектора хранения импортируемого значения
+     *
+     * @param string $target Тип обмена
+     * @param string $entityId ID сущности в которую идет импорт
+     * @param string $type
+     * @param array $options
+     * @return array
+     * @since 1.2.0
+     * @version 1.2.0
+     */
+    public function getToSelectorOptionsAction(string $target, string $entityId, string $type, array $options = []): array
+    {
+        $result = [];
+
+        try {
+            $factory = new Factory($target);
+            $callback = $factory->create($entityId, $type);
+
+            if (is_callable($callback)) {
+                $result = (array)$callback($entityId, $options);
+            }
+        } catch (Throwable $throwable) {
+            $this->addError(
+                new Error(Loc::getMessage('SHOLOKHOV_EXCHANGE_CONTROLLER_MAP_EXCEPTION'), 500)
+            );
         }
 
         return $result;

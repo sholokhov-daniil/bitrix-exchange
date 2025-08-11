@@ -27,6 +27,7 @@ const normalizeTypeResponse = (response) => {
   <GridRow>
     <template #title>{{ getMessage('SHOLOKHOV_EXCHANGE_DETAIL_ENTITY_UI_TARGET_TITLE_FIELD_TYPE') }}</template>
     <template #content>
+      {{ model }}
       <SelectField v-model="model.type" :api="fieldApi" name="type" />
     </template>
   </GridRow>

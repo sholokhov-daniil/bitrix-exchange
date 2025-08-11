@@ -18,7 +18,7 @@ const data = reactive({
     general: {},
     target: {},
     source: {},
-    map: {},
+    map: [],
   },
   userForm: {},
 });
@@ -74,6 +74,6 @@ const submit = (event) => {
   </Teleport>
 
   <Teleport v-if="teleport.map" :to="teleport.map">
-    <MapBlock v-model="data.form.map" :target="data.form?.target?.type" />
+    <MapBlock v-model="data.form.map" :target="data.form?.target" />
   </Teleport>
 </template>

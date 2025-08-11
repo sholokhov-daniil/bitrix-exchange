@@ -1,3 +1,7 @@
+<template>
+  <div ref="container"></div>
+</template>
+
 <script setup>
 import {defineProps, defineEmits, ref, onMounted, reactive, watch, defineModel} from 'vue'
 import {getMessage} from "utils"
@@ -43,6 +47,15 @@ watch(
         render();
       }
     }
+);
+
+watch(
+    () => props.options,
+    (newValue) => {
+      setOptions();
+      render();
+    },
+    { deep: true }
 )
 
 const setOptions = () => {
@@ -107,7 +120,3 @@ const updateModelValue = (event) => {
   model.value = data.value = value;
 }
 </script>
-
-<template>
-  <div ref="container"></div>
-</template>

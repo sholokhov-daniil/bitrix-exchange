@@ -1,13 +1,41 @@
+<template>
+  <GridRow>
+    <template #content>
+      Значение: {{ model }}<br><br>
+      Тип: {{ target }}<br><br>
+      Шаблоны: {{ data.templates }} <br><br>
+
+      <template v-if="target">
+        Тут выводим список доступных типов карт
+        <button type="button" @click="add">Добавить</button>
+      </template>
+      <Alert v-else v-for="message in data.errors" :key="message" type="danger">
+        {{ message }}
+      </Alert>
+    </template>
+  </GridRow>
+
+  <template v-for="(field, index) in model" :key="index">
+    <DynamicFields
+        v-model="model[index]"
+        :type="field.type"
+        :target="target"
+    />
+
+    <GridRow style="border-bottom: 1px solid silver"></GridRow>
+  </template>
+</template>
+
 <script setup>
 import {defineModel, defineProps, reactive, watch, onMounted, computed} from 'vue';
 import {Alert, GridRow} from "ui";
 import {runAction} from "utils";
 import DynamicFields from "@/components/dynamic-fields.vue";
 
-const model = defineModel();
+const model = defineModel({default: []});
 
 const props = defineProps({
-  target: {type: String, default: () => ''}
+  target: {type: Object, default: () => ({})}
 });
 
 const data = reactive({
@@ -16,15 +44,15 @@ const data = reactive({
 });
 
 onMounted(() => {
-  if (!props.target) {
+  if (!props.target?.type) {
     showEmptyError();
   }
 })
 
-const templates = computed(() => data.templates[target] || []);
+const templates = computed(() => data.templates[props.target?.type] || []);
 
 watch(
-    () => props.target,
+    () => props.target.type,
     (newValue) => {
       if (!newValue) {
         showEmptyError();
@@ -53,41 +81,18 @@ const loadTemplates = async (target) => {
     return;
   }
 
-  response.data.forEach(map => data.templates[target][map.code] = map.fields || [])
+  data.templates[target] = [];
+
+  response.data.forEach(map => data.templates[target].push(map || {}));
 }
 
 const add = () => {
-  if (!Array.isArray(model.map)) {
-    model.map = [];
+  if (!Array.isArray(model.value)) {
+    model.value = [];
   }
 
-  model.map.push({
-    type: templates.value[0].
+  model.value.push({
+    type: templates.value[0]?.code || ''
   });
 }
 </script>
-
-<template>
-  <GridRow>
-    <template #content>
-      Значение: {{ model }}<br><br>
-      Тип: {{ target }}<br><br>
-      Шаблоны: {{ data.templates }} <br><br>
-
-      <template v-if="target">
-        Тут выводим список доступных типов карт
-        <button type="button" @click="add">Добавить</button>
-      </template>
-      <Alert v-else v-for="message in data.errors" :key="message" type="danger">
-        {{ message }}
-      </Alert>
-    </template>
-  </GridRow>
-
-  <DynamicFields
-    v-for="(field, index) in model.maps"
-    :key="index"
-    v-model="model.maps[field.type]"
-    type="field.type"
-  />
-</template>
