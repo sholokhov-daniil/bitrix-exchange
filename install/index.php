@@ -101,7 +101,7 @@ class sholokhov_exchange extends CModule
 
     private function checkComposer(): void
     {
-        $autoload = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+        $autoload = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
         if (!file_exists($autoload)) {
             throw new Exception(
