@@ -9,7 +9,7 @@ use Sholokhov\Exchange\Messages\ErrorInterface;
 /**
  * Описание ошибки
  *
- * @version 1.0.0
+ * @version 1.1.1
  * @since 1.0.0
  */
 class Error implements ErrorInterface
@@ -39,6 +39,19 @@ class Error implements ErrorInterface
     public static function createFromThrowable(Throwable $throwable): static
     {
         return new static($throwable->getMessage(), $throwable->getCode());
+    }
+
+    /**
+     * Создание ошибки на основе ошибки битрикса
+     *
+     * @param \Bitrix\Main\Error $error
+     * @return static
+     * @version 1.1.1
+     * @since 1.1.1
+     */
+    public static function createFromBitrix(\Bitrix\Main\Error $error): static
+    {
+        return new static($error->getMessage(), $error->getCode(), $error->getCustomData());
     }
 
     /**

@@ -84,6 +84,7 @@ abstract class IBlock extends Exchange
         if (!Loader::includeModule('iblock')) {
             $result->addError(new Error('Module "iblock" not installed'));
         }
+
         return $result;
     }
 
