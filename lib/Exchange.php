@@ -53,9 +53,6 @@ use Psr\Log\LoggerAwareTrait;
  *  <ul>
  *      <li>{@see self::mapValidate()} - Проверка корректности карты обмена</li>
  *  </ul>
- *
- * @since 1.0.0
- * @version 1.1.0
  */
 #[MapValidator]
 abstract class Exchange extends Application implements MappingExchangeInterface
@@ -66,9 +63,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * Хранилище данных текущего обмена
      *
      * @var RepositoryInterface
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     protected readonly RepositoryInterface $repository;
 
@@ -77,9 +71,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      *
      * @param array $item
      * @return DataResultInterface
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     abstract protected function add(array $item): DataResultInterface;
 
@@ -88,9 +79,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      *
      * @param array $item
      * @return DataResultInterface
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     abstract protected function update(array $item): DataResultInterface;
 
@@ -99,9 +87,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      *
      * @param array $item
      * @return bool
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     abstract protected function exists(array $item): bool;
 
@@ -110,9 +95,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      *
      * @param FieldInterface $field
      * @return bool
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     abstract protected function isMultipleField(FieldInterface $field): bool;
 
@@ -120,9 +102,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * Деактивация элементов сущности, которые не пришли в обмене
      *
      * @return void
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     protected function deactivate(): void
     {
@@ -133,10 +112,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      *
      * @param FieldInterface[] $map
      * @return Exchange
-     *
      * @throws Exception
-     * @since 1.0.0
-     * @version 1.1.0
      */
     public function setMap(array $map): static
     {
@@ -165,8 +141,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * Получение хэша импорта
      *
      * @return string
-     * @since 1.1.0
-     * @version 1.1.0
      */
     public function getHash(): string
     {
@@ -181,8 +155,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      *
      * @throws NotImplementedException
      * @throws ReflectionException
-     * @since 1.0.0
-     * @version 1.0.0
      */
     final public function execute(iterable $source): ExchangeResultInterface
     {
@@ -204,9 +176,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
         }
 
         $this->repository->set('date_up', time());
-
         $this->getEventManager()->send(ExchangeEvent::BeforeRun->value);
-        (new Event(Helper::getModuleID(),  ExchangeEvent::BeforeRun->value, ['exchange' => $this]))->send();
 
         try {
             foreach ($source as $item) {
@@ -234,8 +204,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
         }
 
         $this->getEventManager()->send(ExchangeEvent::AfterRun->value);
-        (new Event(Helper::getModuleID(), ExchangeEvent::AfterRun->value, ['exchange' => $this]))->send();
-
         $this->repository->set('date_up', 0);
 
         return $result;
@@ -245,9 +213,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * ID сайта, которому принадлежит обмен
      *
      * @return string
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public function getSiteID(): string
     {
@@ -258,9 +223,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * Получение карты обмена
      *
      * @return FieldInterface[]
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public function getMap(): array
     {
@@ -272,9 +234,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      *
      * @param PreparationInterface $prepare
      * @return $this
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public function addPrepared(PreparationInterface $prepare): self
     {
@@ -288,9 +247,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * @final
      * @param callable $callback
      * @return $this
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     final public function setResultRepository(callable $callback): static
     {
@@ -303,9 +259,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      *
      * @final
      * @return int
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     final protected function getDateStarted(): int
     {
@@ -316,9 +269,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * Получение генератора хранилища
      *
      * @return callable|null
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     protected function getResultRepository(): ?callable
     {
@@ -330,9 +280,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      *
      * @final
      * @return Chain
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     final protected function getPrepares(): Chain
     {
@@ -344,9 +291,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      *
      * @return ResultInterface
      * @throws ReflectionException
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     protected function validate(): ResultInterface
     {
@@ -359,9 +303,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * @final
      * @return FieldInterface
      * @throws Exception
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     final protected function getPrimaryField(): FieldInterface
     {
@@ -372,8 +313,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * Получение поля отвечающего за хеш
      *
      * @return FieldInterface|null
-     * @since 1.1.0
-     * @version 1.1.0
      */
     final protected function getHashField(): ?FieldInterface
     {
@@ -385,14 +324,10 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      *
      * @param array $item
      * @return DataResultInterface
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     private function action(array $item): DataResultInterface
     {
         $this->getEventManager()->send(ExchangeEvent::BeforeImportItem->value, $item);
-        (new Event(Helper::getModuleID(), ExchangeEvent::BeforeImportItem->value, ['exchange' => $this, 'item' => &$item]))->send();
 
         $prepareResult = $this->prepared($item);
 
@@ -404,38 +339,16 @@ abstract class Exchange extends Application implements MappingExchangeInterface
 
         if ($this->exists($item)) {
             $this->getEventManager()->send(ExchangeEvent::BeforeUpdate->value, $item);
-            $event = new Event(Helper::getModuleID(), ExchangeEvent::BeforeUpdate->value, ['exchange' => $this, 'item' => &$item]);
-            $event->send();
-
-            foreach ($event->getResults() as $eventResult) {
-                if ($eventResult->getType() !== EventResult::SUCCESS) {
-                    $this->logger?->debug('The updating of the element was rejected by the event: ' . json_encode($item));
-                    return new DataResult;
-                }
-            }
-
             $result = $this->update($item);
-
             $this->getEventManager()->send(ExchangeEvent::AfterUpdate->value, $item, $result);
-            (new Event(Helper::getModuleID(), ExchangeEvent::AfterUpdate->value, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
         } else {
             $this->getEventManager()->send(ExchangeEvent::BeforeAdd->value, $item);
-            $event = new Event(Helper::getModuleID(), ExchangeEvent::BeforeAdd->value, ['exchange' => $this, 'item' => &$item]);
-
-            foreach ($event->getResults() as $eventResult) {
-                if ($eventResult->getType()!== EventResult::SUCCESS) {
-                    $this->logger?->debug('The creation of the element was rejected by the event: ' . json_encode($item));
-                    return new DataResult;
-                }
-            }
 
             $result = $this->add($item);
             $this->getEventManager()->send(ExchangeEvent::AfterAdd->value, $item, $result);
-            (new Event(Helper::getModuleID(), ExchangeEvent::AfterAdd->value, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
         }
 
         $this->getEventManager()->send(ExchangeEvent::AfterImportItem->value, $item, $result);
-        (new Event(Helper::getModuleID(), ExchangeEvent::AfterImportItem->value, ['exchange' => $this, 'item' => $item, 'result' => $result]))->send();
 
         return $result;
     }
@@ -445,9 +358,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      *
      * @param array $item
      * @return DataResultInterface
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     private function prepared(array $item): DataResultInterface
     {
@@ -480,9 +390,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * @param mixed $value
      * @param FieldInterface $field
      * @return mixed
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     private function normalize(mixed $value, FieldInterface $field): mixed
     {
@@ -505,9 +412,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * Получение менеджера событий
      *
      * @return EventManager
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     private function getEventManager(): EventManager
     {
@@ -518,9 +422,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * Валидация карты обмена
      *
      * @return ResultInterface
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     #[Validate]
     private function mapValidate(): ResultInterface
@@ -534,9 +435,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * Инициализация хранилища дополнительных данных обмена
      *
      * @return void
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     #[BootstrapConfiguration]
     private function bootstrapRepository(): void
@@ -551,9 +449,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * @return void
      * @throws ReflectionException
      * @throws Exception
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     #[BootstrapConfiguration]
     private function bootstrapValidationMapping(): void
@@ -575,8 +470,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * @return void
      *
      * @throws ReflectionException
-     * @since 1.0.0
-     * @version 1.0.0
      */
     #[BootstrapConfiguration]
     private function bootstrapEvents(): void
