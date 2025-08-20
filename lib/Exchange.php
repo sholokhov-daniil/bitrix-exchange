@@ -2,19 +2,17 @@
 
 namespace Sholokhov\Exchange;
 
-use Bitrix\Main\Diag\Debug;
 use Exception;
+use Sholokhov\Exchange\Repository\MapRepository;
 use Throwable;
 use ReflectionException;
 
-use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\Bootstrap\Validator;
 use Sholokhov\Exchange\Fields\FieldInterface;
 use Sholokhov\Exchange\Helper\LoggerHelper;
 use Sholokhov\Exchange\Events\EventManager;
 use Sholokhov\Exchange\Events\ExchangeEvent;
 use Sholokhov\Exchange\Events\Factory\AttributeEventFactory;
-use Sholokhov\Exchange\Messages\Type\Result;
 use Sholokhov\Exchange\Messages\DataResultInterface;
 use Sholokhov\Exchange\Messages\ExchangeResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
@@ -29,12 +27,9 @@ use Sholokhov\Exchange\Helper\Entity;
 use Sholokhov\Exchange\Helper\FieldHelper;
 use Sholokhov\Exchange\Preparation\Chain;
 use Sholokhov\Exchange\Preparation\PreparationInterface;
-use Sholokhov\Exchange\Target\Attributes\Validate;
 use Sholokhov\Exchange\Target\Attributes\MapValidator;
 use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
 
-use Bitrix\Main\Event;
-use Bitrix\Main\EventResult;
 use Bitrix\Main\NotImplementedException;
 
 use Psr\Log\LoggerAwareTrait;
@@ -116,24 +111,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      */
     public function setMap(array $map): static
     {
-        $primaryExist = false;
-
-        foreach ($map as $field) {
-            if ($field->isPrimary()) {
-                $primaryExist = true;
-                $this->repository->set('primary_field', $field);
-            }
-
-            if ($field->isHash()) {
-                $this->repository->set('hash_field', $field);
-            }
-        }
-
-        if (!$primaryExist) {
-            throw new Exception("No key field found");
-        }
-
-        $this->repository->set('map', $map);
+        $this->getMapRepository()->setMap($map);
         return $this;
     }
 
@@ -163,7 +141,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
         if (is_callable($this->getResultRepository())) {
             $resultRepository = call_user_func($this->getResultRepository(), $this);
 
-            if (!$resultRepository instanceof ResultRepositoryInterface) {
+            if (!($resultRepository instanceof ResultRepositoryInterface)) {
                 throw new NotImplementedException('Result repository not implemented: ' . ResultRepositoryInterface::class);
             }
         }
@@ -226,7 +204,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      */
     public function getMap(): array
     {
-        return $this->repository->get('map');
+        return $this->getMapRepository()->getMap();
     }
 
     /**
@@ -306,7 +284,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      */
     final protected function getPrimaryField(): FieldInterface
     {
-        return $this->repository->get('primary_field');
+        return $this->getMapRepository()->getPrimaryField();
     }
 
     /**
@@ -316,7 +294,17 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      */
     final protected function getHashField(): ?FieldInterface
     {
-        return $this->repository->get('hash_field');
+        return $this->getMapRepository()->getHashField();
+    }
+
+    /**
+     * Хранилище карты обмена
+     *
+     * @return MapRepository
+     */
+    final protected function getMapRepository(): MapRepository
+    {
+        return $this->repository->get('map');
     }
 
     /**
@@ -419,19 +407,6 @@ abstract class Exchange extends Application implements MappingExchangeInterface
     }
 
     /**
-     * Валидация карты обмена
-     *
-     * @return ResultInterface
-     */
-    #[Validate]
-    private function mapValidate(): ResultInterface
-    {
-        return $this->repository
-            ->get('map_validator')
-            ->validate($this->getMap());
-    }
-
-    /**
      * Инициализация хранилища дополнительных данных обмена
      *
      * @return void
@@ -451,7 +426,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
      * @throws Exception
      */
     #[BootstrapConfiguration]
-    private function bootstrapValidationMapping(): void
+    private function bootstrapMap(): void
     {
         /** @var MapValidator $attribute */
         $attribute = Entity::getAttributeChain($this, MapValidator::class);
@@ -461,7 +436,7 @@ abstract class Exchange extends Application implements MappingExchangeInterface
             throw new Exception('Validator class must be subclass of ' . ValidatorInterface::class);
         }
 
-        $this->repository->set('map_validator', new $validator);
+        $this->repository->set('map', new MapRepository(new $validator));
     }
 
     /**
