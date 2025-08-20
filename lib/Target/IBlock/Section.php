@@ -83,7 +83,7 @@ class Section extends IBlock
      *
      * @version 1.1.0
      */
-    protected function exists(array $item): bool
+    public function exists(array $item): bool
     {
         $keyField = $this->getPrimaryField();
 
@@ -158,7 +158,7 @@ class Section extends IBlock
      * @return DataResultInterface
      * @throws Exception
      */
-    protected function update(array $item): DataResultInterface
+    public function update(array $item): DataResultInterface
     {
         $result = new DataResult;
         $keyField = $this->getPrimaryField();
@@ -287,7 +287,7 @@ class Section extends IBlock
      * @version 1.0.0
      * @since 1.0.0
      */
-    protected function isMultipleField(FieldInterface $field): bool
+    public function isMultipleField(FieldInterface $field): bool
     {
         $repository = $this->getFieldRepository();
         return $repository->has($field->getTo()) && $repository->get($field->getTo())['MULTIPLE'] === 'Y';

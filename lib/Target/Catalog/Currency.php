@@ -32,7 +32,7 @@ class Currency extends Exchange
      * @throws SystemException
      * @throws Exception
      */
-    protected function exists(array $item): bool
+    public function exists(array $item): bool
     {
         $keyField = $this->getPrimaryField();
 
@@ -63,7 +63,7 @@ class Currency extends Exchange
      * @return ResultInterface
      * @throws Exception
      */
-    protected function add(array $item): Result
+    public function add(array $item): Result
     {
         $result = new Result;
         $preparedItem = $this->prepareItem($item);
@@ -83,7 +83,7 @@ class Currency extends Exchange
         return $result;
     }
 
-    protected function update(array $item): Result
+    public function update(array $item): Result
     {
         // TODO: Implement update() method.
     }

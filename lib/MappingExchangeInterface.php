@@ -6,20 +6,21 @@ use Sholokhov\Exchange\Fields\FieldInterface;
 
 /**
  * Структура обмена согласно пользовательской карте
- *
- * @since 1.0.0
- * @version 1.0.0
  */
 interface MappingExchangeInterface extends ExchangeInterface
 {
+    /**
+     * Карта обмена
+     *
+     * @return array
+     */
+    public function getMap(): array;
+
     /**
      * Указание карты обмена данных
      *
      * @param FieldInterface[] $map
      * @return $this
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public function setMap(array $map): static;
 }

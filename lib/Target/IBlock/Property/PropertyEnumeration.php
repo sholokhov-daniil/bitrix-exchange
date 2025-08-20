@@ -94,7 +94,7 @@ class PropertyEnumeration extends IBlock
      * @version 1.0.0
      * @since 1.0.0
      */
-    protected function exists(array $item): bool
+    public function exists(array $item): bool
     {
         $primaryField = $this->getPrimaryField();
 
@@ -125,7 +125,7 @@ class PropertyEnumeration extends IBlock
      * @version 1.0.0
      * @since 1.0.0
      */
-    protected function add(array $item): DataResultInterface
+    public function add(array $item): DataResultInterface
     {
         $result = new DataResult;
 
@@ -162,7 +162,7 @@ class PropertyEnumeration extends IBlock
      * @version 1.0.0
      * @since 1.0.0
      */
-    protected function update(array $item): DataResultInterface
+    public function update(array $item): DataResultInterface
     {
         $result = new DataResult;
         $primaryField = $this->getPrimaryField();
@@ -205,7 +205,7 @@ class PropertyEnumeration extends IBlock
      * @since 1.0.0
      * @version 1.0.0
      */
-    protected function isMultipleField(FieldInterface $field): bool
+    public function isMultipleField(FieldInterface $field): bool
     {
         $repository = $this->getPropertyRepository()->get($field->getTo());
         return $repository && $repository['MULTIPLE'] === 'Y';

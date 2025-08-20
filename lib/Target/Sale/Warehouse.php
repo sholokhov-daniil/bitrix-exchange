@@ -35,7 +35,7 @@ class Warehouse extends Exchange
      * @version 1.1.1
      * @since 1.1.1
      */
-    protected function exists(array $item): bool
+    public function exists(array $item): bool
     {
         $keyField = $this->getPrimaryField();
         $externalId = $item[$keyField->getTo()];
@@ -65,7 +65,7 @@ class Warehouse extends Exchange
      * @version 1.1.1
      * @since 1.1.1
      */
-    protected function add(array $item): DataResultInterface
+    public function add(array $item): DataResultInterface
     {
         $result = new DataResult;
         $fields = $this->preparation($item);
@@ -99,7 +99,7 @@ class Warehouse extends Exchange
         return $result;
     }
 
-    protected function update(array $item): DataResultInterface
+    public function update(array $item): DataResultInterface
     {
         $result = new DataResult;
         $primary = $this->getPrimaryField();
@@ -139,7 +139,7 @@ class Warehouse extends Exchange
         return $result;
     }
 
-    protected function isMultipleField(FieldInterface $field): bool
+    public function isMultipleField(FieldInterface $field): bool
     {
         return false;
     }

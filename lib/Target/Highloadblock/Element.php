@@ -90,7 +90,7 @@ class Element extends Exchange
      * @throws ObjectPropertyException
      * @throws SystemException
      */
-    protected function exists(array $item): bool
+    public function exists(array $item): bool
     {
         $keyField = $this->getPrimaryField();
 
@@ -121,7 +121,7 @@ class Element extends Exchange
      * @return DataResultInterface
      * @throws Exception
      */
-    protected function add(array $item): DataResultInterface
+    public function add(array $item): DataResultInterface
     {
         $result = new DataResult;
 
@@ -159,7 +159,7 @@ class Element extends Exchange
      * @return DataResult
      * @throws Exception
      */
-    protected function update(array $item): DataResult
+    public function update(array $item): DataResult
     {
         $result = new DataResult;
         $keyField = $this->getPrimaryField();
@@ -217,7 +217,7 @@ class Element extends Exchange
      * @since 1.0.0
      * @version 1.0.0
      */
-    protected function isMultipleField(FieldInterface $field): bool
+    public function isMultipleField(FieldInterface $field): bool
     {
         $property = $this->getUfRepository()->get($field->getTo());
         return $property && $property['MULTIPLE'] === 'Y';

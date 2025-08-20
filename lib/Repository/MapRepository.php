@@ -49,7 +49,7 @@ class MapRepository
     /**
      * Установка карты обмена
      *
-     * @param array $map
+     * @param FieldInterface[] $map
      * @return void
      * @throws Exception
      */

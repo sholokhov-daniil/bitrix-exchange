@@ -50,7 +50,7 @@ class File extends Exchange
      * @throws SystemException
      * @throws Exception
      */
-    protected function exists(array $item): bool
+    public function exists(array $item): bool
     {
         $keyField = $this->getPrimaryField();
         $externalID = $this->getExternalId((string)$item[$keyField->getTo()]);
@@ -73,7 +73,7 @@ class File extends Exchange
      * @return DataResultInterface
      * @throws Exception
      */
-    protected function add(array $item): DataResultInterface
+    public function add(array $item): DataResultInterface
     {
         $result = new DataResult;
         $path = $item[$this->getPrimaryField()->getTo()];
@@ -106,7 +106,7 @@ class File extends Exchange
      * @throws Exception
      * @todo Доработать
      */
-    protected function update(array $item): DataResultInterface
+    public function update(array $item): DataResultInterface
     {
         $keyField = $this->getPrimaryField();
         $externalID = $this->getExternalId((string)$item[$keyField->getTo()]);
@@ -138,7 +138,7 @@ class File extends Exchange
      * @since 1.0.0
      * @version 1.0.0
      */
-    protected function isMultipleField(FieldInterface $field): bool
+    public function isMultipleField(FieldInterface $field): bool
     {
         return false;
     }

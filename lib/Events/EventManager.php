@@ -2,6 +2,9 @@
 
 namespace Sholokhov\Exchange\Events;
 
+use ReflectionException;
+use Sholokhov\Exchange\Events\Factory\AttributeEventFactory;
+
 /**
  * Менеджер внутренних изолированных событий
  *
@@ -20,6 +23,22 @@ class EventManager
      * @version 1.0.0
      */
     private array $events = [];
+
+    /**
+     * Инициализация диспетчера на основе объекта
+     *
+     * @param object $entity
+     * @return static
+     * @throws ReflectionException
+     */
+    public static function create(object $entity): static
+    {
+        $dispatcher = new static;
+        $events = (new AttributeEventFactory($entity))->make();
+        $dispatcher->registrationBulk($events);
+
+        return $dispatcher;
+    }
 
     /**
      * Вызов событий
