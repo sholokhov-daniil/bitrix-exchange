@@ -12,6 +12,6 @@ use Attribute;
  * @version 1.0.0
  */
 #[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_PROPERTY)]
-class BootstrapConfiguration
+class Configuration
 {
 }

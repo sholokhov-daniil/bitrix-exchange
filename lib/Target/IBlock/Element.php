@@ -25,7 +25,7 @@ use Bitrix\Main\SystemException;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Main\ObjectPropertyException;
 use Sholokhov\Exchange\Repository\IBlock\PropertyRepository;
-use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\Exchange\Target\Attributes\Configuration;
 
 /**
  * Импортирование элемента информационного блока
@@ -383,7 +383,7 @@ class Element extends IBlock
      * @version 1.0.0
      * @since 1.0.0
      */
-    #[BootstrapConfiguration]
+    #[Configuration]
     private function bootstrapPrepares(): void
     {
         $iBlockID = $this->getIBlockID();
@@ -420,7 +420,7 @@ class Element extends IBlock
      * @version 1.0.0
      * @since 1.0.0
      */
-    #[BootstrapConfiguration]
+    #[Configuration]
     private function configuration(): void
     {
         $this->repository->set('property_repository', new PropertyRepository(['iblock_id' => $this->getIBlockID()]));

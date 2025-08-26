@@ -4,7 +4,7 @@ namespace Sholokhov\Exchange\Bootstrap;
 
 use ReflectionClass;
 use ReflectionException;
-use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\Exchange\Target\Attributes\Configuration;
 
 /**
  * Производит вызов всех методов отвечающий за загрузку конфигураций обмена
@@ -56,7 +56,7 @@ class Loader
         $methods = $reflection->getMethods();
 
         foreach ($methods as $method) {
-            if ($method->getAttributes(BootstrapConfiguration::class)) {
+            if ($method->getAttributes(Configuration::class)) {
                 $method->invoke($this->exchange);
             }
         }

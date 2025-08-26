@@ -19,7 +19,7 @@ use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\Messages\Type\Error;
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Target\Attributes\Validate;
-use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\Exchange\Target\Attributes\Configuration;
 
 use Bitrix\Main\Event;
 use Bitrix\Main\EventResult as BXEventResult;
@@ -304,7 +304,7 @@ class PropertyEnumeration extends IBlock
      * @version 1.0.0
      * @since 1.0.0
      */
-    #[BootstrapConfiguration]
+    #[Configuration]
     private function bootstrapPropertyRepository(): void
     {
         $this->repository->set('property_repository', new PropertyRepository([

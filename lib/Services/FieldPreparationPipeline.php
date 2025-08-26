@@ -7,16 +7,19 @@ use Sholokhov\Exchange\Helper\FieldHelper;
 use Sholokhov\Exchange\Normalizers\ValueNormalizer;
 use Sholokhov\Exchange\Preparation\Chain;
 use Sholokhov\Exchange\Preparation\PreparationInterface;
+use Sholokhov\Exchange\Preparation\FieldPreparationPipelineInterface;
 
 /**
  * Преобразует обработку значения на основе свойства карты обмена
+ *
+ * @internal
  */
-class PreparationPipeline
+class FieldPreparationPipeline implements FieldPreparationPipelineInterface
 {
     private readonly Chain $engine;
-    private readonly ValueNormalizer $normalizer;
+    private readonly ?ValueNormalizer $normalizer;
 
-    public function __construct(ValueNormalizer $normalizer)
+    public function __construct(ValueNormalizer $normalizer = null)
     {
         $this->normalizer = $normalizer;
         $this->engine = new Chain;
@@ -35,10 +38,13 @@ class PreparationPipeline
 
         foreach ($map as $field) {
             $value = FieldHelper::getValue($item, $field);
-            $value = $this->normalizer->normalize($value, $field);
+
+            if ($this->normalizer) {
+                $value = $this->normalizer->normalize($value, $field);
+            }
 
             if (is_callable($field->getPreparation())) {
-                $value = ($field->getPreparation())($value, $field);
+                $value = call_user_func($field->getPreparation(), $value, $field);
             } else {
                 $value = $this->engine->prepare($value, $field);
             }

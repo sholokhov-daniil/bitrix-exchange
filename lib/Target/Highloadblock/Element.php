@@ -15,7 +15,7 @@ use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Repository\Fields\FieldRepositoryInterface;
 use Sholokhov\Exchange\Repository\Fields\UFRepository;
-use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\Exchange\Target\Attributes\Configuration;
 use Sholokhov\Exchange\Target\Attributes\Validate;
 
 use Sholokhov\Exchange\Messages\Type\Error;
@@ -243,7 +243,7 @@ class Element extends Exchange
      * @throws LoaderException
      * @throws SystemException
      */
-    #[BootstrapConfiguration]
+    #[Configuration]
     private function bootstrap(): void
     {
         if (!Loader::includeModule('highloadblock')) {
@@ -358,7 +358,7 @@ class Element extends Exchange
      * @version 1.0.0
      * @since 1.0.0
      */
-    #[BootstrapConfiguration]
+    #[Configuration]
     private function bootstrapPrepares(): void
     {
         $entityId = $this->getUfEntityID();

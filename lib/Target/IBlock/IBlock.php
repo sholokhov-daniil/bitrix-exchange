@@ -9,7 +9,7 @@ use Sholokhov\Exchange\Messages\Type\Result;
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Repository\IBlock\IBlockRepository;
 use Sholokhov\Exchange\Target\Attributes\Validate;
-use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\Exchange\Target\Attributes\Configuration;
 
 use Sholokhov\Exchange\Messages\Type\Error;
 use Bitrix\Main\Loader;
@@ -113,7 +113,7 @@ abstract class IBlock extends Exchange
      * @since 1.0.0
      * @version 1.0.0
      */
-    #[BootstrapConfiguration]
+    #[Configuration]
     private function bootstrapIBlockRepository(): void
     {
         $this->repository->set('iblock_info', new IBlockRepository($this->getIBlockID()));

@@ -10,7 +10,7 @@ use Sholokhov\Exchange\Fields\Catalog\CatalogFieldInterface;
 use Sholokhov\Exchange\Fields\Catalog\PriceFieldInterface;
 use Sholokhov\Exchange\Messages\DataResultInterface;
 use Sholokhov\Exchange\Messages\ResultInterface;
-use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\Exchange\Target\Attributes\Configuration;
 use Sholokhov\Exchange\Target\Attributes\Event;
 use Sholokhov\Exchange\Target\IBlock\Element;
 
@@ -104,7 +104,7 @@ class SimpleProduct extends Element
      * @since 1.0.0
      * @version 1.0.0
      */
-    #[BootstrapConfiguration]
+    #[Configuration]
     private function bootstrapModules(): void
     {
         if (!Loader::includeModule("catalog")) {

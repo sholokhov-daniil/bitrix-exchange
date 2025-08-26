@@ -43,6 +43,13 @@ interface ExchangeInterface extends LoggerAwareInterface
     public function add(array $item): DataResultInterface;
 
     /**
+     * Деактивация элементов сущности, которые не пришли в обмене
+     *
+     * @return void
+     */
+    public function deactivate(): void;
+
+    /**
      * Свойство является множественным
      *
      * @param FieldInterface $field

@@ -29,7 +29,7 @@ use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\Type\DateTime;
 use Sholokhov\Exchange\Repository\Fields\UFRepository;
-use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\Exchange\Target\Attributes\Configuration;
 
 /**
  * Импорт разделов информационного блока
@@ -301,7 +301,7 @@ class Section extends IBlock
      * @version 1.0.0
      * @since 1.0.0
      */
-    #[BootstrapConfiguration]
+    #[Configuration]
     private function configuration(): void
     {
         $this->repository->set('uf_repository', new UFRepository(['entity_id' => 'IBLOCK_' . $this->getIBlockID() . '_SECTION']));
@@ -389,7 +389,7 @@ class Section extends IBlock
      * @version 1.0.0
      * @since 1.0.0
      */
-    #[BootstrapConfiguration]
+    #[Configuration]
     private function bootstrapPrepares(): void
     {
         $entityId = $this->getUfEntityID();

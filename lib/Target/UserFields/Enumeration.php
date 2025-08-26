@@ -17,7 +17,7 @@ use Sholokhov\Exchange\Messages\Type\ExchangeResult;
 use Sholokhov\Exchange\Messages\Type\Result;
 use Sholokhov\Exchange\Repository\Fields\UFRepository;
 use Sholokhov\Exchange\Target\Attributes\Validate;
-use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
+use Sholokhov\Exchange\Target\Attributes\Configuration;
 
 use Bitrix\Main\Event;
 use Sholokhov\Exchange\Messages\Type\Error;
@@ -210,7 +210,7 @@ class Enumeration extends Exchange
      * @version 1.0.0
      * @since 1.0.0
      */
-    #[BootstrapConfiguration]
+    #[Configuration]
     private function bootstrapUserFieldRepository(): void
     {
         $this->repository->set('uf_repository', new UFRepository([

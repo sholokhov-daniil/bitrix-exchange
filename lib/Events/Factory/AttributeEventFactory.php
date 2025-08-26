@@ -7,16 +7,12 @@ use ReflectionMethod;
 use ReflectionException;
 
 use Sholokhov\Exchange\Helper\Entity;
-use Sholokhov\Exchange\Events\Event;
-use Sholokhov\Exchange\Events\EventInterface;
 use Sholokhov\Exchange\Target\Attributes\Event as Attribute;
 
 /**
  * Создает объекты события, которые зарегистрированы в объекте посредством атрибутов
  *
  * @package Event
- * @since 1.0.0
- * @version 1.0.0
  */
 readonly class AttributeEventFactory
 {
@@ -24,16 +20,11 @@ readonly class AttributeEventFactory
      * Объект у которого производится поиск обработчиков
      *
      * @var object
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     private object $entity;
 
     /**
      * @param object $entity Объект у которого производится поиск обработчиков
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public function __construct(object $entity)
     {
@@ -43,15 +34,14 @@ readonly class AttributeEventFactory
     /**
      * Создание объектов события
      *
-     * @return EventInterface[]
+     * @return callable[][]
      * @throws ReflectionException
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public function make(): array
     {
-        return array_map(function(array $item) {
+        $result = [];
+
+        foreach ($this->parsing() as $item) {
             /** @var ReflectionMethod $method */
             $method = $item['method'];
 
@@ -60,9 +50,13 @@ readonly class AttributeEventFactory
 
             $context = $method->isStatic() ? null : $this->entity;
             $callback = $method->getClosure($context);
+            $type = $attribute->getType()->value;
 
-            return new Event($attribute->getType()->value, $callback);
-        }, $this->parsing());
+
+            $result[$type][] = $callback;
+        }
+
+        return $result;
     }
 
     /**
@@ -70,9 +64,6 @@ readonly class AttributeEventFactory
      *
      * @return ReflectionMethod[]
      * @throws ReflectionException
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     private function parsing(): array
     {

@@ -2,15 +2,15 @@
 
 namespace Sholokhov\Exchange\Normalizers;
 
+use Sholokhov\Exchange\ExchangeInterface;
 use Sholokhov\Exchange\Fields\FieldInterface;
-use Sholokhov\Exchange\MappingExchangeInterface;
 
 /**
  * Нормализует импортируемые значения
  */
-class ValueNormalizer
+class ValueNormalizer implements NormalizerInterface
 {
-    public function __construct(private readonly MappingExchangeInterface $exchange)
+    public function __construct(private readonly ExchangeInterface $exchange)
     {
     }
 
