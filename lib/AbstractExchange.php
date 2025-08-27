@@ -2,59 +2,62 @@
 
 namespace Sholokhov\Exchange;
 
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
-use Psr\Log\LoggerAwareInterface;
+use Throwable;
+use ReflectionException;
+
 use Sholokhov\Exchange\Builder\ExchangeResultBuilder;
-use Sholokhov\Exchange\Dispatcher\EventDispatchableInterface;
 use Sholokhov\Exchange\Dispatcher\EventDispatchableTrait;
 use Sholokhov\Exchange\Factory\Exchange\ProcessorFactory;
 use Sholokhov\Exchange\Factory\Exchange\ValidatorFactory;
 use Sholokhov\Exchange\Processor\ProcessorInterface;
+use Sholokhov\Exchange\Repository\RepositoryInterface;
 use Sholokhov\Exchange\Repository\Types\Memory;
 use Sholokhov\Exchange\Target\Attributes\Event;
-use Throwable;
-
 use Sholokhov\Exchange\Events\ExchangeEvent;
 use Sholokhov\Exchange\Messages\ExchangeResultInterface;
 use Sholokhov\Exchange\Messages\Type\Error;
 
+use Bitrix\Main\NotImplementedException;
+
 use Psr\Log\LoggerAwareTrait;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Базовый класс обмена данными
- *
- *  <b>Методы отвечающие за конфигурацию обмена:</b>
- *  <ul>
- *      <li>{@see self::bootstrapEvents()} - Инициализация системных событий</li>
- *      <li>{@see self::bootstrapValidationMapping()} - Инициализация механизма валидации карты обмена</li>
- *      <li>{@see self::bootstrapRepository()} - Инициализация хранилища объекта обмена</li>
- *  </ul>
- *
- *  <b>Методы отвечающие за валидацию конфигурации обмена:</b>
- *  <ul>
- *      <li>{@see self::mapValidate()} - Проверка корректности карты обмена</li>
- *  </ul>
  */
-abstract class Exchange implements ExchangeInterface, EventDispatcherInterface
+abstract class AbstractExchange implements ExchangeInterface, EventDispatcherInterface
 {
-    use LoggerAwareTrait, EventDispatchableTrait;
+    use LoggerAwareTrait,
+        EventDispatchableTrait;
 
     protected readonly ProcessorInterface $processor;
     protected readonly Memory $repository;
     protected readonly Memory $options;
     protected array $validators;
+    protected readonly RepositoryInterface $cache;
 
     public function __construct(array $options = [])
     {
         $this->processor = ProcessorFactory::create($this);
         $this->validators = ValidatorFactory::create($this);
         $this->repository = new Memory;
+
+        // TODO: Необходимо создать нормализовать параметры
         $this->options = new Memory($options);
+        $this->cache = new Memory;
     }
 
+    /**
+     * @param iterable $source
+     * @return ExchangeResultInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws NotImplementedException
+     * @throws ReflectionException
+     */
     public function execute(iterable $source): ExchangeResultInterface
     {
         $result = $this->createResult();
@@ -67,8 +70,8 @@ abstract class Exchange implements ExchangeInterface, EventDispatcherInterface
         $this->beforeRunEvent();
 
         try {
-            if ($this->logger && $this->processor instanceof LoggerAwareInterface) {
-                $this->processor->setLogger($this->logger);
+            if ($this->logger) {
+                $this->processor?->setLogger($this->logger);
             }
 
             $this->processor->run($source, $result);
@@ -150,6 +153,8 @@ abstract class Exchange implements ExchangeInterface, EventDispatcherInterface
      * Событие перед запуском обмена
      *
      * @return void
+     * @throws NotImplementedException
+     * @throws ReflectionException
      */
     private function beforeRunEvent(): void
     {
@@ -161,6 +166,8 @@ abstract class Exchange implements ExchangeInterface, EventDispatcherInterface
      * Событие после окончания обмена
      *
      * @return void
+     * @throws NotImplementedException
+     * @throws ReflectionException
      */
     private function afterRunEvent(): void
     {

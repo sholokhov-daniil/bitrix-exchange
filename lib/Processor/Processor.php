@@ -92,7 +92,6 @@ class Processor implements ProcessorInterface, LoggerAwareInterface
     protected function processItem(array $item): DataResultInterface
     {
         $prepared = $this->pipeline->prepare($item, $this->engine->getMap());
-
         $prepared = $this->dispatcher?->beforeImportItem($prepared);
 
         if ($this->engine->exists($prepared)) {

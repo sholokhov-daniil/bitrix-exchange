@@ -6,7 +6,7 @@ use Exception;
 use CUserFieldEnum;
 
 use Sholokhov\Exchange\Exception\Target\ExchangeItemStoppedException;
-use Sholokhov\Exchange\Exchange;
+use Sholokhov\Exchange\AbstractExchange;
 use Sholokhov\Exchange\Fields\FieldInterface;
 use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\Messages\DataResultInterface;
@@ -23,7 +23,7 @@ use Bitrix\Main\Event;
 use Sholokhov\Exchange\Messages\Type\Error;
 use Bitrix\Main\EventResult as BXEventResult;
 
-class Enumeration extends Exchange
+class Enumeration extends AbstractExchange
 {
     /**
      * @version 1.0.0

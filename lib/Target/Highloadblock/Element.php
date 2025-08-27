@@ -10,7 +10,7 @@ use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Messages\Type\EventResult;
 use Sholokhov\Exchange\Messages\Type\Result;
 use Sholokhov\Exchange\Preparation\UserField as Prepare;
-use Sholokhov\Exchange\Exchange;
+use Sholokhov\Exchange\AbstractExchange;
 use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Repository\Fields\FieldRepositoryInterface;
@@ -32,7 +32,7 @@ use Bitrix\Highloadblock\HighloadBlockTable as HLT;
 /**
  * @package Target
  */
-class Element extends Exchange
+class Element extends AbstractExchange
 {
     public const BEFORE_UPDATE_EVENT = 'onBeforeHighloadblockElementUpdate';
     public const AFTER_UPDATE_EVENT = 'onAfterHighloadblockElementUpdate';
