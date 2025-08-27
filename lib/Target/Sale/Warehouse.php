@@ -12,6 +12,7 @@ use Bitrix\Main\SystemException;
 use CUserTypeEntity;
 use Exception;
 use Sholokhov\Exchange\AbstractExchange;
+use Sholokhov\Exchange\ExchangeMapTrait;
 use Sholokhov\Exchange\Fields\FieldInterface;
 use Sholokhov\Exchange\Messages\DataResultInterface;
 use Sholokhov\Exchange\Messages\ResultInterface;
@@ -23,6 +24,8 @@ use Sholokhov\Exchange\Target\Attributes\Validate;
 
 class Warehouse extends AbstractExchange
 {
+    use ExchangeMapTrait;
+
     /**
      * Проверка наличия склада
      *

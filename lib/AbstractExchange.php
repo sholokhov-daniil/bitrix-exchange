@@ -39,6 +39,10 @@ abstract class AbstractExchange implements ExchangeInterface, EventDispatcherInt
     protected array $validators;
     protected readonly RepositoryInterface $cache;
 
+    public function deactivate(): void
+    {
+    }
+
     public function __construct(array $options = [])
     {
         $this->processor = ProcessorFactory::create($this);
@@ -82,6 +86,18 @@ abstract class AbstractExchange implements ExchangeInterface, EventDispatcherInt
         $this->afterRunEvent();
 
         return $result;
+    }
+
+    /**
+     * Получение хэша импорта
+     *
+     * @return string
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function getHash(): string
+    {
+        return (string)$this->getOptions()->get('hash', '');
     }
 
     /**
