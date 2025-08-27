@@ -10,13 +10,23 @@ use Illuminate\Support\Arr;
 class Helper
 {
     /**
-     * Псевдо-идентификатор модуля
+     * ID текущего модуля
      *
      * @return string
      */
     public static function getModuleID(): string
     {
-        return 'sholokhov.exchange';
+        return GetModuleID(self::getRootDir());
+    }
+
+    /**
+     * Путь до корня модуля
+     *
+     * @return string
+     */
+    public static function getRootDir(): string
+    {
+        return dirname(__DIR__, 2);
     }
 
     /**
