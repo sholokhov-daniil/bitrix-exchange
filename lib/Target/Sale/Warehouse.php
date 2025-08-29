@@ -2,53 +2,60 @@
 
 namespace Sholokhov\Exchange\Target\Sale;
 
-use Bitrix\Catalog\StoreTable;
-use Bitrix\Main\ArgumentException;
-use Bitrix\Main\Diag\Debug;
-use Bitrix\Main\Loader;
-use Bitrix\Main\LoaderException;
-use Bitrix\Main\ObjectPropertyException;
-use Bitrix\Main\SystemException;
-use CUserTypeEntity;
 use Exception;
+
+use Sholokhov\Exchange\AbstractApplication;
 use Sholokhov\Exchange\AbstractExchange;
+use Sholokhov\Exchange\Dispatcher\ExternalEventDispatcher;
+use Sholokhov\Exchange\Dispatcher\ExternalEventTypes;
+use Sholokhov\Exchange\Events\ExchangeEvent;
 use Sholokhov\Exchange\ExchangeMapTrait;
 use Sholokhov\Exchange\Fields\FieldInterface;
 use Sholokhov\Exchange\Messages\DataResultInterface;
-use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Messages\Type\Error;
-use Sholokhov\Exchange\Messages\Type\EventResult;
-use Sholokhov\Exchange\Messages\Type\Result;
-use Sholokhov\Exchange\Target\Attributes\Validate;
+use Sholokhov\Exchange\Repository\Fields\UFRepository;
+use Sholokhov\Exchange\Target\Attributes\Event;
 
+use Bitrix\Catalog\StoreTable;
+use Bitrix\Main\ArgumentException;
+use Bitrix\Main\ObjectPropertyException;
+use Bitrix\Main\SystemException;
+
+/**
+ * Производит импорт складов
+ */
 class Warehouse extends AbstractExchange
 {
     use ExchangeMapTrait;
 
+    protected UFRepository $ufRepository;
+
     /**
-     * Проверка наличия склада
+     * Получение ID значения из кеша
+     *
+     * @param array $item
+     * @return int
+     */
+    protected function resolveId(array $item): int
+    {
+        $key = $this->getPrimaryField()->getTo();
+        return (int)$this->cache->get($item[$key]);
+    }
+
+    /**
+     * Логика проверки наличия элемента
      *
      * @param array $item
      * @return bool
-     * @throws ArgumentException
-     * @throws ObjectPropertyException
-     * @throws SystemException
-     *
-     * @version 1.1.1
-     * @since 1.1.1
      */
-    public function exists(array $item): bool
+    protected function doExist(array $item): bool
     {
-        $keyField = $this->getPrimaryField();
-        $externalId = $item[$keyField->getTo()];
-
-        if ($this->cache->has($externalId)) {
-            return true;
-        }
+        $fieldKey = $this->getPrimaryField()->getTo();
+        $externalId = $item[$fieldKey];
 
         $select = ['ID'];
-        $filter = [$keyField->getTo() => $externalId];
+        $filter = [$fieldKey=> $externalId];
         $store = StoreTable::getRow(compact('filter', 'select'));
 
         if ($store) {
@@ -59,21 +66,20 @@ class Warehouse extends AbstractExchange
         return false;
     }
 
+
     /**
      * Логика создания склада
      *
      * @param array $item
      * @return DataResultInterface
      * @throws Exception
-     * @version 1.1.1
-     * @since 1.1.1
      */
     public function add(array $item): DataResultInterface
     {
         $result = new DataResult;
         $fields = $this->preparation($item);
 
-        $beforeAdd = $this->beforeAdd($fields);
+        $beforeAdd = $this->eventDispatcher?->beforeAdd($item);
         if (!$beforeAdd->isSuccess()) {
             return $result->addErrors($beforeAdd->getErrors());
         }
@@ -82,22 +88,25 @@ class Warehouse extends AbstractExchange
             return $result;
         }
 
-        $addResult = StoreTable::add($fields);
+        $addResult = StoreTable::add($fields['FIELDS']);
         if (!$addResult->isSuccess()) {
             return $result->addError(
                 new Error(
                     'An error occurred when creating the warehouse: ' . implode('.', $addResult->getErrorMessages()),
-                    500,
-                    $item
+                    500
                 )
             );
         }
+
+        if (!$this->setUserFields($addResult->getId(), $fields['UF'])) {
+            $result->addError(new Error('Error update user fields'));
+        };
 
         $primary = $this->getPrimaryField();
         $this->cache->set($item[$primary->getTo()], $addResult->getId());
         $result->setData($addResult->getId());
 
-        // TODO: Event
+        $this->eventDispatcher?->afterAdd($fields, $result);
 
         return $result;
     }
@@ -111,7 +120,7 @@ class Warehouse extends AbstractExchange
         $id = (int)$this->cache->get($externalId);
         $fields = $this->preparation($item);
 
-        $beforeUpdate = $this->beforeUpdate($id, $fields);
+        $beforeUpdate = $this->eventDispatcher?->beforeUpdate($id, $fields);
         if (!$beforeUpdate->isSuccess()) {
             return $result->addErrors($beforeUpdate->getErrors());
         }
@@ -125,8 +134,7 @@ class Warehouse extends AbstractExchange
             return $result->addError(
                 new Error(
                     'An error occurred when updating warehouse: ' . implode('.', $updateResult->getErrorMessages()),
-                    500,
-                    $item
+                    500
                 )
             );
         }
@@ -137,13 +145,27 @@ class Warehouse extends AbstractExchange
 
         $result->setData($id);
 
-        // TODO: EVENT
+        $this->eventDispatcher?->afterUpdate($id, $fields, $result);
 
         return $result;
     }
 
+    /**
+     * Проверка множественности значения
+     *
+     * @param FieldInterface $field
+     * @return bool
+     */
     public function isMultipleField(FieldInterface $field): bool
     {
+        $code = $field->getTo();
+
+        if ($this->isUserField($code)) {
+            $uf = $this->ufRepository->get($code);
+            return $uf['MULTIPLE'] === 'Y';
+
+        }
+
         return false;
     }
 
@@ -158,7 +180,7 @@ class Warehouse extends AbstractExchange
     private function setUserFields(int $id, array $fields): bool
     {
         global $USER_FIELD_MANAGER;
-        return $USER_FIELD_MANAGER->Update('CAT_STORE', $id, $fields);
+        return $USER_FIELD_MANAGER->Update($this->ufRepository->getId(), $id, $fields);
     }
 
     /**
@@ -166,8 +188,6 @@ class Warehouse extends AbstractExchange
      *
      * @param array $fields
      * @return array{UF: array, FIELDS: array}
-     * @since 1.1.1
-     * @version 1.1.1
      */
     private function preparation(array $fields): array
     {
@@ -181,46 +201,74 @@ class Warehouse extends AbstractExchange
         }
 
         foreach ($fields as $code => $value) {
-            $group = str_starts_with($code, 'UF_') ? 'UF' : 'FIELDS';
+            $group = $this->isUserField($code) ? 'UF' : 'FIELDS';
             $result[$group][$code] = $value;
         }
 
         return $result;
     }
 
-    private function beforeAdd(array $fields): EventResult
+    /**
+     * Код свойства относится к пользовательским полням
+     *
+     * @param string $code
+     * @return bool
+     */
+    private function isUserField(string $code): bool
     {
-        // TODO: Logic
-        $result = new EventResult;
-
-        return $result;
-    }
-
-    private function beforeUpdate(int $id, array $fields): EventResult
-    {
-        // TODO: Logic
-        $result = new EventResult;
-
-        return $result;
+        return str_starts_with($code, 'UF_');
     }
 
     /**
-     * Проверка доступности модулей
+     * Инициализация событий обмена
      *
-     * @return ResultInterface
-     * @throws LoaderException
-     * @since 1.1.1
-     * @version 1.1.1
+     * @return void
      */
-    #[Validate]
-    private function checkModules(): ResultInterface
+    #[Event(ExchangeEvent::BeforeRun)]
+    private function beforeRun(): void
     {
-        $result = new Result;
+        $this->ufRepository = new UFRepository(['entity_id' => 'CAT_STORE']);
 
-        if (!Loader::includeModule('catalog')) {
-            $result->addError(new Error('Module "catalog" not installed'));
+        $types = new ExternalEventTypes;
+        $types->beforeUpdate = 'onBeforeWarehouseUpdate';
+        $types->afterUpdate = 'onAfterWarehouseUpdate';
+        $types->beforeAdd = 'onBeforeWarehouseAdd';
+        $types->afterAdd = 'onAfterWarehouseAdd';
+
+        $this->eventDispatcher = new ExternalEventDispatcher($types, $this);
+
+        if ($this->logger) {
+            $this->eventDispatcher->setLogger($this->logger);
         }
+    }
 
-        return $result;
+    protected function doAdd(array $fields): DataResultInterface
+    {
+        // TODO: Implement doAdd() method.
+    }
+
+    protected function doUpdate(int $id, array $fields): DataResultInterface
+    {
+        // TODO: Implement doUpdate() method.
+    }
+
+    protected function doExist(array $item): bool
+    {
+        // TODO: Implement doExist() method.
+    }
+
+    protected function prepareForAdd(array $item): array
+    {
+        // TODO: Implement prepareForAdd() method.
+    }
+
+    protected function prepareForUpdate(array $item): array
+    {
+        // TODO: Implement prepareForUpdate() method.
+    }
+
+    protected function resolveId(array $item): int
+    {
+        // TODO: Implement resolveId() method.
     }
 }

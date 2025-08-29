@@ -2,192 +2,124 @@
 
 namespace Sholokhov\Exchange;
 
-use Throwable;
-use ReflectionException;
+use Sholokhov\Exchange\Dispatcher\ExternalEventDispatcher;
+use Sholokhov\Exchange\Messages\DataResultInterface;
 
-use Sholokhov\Exchange\Builder\ExchangeResultBuilder;
-use Sholokhov\Exchange\Dispatcher\EventDispatchableTrait;
-use Sholokhov\Exchange\Factory\Exchange\ProcessorFactory;
-use Sholokhov\Exchange\Factory\Exchange\ValidatorFactory;
-use Sholokhov\Exchange\Processor\ProcessorInterface;
-use Sholokhov\Exchange\Repository\RepositoryInterface;
-use Sholokhov\Exchange\Repository\Types\Memory;
-use Sholokhov\Exchange\Target\Attributes\Event;
-use Sholokhov\Exchange\Events\ExchangeEvent;
-use Sholokhov\Exchange\Messages\ExchangeResultInterface;
-use Sholokhov\Exchange\Messages\Type\Error;
-
-use Bitrix\Main\NotImplementedException;
-
-use Psr\Log\LoggerAwareTrait;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
-
-/**
- * Базовый класс обмена данными
- */
-abstract class AbstractExchange implements ExchangeInterface, EventDispatcherInterface
+abstract class AbstractExchange extends AbstractApplication
 {
-    use LoggerAwareTrait,
-        EventDispatchableTrait;
+    protected readonly ExternalEventDispatcher $externalEventDispatcher;
 
-    protected readonly ProcessorInterface $processor;
-    protected readonly Memory $repository;
-    protected readonly Memory $options;
-    protected array $validators;
-    protected readonly RepositoryInterface $cache;
+    /**
+     * Логика добавления элемента сущности
+     *
+     * @param array $fields
+     * @return DataResultInterface
+     */
+    abstract protected function doAdd(array $fields): DataResultInterface;
 
-    public function deactivate(): void
+    /**
+     * Логика обновления значения
+     *
+     * @param int $id
+     * @param array $fields Обновляемый набор параметров
+     * @return DataResultInterface
+     */
+    abstract protected function doUpdate(int $id, array $fields): DataResultInterface;
+
+    /**
+     * Логика проверки наличия элемента сущности
+     *
+     * @param array $item
+     * @return bool
+     */
+    abstract protected function doExist(array $item): bool;
+
+    /**
+     * Преобразование данных, для добавления элемента сущности
+     *
+     * @param array $item
+     * @return array
+     */
+    abstract protected function prepareForAdd(array $item): array;
+
+    /**
+     * Преобразование данных для обновления
+     *
+     * @param array $item
+     * @return array
+     */
+    abstract protected function prepareForUpdate(array $item): array;
+
+    /**
+     * Получение ID элемента сущности
+     *
+     * @param array $item
+     * @return int
+     */
+    abstract protected function resolveId(array $item): int;
+
+    /**
+     * Проверяет наличие элемента
+     *
+     * @final
+     * @param array $item
+     * @return bool
+     */
+    final public function exists(array $item): bool
     {
-    }
-
-    public function __construct(array $options = [])
-    {
-        $this->processor = ProcessorFactory::create($this);
-        $this->validators = ValidatorFactory::create($this);
-        $this->repository = new Memory;
-
-        // TODO: Необходимо создать нормализовать параметры
-        $this->options = new Memory($options);
-        $this->cache = new Memory;
+        return $this->resolveId($item) ?: $this->doExist($item);
     }
 
     /**
-     * @param iterable $source
-     * @return ExchangeResultInterface
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @throws NotImplementedException
-     * @throws ReflectionException
+     * Обновление элемента сущности
+     *
+     * @final
+     * @param array $item
+     * @return DataResultInterface
      */
-    public function execute(iterable $source): ExchangeResultInterface
+    final public function update(array $item): DataResultInterface
     {
-        $result = $this->createResult();
+       $fields = $this->prepareForUpdate($item);
+       $id = $this->resolveId($item);
 
-        $this->validate($result);
-        if (!$result->isSuccess()) {
-            return $result;
+        $beforeUpdate = $this->externalEventDispatcher?->beforeUpdate($id, $fields);
+        if (!$beforeUpdate->isSuccess()) {
+            return $beforeUpdate;
         }
 
-        $this->beforeRunEvent();
-
-        try {
-            if ($this->logger) {
-                $this->processor?->setLogger($this->logger);
-            }
-
-            $this->processor->run($source, $result);
-        } catch (Throwable $e) {
-            $this->handleException($e, $result);
+        if ($beforeUpdate->isStopped()) {
+            return $beforeUpdate;
         }
 
-        $this->afterRunEvent();
+        $result = $this->doUpdate($id, $item);
+        $this->externalEventDispatcher?->afterUpdate($id, $fields, $result);
 
         return $result;
     }
 
     /**
-     * Получение хэша импорта
+     * Добавление элемента в сущность
      *
-     * @return string
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @final
+     * @param array $item
+     * @return DataResultInterface
      */
-    public function getHash(): string
+    final public function add(array $item): Messages\DataResultInterface
     {
-        return (string)$this->getOptions()->get('hash', '');
-    }
+        $fields = $this->prepareForAdd($item);
 
-    /**
-     * Получение конфигурации обмена
-     *
-     * @return ContainerInterface
-     */
-    public function getOptions(): ContainerInterface
-    {
-        return $this->options;
-    }
-
-    /**
-     * Получение генератора хранилища
-     *
-     * @return callable|null
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    protected function getResultRepositoryFactory(): ?callable
-    {
-        return $this->getOptions()->get('result_repository') ?: null;
-    }
-
-    /**
-     * Создание объекта хранения результатов обмена
-     *
-     * @return ExchangeResultInterface
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    protected function createResult(): ExchangeResultInterface
-    {
-        $factory = $this->getResultRepositoryFactory();
-        return ExchangeResultBuilder::create($this, $factory);
-    }
-
-    /**
-     * Обработка ошибки обмена
-     *
-     * @param Throwable $exception
-     * @param ExchangeResultInterface $result
-     * @return void
-     */
-    protected function handleException(Throwable $exception, ExchangeResultInterface $result): void
-    {
-        $this->logger?->error($exception->getMessage(), ['exception' => $exception]);
-        $result->addError(new Error($exception->getMessage()));
-    }
-
-    /**
-     * Валидация обмена
-     *
-     * @param ExchangeResultInterface $result
-     * @return void
-     */
-    protected function validate(ExchangeResultInterface $result): void
-    {
-        foreach ($this->validators as $validator) {
-            $validateResult = $validator->validate($this);
-
-            if (!$validateResult->isSuccess()) {
-                $result->addErrors($validateResult->getErrors());
-            }
+        $beforeAdd = $this->externalEventDispatcher?->beforeAdd($fields);
+        if (!$beforeAdd->isSuccess()) {
+            return $beforeAdd;
         }
-    }
 
-    /**
-     * Событие перед запуском обмена
-     *
-     * @return void
-     * @throws NotImplementedException
-     * @throws ReflectionException
-     */
-    private function beforeRunEvent(): void
-    {
-        $this->repository->set('date_up', time());
-        $this->dispatch(new Events\Event(ExchangeEvent::BeforeRun->value));
-    }
+        if ($beforeAdd->isStopped()) {
+            return $beforeAdd;
+        }
 
-    /**
-     * Событие после окончания обмена
-     *
-     * @return void
-     * @throws NotImplementedException
-     * @throws ReflectionException
-     */
-    private function afterRunEvent(): void
-    {
-        $this->dispatch(new Events\Event(ExchangeEvent::AfterRun->value));
-        $this->repository->set('date_up', 0);
+        $result = $this->doAdd($fields);
+        $this->externalEventDispatcher->afterAdd($fields, $result);
+
+        return $result;
     }
 }

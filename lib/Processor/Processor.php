@@ -2,10 +2,11 @@
 
 namespace Sholokhov\Exchange\Processor;
 
+use Sholokhov\Exchange\Preparation\PreparationInterface;
 use Throwable;
 
 use Sholokhov\Exchange\ExchangeInterface;
-use Sholokhov\Exchange\Dispatcher\ExchangeEventDispatcher;
+use Sholokhov\Exchange\Dispatcher\InternalEventDispatcher;
 use Sholokhov\Exchange\Factory\Exchange\FieldPreparationPipelineFactory;
 use Sholokhov\Exchange\Messages\DataResultInterface;
 use Sholokhov\Exchange\Messages\ExchangeResultInterface;
@@ -18,6 +19,7 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Процесс выполнения обмена данных
+ * @internal
  */
 class Processor implements ProcessorInterface, LoggerAwareInterface
 {
@@ -40,15 +42,15 @@ class Processor implements ProcessorInterface, LoggerAwareInterface
     /**
      * Диспетчер событий обмена
      *
-     * @var ExchangeEventDispatcher|null
+     * @var InternalEventDispatcher|null
      */
-    private readonly ?ExchangeEventDispatcher $dispatcher;
+    private readonly ?InternalEventDispatcher $dispatcher;
 
     public function __construct(ExchangeInterface $engine)
     {
         $this->engine = $engine;
         $this->pipeline = FieldPreparationPipelineFactory::create($engine);
-        $this->dispatcher = $engine instanceof EventDispatcherInterface ? new ExchangeEventDispatcher($engine) : null;
+        $this->dispatcher = $engine instanceof EventDispatcherInterface ? new InternalEventDispatcher($engine) : null;
     }
 
     /**
@@ -61,7 +63,7 @@ class Processor implements ProcessorInterface, LoggerAwareInterface
     public function run(iterable $source, ExchangeResultInterface $result): void
     {
         foreach ($source as $item) {
-            try {
+//            try {
                 if ($this->isInvalidItem($item, $result)) {
                     continue;
                 }
@@ -75,11 +77,23 @@ class Processor implements ProcessorInterface, LoggerAwareInterface
                 if ($data = $processResult->getData()) {
                     $result->getData()?->add($data);
                 }
-            } catch (Throwable $throwable) {
-                $this->logger?->critical($throwable->getMessage());
-                $result->addError(new Error($throwable->getMessage()));
-            }
+//            } catch (Throwable $throwable) {
+//                $this->logger?->critical($throwable->getMessage());
+//                $result->addError(new Error($throwable->getMessage()));
+//            }
         }
+    }
+
+    /**
+     * Добавление преобразователя данных
+     *
+     * @param PreparationInterface $preparation
+     * @return $this
+     */
+    public function addPrepared(PreparationInterface $preparation): static
+    {
+        $this->pipeline->add($preparation);
+        return $this;
     }
 
     /**

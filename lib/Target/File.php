@@ -5,7 +5,10 @@ namespace Sholokhov\Exchange\Target;
 use CFile;
 use Exception;
 
-use Sholokhov\Exchange\AbstractExchange;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Sholokhov\Exchange\AbstractApplication;
+use Sholokhov\Exchange\ExchangeMapTrait;
 use Sholokhov\Exchange\Fields\FieldInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Messages\DataResultInterface;
@@ -21,23 +24,15 @@ use Bitrix\Main\ObjectPropertyException;
  *
  * @todo Переделать логику
  * @package Target
- * @version 1.0.0
  */
-class File extends AbstractExchange
+class File extends AbstractApplication
 {
-    /**
-     * Обработка конфигураций обмена
-     *
-     * @param array $options
-     * @return array
-     */
-    protected function normalizeOptions(array $options): array
-    {
-        if (empty($options['module_id']) || !is_string($options['module_id'])) {
-            $options['module_id'] = 'iblock';
-        }
+    use ExchangeMapTrait;
 
-        return parent::normalizeOptions($options);
+    public function __construct(array $options = [])
+    {
+        parent::__construct($options);
+        $this->normalizeOptions();
     }
 
     /**
@@ -71,7 +66,8 @@ class File extends AbstractExchange
      *
      * @param array $item
      * @return DataResultInterface
-     * @throws Exception
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function add(array $item): DataResultInterface
     {
@@ -103,7 +99,8 @@ class File extends AbstractExchange
      *
      * @param array $item
      * @return DataResultInterface
-     * @throws Exception
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @todo Доработать
      */
     public function update(array $item): DataResultInterface
@@ -119,6 +116,17 @@ class File extends AbstractExchange
     }
 
     /**
+     * Проверка, что свойство является множественным
+     *
+     * @param FieldInterface $field
+     * @return bool
+     */
+    public function isMultipleField(FieldInterface $field): bool
+    {
+        return false;
+    }
+
+    /**
      * Получение внешнего идентификатора файла
      *
      * @param string $path
@@ -130,16 +138,14 @@ class File extends AbstractExchange
     }
 
     /**
-     * Проверка, что свойство является множественным
+     * Обработка конфигураций обмена
      *
-     * @param FieldInterface $field
-     * @return bool
-     *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @return void
      */
-    public function isMultipleField(FieldInterface $field): bool
+    private function normalizeOptions(): void
     {
-        return false;
+        if (!$this->options->get('module_id')) {
+            $this->options->set('module_id', 'main');
+        }
     }
 }

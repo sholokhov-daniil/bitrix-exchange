@@ -6,17 +6,11 @@ use Sholokhov\Exchange\Messages\DataResultInterface;
 
 /**
  * Результата работы с произвольными данными
- *
- * @since 1.0.0
- * @version 1.0.0
  */
 class DataResult extends Result implements DataResultInterface
 {
     /**
      * @var mixed|null
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     protected mixed $data = null;
 
@@ -25,9 +19,6 @@ class DataResult extends Result implements DataResultInterface
      *
      * @param mixed $data
      * @return DataResultInterface
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public function setData(mixed $data): DataResultInterface
     {
@@ -39,9 +30,6 @@ class DataResult extends Result implements DataResultInterface
      * Получение дополнительной информации результата выполнения
      *
      * @return mixed
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public function getData(): mixed
     {

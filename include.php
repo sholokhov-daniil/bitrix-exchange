@@ -17,3 +17,5 @@ array_walk(
     }
 );
 unset($bootstrapIterator);
+
+@require_once 'events.php';

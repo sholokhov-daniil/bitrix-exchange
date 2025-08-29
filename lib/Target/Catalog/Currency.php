@@ -10,7 +10,7 @@ use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 use CCurrency;
 use Exception;
-use Sholokhov\Exchange\AbstractExchange;
+use Sholokhov\Exchange\AbstractApplication;
 use Sholokhov\Exchange\Messages\Type\Result;
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\Error;
@@ -20,7 +20,7 @@ use Sholokhov\Exchange\Target\Attributes\Validate;
 /**
  * @package Target
  */
-class Currency extends AbstractExchange
+class Currency extends AbstractApplication
 {
     /**
      * Проверка наличия валюты

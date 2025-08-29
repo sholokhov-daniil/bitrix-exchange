@@ -9,7 +9,7 @@ use Sholokhov\Exchange\Messages\DataResultInterface;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
 
-class ExchangeEventDispatcher
+class InternalEventDispatcher
 {
     public function __construct(private readonly EventDispatcherInterface $dispatcher)
     {

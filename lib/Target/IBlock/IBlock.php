@@ -4,7 +4,7 @@ namespace Sholokhov\Exchange\Target\IBlock;
 
 use CIBlock;
 
-use Sholokhov\Exchange\AbstractExchange;
+use Sholokhov\Exchange\AbstractApplication;
 use Sholokhov\Exchange\Messages\Type\Result;
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Repository\IBlock\IBlockRepository;
@@ -19,7 +19,7 @@ use Bitrix\Main\LoaderException;
  * Импорт в информационный блок
  * @package Target
  */
-abstract class IBlock extends AbstractExchange
+abstract class IBlock extends AbstractApplication
 {
     /**
      * Информационный блок в который идет импорт

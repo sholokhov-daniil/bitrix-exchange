@@ -2,6 +2,7 @@
 
 namespace Sholokhov\Exchange\Factory\Exchange;
 
+use Bitrix\Main\Diag\Debug;
 use Sholokhov\Exchange\ExchangeInterface;
 use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\Validators\ValidatorInterface;

@@ -11,9 +11,6 @@ class Result implements ResultInterface
      * Ошибки при выполнении действия
      *
      * @var ErrorInterface[]
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     protected array $errors = [];
 
@@ -21,9 +18,6 @@ class Result implements ResultInterface
      * Работа завершилась успехом
      *
      * @return bool
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public function isSuccess(): bool
     {
@@ -35,9 +29,6 @@ class Result implements ResultInterface
      *
      * @param ErrorInterface $error
      * @return static
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public function addError(ErrorInterface $error): static
     {
@@ -50,9 +41,6 @@ class Result implements ResultInterface
      *
      * @param ErrorInterface[] $errors
      * @return static
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public function addErrors(array $errors): static
     {
@@ -65,9 +53,6 @@ class Result implements ResultInterface
      *
      * @param ErrorInterface[] $errors
      * @return static
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public function setErrors(array $errors): static
     {
@@ -79,9 +64,6 @@ class Result implements ResultInterface
      * Получение ошибок
      *
      * @return ErrorInterface[]
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public function getErrors(): array
     {
@@ -92,9 +74,6 @@ class Result implements ResultInterface
      * Получение ошибочных сообщений
      *
      * @return array
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public function getErrorMessages(): array
     {
@@ -106,9 +85,6 @@ class Result implements ResultInterface
      *
      * @param string $code
      * @return ErrorInterface|null
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public function getErrorByCode(string $code): ?ErrorInterface
     {
