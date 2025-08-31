@@ -2,14 +2,19 @@
 
 namespace Sholokhov\Exchange\Factory\Exchange;
 
+use Exception;
 use Sholokhov\Exchange\ExchangeInterface;
 use Sholokhov\Exchange\Helper\Helper;
-use Sholokhov\Exchange\Processor\Processor;
+use Sholokhov\Exchange\ImportInterface;
+use Sholokhov\Exchange\Processor\ImportProcessor;
 use Sholokhov\Exchange\Processor\ProcessorInterface;
 
 use Bitrix\Main\Event;
 use Bitrix\Main\EventResult;
 
+/**
+ * @internal
+ */
 class ProcessorFactory
 {
     /**
@@ -17,10 +22,21 @@ class ProcessorFactory
      *
      * @param ExchangeInterface $exchange
      * @return ProcessorInterface
+     * @throws Exception
      */
     public static function create(ExchangeInterface $exchange): ProcessorInterface
     {
-        return self::resolve($exchange) ?: new Processor($exchange);
+        $processor = self::resolve($exchange);
+
+        if ($processor) {
+            return $processor;
+        }
+
+        if ($exchange instanceof ImportInterface) {
+            return new ImportProcessor($exchange);
+        }
+
+        throw new Exception('Processor not found');
     }
 
     /**

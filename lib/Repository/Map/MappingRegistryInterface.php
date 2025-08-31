@@ -1,11 +1,13 @@
 <?php
 
-namespace Sholokhov\Exchange\Services\Map;
+namespace Sholokhov\Exchange\Repository\Map;
 
 use Sholokhov\Exchange\Fields\FieldInterface;
 
 /**
  * Хранилище правил соответствия полей обмена
+ *
+ * @package Repository
  */
 interface MappingRegistryInterface
 {
@@ -15,14 +17,14 @@ interface MappingRegistryInterface
      * @param array $map
      * @return $this
      */
-    public function setMap(array $map): static;
+    public function setFields(array $map): static;
 
     /**
      * Получение карты обмена
      *
      * @return array
      */
-    public function getMap(): array;
+    public function getFields(): array;
 
     /**
      * Получение свойства отвечающего за идентификацию значения

@@ -2,7 +2,7 @@
 
 namespace Sholokhov\Exchange\Preparation\IBlock\Element;
 
-use ReflectionException;
+use Exception;
 
 use Sholokhov\Exchange\Factory\Result\SimpleFactory;
 use Sholokhov\Exchange\Preparation\Base\AbstractIBlockSection;
@@ -21,8 +21,6 @@ use Bitrix\Iblock\PropertyTable;
  * Если элемент будет отсутствовать, то будет произведено автоматическое создание
  *
  * @package Preparation
- * @since 1.0.0
- * @version 1.0.0
  */
 class IBlockSection extends AbstractIBlockSection
 {
@@ -31,9 +29,6 @@ class IBlockSection extends AbstractIBlockSection
     /**
      * @param int $iblockId Информационный блок, которому относится свойство хранения значения
      * @param string $primary Ключ по которому будет производиться проверка уникальности
-     *
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public function __construct(int $iblockId, string $primary = 'XML_ID')
     {
@@ -47,9 +42,7 @@ class IBlockSection extends AbstractIBlockSection
      * @param FieldInterface $field Свойство в которое производится преобразование
      * @return ExchangeInterface
      *
-     * @throws ReflectionException
-     * @since 1.0.0
-     * @version 1.0.0
+     * @throws Exception
      */
     protected function getTarget(FieldInterface $field): ExchangeInterface
     {
@@ -65,9 +58,6 @@ class IBlockSection extends AbstractIBlockSection
      *
      * @param FieldInterface $field Свойство из которого необходимо получить идентификатор информационного блока
      * @return int
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     protected function getFieldIBlockID(FieldInterface $field): int
     {
@@ -81,9 +71,6 @@ class IBlockSection extends AbstractIBlockSection
      * @param mixed $value Значение, которое необходимо преобразовать
      * @param FieldInterface $field Свойство, которое преобразовывается
      * @return bool
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public function supported(mixed $value, FieldInterface $field): bool
     {

@@ -5,6 +5,9 @@ namespace Sholokhov\Exchange\Messages\Type;
 use Sholokhov\Exchange\Messages\ErrorInterface;
 use Sholokhov\Exchange\Messages\ResultInterface;
 
+/**
+ * @package Message
+ */
 class Result implements ResultInterface
 {
     /**
@@ -89,7 +92,7 @@ class Result implements ResultInterface
     public function getErrorByCode(string $code): ?ErrorInterface
     {
         foreach ($this->errors as $error) {
-            if ($error->getCode() === $code) {
+            if ($error->getCode() == $code) {
                 return $error;
             }
         }

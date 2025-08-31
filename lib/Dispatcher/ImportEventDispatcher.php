@@ -18,7 +18,7 @@ use Psr\Log\LoggerAwareTrait;
 /**
  * @internal
  */
-class ExternalEventDispatcher implements LoggerAwareInterface
+class ImportEventDispatcher implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
@@ -37,14 +37,14 @@ class ExternalEventDispatcher implements LoggerAwareInterface
      */
     public function beforeAdd(array &$fields): EventResult
     {
-        $fields = [
+        $parameters = [
             'fields' => &$fields,
             'exchange' => $this->exchange
         ];
 
         return $this->dispatchBeforeEvent(
             $this->type->beforeAdd,
-            $fields,
+            $parameters,
             'The creation of the item has been stopped'
         );
     }
@@ -77,7 +77,7 @@ class ExternalEventDispatcher implements LoggerAwareInterface
      */
     public function beforeUpdate(int $id, array &$item): EventResult
     {
-        $fields = [
+        $parameters = [
             'fields' => &$item,
             'id' => $id,
             'exchange' => $this->exchange
@@ -85,7 +85,7 @@ class ExternalEventDispatcher implements LoggerAwareInterface
 
         return $this->dispatchBeforeEvent(
             $this->type->beforeUpdate,
-            $fields,
+            $parameters,
             'The update of the item has been stopped'
         );
     }
@@ -114,6 +114,10 @@ class ExternalEventDispatcher implements LoggerAwareInterface
     private function dispatchBeforeEvent(string $type, array $fields, string $stoppedMessage): EventResult
     {
         $result = new EventResult;
+
+        if (!$type) {
+            return $result;
+        }
 
         try {
             $iterator = $this->dispatch($type, $fields);

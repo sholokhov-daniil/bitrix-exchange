@@ -4,13 +4,15 @@ namespace Sholokhov\Exchange\Factory\Exchange;
 
 use Sholokhov\Exchange\Helper\Helper;
 use Sholokhov\Exchange\ExchangeInterface;
-use Sholokhov\Exchange\Services\FieldPreparationPipeline;
+use Sholokhov\Exchange\Preparation\FieldPreparationPipeline;
 use Sholokhov\Exchange\Preparation\FieldPreparationPipelineInterface;
 
 use Bitrix\Main\Event;
 use Bitrix\Main\EventResult;
 
-
+/**
+ * @internal
+ */
 class FieldPreparationPipelineFactory
 {
     /**

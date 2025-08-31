@@ -3,6 +3,7 @@
 namespace Sholokhov\Exchange\Source;
 
 use ArrayIterator;
+use Bitrix\Main\Diag\Debug;
 use Iterator;
 use EmptyIterator;
 
@@ -18,8 +19,6 @@ use Symfony\Component\Serializer\Encoder\XmlEncoder;
  * Рекомендуется для использования, если объем данных не большой
  *
  * @package Source
- * @since 1.0.0
- * @version 1.0.0
  */
 class SimpleXml extends AbstractXml
 {
@@ -28,9 +27,6 @@ class SimpleXml extends AbstractXml
      *
      * @param mixed $resource
      * @return Iterator
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     protected function parsing(mixed $resource): Iterator
     {

@@ -2,7 +2,7 @@
 
 namespace Sholokhov\Exchange;
 
-use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\Repository\Map\MappingRegistryInterface;
 
 /**
  * Структура обмена согласно пользовательской карте
@@ -10,17 +10,17 @@ use Sholokhov\Exchange\Fields\FieldInterface;
 interface MappingExchangeInterface extends ExchangeInterface
 {
     /**
-     * Карта обмена
+     * Указание хранилища карты обмена
      *
-     * @return array
-     */
-    public function getMap(): array;
-
-    /**
-     * Указание карты обмена данных
-     *
-     * @param FieldInterface[] $map
+     * @param MappingRegistryInterface $mappingRegistry
      * @return $this
      */
-    public function setMap(array $map): static;
+    public function setMappingRegistry(MappingRegistryInterface $mappingRegistry): static;
+
+    /**
+     * Карта обмена используемая обменом
+     *
+     * @return MappingRegistryInterface|null
+     */
+    public function getMappingRegistry(): ?MappingRegistryInterface;
 }

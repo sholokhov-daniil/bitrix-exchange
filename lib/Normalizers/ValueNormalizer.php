@@ -7,6 +7,8 @@ use Sholokhov\Exchange\Fields\FieldInterface;
 
 /**
  * Нормализует импортируемые значения
+ *
+ * @package Normalizer
  */
 class ValueNormalizer implements NormalizerInterface
 {

@@ -2,182 +2,55 @@
 
 namespace Sholokhov\Exchange\Target\IBlock;
 
-use Exception;
+use CUtil;
 use CIBlockElement;
 
-use Sholokhov\Exchange\Exception\Target\ExchangeItemStoppedException;
+use Sholokhov\Exchange\AbstractImport;
+use Sholokhov\Exchange\Dispatcher\ExternalEventTypes;
+use Sholokhov\Exchange\ExchangeMapTrait;
 use Sholokhov\Exchange\Fields\FieldInterface;
-use Sholokhov\Exchange\Helper\Helper;
+use Sholokhov\Exchange\MappingExchangeInterface;
 use Sholokhov\Exchange\Messages\DataResultInterface;
 use Sholokhov\Exchange\Messages\Type\Error;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 
 use Sholokhov\Exchange\Helper\Site;
 use Sholokhov\Exchange\Preparation\IBlock\Element as Prepare;
-use Sholokhov\Exchange\Messages\Type\EventResult;
 use Sholokhov\Exchange\Fields\IBlock\ElementFieldInterface;
-
-use Bitrix\Main\Event;
-use Bitrix\Main\EventResult as BxEventResult;
-use Bitrix\Main\Type\DateTime;
-use Bitrix\Iblock\ElementTable;
-use Bitrix\Main\SystemException;
-use Bitrix\Main\ArgumentException;
-use Bitrix\Main\ObjectPropertyException;
 use Sholokhov\Exchange\Repository\IBlock\PropertyRepository;
-use Sholokhov\Exchange\Target\Attributes\Configuration;
+
+use Bitrix\Main\LoaderException;
+use Bitrix\Main\Type\DateTime;
+
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Импортирование элемента информационного блока
  *
- * @package Target
- * @version 1.1.0
+ * @package Import
  */
-class Element extends IBlock
+class Element extends AbstractImport implements MappingExchangeInterface
 {
-    public const BEFORE_DEACTIVATE = 'onBeforeIBlockElementsDeactivate';
-    public const BEFORE_UPDATE_EVENT = 'onBeforeIBlockElementUpdate';
-    public const AFTER_UPDATE_EVENT = 'onAfterIBlockElementUpdate';
-    public const BEFORE_ADD_EVENT = 'onBeforeIBlockElementAdd';
-    public const AFTER_ADD_EVENT = 'onAfterIBlockElementAdd';
+    use ExchangeMapTrait,
+        IBlockTrait;
 
     /**
-     * Проверка наличия элемента
+     * Хранилище свойств инфоблока
      *
-     * @param array $item
-     * @return bool
-     * @throws Exception
-     *
-     * @version 1.1.0
+     * @var PropertyRepository|null
      */
-    public function exists(array $item): bool
-    {
-        $keyField = $this->getPrimaryField();
-
-        if ($this->cache->has($item[$keyField->getTo()])) {
-            return true;
-        }
-
-        $filter = [
-            'IBLOCK_ID' => $this->getIBlockID(),
-        ];
-
-        if ($hashField = $this->getHashFieldCode()) {
-            $filter[$hashField] = $this->getHash();
-        }
-
-        if ($keyField instanceof ElementFieldInterface) {
-            $filter['PROPERTY_' . $keyField->getTo()] = $item[$keyField->getTo()];
-        } else {
-            $filter[$keyField->getTo()] = $item[$keyField->getTo()];
-        }
-
-        if ($element = CIBlockElement::GetList([], $filter)->Fetch()) {
-            $this->cache->set($item[$keyField->getTo()], (int)$element['ID']);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Добавление элемента в информационный блок
-     *
-     * @param array $item
-     * @return DataResultInterface
-     * @throws Exception
-     */
-    public function add(array $item): DataResultInterface
-    {
-        $result = new DataResult;
-        $iblock = new CIBlockElement;
-
-        $preparedItem = $this->prepareItem($item);
-        $data = $preparedItem['FIELDS'];
-        $data['IBLOCK_ID'] = $this->getIBlockID();
-        $data['PROPERTY_VALUES'] = $preparedItem['PROPERTIES'] ?? [];
-
-        $resultBeforeAdd = $this->beforeAdd($data);
-        if (!$resultBeforeAdd->isSuccess()) {
-            return $result->addErrors($resultBeforeAdd->getErrors());
-        }
-
-        if ($resultBeforeAdd->isStopped()) {
-            return $result;
-        }
-
-        if ($itemId = $iblock->Add($data)) {
-            $result->setData((int)$itemId);
-            $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the %s information block', $this->getIBlockID(), $itemId));
-            $this->cache->set($item[$this->getPrimaryField()->getTo()], (int)$itemId);
-        } else {
-            $result->addError(new Error('Error while adding IBLOCK element: ' . strip_tags($iblock->getLastError()), 500, $data));
-        }
-
-        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['id' => $itemId, 'fields' => $data, 'result' => $result]))->send();
-
-        return $result;
-    }
-
-    /**
-     * Обновление элемента
-     *
-     * @param array $item
-     * @return DataResultInterface
-     * @throws Exception
-     */
-    public function update(array $item): DataResultInterface
-    {
-        $result = new DataResult;
-        $keyField = $this->getPrimaryField();
-
-        $iBlock = new CIBlockElement;
-        $itemID = $this->cache->get($item[$keyField->getTo()]);
-
-        if (!$itemID) {
-            return $this->add($item);
-        }
-
-        $preparedItem = $this->prepareItem($item);
-        if (!isset($preparedItem['FIELDS']['ACTIVE'])) {
-            $preparedItem['FIELDS']['ACTIVE'] = 'Y';
-        }
-
-        $resultBeforeUpdate = $this->beforeUpdate($itemID, $preparedItem);
-        if (!$resultBeforeUpdate->isSuccess()) {
-            return $result->addErrors($resultBeforeUpdate->getErrors());
-        }
-
-        if ($resultBeforeUpdate->isStopped()) {
-            return $result;
-        }
-
-        if (!$iBlock->Update($itemID, $preparedItem['FIELDS'])) {
-            return $result->addError(new Error('Error while updating IBLOCK element: ' . $iBlock->getLastError(), 500, ['ID' => $itemID, 'FIELDS' => $preparedItem['FIELDS']]));
-        }
-
-        $this->logger?->debug('Updated fields IBLOCK element: ' . $itemID);
-
-        $iBlock::SetPropertyValuesEx($itemID, $this->getIBlockID(), $preparedItem['PROPERTIES']);
-
-        $this->logger?->debug('Updated properties IBLOCK element: ' . $itemID);
-        $this->cleanCache();
-
-        $result->setData((int)$itemID);
-
-        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['fields' => $preparedItem, 'id' => $itemID, 'result' => $result]))->send();
-
-        return $result;
-    }
+    private ?PropertyRepository $propertyRepository = null;
 
     /**
      * Деактивация элементов, которые не пришли в импорте
      *
+     * @inheritDoc
      * @return void
-     * @version 1.1.0
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function deactivate(): void
+    public function deactivate(): void
     {
         $filter = [
             'IBLOCK_ID' => $this->getIBlockID(),
@@ -193,7 +66,7 @@ class Element extends IBlock
 
         $parameters = compact('filter', 'select');
 
-        (new Event(Helper::getModuleID(), self::BEFORE_DEACTIVATE, ['parameters' => &$parameters]))->send();
+        $this->events->beforeDeactivate(['parameters' => &$parameters]);
 
         $iBlock = new CIBlockElement;
         $iterator = CIBlockElement::GetList([], $parameters['filter'], false, false, $parameters['select']);
@@ -204,22 +77,210 @@ class Element extends IBlock
     }
 
     /**
+     * Проверка, что поле является множественным
+     *
+     * @inheritDoc
+     * @param FieldInterface $field
+     * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function isMultipleField(FieldInterface $field): bool
+    {
+        $property = $this->getPropertyRepository()->get($field->getTo());
+        return $property && $property['MULTIPLE'] === 'Y';
+    }
+
+    /**
+     * Конфигурация импорта
+     *
+     * @inheritDoc
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    protected function configuration(): void
+    {
+        parent::configuration();
+        $this->initPrepared();
+    }
+
+    /**
+     * Получение доступных внешних событий обмена
+     *
+     * @inheritDoc
+     * @return ExternalEventTypes
+     */
+    protected function getEventTypes(): ExternalEventTypes
+    {
+        $types = new ExternalEventTypes;
+        $types->beforeDeactivate = 'onBeforeIBlockElementsDeactivate';
+        $types->beforeUpdate = 'onBeforeIBlockElementUpdate';
+        $types->afterUpdate = 'onAfterIBlockElementUpdate';
+        $types->beforeAdd = 'onBeforeIBlockElementAdd';
+        $types->afterAdd = 'onAfterIBlockElementAdd';
+
+        return $types;
+    }
+
+    /**
+     * Получение ID элемента из кэша
+     *
+     * @inheritDoc
+     * @param array $item
+     * @return int
+     */
+    protected function resolveId(array $item): int
+    {
+        $key = $this->getPrimaryField()->getTo();
+        return (int)$this->cache->get($item[$key]);
+    }
+
+    /**
+     * Проверка наличия элемента
+     *
+     * @inheritDoc
+     * @param array $item
+     * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    protected function doExist(array $item): bool
+    {
+        $keyField = $this->getPrimaryField();
+        $externalId = $item[$keyField->getTo()];
+
+        $filter = [
+            'IBLOCK_ID' => $this->getIBlockID(),
+        ];
+
+        if ($hashField = $this->getHashFieldCode()) {
+            $filter[$hashField] = $this->getHash();
+        }
+
+        if ($keyField instanceof ElementFieldInterface) {
+            $filter['PROPERTY_' . $keyField->getTo()] = $externalId;
+        } else {
+            $filter[$keyField->getTo()] = $externalId;
+        }
+
+        if ($element = CIBlockElement::GetList([], $filter)->Fetch()) {
+            $this->cache->set($item[$keyField->getTo()], (int)$element['ID']);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Логика создания нового элемента ИБ
+     *
+     * @inheritDoc
+     * @param array $fields
+     * @param array $originalFields
+     * @return DataResultInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    protected function doAdd(array $fields, array $originalFields): DataResultInterface
+    {
+        $result = new DataResult;
+        $iBlock = new CIBlockElement;
+
+        if ($itemId = $iBlock->Add($fields)) {
+            $result->setData((int)$itemId);
+            $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the %s information block', $this->getIBlockID(), $itemId));
+            $this->cache->set($originalFields[$this->getPrimaryField()->getTo()], (int)$itemId);
+        } else {
+            $result->addError(new Error('Error while adding IBLOCK element: ' . strip_tags($iBlock->getLastError()), 500));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Обновление элемента инфоблока
+     *
+     * @inheritDoc
+     * @param int $id
+     * @param array $fields
+     * @param array $originalFields
+     * @return DataResultInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    protected function doUpdate(int $id, array $fields, array $originalFields): DataResultInterface
+    {
+        $result = new DataResult;
+        $iBlock = new CIBlockElement;
+
+        if (!$iBlock->Update($id, $fields['FIELDS'])) {
+            return $result->addError(new Error('Error while updating IBLOCK element: ' . $iBlock->getLastError(), 500, ['ID' => $id]));
+        }
+
+        $this->logger?->debug('Updated fields IBLOCK element: ' . $id);
+
+        $iBlock::SetPropertyValuesEx($id, $this->getIBlockID(), $fields['PROPERTIES']);
+
+        $this->logger?->debug('Updated properties IBLOCK element: ' . $id);
+        $this->cleanCache();
+
+        return $result;
+    }
+
+    /**
+     * Преобразование данных для добавления элемента
+     *
+     * @inheritDoc
+     * @param array $item
+     * @return array
+     * @throws ContainerExceptionInterface
+     * @throws LoaderException
+     * @throws NotFoundExceptionInterface
+     */
+    protected function prepareForAdd(array $item): array
+    {
+        $fields = $this->preparation($item);
+        $data = $fields['FIELDS'];
+        $data['IBLOCK_ID'] = $this->getIBlockID();
+        $data['PROPERTY_VALUES'] = $fields['PROPERTIES'] ?? [];
+
+        return $data;
+    }
+
+    /**
+     * Преобразование данных, для обновления элемента
+     *
+     * @inheritDoc
+     * @param array $item
+     * @return array[]
+     * @throws ContainerExceptionInterface
+     * @throws LoaderException
+     * @throws NotFoundExceptionInterface
+     */
+    protected function prepareForUpdate(array $item): array
+    {
+        return $this->preparation($item);
+    }
+
+    /**
      * Разделение импортируемых данных на группы
      *
      * @param array{FIELDS: array, PROPERTIES: array} $item
      * @return array|array[]
-     * @throws Exception
-     *
-     * @version 1.1.0
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws LoaderException
      */
-    protected function prepareItem(array $item): array
+    protected function preparation(array $item): array
     {
         $result = [
             'FIELDS' => [],
             'PROPERTIES' => []
         ];
 
-        foreach ($this->getMap() as $field) {
+        foreach ($this->getMappingRegistry()->getFields() as $field) {
             $group = 'FIELDS';
             $value = $item[$field->getTo()] ?? null;
 
@@ -229,7 +290,7 @@ class Element extends IBlock
                 $translitOptions = $this->getIBlockInfo()->get('FIELDS')['CODE']['DEFAULT_VALUE'] ?? [];
 
                 if ($translitOptions) {
-                    $value = \CUtil::translit($value, Site::getLanguage(), $translitOptions);
+                    $value = CUtil::translit($value, Site::getLanguage(), $translitOptions);
                 }
             }
 
@@ -255,116 +316,11 @@ class Element extends IBlock
     }
 
     /**
-     * Событие перед обновлением элемента
-     *
-     * @param int $id
-     * @param array $item
-     * @return EventResult
-     */
-    private function beforeUpdate(int $id, array &$item): EventResult
-    {
-        $result = new EventResult;
-
-        try {
-            $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['fields' => &$item['FIELDS'], 'id' => $id, 'exchange' => $this]);
-            $event->send();
-
-            foreach ($event->getResults() as $eventResult) {
-                if ($eventResult->getType() === BxEventResult::SUCCESS) {
-                    continue;
-                }
-
-                $parameters = $eventResult->getParameters();
-                if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                    $result->addError(new Error('Error while updating IBLOCK element: stopped', 300, $item));
-                } else {
-                    foreach ($parameters['ERRORS'] as $error) {
-                        $result->addError(new Error($error, 300, $item));
-                    }
-                }
-            }
-        } catch (ExchangeItemStoppedException $exception) {
-            $this->logger?->warning($exception->getMessage() ?: 'The update of the iblock element has been stopped');
-            $result->setStopped();
-        }
-
-        return $result;
-    }
-
-    /**
-     * Событие перед созданием элемента
-     *
-     * @param array $item
-     * @return EventResult
-     */
-    private function beforeAdd(array $item): EventResult
-    {
-        $result = new EventResult();
-
-        try {
-            $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['fields' => &$item]);
-            $event->send();
-
-            foreach ($event->getResults() as $eventResult) {
-                if ($eventResult->getType() === BxEventResult::SUCCESS) {
-                    continue;
-                }
-
-                $parameters = $eventResult->getParameters();
-                if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                    $result->addError(new Error('Error while adding IBLOCK element: stopped', 300, $item));
-                } else {
-                    foreach ($parameters['ERRORS'] as $error) {
-                        $result->addError(new Error($error, 300, $item));
-                    }
-                }
-            }
-        } catch (ExchangeItemStoppedException $exception) {
-            $this->logger?->warning($exception->getMessage() ?: 'The adding of the iblock element has been stopped');
-            $result->setStopped();
-
-        }
-
-        return $result;
-    }
-
-    /**
-     * Проверка, что поле является множественным
-     *
-     * @param FieldInterface $field
-     * @return bool
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    public function isMultipleField(FieldInterface $field): bool
-    {
-        $property = $this->getPropertyRepository()->get($field->getTo());
-        return $property && $property['MULTIPLE'] === 'Y';
-    }
-
-    /**
-     * Получение хранилища свойств ИБ
-     *
-     * @return PropertyRepository
-     *
-     * @since 1.0.0
-     * @version 1.0.0
-     */
-    protected function getPropertyRepository(): PropertyRepository
-    {
-        return $this->repository->get('property_repository');
-    }
-
-    /**
      * Получение свойства в котором хранится хэш импорта.
      *
      * Если это пользовательское свойство, то автоматически преобразовывается в формат PROPERTY_xxxx
      *
      * @return string
-     *
-     * @since 1.1.0
-     * @version 1.1.0
      */
     protected function getHashFieldCode(): string
     {
@@ -378,16 +334,17 @@ class Element extends IBlock
     }
 
     /**
-     * @return void
+     * Инициализация преобразователей импортируемых данных
      *
-     * @version 1.0.0
-     * @since 1.0.0
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    #[Configuration]
-    private function bootstrapPrepares(): void
+    protected function initPrepared(): void
     {
         $iBlockID = $this->getIBlockID();
-        $this->addPrepared(new Prepare\Date($iBlockID))
+        $this->processor
+            ->addPrepared(new Prepare\Date($iBlockID))
             ->addPrepared(new Prepare\DateTime($iBlockID))
             ->addPrepared(new Prepare\Number($iBlockID))
             ->addPrepared(new Prepare\Enumeration($iBlockID))
@@ -397,6 +354,7 @@ class Element extends IBlock
             ->addPrepared(new Prepare\IBlockSection($iBlockID))
             ->addPrepared(new Prepare\HtmlText($iBlockID))
             ->addPrepared(new Prepare\HandbookElement($iBlockID));
+
         // Video
         // Деньги
         // Привязка к яндекс.карте
@@ -410,19 +368,5 @@ class Element extends IBlock
         // Привязка к элементам по XML_ID
         // Привязка к элементам с автозаполнением
         // Счетчик
-    }
-
-    /**
-     * Конфигурация связанных объектов обмена
-     *
-     * @return void
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    #[Configuration]
-    private function configuration(): void
-    {
-        $this->repository->set('property_repository', new PropertyRepository(['iblock_id' => $this->getIBlockID()]));
     }
 }

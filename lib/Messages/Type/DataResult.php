@@ -6,6 +6,8 @@ use Sholokhov\Exchange\Messages\DataResultInterface;
 
 /**
  * Результата работы с произвольными данными
+ *
+ * @package Message
  */
 class DataResult extends Result implements DataResultInterface
 {

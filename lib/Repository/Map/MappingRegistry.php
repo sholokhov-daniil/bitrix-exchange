@@ -1,14 +1,20 @@
 <?php
 
-namespace Sholokhov\Exchange\Repository;
+namespace Sholokhov\Exchange\Repository\Map;
 
 use Exception;
-use InvalidArgumentException;
 use LogicException;
+use InvalidArgumentException;
+
 use Sholokhov\Exchange\Fields\FieldInterface;
 use Sholokhov\Exchange\Validators\ValidatorInterface;
 
-class MapRepository
+/**
+ * Хранилище карты обмена
+ *
+ * @package Repository
+ */
+class MappingRegistry implements MappingRegistryInterface
 {
     /**
      * Карта обмена
@@ -36,7 +42,7 @@ class MapRepository
      *
      * @var ValidatorInterface|null
      */
-    private ?ValidatorInterface $validator = null;
+    private ?ValidatorInterface $validator;
 
     /**
      * @param ValidatorInterface|null $validator Валидатор карты обмена
@@ -50,10 +56,10 @@ class MapRepository
      * Установка карты обмена
      *
      * @param FieldInterface[] $map
-     * @return void
+     * @return MappingRegistry
      * @throws Exception
      */
-    public function setMap(array $map): void
+    public function setFields(array $map): static
     {
         $this->validate($map);
         $this->resetFields();
@@ -64,8 +70,9 @@ class MapRepository
         }
 
         $this->assertPrimaryExists();
-
         $this->map = $map;
+
+        return $this;
     }
 
     /**
@@ -73,7 +80,7 @@ class MapRepository
      *
      * @return FieldInterface[]
      */
-    public function getMap(): array
+    public function getFields(): array
     {
         return $this->map;
     }

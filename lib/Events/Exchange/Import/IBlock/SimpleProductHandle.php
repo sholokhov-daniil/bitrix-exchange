@@ -1,17 +1,21 @@
 <?php
 
-namespace Sholokhov\Exchange\Events\Exchange;
+namespace Sholokhov\Exchange\Events\Exchange\Import\IBlock;
 
-use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Event;
 use Bitrix\Main\EventResult;
-use Sholokhov\Exchange\Target\Sale\Warehouse;
+use Sholokhov\Exchange\Target\IBlock\Catalog\SimpleProduct;
 use Sholokhov\Exchange\Validators\CheckAvailableModules;
 
-class WarehouseHandlers
+/**
+ * Обработчики импорта простых товаров
+ *
+ * @internal
+ */
+class SimpleProductHandle
 {
     /**
-     * Получение валидаторов импорта складов
+     * Получение доступных валидаторов
      *
      * @param Event $event
      * @return EventResult
@@ -19,12 +23,12 @@ class WarehouseHandlers
     public static function getValidators(Event $event): EventResult
     {
         $exchange = $event->getParameter('exchange');
-        if (!($exchange instanceof Warehouse)) {
+        if (!($exchange instanceof SimpleProduct)) {
             return new EventResult(EventResult::UNDEFINED);
         }
 
         $validators = [
-            new CheckAvailableModules(['catalog'])
+            new CheckAvailableModules(['catalog', 'currency']),
         ];
 
         return new EventResult(EventResult::SUCCESS, compact('validators'));

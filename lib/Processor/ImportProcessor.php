@@ -2,7 +2,6 @@
 
 namespace Sholokhov\Exchange\Processor;
 
-use Sholokhov\Exchange\Preparation\PreparationInterface;
 use Throwable;
 
 use Sholokhov\Exchange\ExchangeInterface;
@@ -11,7 +10,10 @@ use Sholokhov\Exchange\Factory\Exchange\FieldPreparationPipelineFactory;
 use Sholokhov\Exchange\Messages\DataResultInterface;
 use Sholokhov\Exchange\Messages\ExchangeResultInterface;
 use Sholokhov\Exchange\Messages\Type\Error;
-use Sholokhov\Exchange\Services\FieldPreparationPipeline;
+use Sholokhov\Exchange\Preparation\FieldPreparationPipeline;
+use Sholokhov\Exchange\ImportInterface;
+use Sholokhov\Exchange\MappingExchangeInterface;
+use Sholokhov\Exchange\Preparation\PreparationInterface;
 
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerAwareInterface;
@@ -20,8 +22,9 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 /**
  * Процесс выполнения обмена данных
  * @internal
+ * @package Processor
  */
-class Processor implements ProcessorInterface, LoggerAwareInterface
+class ImportProcessor implements ProcessorInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
@@ -46,7 +49,7 @@ class Processor implements ProcessorInterface, LoggerAwareInterface
      */
     private readonly ?InternalEventDispatcher $dispatcher;
 
-    public function __construct(ExchangeInterface $engine)
+    public function __construct(ImportInterface $engine)
     {
         $this->engine = $engine;
         $this->pipeline = FieldPreparationPipelineFactory::create($engine);
@@ -63,7 +66,7 @@ class Processor implements ProcessorInterface, LoggerAwareInterface
     public function run(iterable $source, ExchangeResultInterface $result): void
     {
         foreach ($source as $item) {
-//            try {
+            try {
                 if ($this->isInvalidItem($item, $result)) {
                     continue;
                 }
@@ -77,10 +80,10 @@ class Processor implements ProcessorInterface, LoggerAwareInterface
                 if ($data = $processResult->getData()) {
                     $result->getData()?->add($data);
                 }
-//            } catch (Throwable $throwable) {
-//                $this->logger?->critical($throwable->getMessage());
-//                $result->addError(new Error($throwable->getMessage()));
-//            }
+            } catch (Throwable $throwable) {
+                $this->logger?->critical($throwable->getMessage());
+                $result->addError(new Error($throwable->getMessage()));
+            }
         }
     }
 
@@ -105,7 +108,7 @@ class Processor implements ProcessorInterface, LoggerAwareInterface
      */
     protected function processItem(array $item): DataResultInterface
     {
-        $prepared = $this->pipeline->prepare($item, $this->engine->getMap());
+        $prepared = $this->prepare($item);
         $prepared = $this->dispatcher?->beforeImportItem($prepared);
 
         if ($this->engine->exists($prepared)) {
@@ -121,6 +124,22 @@ class Processor implements ProcessorInterface, LoggerAwareInterface
         $this->dispatcher?->afterImport($prepared, $result);
 
         return $result;
+    }
+
+    /**
+     * Преобразование данных
+     *
+     * @param array $item
+     * @return array
+     */
+    private function prepare(array $item): array
+    {
+        if ($this->engine instanceof MappingExchangeInterface) {
+            $map = $this->engine->getMappingRegistry()->getFields();
+            return $this->pipeline->prepare($item, $map);
+        }
+
+        return $item;
     }
 
     /**

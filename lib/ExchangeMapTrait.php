@@ -3,7 +3,7 @@
 namespace Sholokhov\Exchange;
 
 use Sholokhov\Exchange\Fields\FieldInterface;
-use Sholokhov\Exchange\Services\Map\MappingRegistryInterface;
+use Sholokhov\Exchange\Repository\Map\MappingRegistryInterface;
 
 trait ExchangeMapTrait
 {
@@ -27,13 +27,13 @@ trait ExchangeMapTrait
     }
 
     /**
-     * Получение карты обмена
+     * Получение хранилища карты обмена
      *
-     * @return array
+     * @return MappingRegistryInterface|null
      */
-    public function getMap(): array
+    public function getMappingRegistry(): ?MappingRegistryInterface
     {
-        return $this->mappingRegistry->getMap();
+        return $this->mappingRegistry;
     }
 
     /**

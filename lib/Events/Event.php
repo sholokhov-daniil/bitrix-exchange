@@ -35,4 +35,15 @@ class Event implements EventInterface
     {
         return $this->parameters;
     }
+
+    /**
+     * Получение параметра по ключу
+     *
+     * @param string|int $key
+     * @return mixed
+     */
+    public function getParameter(string|int $key): mixed
+    {
+        return $this->parameters[$key] ?? null;
+    }
 }

@@ -10,17 +10,16 @@ use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 use CCurrency;
 use Exception;
-use Sholokhov\Exchange\AbstractApplication;
+use Sholokhov\Exchange\AbstractExchange;
 use Sholokhov\Exchange\Messages\Type\Result;
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\Error;
 use Sholokhov\Exchange\Messages\Type\ExchangeResult;
-use Sholokhov\Exchange\Target\Attributes\Validate;
 
 /**
- * @package Target
+ * @package Import
  */
-class Currency extends AbstractApplication
+class Currency extends AbstractExchange
 {
     /**
      * Проверка наличия валюты
@@ -117,7 +116,6 @@ class Currency extends AbstractApplication
      * @return ResultInterface
      * @throws LoaderException
      */
-    #[Validate]
     private function checkModules(): ResultInterface
     {
         throw new Exception('In development');

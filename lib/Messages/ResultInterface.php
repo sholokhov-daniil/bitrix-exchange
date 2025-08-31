@@ -2,6 +2,9 @@
 
 namespace Sholokhov\Exchange\Messages;
 
+/**
+ * @package Message
+ */
 interface ResultInterface
 {
     /**

@@ -7,13 +7,14 @@ use Exception;
 
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Sholokhov\Exchange\AbstractApplication;
+use Sholokhov\Exchange\AbstractImport;
 use Sholokhov\Exchange\ExchangeMapTrait;
 use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\MappingExchangeInterface;
+use Sholokhov\Exchange\Messages\Type\Error;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Messages\DataResultInterface;
 
-use Sholokhov\Exchange\Messages\Type\Error;
 use Bitrix\Main\FileTable;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\ArgumentException;
@@ -25,14 +26,44 @@ use Bitrix\Main\ObjectPropertyException;
  * @todo Переделать логику
  * @package Target
  */
-class File extends AbstractApplication
+class File extends AbstractImport implements MappingExchangeInterface
 {
     use ExchangeMapTrait;
 
-    public function __construct(array $options = [])
+    /**
+     * Проверка, что свойство является множественным
+     *
+     * @param FieldInterface $field
+     * @return bool
+     */
+    public function isMultipleField(FieldInterface $field): bool
     {
-        parent::__construct($options);
+        return false;
+    }
+
+    /**
+     * Конфигурация импорта
+     *
+     * @return void
+     * @throws Exception
+     */
+    protected function configuration(): void
+    {
+        parent::configuration();
         $this->normalizeOptions();
+    }
+
+    /**
+     * Получение ID значение из кэша
+     *
+     * @param array $item
+     * @return int
+     */
+    protected function resolveId(array $item): int
+    {
+        $key = $this->getPrimaryField()->getTo();
+        $externalID = $this->getExternalId((string)$item[$key]);
+        return (int)$this->cache->get($externalID);
     }
 
     /**
@@ -43,16 +74,13 @@ class File extends AbstractApplication
      * @throws ArgumentException
      * @throws ObjectPropertyException
      * @throws SystemException
-     * @throws Exception
      */
-    public function exists(array $item): bool
+    protected function doExist(array $item): bool
     {
         $keyField = $this->getPrimaryField();
         $externalID = $this->getExternalId((string)$item[$keyField->getTo()]);
 
-        if ($this->cache->has($externalID)) {
-            return true;
-        } elseif ($file = FileTable::getRow(['filter' => ['EXTERNAL_ID' => $externalID], 'select' => ['ID']])) {
+        if ($file = FileTable::getRow(['filter' => ['EXTERNAL_ID' => $externalID], 'select' => ['ID']])) {
             $fileId = (int)$file['ID'];
             $this->cache->set($externalID, $fileId);
             return true;
@@ -64,15 +92,16 @@ class File extends AbstractApplication
     /**
      * Создание нового файла
      *
-     * @param array $item
+     * @param array $fields
+     * @param array $originalFields
      * @return DataResultInterface
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function add(array $item): DataResultInterface
+    protected function doAdd(array $fields, array $originalFields): DataResultInterface
     {
         $result = new DataResult;
-        $path = $item[$this->getPrimaryField()->getTo()];
+        $path = $fields[$this->getPrimaryField()->getTo()];
         $file = CFile::MakeFileArray($path);
 
         if (!$file) {
@@ -88,7 +117,7 @@ class File extends AbstractApplication
             $result->setData($fileId);
         } else {
             $this->logger?->error('File receipt error: ' . $path . '. Data: ' . json_encode($file));
-            $result->addError(new Error('Ошибка сохранения файла', 500, $file));
+            $result->addError(new Error('Ошибка сохранения файла', 500));
         }
 
         return $result;
@@ -97,33 +126,16 @@ class File extends AbstractApplication
     /**
      * Обновление файла
      *
-     * @param array $item
+     * @param int $id
+     * @param array $fields
+     * @param array $originalFields
      * @return DataResultInterface
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     *
      * @todo Доработать
      */
-    public function update(array $item): DataResultInterface
+    protected function doUpdate(int $id, array $fields, array $originalFields): DataResultInterface
     {
-        $keyField = $this->getPrimaryField();
-        $externalID = $this->getExternalId((string)$item[$keyField->getTo()]);
-
-        if (!$this->cache->has($externalID)) {
-            $this->add($item);
-        }
-
-        return (new DataResult)->setData((int)$this->cache->get($externalID));
-    }
-
-    /**
-     * Проверка, что свойство является множественным
-     *
-     * @param FieldInterface $field
-     * @return bool
-     */
-    public function isMultipleField(FieldInterface $field): bool
-    {
-        return false;
+        return new DataResult;
     }
 
     /**
@@ -135,6 +147,28 @@ class File extends AbstractApplication
     protected function getExternalId(string $path): string
     {
         return md5($path);
+    }
+
+    /**
+     * Преобразование данных, для создания
+     *
+     * @param array $item
+     * @return array
+     */
+    protected function prepareForAdd(array $item): array
+    {
+        return $item;
+    }
+
+    /**
+     * Преобразование данных, для обновления
+     *
+     * @param array $item
+     * @return array
+     */
+    protected function prepareForUpdate(array $item): array
+    {
+        return $item;
     }
 
     /**

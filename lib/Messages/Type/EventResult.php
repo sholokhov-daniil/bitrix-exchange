@@ -4,6 +4,8 @@ namespace Sholokhov\Exchange\Messages\Type;
 
 /**
  * Результат вызова события обмена
+ *
+ * @package Message
  */
 class EventResult extends Result
 {

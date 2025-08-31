@@ -9,6 +9,8 @@ use Sholokhov\Exchange\Normalizers\ValueNormalizer;
 
 /**
  * Преобразует обработку значения на основе свойства карты обмена
+ *
+ * @package Preparation
  */
 class FieldPreparation
 {

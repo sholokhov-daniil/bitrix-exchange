@@ -10,7 +10,9 @@ use Sholokhov\Exchange\Normalizers\NormalizerInterface;
 use Bitrix\Main\Event;
 use Bitrix\Main\EventResult;
 
-
+/**
+ * @internal
+ */
 class ValueNormalizerFactory
 {
     /**

@@ -4,6 +4,9 @@ namespace Sholokhov\Exchange\Preparation;
 
 use Sholokhov\Exchange\Fields\FieldInterface;
 
+/**
+ * @package Preparation
+ */
 interface FieldPreparationPipelineInterface
 {
     /**

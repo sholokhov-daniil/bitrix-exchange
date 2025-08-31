@@ -9,8 +9,7 @@ use Sholokhov\Exchange\Messages\ErrorInterface;
 /**
  * Описание ошибки
  *
- * @version 1.1.1
- * @since 1.0.0
+ * @package Message
  */
 class Error implements ErrorInterface
 {
@@ -32,9 +31,6 @@ class Error implements ErrorInterface
      *
      * @param Throwable $throwable
      * @return static
-     *
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public static function createFromThrowable(Throwable $throwable): static
     {
@@ -46,8 +42,6 @@ class Error implements ErrorInterface
      *
      * @param \Bitrix\Main\Error $error
      * @return static
-     * @version 1.1.1
-     * @since 1.1.1
      */
     public static function createFromBitrix(\Bitrix\Main\Error $error): static
     {
@@ -58,9 +52,6 @@ class Error implements ErrorInterface
      * Получение кода ошибки
      *
      * @return int
-     *
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public function getCode(): int
     {
@@ -71,9 +62,6 @@ class Error implements ErrorInterface
      * Текстовое сообщение ошибки
      *
      * @return string
-     *
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public function getMessage(): string
     {
@@ -84,9 +72,6 @@ class Error implements ErrorInterface
      * Получение контекста ошибки
      *
      * @return mixed
-     *
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public function getContext(): mixed
     {

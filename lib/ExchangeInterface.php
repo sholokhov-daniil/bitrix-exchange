@@ -3,10 +3,10 @@
 namespace Sholokhov\Exchange;
 
 use Sholokhov\Exchange\Fields\FieldInterface;
-use Sholokhov\Exchange\Messages\DataResultInterface;
 use Sholokhov\Exchange\Messages\ExchangeResultInterface;
 
 use Psr\Log\LoggerAwareInterface;
+use Psr\Container\ContainerInterface;
 
 interface ExchangeInterface extends LoggerAwareInterface
 {
@@ -19,35 +19,11 @@ interface ExchangeInterface extends LoggerAwareInterface
     public function execute(iterable $source): ExchangeResultInterface;
 
     /**
-     * Проверка наличия элемента сущности
+     * Получение хэша обмена
      *
-     * @param array $item
-     * @return bool
+     * @return string
      */
-    public function exists(array $item): bool;
-
-    /**
-     * Обновление элемента сущности
-     *
-     * @param array $item
-     * @return DataResultInterface
-     */
-    public function update(array $item): DataResultInterface;
-
-    /**
-     * Добавление нового элемента сущности
-     *
-     * @param array $item
-     * @return DataResultInterface
-     */
-    public function add(array $item): DataResultInterface;
-
-    /**
-     * Деактивация элементов сущности, которые не пришли в обмене
-     *
-     * @return void
-     */
-    public function deactivate(): void;
+    public function getHash(): string;
 
     /**
      * Свойство является множественным
@@ -58,9 +34,9 @@ interface ExchangeInterface extends LoggerAwareInterface
     public function isMultipleField(FieldInterface $field): bool;
 
     /**
-     * Получение хэша обмена
+     * Получение конфигурации обмена
      *
-     * @return string
+     * @return ContainerInterface
      */
-    public function getHash(): string;
+    public function getOptions(): ContainerInterface;
 }

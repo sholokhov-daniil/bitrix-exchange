@@ -4,6 +4,9 @@ namespace Sholokhov\Exchange\Normalizers;
 
 use Sholokhov\Exchange\Fields\FieldInterface;
 
+/**
+ * @package Normalizer
+ */
 interface NormalizerInterface
 {
     /**

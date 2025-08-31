@@ -5,6 +5,9 @@ namespace Sholokhov\Exchange\Processor;
 use Sholokhov\Exchange\Messages\ExchangeResultInterface;
 use Sholokhov\Exchange\Preparation\PreparationInterface;
 
+/**
+ * @package Processor
+ */
 interface ProcessorInterface
 {
     /**

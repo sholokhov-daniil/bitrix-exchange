@@ -1,18 +1,16 @@
 <?php
 
-namespace Sholokhov\Exchange\Services;
+namespace Sholokhov\Exchange\Preparation;
 
 use Sholokhov\Exchange\Fields\FieldInterface;
 use Sholokhov\Exchange\Helper\FieldHelper;
 use Sholokhov\Exchange\Normalizers\ValueNormalizer;
-use Sholokhov\Exchange\Preparation\Chain;
-use Sholokhov\Exchange\Preparation\PreparationInterface;
-use Sholokhov\Exchange\Preparation\FieldPreparationPipelineInterface;
 
 /**
  * Преобразует обработку значения на основе свойства карты обмена
  *
  * @internal
+ * @package Preparation
  */
 class FieldPreparationPipeline implements FieldPreparationPipelineInterface
 {

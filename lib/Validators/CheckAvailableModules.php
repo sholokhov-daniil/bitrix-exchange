@@ -10,6 +10,8 @@ use Bitrix\Main\Loader;
 
 /**
  * Производит проверку доступности модулей
+ *
+ * @package Validator
  */
 readonly class CheckAvailableModules implements ValidatorInterface
 {
