@@ -10,6 +10,7 @@ use Sholokhov\Exchange\Messages\ExchangeResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Messages\DataResultInterface;
 use Sholokhov\Exchange\Dispatcher\ImportEventDispatcher;
+use Sholokhov\Exchange\Preparation\PreparationInterface;
 use Sholokhov\Exchange\Processor\ProcessorInterface;
 
 use Bitrix\Main\EventManager;
@@ -178,6 +179,18 @@ abstract class AbstractImport extends AbstractExchange implements ImportInterfac
         $this->events->afterAdd($fields, $result);
 
         return $result;
+    }
+
+    /**
+     * Указание преобразователя данных
+     *
+     * @param PreparationInterface $preparation
+     * @return $this
+     */
+    public function addPrepared(PreparationInterface $preparation): static
+    {
+        $this->processor->addPrepared($preparation);
+        return $this;
     }
 
     /**
