@@ -10,13 +10,23 @@ use Illuminate\Support\Arr;
 class Helper
 {
     /**
-     * Псевдо-идентификатор модуля
+     * ID текущего модуля
      *
      * @return string
      */
     public static function getModuleID(): string
     {
-        return 'sholokhov.exchange';
+        return GetModuleID(self::getRootDir());
+    }
+
+    /**
+     * Путь до корня модуля
+     *
+     * @return string
+     */
+    public static function getRootDir(): string
+    {
+        return dirname(__DIR__, 2);
     }
 
     /**
@@ -25,9 +35,6 @@ class Helper
      * @param array $item
      * @param string $path
      * @return mixed
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public static function getArrValueByPath(array $item, $path): mixed
     {

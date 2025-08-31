@@ -10,17 +10,16 @@ use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 use CCurrency;
 use Exception;
-use Sholokhov\Exchange\Exchange;
+use Sholokhov\Exchange\AbstractExchange;
 use Sholokhov\Exchange\Messages\Type\Result;
 use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\Error;
 use Sholokhov\Exchange\Messages\Type\ExchangeResult;
-use Sholokhov\Exchange\Target\Attributes\Validate;
 
 /**
- * @package Target
+ * @package Import
  */
-class Currency extends Exchange
+class Currency extends AbstractExchange
 {
     /**
      * Проверка наличия валюты
@@ -32,7 +31,7 @@ class Currency extends Exchange
      * @throws SystemException
      * @throws Exception
      */
-    protected function exists(array $item): bool
+    public function exists(array $item): bool
     {
         $keyField = $this->getPrimaryField();
 
@@ -63,7 +62,7 @@ class Currency extends Exchange
      * @return ResultInterface
      * @throws Exception
      */
-    protected function add(array $item): Result
+    public function add(array $item): Result
     {
         $result = new Result;
         $preparedItem = $this->prepareItem($item);
@@ -83,7 +82,7 @@ class Currency extends Exchange
         return $result;
     }
 
-    protected function update(array $item): Result
+    public function update(array $item): Result
     {
         // TODO: Implement update() method.
     }
@@ -117,7 +116,6 @@ class Currency extends Exchange
      * @return ResultInterface
      * @throws LoaderException
      */
-    #[Validate]
     private function checkModules(): ResultInterface
     {
         throw new Exception('In development');

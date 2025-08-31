@@ -2,76 +2,171 @@
 
 namespace Sholokhov\Exchange\Target\IBlock;
 
-use Bitrix\Main\ORM\Fields\Relations\Reference;
-use Bitrix\Main\ORM\Fields\StringField;
 use CUtil;
 use Exception;
 use CIBlockSection;
 
+use Sholokhov\Exchange\AbstractImport;
 use Sholokhov\Exchange\Builder\SectionUtsBuilder;
-use Sholokhov\Exchange\Exception\ExchangeException;
-use Sholokhov\Exchange\Exception\Target\ExchangeItemStoppedException;
+use Sholokhov\Exchange\Dispatcher\ExternalEventTypes;
+use Sholokhov\Exchange\ExchangeMapTrait;
 use Sholokhov\Exchange\Fields\FieldInterface;
-use Sholokhov\Exchange\Helper\Helper;
+use Sholokhov\Exchange\MappingExchangeInterface;
+use Sholokhov\Exchange\Messages\Type\Error;
 use Sholokhov\Exchange\Helper\Site;
-
+use Sholokhov\Exchange\Repository\Fields\UFRepository;
 use Sholokhov\Exchange\Preparation\UserField as Prepare;
 use Sholokhov\Exchange\Messages\DataResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
-use Sholokhov\Exchange\Messages\Type\EventResult;
+use Sholokhov\Exchange\Target\IBlock\IBlockTrait;
+use Sholokhov\Exchange\Target\IBlock\IBlockExchangeInterface;
 
-use Sholokhov\Exchange\Messages\Type\Error;
-use Bitrix\Main\Event;
-use Bitrix\Main\EventResult as BXEventResult;
 use Bitrix\Main\ArgumentException;
 use Bitrix\Iblock\SectionTable;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\Type\DateTime;
-use Sholokhov\Exchange\Repository\Fields\UFRepository;
-use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
+use Bitrix\Main\LoaderException;
+use Bitrix\Main\ORM\Fields\Relations\Reference;
+use Bitrix\Main\ORM\Fields\StringField;
+
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Импорт разделов информационного блока
  *
- * @package Target
- * @version 1.1.0
+ * @package Import
  */
-class Section extends IBlock
+class Section extends AbstractImport implements MappingExchangeInterface, IBlockExchangeInterface
 {
-    public const BEFORE_DEACTIVATE = 'onBeforeIBlockSectionsDeactivate';
-    public const BEFORE_UPDATE_EVENT = 'onBeforeIBlockSectionUpdate';
-    public const AFTER_UPDATE_EVENT = 'onAfterIBlockSectionUpdate';
-    public const BEFORE_ADD_EVENT = 'onBeforeIBlockSectionAdd';
-    public const AFTER_ADD_EVENT = 'onAfterIBlockSectionAdd';
+    use ExchangeMapTrait,
+        IBlockTrait;
+
+    protected ?UFRepository $ufRepository = null;
+
+    private string $ufEntityId;
+
+    /**
+     * Деактивация разделов, которые не пришли в импорте
+     *
+     * @inheritDoc
+     * @return void
+     * @throws ArgumentException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws ObjectPropertyException
+     * @throws Exception
+     * @throws SystemException
+     */
+    public function deactivate(): void
+    {
+        $query = SectionTable::query()
+            ->where('IBLOCK_ID', $this->getIBlockID())
+            ->where('TIMESTAMP_X', '<', DateTime::createFromTimestamp($this->getDateStarted()))
+            ->where('ACTIVE', 'Y')
+            ->addSelect('ID');
+
+        if ($hashField = $this->getHashField()) {
+            if ($this->getUfFieldRepository()->has($hashField->getTo())) {
+                $factory = new SectionUtsBuilder($this->getIBlockID());
+                $uts = $factory->make([new StringField($hashField->getTo())]);
+                $query->registerRuntimeField(
+                    new Reference('UF', $uts, ['=this.ID' => 'ref.VALUE_ID'], ['join_type' => 'inner'])
+                );
+            } else {
+                $query->where($hashField->getTo(), $this->getHash());
+            }
+        }
+
+        $this->events->beforeDeactivate(['query' => &$query]);
+
+        $iterator = $query->exec();
+        while ($section = $iterator->fetch()) {
+            SectionTable::update($section['ID'], ['ACTIVE' => 'N']);
+        }
+    }
+
+    /**
+     * Свойство является множественным
+     *
+     * @inheritDoc
+     * @param FieldInterface $field
+     * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function isMultipleField(FieldInterface $field): bool
+    {
+        $repository = $this->getUfFieldRepository();
+        return $repository->has($field->getTo()) && $repository->get($field->getTo())['MULTIPLE'] === 'Y';
+    }
 
     /**
      * @return string
      *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getUfEntityID(): string
     {
-        $options = $this->getOptions();
-        if (!$options->has('uf_entity_id')) {
-            $options->set('uf_entity_id', 'IBLOCK_' . $this->getIBlockID() . '_SECTION');
-        }
-
-        return $options->get('uf_entity_id');
+        return $this->ufEntityId ??= 'IBLOCK_' . $this->getIBlockID() . '_SECTION';
     }
 
     /**
      * Получить хранилище данных свойств
      *
      * @return UFRepository
-     *
-     * @version 1.0.0
-     * @since 1.0.0
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public function getFieldRepository(): UFRepository
+    public function getUfFieldRepository(): UFRepository
     {
-        return $this->repository->get('uf_repository');
+        return $this->ufRepository ??= new UFRepository(['entity_id' => 'IBLOCK_' . $this->getIBlockID() . '_SECTION']);
+    }
+
+    /**
+     * Получение доступных внешних событий обмена
+     *
+     * @inheritDoc
+     * @return ExternalEventTypes
+     */
+    protected function getEventTypes(): ExternalEventTypes
+    {
+        $types = new ExternalEventTypes;
+        $types->beforeDeactivate = 'onBeforeIBlockSectionsDeactivate';
+        $types->beforeUpdate = 'onBeforeIBlockSectionUpdate';
+        $types->afterUpdate = 'onAfterIBlockSectionUpdate';
+        $types->beforeAdd = 'onBeforeIBlockSectionAdd';
+        $types->afterAdd = 'onAfterIBlockSectionAdd';
+
+        return $types;
+    }
+
+    /**
+     * Конфигурация импорта
+     *
+     * @inheritDoc
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    protected function configuration(): void
+    {
+        parent::configuration();
+        $this->initPrepared();
+    }
+
+    /**
+     * Получение ID раздела из кэша
+     *
+     * @param array $item
+     * @return int
+     */
+    protected function resolveId(array $item): int
+    {
+        $key = $this->getPrimaryField()->getTo();
+        return (int)$this->cache->get($item[$key]);
     }
 
     /**
@@ -79,21 +174,12 @@ class Section extends IBlock
      *
      * @param array $item
      * @return bool
-     * @throws Exception
-     *
-     * @version 1.1.0
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function exists(array $item): bool
+    protected function doExist(array $item): bool
     {
         $keyField = $this->getPrimaryField();
-
-        if (!isset($item[$keyField->getTo()])) {
-            return false;
-        }
-
-        if ($this->cache->has($item[$keyField->getTo()])) {
-            return true;
-        }
 
         $filter = [
             'IBLOCK_ID' => $this->getIBlockID(),
@@ -113,89 +199,94 @@ class Section extends IBlock
         return false;
     }
 
+
     /**
-     * Добавление раздела
+     * Создание нового раздела
      *
-     * @param array $item
+     * @param array $fields
+     * @param array $originalFields
      * @return DataResultInterface
-     * @throws Exception
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function add(array $item): DataResultInterface
+    protected function doAdd(array $fields, array $originalFields): DataResultInterface
     {
         $result = new DataResult;
         $section = new CIBlockSection;
-        $fields = $this->prepareItem($item);
-
-        $resultBeforeAdd = $this->beforeAdd($fields);
-        if (!$resultBeforeAdd->isSuccess()) {
-            return $result->addErrors($resultBeforeAdd->getErrors());
-        }
-
-        if ($resultBeforeAdd->isStopped()) {
-            return $result;
-        }
 
         if ($id = $section->Add($fields)) {
             $result->setData((int)$id);
             $this->logger?->debug(sprintf('An element with the identifier "%s" has been added to the %s information block', $this->getIBlockID(), $id));
 
             if ($keyField = $this->getPrimaryField()) {
-                $this->cache->set($item[$keyField->getTo()], (int)$id);
+                $this->cache->set($fields[$keyField->getTo()], (int)$id);
             }
         } else {
-            $result->addError(new Error('Error while adding IBLOCK section: ' . strip_tags($section->getLastError()), 500, $fields));
+            $result->addError(new Error('Error while adding IBLOCK section: ' . strip_tags($section->getLastError()), 500));
         }
-
-        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['id' => $id, 'fields' => $fields, 'result' => $result]))->send();
 
         return $result;
     }
 
     /**
-     * Обновление раздела
+     * Логика обновления раздела
      *
-     * @param array $item
+     * @param int $id
+     * @param array $fields
+     * @param array $originalFields
      * @return DataResultInterface
-     * @throws Exception
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function update(array $item): DataResultInterface
+    protected function doUpdate(int $id, array $fields, array $originalFields): DataResultInterface
     {
         $result = new DataResult;
-        $keyField = $this->getPrimaryField();
-
         $section = new CIBlockSection;
-        $sectionId = $this->cache->get($item[$keyField->getTo()]);
 
-        if (!$sectionId) {
-            return $this->add($item);
+        if (!$section->Update($id, $fields)) {
+            return $result->addError(new Error('Error while updating IBLOCK section: ' . $section->getLastError(), 500, ['ID' => $id]));
         }
 
-        $result->setData((int)$sectionId);
-
-        $preparedItem = $this->prepareItem($item);
-        if (!isset($preparedItem['ACTIVE'])) {
-            $preparedItem['ACTIVE'] = 'Y';
-        }
-
-        $resultBeforeUpdate = $this->beforeUpdate($sectionId, $preparedItem);
-        if (!$resultBeforeUpdate->isSuccess()) {
-            return $result->addErrors($resultBeforeUpdate->getErrors());
-        }
-
-        if ($resultBeforeUpdate->isStopped()) {
-            return $result;
-        }
-
-        if (!$section->Update($sectionId, $preparedItem)) {
-            return $result->addError(new Error('Error while updating IBLOCK section: ' . $section->getLastError(), 500, ['ID' => $sectionId, 'FIELDS' => $preparedItem]));
-        }
-
-        $this->logger?->debug('Updated properties IBLOCK section: ' . $sectionId);
+        $this->logger?->debug('Updated properties IBLOCK section: ' . $id);
         $this->cleanCache();
 
-        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['fields' => $preparedItem, 'id' => $sectionId, 'result' => $result]))->send();
-
         return $result;
+    }
+
+    /**
+     * Подготовка данных, для создания раздела
+     *
+     * @inheritDoc
+     * @param array $item
+     * @return array
+     * @throws ContainerExceptionInterface
+     * @throws LoaderException
+     * @throws NotFoundExceptionInterface
+     */
+    protected function prepareForAdd(array $item): array
+    {
+        return $this->preparation($item);
+    }
+
+    /**
+     * Подготовка данных, для обновления раздела
+     *
+     * @inheritDoc
+     * @param array $item
+     * @return array
+     * @throws ContainerExceptionInterface
+     * @throws LoaderException
+     * @throws NotFoundExceptionInterface
+     */
+    protected function prepareForUpdate(array $item): array
+    {
+        $prepared = $this->prepareForAdd($item);
+
+        if (!isset($prepared['ACTIVE'])) {
+            $prepared['ACTIVE'] = 'Y';
+        }
+
+        return $prepared;
     }
 
     /**
@@ -203,16 +294,16 @@ class Section extends IBlock
      *
      * @param array $item
      * @return array
-     * @throws Exception
-     *
-     * @version 1.1.0
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws LoaderException
      */
-    protected function prepareItem(array $item): array
+    protected function preparation(array $item): array
     {
         $result = [];
         $translitOptions = $this->getIBlockInfo()->get('FIELDS')['CODE']['DEFAULT_VALUE'] ?? [];
 
-        foreach ($this->getMap() as $field) {
+        foreach ($this->getMappingRegistry()->getFields() as $field) {
             $value = $item[$field->getTo()] ?? '';
 
             if ($field->getTo() === 'CODE' && $translitOptions) {
@@ -240,161 +331,17 @@ class Section extends IBlock
     }
 
     /**
-     * Деактивация разделов, которые не пришли в импорте
+     * Конфигурация обмена данными по умолчанию
      *
      * @return void
-     * @throws ArgumentException
-     * @throws ObjectPropertyException
-     * @throws SystemException
-     * @throws Exception
-     *
-     * @version 1.1.0
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function deactivate(): void
-    {
-        $query = SectionTable::query()
-            ->where('IBLOCK_ID', $this->getIBlockID())
-            ->where('TIMESTAMP_X', '<', DateTime::createFromTimestamp($this->getDateStarted()))
-            ->where('ACTIVE', 'Y')
-            ->addSelect('ID');
-
-        if ($hashField = $this->getHashField()) {
-            if ($this->getFieldRepository()->has($hashField->getTo())) {
-                $factory = new SectionUtsBuilder($this->getIBlockID());
-                $uts = $factory->make([new StringField($hashField->getTo())]);
-                $query->registerRuntimeField(
-                    new Reference('UF', $uts, ['=this.ID' => 'ref.VALUE_ID'], ['join_type' => 'inner'])
-                );
-            } else {
-                $query->where($hashField->getTo(), $this->getHash());
-            }
-        }
-
-        (new Event(Helper::getModuleID(), self::BEFORE_DEACTIVATE, ['query' => $query]))->send();
-
-        $iterator = $query->exec();
-        while ($section = $iterator->fetch()) {
-            SectionTable::update($section['ID'], ['ACTIVE' => 'N']);
-        }
-    }
-
-    /**
-     * Свойство является множественным
-     *
-     * @param FieldInterface $field
-     * @return bool
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    protected function isMultipleField(FieldInterface $field): bool
-    {
-        $repository = $this->getFieldRepository();
-        return $repository->has($field->getTo()) && $repository->get($field->getTo())['MULTIPLE'] === 'Y';
-    }
-
-    /**
-     * Конфигурация механизмов обмена
-     *
-     * @return void
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    #[BootstrapConfiguration]
-    private function configuration(): void
-    {
-        $this->repository->set('uf_repository', new UFRepository(['entity_id' => 'IBLOCK_' . $this->getIBlockID() . '_SECTION']));
-    }
-
-    /**
-     * Событие перед обновлением раздела
-     *
-     * @param int $id
-     * @param array $item
-     * @return EventResult
-     */
-    private function beforeUpdate(int $id, array &$item): EventResult
-    {
-        $result = new EventResult;
-
-        try {
-            $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['fields' => &$item, 'id' => $id, 'exchange' => $this]);
-            $event->send();
-
-            foreach ($event->getResults() as $eventResult) {
-                if ($eventResult->getType() === BXEventResult::SUCCESS) {
-                    continue;
-                }
-
-                $parameters = $eventResult->getParameters();
-                if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                    $result->addError(new Error('Error while updating IBLOCK section: stopped', 300, $item));
-                } else {
-                    foreach ($parameters['ERRORS'] as $error) {
-                        $result->addError(new Error($error, 300, $item));
-                    }
-                }
-            }
-        } catch (ExchangeException $e) {
-            $this->logger?->warning(($e->getMessage() ?: 'Error while updating IBLOCK section') . ': ' . $id);
-            $result->setStopped();
-        }
-
-        return $result;
-    }
-
-    /**
-     * Событие перед созданием раздела
-     *
-     * @param array $item
-     * @return EventResult
-     */
-    private function beforeAdd(array $item): EventResult
-    {
-        $result = new EventResult();
-
-        try {
-            $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['fields' => &$item, 'exchange' => $this]);
-            $event->send();
-
-            foreach ($event->getResults() as $eventResult) {
-                if ($eventResult->getType() === BXEventResult::SUCCESS) {
-                    continue;
-                }
-
-                $parameters = $eventResult->getParameters();
-                if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                    $result->addError(new Error('Error while adding IBLOCK section: stopped', 300, $item));
-                } else {
-                    foreach ($parameters['ERRORS'] as $error) {
-                        $result->addError(new Error($error, 300, $item));
-                    }
-                }
-            }
-        } catch (ExchangeItemStoppedException $e) {
-            $this->logger?->warning(($e->getMessage() ?: 'Error while updating IBLOCK section') . ': ' . json_encode($item));
-            $result->setStopped();
-
-        }
-
-        return $result;
-    }
-
-    /**
-     * Инициализация преобразователей импортированных значений
-     *
-     * @return void
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    #[BootstrapConfiguration]
-    private function bootstrapPrepares(): void
+    private function initPrepared(): void
     {
         $entityId = $this->getUfEntityID();
-
-        $this->addPrepared(new Prepare\File($entityId))
+        $this->processor
+            ->addPrepared(new Prepare\File($entityId))
             ->addPrepared(new Prepare\Date($entityId))
             ->addPrepared(new Prepare\DateTime($entityId))
             ->addPrepared(new Prepare\Boolean($entityId))

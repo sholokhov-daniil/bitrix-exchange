@@ -5,12 +5,16 @@ namespace Sholokhov\Exchange\Target;
 use CFile;
 use Exception;
 
-use Sholokhov\Exchange\Exchange;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Sholokhov\Exchange\AbstractImport;
+use Sholokhov\Exchange\ExchangeMapTrait;
 use Sholokhov\Exchange\Fields\FieldInterface;
+use Sholokhov\Exchange\MappingExchangeInterface;
+use Sholokhov\Exchange\Messages\Type\Error;
 use Sholokhov\Exchange\Messages\Type\DataResult;
 use Sholokhov\Exchange\Messages\DataResultInterface;
 
-use Sholokhov\Exchange\Messages\Type\Error;
 use Bitrix\Main\FileTable;
 use Bitrix\Main\SystemException;
 use Bitrix\Main\ArgumentException;
@@ -21,23 +25,45 @@ use Bitrix\Main\ObjectPropertyException;
  *
  * @todo Переделать логику
  * @package Target
- * @version 1.0.0
  */
-class File extends Exchange
+class File extends AbstractImport implements MappingExchangeInterface
 {
-    /**
-     * Обработка конфигураций обмена
-     *
-     * @param array $options
-     * @return array
-     */
-    protected function normalizeOptions(array $options): array
-    {
-        if (empty($options['module_id']) || !is_string($options['module_id'])) {
-            $options['module_id'] = 'iblock';
-        }
+    use ExchangeMapTrait;
 
-        return parent::normalizeOptions($options);
+    /**
+     * Проверка, что свойство является множественным
+     *
+     * @param FieldInterface $field
+     * @return bool
+     */
+    public function isMultipleField(FieldInterface $field): bool
+    {
+        return false;
+    }
+
+    /**
+     * Конфигурация импорта
+     *
+     * @return void
+     * @throws Exception
+     */
+    protected function configuration(): void
+    {
+        parent::configuration();
+        $this->normalizeOptions();
+    }
+
+    /**
+     * Получение ID значение из кэша
+     *
+     * @param array $item
+     * @return int
+     */
+    protected function resolveId(array $item): int
+    {
+        $key = $this->getPrimaryField()->getTo();
+        $externalID = $this->getExternalId((string)$item[$key]);
+        return (int)$this->cache->get($externalID);
     }
 
     /**
@@ -48,16 +74,13 @@ class File extends Exchange
      * @throws ArgumentException
      * @throws ObjectPropertyException
      * @throws SystemException
-     * @throws Exception
      */
-    protected function exists(array $item): bool
+    protected function doExist(array $item): bool
     {
         $keyField = $this->getPrimaryField();
         $externalID = $this->getExternalId((string)$item[$keyField->getTo()]);
 
-        if ($this->cache->has($externalID)) {
-            return true;
-        } elseif ($file = FileTable::getRow(['filter' => ['EXTERNAL_ID' => $externalID], 'select' => ['ID']])) {
+        if ($file = FileTable::getRow(['filter' => ['EXTERNAL_ID' => $externalID], 'select' => ['ID']])) {
             $fileId = (int)$file['ID'];
             $this->cache->set($externalID, $fileId);
             return true;
@@ -69,14 +92,16 @@ class File extends Exchange
     /**
      * Создание нового файла
      *
-     * @param array $item
+     * @param array $fields
+     * @param array $originalFields
      * @return DataResultInterface
-     * @throws Exception
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function add(array $item): DataResultInterface
+    protected function doAdd(array $fields, array $originalFields): DataResultInterface
     {
         $result = new DataResult;
-        $path = $item[$this->getPrimaryField()->getTo()];
+        $path = $fields[$this->getPrimaryField()->getTo()];
         $file = CFile::MakeFileArray($path);
 
         if (!$file) {
@@ -92,7 +117,7 @@ class File extends Exchange
             $result->setData($fileId);
         } else {
             $this->logger?->error('File receipt error: ' . $path . '. Data: ' . json_encode($file));
-            $result->addError(new Error('Ошибка сохранения файла', 500, $file));
+            $result->addError(new Error('Ошибка сохранения файла', 500));
         }
 
         return $result;
@@ -101,21 +126,16 @@ class File extends Exchange
     /**
      * Обновление файла
      *
-     * @param array $item
+     * @param int $id
+     * @param array $fields
+     * @param array $originalFields
      * @return DataResultInterface
-     * @throws Exception
+     *
      * @todo Доработать
      */
-    protected function update(array $item): DataResultInterface
+    protected function doUpdate(int $id, array $fields, array $originalFields): DataResultInterface
     {
-        $keyField = $this->getPrimaryField();
-        $externalID = $this->getExternalId((string)$item[$keyField->getTo()]);
-
-        if (!$this->cache->has($externalID)) {
-            $this->add($item);
-        }
-
-        return (new DataResult)->setData((int)$this->cache->get($externalID));
+        return new DataResult;
     }
 
     /**
@@ -130,16 +150,36 @@ class File extends Exchange
     }
 
     /**
-     * Проверка, что свойство является множественным
+     * Преобразование данных, для создания
      *
-     * @param FieldInterface $field
-     * @return bool
-     *
-     * @since 1.0.0
-     * @version 1.0.0
+     * @param array $item
+     * @return array
      */
-    protected function isMultipleField(FieldInterface $field): bool
+    protected function prepareForAdd(array $item): array
     {
-        return false;
+        return $item;
+    }
+
+    /**
+     * Преобразование данных, для обновления
+     *
+     * @param array $item
+     * @return array
+     */
+    protected function prepareForUpdate(array $item): array
+    {
+        return $item;
+    }
+
+    /**
+     * Обработка конфигураций обмена
+     *
+     * @return void
+     */
+    private function normalizeOptions(): void
+    {
+        if (!$this->options->get('module_id')) {
+            $this->options->set('module_id', 'main');
+        }
     }
 }

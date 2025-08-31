@@ -2,60 +2,51 @@
 
 namespace Sholokhov\Exchange\Target\UserFields;
 
-use Exception;
 use CUserFieldEnum;
 
-use Sholokhov\Exchange\Exception\Target\ExchangeItemStoppedException;
-use Sholokhov\Exchange\Exchange;
+use Sholokhov\Exchange\AbstractImport;
+use Sholokhov\Exchange\Dispatcher\ExternalEventTypes;
+use Sholokhov\Exchange\ExchangeMapTrait;
 use Sholokhov\Exchange\Fields\FieldInterface;
-use Sholokhov\Exchange\Helper\Helper;
+use Sholokhov\Exchange\MappingExchangeInterface;
 use Sholokhov\Exchange\Messages\DataResultInterface;
-use Sholokhov\Exchange\Messages\ResultInterface;
 use Sholokhov\Exchange\Messages\Type\DataResult;
-use Sholokhov\Exchange\Messages\Type\EventResult;
-use Sholokhov\Exchange\Messages\Type\ExchangeResult;
-use Sholokhov\Exchange\Messages\Type\Result;
 use Sholokhov\Exchange\Repository\Fields\UFRepository;
-use Sholokhov\Exchange\Target\Attributes\Validate;
-use Sholokhov\Exchange\Target\Attributes\BootstrapConfiguration;
-
-use Bitrix\Main\Event;
 use Sholokhov\Exchange\Messages\Type\Error;
-use Bitrix\Main\EventResult as BXEventResult;
 
-class Enumeration extends Exchange
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+
+/**
+ * Импорт значений списка
+ *
+ * @package Import
+ */
+class Enumeration extends AbstractImport implements MappingExchangeInterface, ExchangeUserFieldInterface
 {
-    /**
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    public const BEFORE_UPDATE_EVENT = 'onBeforeUFEnumerationUpdate';
+    use ExchangeMapTrait;
+
+    private UfRepository $propertyRepository;
 
     /**
-     * @version 1.0.0
-     * @since 1.0.0
+     * Поле в которое производится импорт является множественным
+     *
+     * @param FieldInterface $field
+     * @return bool
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    public const AFTER_UPDATE_EVENT = 'onAfterUFEnumerationUpdate';
-
-    /**
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    public const BEFORE_ADD_EVENT = 'onBeforeUFEnumerationAdd';
-
-    /**
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    public const AFTER_ADD_EVENT = 'onAfterUFEnumerationAdd';
+    public function isMultipleField(FieldInterface $field): bool
+    {
+        return $this->getProperty()['MULTIPLE'] === 'Y';
+    }
 
     /**
      * Получение идентификатора сущности которой относится пользовательское свойство(UF)
      *
      * @return string
-     *
-     * @version 1.0.0
-     * @since 1.0.0
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getEntityId(): string
     {
@@ -66,9 +57,8 @@ class Enumeration extends Exchange
      * Получение кода свойства в которое производится импорт данных
      *
      * @return string
-     *
-     * @version 1.0.0
-     * @since 1.0.0
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getPropertyCode(): string
     {
@@ -76,22 +66,45 @@ class Enumeration extends Exchange
     }
 
     /**
+     * Получение доступных внешних событий обмена
+     *
+     * @inheritDoc
+     * @return ExternalEventTypes
+     */
+    protected function getEventTypes(): ExternalEventTypes
+    {
+        $types = new ExternalEventTypes;
+        $types->beforeUpdate = 'onBeforeUFEnumerationUpdate';
+        $types->afterUpdate = 'onAfterUFEnumerationUpdate';
+        $types->beforeAdd = 'onBeforeUFEnumerationAdd';
+        $types->afterAdd = 'onAfterUFEnumerationAdd';
+
+        return $types;
+    }
+
+    /**
+     * Получение ID значение из кэша
+     *
+     * @param array $item
+     * @return int
+     */
+    protected function resolveId(array $item): int
+    {
+        $key = $this->getPrimaryField()->getTo();
+        return (int)$this->cache->get($item[$key]);
+    }
+
+    /**
      * Проверка наличия значения списка
      *
      * @param array $item
      * @return bool
-     * @throws Exception
-     *
-     * @version 1.0.0
-     * @since 1.0.0
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function exists(array $item): bool
+    protected function doExist(array $item): bool
     {
         $primary = $this->getPrimaryField();
-
-        if ($this->cache->has($item[$primary->getTo()])) {
-            return true;
-        }
 
         if ($enum = $this->searchEnum($item[$primary->getTo()])) {
             $this->cache->set($item[$primary->getTo()], $enum['ID']);
@@ -104,32 +117,21 @@ class Enumeration extends Exchange
     /**
      * Создание значения списка
      *
-     * @param array $item
+     * @param array $fields
+     * @param array $originalFields
      * @return DataResultInterface
-     * @throws Exception
-     *
-     * @version 1.0.0
-     * @since 1.0.0
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function add(array $item): DataResultInterface
+    protected function doAdd(array $fields, array $originalFields): DataResultInterface
     {
         global $APPLICATION;
 
         $result = new DataResult;
-        $fields = $this->prepareItem($item);
-
-        $beforeAdd = $this->beforeAdd($fields);
-        if (!$beforeAdd->isSuccess()) {
-            return $result->addErrors($beforeAdd->getErrors());
-        }
-
-        if ($beforeAdd->isStopped()) {
-            return $result;
-        }
-
         $uf = new CUserFieldEnum;
+
         $setResult = $uf->SetEnumValues(
-            $this->getUserField()['ID'],
+            $this->getProperty()['ID'],
             [
                 'n0' => $fields
             ]
@@ -147,10 +149,8 @@ class Enumeration extends Exchange
 
         $primary = $this->getPrimaryField();
         $enum = $this->searchEnum($fields[$primary->getTo()]);
-        $this->cache->set($item[$primary->getTo()], (int)$enum['ID']);
+        $this->cache->set($originalFields[$primary->getTo()], (int)$enum['ID']);
         $result->setData((int)$enum['ID']);
-
-        (new Event(Helper::getModuleID(), self::AFTER_ADD_EVENT, ['id' => (int)$enum['ID'], 'fields' => $fields, 'result' => $result]))->send();
 
         return $result;
     }
@@ -158,102 +158,50 @@ class Enumeration extends Exchange
     /**
      * Обновление значения списка
      *
-     * @param array $item
+     * @param int $id
+     * @param array $fields
+     * @param array $originalFields
      * @return DataResultInterface
-     * @throws Exception
-     *
-     * @version 1.0.0
-     * @since 1.0.0
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    protected function update(array $item): DataResultInterface
+    protected function doUpdate(int $id, array $fields, array $originalFields): DataResultInterface
     {
         $result = new DataResult;
         $primary = $this->getPrimaryField();
 
-        $enumId = (int)$this->cache->get($item[$primary->getTo()]);
-
-        if (!$enumId) {
-            return $this->add($item);
-        }
-
-        $fields = $this->prepareItem($item);
-
-        $beforeUpdate = $this->beforeUpdate($enumId, $fields);
-        if (!$beforeUpdate->isSuccess()) {
-            return $result->addErrors($beforeUpdate->getErrors());
-        }
-
-        if ($beforeUpdate->isStopped()) {
-            return $result;
-        }
-
         $this->searchEnum($fields[$primary->getTo()]);
 
         $uf = new CUserFieldEnum;
-        if (!$uf->SetEnumValues($this->getUserField()['ID'], [$enumId => $fields])) {
-            return $result->addError(new Error('An error occurred when creating the list value', 500, $fields));
+        if (!$uf->SetEnumValues($this->getProperty()['ID'], [$id => $fields])) {
+            return $result->addError(new Error('An error occurred when creating the list value', 500));
         }
 
-        $this->logger?->debug(sprintf('Updated the value of the list with the ID "%s"', $enumId));
-        $result->setData($enumId);
-
-        (new Event(Helper::getModuleID(), self::AFTER_UPDATE_EVENT, ['fields' => $fields, 'id' => $enumId, 'result' => $result]))->send();
+        $this->logger?->debug(sprintf('Updated the value of the list with the ID "%s"', $id));
 
         return $result;
     }
 
     /**
-     * Инициализация хранилища пользовательских свойств
+     * Подготовка данных, для создания
      *
-     * @return void
-     *
-     * @version 1.0.0
-     * @since 1.0.0
+     * @param array $item
+     * @return array
      */
-    #[BootstrapConfiguration]
-    private function bootstrapUserFieldRepository(): void
+    protected function prepareForAdd(array $item): array
     {
-        $this->repository->set('uf_repository', new UFRepository([
-            'entity_id' => $this->getEntityID()
-        ]));
+        return $this->prepare($item);
     }
 
     /**
-     * Валидация конфигураций обмена
+     * Преобразование данных, для обновления
      *
-     * @return ResultInterface
-     *
-     * @version 1.0.0
-     * @since 1.0.0
+     * @param array $item
+     * @return array
      */
-    #[Validate]
-    private function validateOptions(): ResultInterface
+    protected function prepareForUpdate(array $item): array
     {
-        $result = new Result;
-
-        if (!$this->getEntityId()) {
-            $result->addError(new Error('entity_id is required'));
-        }
-
-        if (!$this->getPropertyCode()) {
-            $result->addError(new Error('property_code is required'));
-        }
-
-        return $result;
-    }
-
-    /**
-     * Поле в которое производится импорт является множественным
-     *
-     * @param FieldInterface $field
-     * @return bool
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    protected function isMultipleField(FieldInterface $field): bool
-    {
-        return $this->getUserField()['MULTIPLE'] === 'Y';
+        return $this->prepare($item);
     }
 
     /**
@@ -261,16 +209,14 @@ class Enumeration extends Exchange
      *
      * @param mixed $value
      * @return array
-     * @throws Exception
-     *
-     * @version 1.0.0
-     * @since 1.0.0
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function searchEnum(mixed $value): array
     {
         $primary = $this->getPrimaryField();
         $filter = [
-            'USER_FIELD_ID' => $this->getUserField()['ID'],
+            'USER_FIELD_ID' => $this->getProperty()['ID'],
             $primary->getTo() => $value,
         ];
 
@@ -282,16 +228,14 @@ class Enumeration extends Exchange
      *
      * @param array $item
      * @return array
-     *
-     * @version 1.0.0
-     * @since 1.0.0
      */
-    private function prepareItem(array $item): array
+    private function prepare(array $item): array
     {
         $result = [];
         $supportedFields = $this->getSupportedFields();
+        $map = $this->getMappingRegistry()->getFields();
 
-        foreach ($this->getMap() as $field) {
+        foreach ($map as $field) {
             if (in_array($field->getTo(), $supportedFields)) {
                 $result[$field->getTo()] = $item[$field->getTo()];
             }
@@ -304,120 +248,33 @@ class Enumeration extends Exchange
      * Получение хранилища импортированного поля
      *
      * @return array
-     *
-     * @version 1.0.0
-     * @since 1.0.0
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    private function getUserField(): array
+    private function getProperty(): array
     {
-        return $this->getUfRepository()->get($this->getPropertyCode(), []);
+        return $this->getPropertyRepository()->get($this->getPropertyCode(), []);
     }
 
     /**
      * Получение хранилища информации о пользовательских свойствах (UF)
      *
      * @return UFRepository
-     *
-     * @version 1.0.0
-     * @since 1.0.0
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
-    private function getUfRepository(): UFRepository
+    private function getPropertyRepository(): UFRepository
     {
-        return $this->repository->get('uf_repository');
+        return $this->propertyRepository ??= new UFRepository(['entity_id' => $this->getEntityID()]);
     }
 
     /**
      * Список поддерживаемых полей значения свойства, для импортирования
      *
      * @return string[]
-     *
-     * @version 1.0.0
-     * @since 1.0.0
      */
     private function getSupportedFields(): array
     {
         return ['VALUE', 'DEF', 'SORT', 'XML_ID'];
-    }
-
-    /**
-     * Событие перед созданием
-     *
-     * @param array $item
-     * @return EventResult
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    private function beforeAdd(array $item): EventResult
-    {
-        $result = new EventResult;
-
-        try {
-            $event = new Event(Helper::getModuleID(), self::BEFORE_ADD_EVENT, ['fields' => &$item]);
-            $event->send();
-
-            foreach ($event->getResults() as $eventResult) {
-                if ($eventResult->getType() === BXEventResult::SUCCESS) {
-                    continue;
-                }
-
-                $parameters = $eventResult->getParameters();
-                if (empty($parameters['ERRORS']) || !is_array($parameters['ERRORS'])) {
-                    $result->addError(new Error('Error adding UF list property: stopped', 300, $item));
-                } else {
-                    foreach ($parameters['ERRORS'] as $error) {
-                        $result->addError(new Error($error, 300, $item));
-                    }
-                }
-            }
-        } catch (ExchangeItemStoppedException $exception) {
-            $stoppedMessage = $exception->getMessage() ?: 'Adding of the UF property has been stopped:' . json_encode($item);
-            $this->logger?->warning($stoppedMessage);
-
-            $result->setStopped();
-        }
-
-        return $result;
-    }
-
-    /**
-     * Событие перед обновлением
-     *
-     * @param int $id
-     * @param array $item
-     * @return EventResult
-     *
-     * @version 1.0.0
-     * @since 1.0.0
-     */
-    private function beforeUpdate(int $id, array $item): EventResult
-    {
-        $result = new EventResult;
-
-        try {
-            $event = new Event(Helper::getModuleID(), self::BEFORE_UPDATE_EVENT, ['fields' => &$item, 'id' => $id]);
-            $event->send();
-
-            foreach ($event->getResults() as $eventResult) {
-                if ($eventResult->getType() === BXEventResult::SUCCESS) {
-                    continue;
-                }
-
-                $parameters = $eventResult->getParameters();
-                if (empty($parameters['errors']) || !is_array($parameters['errors'])) {
-                    $result->addError(new Error('Error updating UF list property: stopped', 300, $item));
-                } else {
-                    foreach ($parameters['errors'] as $error) {
-                        $result->addError(new Error($error, 300, $item));
-                    }
-                }
-            }
-        } catch (ExchangeItemStoppedException $exception) {
-            $stoppedMessage = $exception->getMessage() ?: ('Updating of the UF property has been stopped: ' . json_encode($item));
-            $this->logger?->warning($stoppedMessage);
-            $result->setStopped();
-        }
-
-        return $result;
     }
 }

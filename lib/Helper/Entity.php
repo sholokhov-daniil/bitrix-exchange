@@ -8,17 +8,12 @@ use ReflectionMethod;
 
 /**
  * @package Helper
- * @since 1.0.0
- * @version 1.0.0
  */
 class Entity
 {
     /**
      * Получение атрибута объекта
      * @throws ReflectionException
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public static function getAttribute(string|object $entity, string $attribute): ?object
     {
@@ -32,9 +27,6 @@ class Entity
      * @param string $attribute
      * @return object|null
      * @throws ReflectionException
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public static function getAttributeChain(string|object $entity, string $attribute): ?object
     {
@@ -60,9 +52,6 @@ class Entity
      * @param ReflectionMethod $method
      * @param string $attribute
      * @return object|null
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public static function getAttributeByMethod(ReflectionMethod $method, string $attribute): ?object
     {
@@ -76,9 +65,6 @@ class Entity
      * @param ReflectionClass $reflection
      * @param string $attribute
      * @return object|null
-     *
-     * @since 1.0.0
-     * @version 1.0.0
      */
     public static function getAttributeByReflection(ReflectionClass $reflection, string $attribute): ?object
     {

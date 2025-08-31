@@ -2,7 +2,7 @@
 
 namespace Sholokhov\Exchange\Preparation\IBlock\Element;
 
-use ReflectionException;
+use Exception;
 
 use Sholokhov\Exchange\ExchangeInterface;
 use Sholokhov\Exchange\Factory\Result\SimpleFactory;
@@ -13,14 +13,11 @@ use Sholokhov\Exchange\Preparation\Base\AbstractEnumeration;
 use Sholokhov\Exchange\Target\IBlock\Property\PropertyEnumeration;
 
 use Bitrix\Iblock\PropertyTable;
-use Bitrix\Main\LoaderException;
 
 /**
  * Производит импорт значения списка и преобразовывает значение в идентификатор значения списка
  *
  * @package Preparation
- * @version 1.0.0
- * @since 1.0.0
  */
 class Enumeration extends AbstractEnumeration
 {
@@ -28,9 +25,6 @@ class Enumeration extends AbstractEnumeration
 
     /**
      * @param int $iBlockID ИБ в рамках которого производится преобразование
-     *
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public function __construct(int $iBlockID, string $primary = 'VALUE')
     {
@@ -43,10 +37,7 @@ class Enumeration extends AbstractEnumeration
      *
      * @param FieldInterface $field Свойство, которое преобразовывается
      * @return ExchangeInterface
-     * @throws ReflectionException
-     *
-     * @version 1.0.0
-     * @since 1.0.0
+     * @throws Exception
      */
     protected function getTarget(FieldInterface $field): ExchangeInterface
     {
@@ -63,8 +54,6 @@ class Enumeration extends AbstractEnumeration
      * @param mixed $value Значение, которое необходимо преобразовать
      * @param FieldInterface $field Свойство, которое преобразовывается
      * @return bool
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public function supported(mixed $value, FieldInterface $field): bool
     {
